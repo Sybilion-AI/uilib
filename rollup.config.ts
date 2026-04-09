@@ -76,16 +76,20 @@ export default [
       }),
       svgr({ exportType: 'default' }),
       postcss({
+        // Default inject uses an absolute path to style-inject; Rollup turns it into a relative
+        // path from each output file, which breaks in consumers (e.g. design-demo). Use the
+        // package name so bundlers resolve node_modules/style-inject correctly.
+        inject: cssVariableName =>
+          `\nimport styleInject from 'style-inject';\nstyleInject(${cssVariableName});\n`,
         minimize: true,
         modules: true,
-        use: [
-          [
-            'stylus',
-            {
-              paths: [path.resolve(__dirname, 'src')],
-            },
-          ],
-        ],
+        use: {
+          sass: {},
+          less: {},
+          stylus: {
+            paths: [path.resolve(__dirname, 'src')],
+          },
+        },
         plugins: [
           postcssPresetEnv({ stage: 3 }),
           cssnano({
