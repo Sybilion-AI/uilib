@@ -1,0 +1,129 @@
+.tableContainer
+  position relative
+  width 100%
+  overflow-x auto
+
+.scrollContainer
+  width 100%
+
+.scrollInner
+  display block
+
+.scrollbar
+  bottom -6px
+
+.withBackground
+  padding 0 var(--p-6)
+  background-color var(--background)
+  border-radius var(--p-4)
+
+.table
+  width 100%
+  caption-side bottom
+  font-size 14px
+  overflow hidden
+
+  &.withPaddings
+    .tableHead:first-child
+    .tableCell:first-child
+      padding-left var(--p-6)
+    .tableHead:last-child
+    .tableCell:last-child
+      padding-right var(--p-6)
+
+.tableBody
+  position relative
+
+  &:not(:first-child)::before
+    content ''
+    display block
+    height 1px
+    position absolute
+    left 0
+    right 0
+    background-color var(--border)
+
+    .withBackground &
+      left var(--p-6)
+      right var(--p-6)
+
+  tr:last-child
+    border-bottom 0
+
+.tableFooter
+  background-color var(--muted-50)
+  font-weight 500
+
+  // .withBackground &
+  //   border-top 1px solid var(--border)
+
+  tr:last-child
+    border-bottom 0
+
+.tableRow
+  position relative
+  transition-property color, border-color, text-decoration-color, fill, stroke
+  transition-timing-function cubic-bezier(0.4, 0, 0.2, 1)
+  transition-duration 150ms
+
+  &::before
+    content ''
+    position absolute
+    z-index 0
+    --gap: 2px;
+    left var(--gap)
+    top var(--gap)
+    height calc(100% - calc(var(--gap) * 2))
+    width calc(100% - calc(var(--gap) * 2))
+    transition background-color 0.1s ease-in-out
+
+  &:last-child::before
+    border-bottom-left-radius var(--p-3)
+    border-bottom-right-radius var(--p-3)
+
+  .tableBody &:hover
+  &[data-state="selected"]
+    &::before
+      background-color var(--muted-50)
+
+.tableHead
+  min-width 0
+  color var(--muted-foreground)
+  white-space nowrap
+  text-align left
+  vertical-align middle
+  font-weight 500
+
+  &:has([role="checkbox"])
+    padding-right 0
+
+  [role="checkbox"]
+    transform translateY(2px)
+
+.tableHead
+.tableCell
+  position relative
+  z-index 1
+  padding-left var(--p-2)
+  padding-right var(--p-2)
+  vertical-align middle
+  white-space nowrap
+  height 65px
+  min-width 0
+
+  &:has([role="checkbox"])
+    padding-right 0
+
+  [role="checkbox"]
+    transform translateY(2px)
+
+.compact
+  height auto
+
+
+.cellValue
+  display flex
+  align-items center
+  gap var(--p-1)
+
+  color var(--muted-foreground)

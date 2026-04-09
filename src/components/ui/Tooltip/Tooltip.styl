@@ -1,0 +1,125 @@
+@import '../../../lib/theme.styl';
+
+.tooltipContent
+  z-index 50
+  width fit-content
+  padding 6px 12px
+  border-radius 0.375rem
+  background-color var(--popover)
+  font-size 12px
+  color var(--popover-foreground)
+  backdrop-filter blur(10px)
+  text-wrap balance
+  word-break break-word
+  transform-origin var(--radix-tooltip-content-transform-origin)
+  // user-select text
+  box-shadow 0 10px 15px -3px rgba(0, 0, 0, 0.1)
+  border 1px solid var(--border)
+
+  &[data-state="open"],
+  &[data-state="delayed-open"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out
+
+  &[data-state="closed"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+  &[data-state="open"][data-side="bottom"],
+  &[data-state="delayed-open"][data-side="bottom"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-top-2 0.15s ease-out
+
+  &[data-state="open"][data-side="left"],
+  &[data-state="delayed-open"][data-side="left"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-right-2 0.15s ease-out
+
+  &[data-state="open"][data-side="right"],
+  &[data-state="delayed-open"][data-side="right"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-left-2 0.15s ease-out
+
+  &[data-state="open"][data-side="top"],
+  &[data-state="delayed-open"][data-side="top"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-bottom-2 0.15s ease-out
+
+  &[data-state="closed"][data-side="bottom"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+  &[data-state="closed"][data-side="left"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+  &[data-state="closed"][data-side="right"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+  &[data-state="closed"][data-side="top"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+.tooltipArrow
+  z-index 50
+  width 10px
+  height 10px
+  transform translateY(calc(-50% + .5px)) rotate(45deg)
+  border-radius 2px
+  border 1px solid var(--border)
+  border-left-width 0
+  border-top-width 0
+  background-color var(--popover)
+  fill var(--popover)
+
+@keyframes fade-in
+  from
+    opacity 0
+  to
+    opacity 1
+
+@keyframes fade-out
+  from
+    opacity 1
+  to
+    opacity 0
+
+@keyframes zoom-in
+  from
+    opacity 0
+    transform scale(0.95)
+  to
+    opacity 1
+    transform scale(1)
+
+@keyframes zoom-out
+  from
+    opacity 1
+    transform scale(1)
+  to
+    opacity 0
+    transform scale(0.95)
+
+@keyframes slide-in-from-top-2
+  from
+    opacity 0
+    transform translateY(-0.5rem)
+  to
+    opacity 1
+    transform translateY(0)
+
+@keyframes slide-in-from-right-2
+  from
+    opacity 0
+    transform translateX(0.5rem)
+  to
+    opacity 1
+    transform translateX(0)
+
+@keyframes slide-in-from-left-2
+  from
+    opacity 0
+    transform translateX(-0.5rem)
+  to
+    opacity 1
+    transform translateX(0)
+
+@keyframes slide-in-from-bottom-2
+  from
+    opacity 0
+    transform translateY(0.5rem)
+  to
+    opacity 1
+    transform translateY(0)
+

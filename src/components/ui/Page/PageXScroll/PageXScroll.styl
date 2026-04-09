@@ -1,0 +1,17 @@
+.root
+  max-width 100%
+
+.fullWidth
+  width var(--page-width)
+
+.inner
+  display flex
+  padding-bottom 2px
+
+  &::before,
+  &::after
+    content ''
+    display block
+    width var(--page-x-padding)
+    min-width var(--page-x-padding)
+    height 100%

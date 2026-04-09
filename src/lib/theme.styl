@@ -1,0 +1,23 @@
+MOBILE = 768px
+DESKTOP = 1024px
+
+pagePaddings()
+  padding var(--page-y-padding) var(--page-x-padding)
+
+pageXPadding()
+  padding-left var(--page-x-padding)
+  padding-right var(--page-x-padding)
+
+pageYPadding()
+  padding-top var(--page-y-padding)
+  padding-bottom var(--page-y-padding)
+
+line-clamp($lines)
+  display -webkit-box
+  -webkit-line-clamp $lines
+  -webkit-box-orient vertical
+
+:global(:root)
+  @media (max-width: MOBILE)
+    --page-x-padding: var(--p-6)
+    --page-y-padding: var(--p-6)

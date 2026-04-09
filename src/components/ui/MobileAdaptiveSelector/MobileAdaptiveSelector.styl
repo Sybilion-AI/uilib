@@ -1,0 +1,32 @@
+// Import shared styles
+@import 'lib/theme.styl'
+
+.root
+  position relative
+  display flex
+
+.selectTrigger
+  max-width 100%
+
+  &.disabledSelect
+    pointer-events none
+
+.selectContent
+  z-index 50
+
+.selectItem
+  cursor pointer
+
+  & > span:first-child
+    display flex
+    align-items center
+    gap var(--p-2)
+
+.selectItemIcon
+  width 20px
+  height 20px
+  object-fit cover
+
+.toggleGroupDesktop
+  display flex
+  flex-wrap wrap

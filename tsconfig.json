@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "strict": false,
+    "allowJs": true,
+    "allowUmdGlobalAccess": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "dist",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "declaration": true,
+    "declarationDir": "dist/esm/types",
+    "paths": {
+      "#uilib/*": ["./src/*"],
+      "uilib": ["./src"],
+      "uilib/*": ["./src/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./tests/mocks"],
+    "types": ["jest", "node"]
+  },
+  "include": ["index.ts", "src", "tests"],
+  "exclude": ["node_modules", "dist", "build", "src/docs/examples"],
+  "files": ["src/declarations.d.ts"]
+}

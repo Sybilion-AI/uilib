@@ -1,0 +1,35 @@
+.root
+  z-index 1;
+  position relative
+  display flex
+  align-items center
+  // gap var(--p-2)
+
+  flex-grow 1
+  margin 0 var(--p-2)
+
+.toggler
+  position absolute
+  z-index 2
+  right 0
+  border-radius 30px
+  transform translateY(-22px)
+  opacity .5
+  transition none
+
+  &:hover
+    opacity 1
+
+.isOpen
+  padding var(--p-1) 0
+  // border-top 1px solid var(--border)
+
+  .toggler
+    position relative
+    transform translateY(0)
+
+.content
+  display flex
+  gap var(--p-2)
+  flex-grow 1
+

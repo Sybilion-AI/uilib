@@ -1,0 +1,28 @@
+@import 'lib/theme.styl'
+
+$md = 768px
+
+.timeRangeContainer
+  display flex
+
+.timeRangeToggleGroup
+  display none
+
+  @media (min-width: $md)
+    display flex
+
+.timeRangeSelectTrigger
+  display flex
+  width 10rem
+
+  @media (min-width: $md)
+    display none
+
+.timeRangeSelectContent
+  border-radius 0.75rem
+
+.timeRangeToggleItem
+  padding var(--p-2) var(--p-3)
+
+.timeRangeSelectItem
+  border-radius 0.5rem

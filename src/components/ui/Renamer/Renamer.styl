@@ -1,0 +1,22 @@
+.root
+  display flex
+  align-items center
+
+.value
+  padding-right var(--p-2)
+
+.input
+  label
+    font-size 18px !important
+    border-radius var(--p-2) !important
+
+.empty .input label
+  background-color var(--accent) / 0.1
+
+.button
+  padding-left 0
+  opacity 0.5
+  transition opacity 0.2s ease-out
+
+  .root:hover &
+    opacity 1

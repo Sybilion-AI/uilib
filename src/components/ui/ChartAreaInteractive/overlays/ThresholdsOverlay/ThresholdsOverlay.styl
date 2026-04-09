@@ -1,0 +1,21 @@
+
+.line
+  position absolute
+  left 0
+  width 100%
+  height 1px
+  translateY(-50px)
+
+  &::before
+    content ''
+    z-index 4
+    position absolute
+    pointer-events none
+    height 1px
+    width 100%
+    left 0
+    background-color var(--sb-cyan-400)
+
+.centeredButton
+  transform translate(-50%, -50%) !important
+

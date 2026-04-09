@@ -1,0 +1,66 @@
+@import 'lib/theme.styl'
+
+:global(:root)
+  --chart-height: 586px
+
+  @media (max-width: unit(MOBILE, 'px'))
+    --chart-height: 300px
+
+// Loading spinner styles
+.loadingSpinner
+  width 1.5rem
+  height 1.5rem
+  border 2px solid var(--muted-foreground) // 0.2
+  border-top-color var(--muted-foreground) // 0.6
+  border-radius 9999px
+  animation spin 1s linear infinite
+
+@keyframes spin
+  to
+    transform rotate(360deg)
+
+@keyframes fadeIn
+  from
+    opacity 0
+  to
+    opacity 1
+
+// Container styles
+.chartHeaderContainer
+  display flex
+  align-items center
+  justify-content space-between
+  flex-wrap wrap
+  gap var(--p-2)
+  margin-bottom 1rem
+
+.chartContainerWrapper
+  position relative
+
+// Chart area styles
+.chartContainer
+  // z-index 11
+  // position relative
+  aspect-ratio auto
+  height var(--chart-height)
+  width 100%
+  transition opacity 300ms ease-out
+
+  .loading &
+    opacity 0.3
+    pointer-events none
+
+  :global(.recharts-legend-item)
+    margin-right var(--p-6) !important
+    cursor pointer
+
+
+// Chart overlay and pin styles
+.overlay
+  position absolute
+  inset 0
+  margin var(--p-5) var(--p-8) var(--p-24) var(--p-12)
+
+@media (max-width: unit(MOBILE, 'px'))
+  .overlay
+    height 230px !important

@@ -1,0 +1,33 @@
+.root
+  display inline-flex
+  align-items center
+  gap var(--p-3)
+  height var(--p-5)
+
+// .sidebarTrigger
+
+.separator
+  flex-shrink 0
+  height 14px
+  width 14px
+  color var(--sb-slate-300)
+
+  &.line
+    width 1px
+    height 100%
+    background-color var(--border)
+    margin 0 var(--p-3)
+
+.item
+  display flex
+  align-items center
+  flex-shrink 0
+  gap var(--p-3)
+  font-size var(--text-sm)
+  color var(--muted-foreground)
+
+  &:last-child
+    color var(--foreground)
+
+  a&:hover
+    text-decoration underline

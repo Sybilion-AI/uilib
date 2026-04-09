@@ -1,0 +1,68 @@
+.root
+  display flex
+  align-items center
+  justify-content flex-start
+  flex-wrap wrap
+  // margin-left calc(var(--p-2) * -1)
+
+.variant-default.single
+  background-color var(--background)
+  border-radius var(--p-4)
+  padding 0 var(--p-2)
+
+.item
+  display flex
+  align-items center
+  gap var(--p-2)
+  margin var(--p-1)
+
+  cursor pointer
+  user-select none
+  transition opacity 0.2s ease
+
+  &:hover
+  &.disabled
+    opacity 0.5
+
+  &.disabled:hover
+    opacity 0.8
+
+  &.historical
+    pointer-events none
+
+  &.dimmed
+    opacity 0.5
+
+.icon
+  width 16px
+  height 16px
+  flex-shrink 0
+  position relative
+  display flex
+  align-items center
+  justify-content center
+
+.label
+  flex-grow 1
+  font-size var(--text-xs)
+  white-space nowrap
+
+.selectItemContent
+  display flex
+  align-items center
+  gap var(--p-2)
+  width 100%
+
+.selectTrigger
+  min-width auto
+  height auto
+  font-size var(--text-xs)
+
+.selectTriggerLabelWithId
+  display flex
+
+.itemLabelWithId
+  flex-grow 1
+  min-width 0
+  display flex
+  align-items center

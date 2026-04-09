@@ -1,0 +1,107 @@
+@import 'lib/theme.styl'
+
+.root
+  display flex
+  flex-direction column
+  gap var(--p-4)
+  max-height 100%
+  border-radius 20px
+  // border 1px solid var(--border)
+  background-color var(--card)
+  color var(--card-foreground)
+  position relative
+
+  &.padding-s
+    padding var(--p-4)
+  &.padding-m
+    padding var(--p-6)
+  &.padding-l
+    padding var(--p-8)
+
+.header
+  display flex
+  align-items flex-start
+  justify-content space-between
+  gap var(--p-4)
+
+  font-size var(--text-base)
+
+  &:has([data-slot="card-action"])
+    grid-template-columns 1fr auto
+
+.icon
+  display flex
+  align-items center
+  justify-content center
+  width var(--p-12)
+  height var(--p-12)
+  border-radius calc(var(--p-4) - 2px)
+  flex-shrink 0
+  box-shadow inset 0 0 0 1px var(--border)
+
+  &.withBackground
+    background var(--page-color)
+    box-shadow none
+
+  & > img
+  & > svg
+    width var(--p-5)
+    height var(--p-5)
+
+.headerText
+  flex-grow 1
+  overflow hidden
+
+.scroll
+  max-height 100%
+  overflow hidden
+  width calc(100% + var(--p-6))
+  padding-right var(--p-6)
+
+  & [data-slot="card-content"]
+    padding-right 1px
+
+// content:
+.centered
+.fullHeight
+  display flex
+  flex-direction column
+.centered
+  align-items center
+  justify-content center
+.fullHeight
+  flex-grow 1
+
+.title
+.description
+  line-clamp(2)
+
+.title
+  font-size var(--text-lg)
+  font-weight 500
+  line-height var(--p-7)
+  overflow hidden
+
+.description
+  max-width 100%
+  word-break break-word
+
+  font-size var(--text-sm)
+  color var(--muted-foreground)
+
+.action
+  grid-column-start 2
+  grid-row-span 2
+  grid-row-start 1
+  align-self start
+  justify-self end
+
+.footer
+  display flex
+  align-items center
+  justify-content space-between
+  flex-shrink 0
+  overflow hidden
+
+  &:global(.border-t)
+    padding-top 24px

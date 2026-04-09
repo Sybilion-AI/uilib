@@ -1,0 +1,38 @@
+
+// Container styles for ToggleGroup
+.container
+  display flex
+  width fit-content
+  align-items center
+  border-radius var(--p-6)
+  gap var(--p-1)
+  // background-color var(--muted-50)
+  transition opacity 100ms ease-out
+  font-weight 600
+
+  &[data-disabled]
+    pointer-events none
+    opacity 0.5
+
+// Item styles for ToggleGroupItem
+.item
+  flex-shrink 0
+  border-radius var(--p-4)
+  box-shadow none
+  border none
+  transition all 0.15s ease-in-out
+  color var(--muted-foreground)
+
+  &:focus
+    z-index 10
+
+  &:focus-visible
+    z-index 10
+
+  &[data-state='on']
+    border-radius var(--p-6)
+    color var(--foreground)
+
+  &[data-disabled]
+    pointer-events none
+    opacity 0.5
