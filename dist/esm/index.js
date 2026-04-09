@@ -36,6 +36,7 @@ export { Logo } from './components/ui/Logo/Logo.js';
 export { MobileAdaptiveSelector } from './components/ui/MobileAdaptiveSelector/MobileAdaptiveSelector.js';
 export { NumberControl } from './components/ui/NumberControl/NumberControl.js';
 export { PageHeader } from './components/ui/Page/PageHeader/PageHeader.js';
+export { PageEmptyCanvas } from './components/ui/Page/PageEmptyCanvas/PageEmptyCanvas.js';
 export { PageContent } from './components/ui/Page/PageContent/PageContent.js';
 export { PageScroll } from './components/ui/Page/PageScroll/PageScroll.js';
 export { PageXScroll } from './components/ui/Page/PageXScroll/PageXScroll.js';
