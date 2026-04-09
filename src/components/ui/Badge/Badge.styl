@@ -1,0 +1,95 @@
+.root
+  display inline-flex
+  align-items center
+  justify-content center
+  width fit-content
+  flex-shrink 0
+  white-space nowrap
+  gap 0.375rem
+  padding 2px var(--p-2)
+  border-radius 0.75rem
+  border-color transparent
+  font-size 0.75rem
+  line-height 1rem
+  font-family var(--font-family-body)
+  font-weight 400
+  overflow hidden
+  transition background-color 0.2s, color 0.2s
+
+  &.squared
+    border-radius var(--p-1)
+
+  & > svg
+    width 0.75rem
+    height 0.75rem
+    pointer-events none
+
+  // Default variant
+  &.variant-default
+    background-color var(--sb-slate-50)
+    color var(--sb-slate-600)
+
+    a&:hover
+      background-color var(--sb-slate-100)
+
+    :global(.dark) &
+      background-color var(--sb-slate-900)
+      color var(--sb-slate-400)
+
+      a&:hover
+        background-color var(--sb-slate-800)
+
+  // Outline variant
+  &.variant-outline
+    background-color transparent
+    border 1px solid var(--border)
+    color var(--foreground)
+
+    a&:hover
+      background-color var(--accent)
+      color var(--accent-foreground)
+
+  // Red variant
+  &.variant-red
+    background-color var(--sb-red-50)
+    color var(--sb-red-600)
+
+    a&:hover
+      background-color var(--sb-red-100)
+
+    :global(.dark) &
+      background-color var(--sb-red-900)
+      color var(--sb-red-400)
+
+      a&:hover
+        background-color var(--sb-red-800)
+
+  // Green variant
+  &.variant-green
+    background-color var(--sb-green-50)
+    color var(--sb-green-600)
+
+    a&:hover
+      background-color var(--sb-green-100)
+
+    :global(.dark) &
+      background-color var(--sb-green-900)
+      color var(--sb-green-400)
+
+      a&:hover
+        background-color var(--sb-green-800)
+
+  // Yellow variant
+  &.variant-yellow
+    background-color var(--sb-yellow-50)
+    color var(--sb-yellow-600)
+
+    a&:hover
+      background-color var(--sb-yellow-100)
+
+    :global(.dark) &
+      background-color var(--sb-yellow-900)
+      color var(--sb-yellow-400)
+
+      a&:hover
+        background-color var(--sb-yellow-800)

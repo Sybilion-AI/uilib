@@ -1,0 +1,41 @@
+.root
+  // position fixed
+  width 100%
+  bottom 160px
+
+.inlineRoot
+  position relative
+  width 100%
+  margin-top var(--p-6)
+
+.inner
+  display flex
+  flex-wrap wrap
+  gap 8px
+  padding var(--p-2) var(--p-6) var(--p-3)
+  background-color var(--background)
+
+.innerInline
+  background-color transparent
+
+.item
+  flex-shrink 0
+  max-width 300px
+  padding var(--p-3)
+
+  background none
+  border 1px solid var(--color-border)
+  border-radius var(--p-4)
+  cursor pointer
+  transition all 0.2s ease
+  text-align left
+  font-size var(--text-xs)
+  line-height 1.4
+  white-space break-spaces
+  color var(--color-text-primary)
+
+  &:hover
+    background var(--border) !important
+
+  :global(.dark) &
+    background-color var(--muted)

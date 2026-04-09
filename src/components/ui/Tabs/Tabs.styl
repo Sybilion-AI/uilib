@@ -1,0 +1,117 @@
+.root
+  display flex
+  flex-direction column
+  gap 0.5rem
+
+.list
+  display inline-flex
+  align-items center
+  justify-content center
+  height 48px
+  width fit-content
+  // background-color var(--muted)
+  color var(--muted-foreground)
+
+  &.fullWidth
+    width 100%
+
+  .variant-link > &
+    background-color transparent !important
+
+  .variant-button &
+    // background-color var(--muted-50)
+    border-radius 1.5rem // 24px
+    // padding 0.25rem // 4px
+    gap 0.25rem // 4px
+    box-shadow none
+    height auto
+
+.trigger
+  display inline-flex
+  flex 1
+  align-items center
+  justify-content center
+  gap 0.375rem
+  height calc(100% - 1px)
+  padding 0.25rem 0.5rem
+  border 1px solid transparent
+  border-radius 0.375rem
+  font-size var(--text-sm) //0.875rem
+  font-weight 500
+  white-space nowrap
+  text-transform capitalize
+  color var(--muted-foreground)
+  transition color 0.2s, box-shadow 0.2s
+  cursor pointer
+
+  &:focus-visible
+    outline 1px solid var(--ring)
+    outline-offset 0
+    border-color var(--ring)
+    box-shadow 0 0 0 3px var(--ring-50)
+
+  &:disabled
+    pointer-events none
+    opacity 0.5
+
+  &[data-state="active"]
+    background-color var(--background)
+    box-shadow 0 1px 2px 0 rgba(0, 0, 0, 0.05)
+
+  &[data-state="active"]
+  &:hover
+    color var(--foreground) !important
+
+  .darker &
+    background-color var(--muted)
+
+  .variant-button .list &
+    flex-shrink 0
+
+    padding var(--p-1) var(--p-3)
+
+    border-radius var(--p-4)
+    box-shadow none
+    border none
+    transition all 0.15s ease-in-out
+
+    font-weight 600
+    color var(--muted-foreground)
+
+    &[data-state="active"]
+      border-radius var(--p-6)
+      color var(--foreground)
+      box-shadow 0 1px 2px 0 rgba(0, 0, 0, 0.05)
+
+  .variant-link > .list &
+    background-color transparent !important
+    border 0 !important
+    padding 12px 16px
+    border-radius 0 !important
+    box-shadow 0 !important
+    font-size 16px
+
+    &[data-state="active"]
+      box-shadow 0 3px 0 -1px var(--sb-cyan-400) !important
+
+
+  & svg
+    pointer-events none
+    flex-shrink 0
+
+  & svg:not([class*="size-"])
+    width 1rem
+    height 1rem
+
+  :global(.dark) &
+    color var(--muted-foreground)
+
+    &[data-state="active"]
+      background-color var(--input-30)
+      border-color var(--input)
+      color var(--foreground)
+
+.content
+  flex 1
+  outline none
+

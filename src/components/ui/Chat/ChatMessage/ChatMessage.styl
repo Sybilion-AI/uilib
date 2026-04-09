@@ -1,0 +1,182 @@
+.root
+  display flex
+  flex-direction column
+  gap var(--p-1)
+
+  padding var(--p-6)
+  background var(--bg-secondary)
+
+.text
+  max-width 100%
+  // padding 0 var(--p-4)
+  font-size var(--text-sm)
+  color var(--text-secondary)
+  width fit-content
+  user-select text
+
+.role-user
+  align-items flex-end
+
+  .text
+    padding var(--p-3) var(--p-4)
+
+    background-color var(--sb-slate-100)
+    border-radius var(--p-4)
+    border-bottom-right-radius 0
+
+    :global(.dark) &
+      background-color var(--sb-gray-800)
+
+.role-system
+  align-items center
+
+  .text
+    width 100%
+    font-size var(--text-xs)
+    color var(--muted-foreground)
+
+.role-assistant
+  .text
+    width 100%
+
+  h3
+    line-height 2.4
+
+  h4
+    line-height 2.2
+    font-size 1.1em
+    font-weight 600
+
+  .bullet
+    display inline-block
+    margin-right 6px
+    margin-left 4px
+
+    &::before
+      content '•'
+      display inline-block
+      color var(--text-secondary)
+
+  .scrollHorizontal
+    max-width 100%
+
+  table
+    margin var(--p-4) 0
+    border-collapse collapse
+    border-spacing 0
+    border-radius var(--p-2)
+    border 1px solid var(--border)
+    overflow hidden
+
+    td
+    th
+      min-width 100px
+      padding var(--p-1)
+      border 1px solid var(--border)
+
+    th
+      text-align left
+
+  ul
+  ol
+    padding-left var(--p-4)
+
+  ul
+    list-style-type disc
+  ol
+    list-style-type decimal
+
+  .datasetAppLink
+    display inline-flex
+    align-items center
+    gap 6px
+    max-width 100%
+    vertical-align middle
+
+    padding 2px 6px 2px 4px
+    margin 1px
+
+    border-radius 8px
+    border 1px dashed var(--sb-slate-300)
+    font-size var(--text-xs)
+    color var(--foreground)
+    text-decoration none
+
+    &:hover
+      border-style solid
+      border-color var(--sb-slate-400)
+      background-color var(--sb-slate-50)
+
+    :global(.dark) &
+      border-color var(--sb-gray-600)
+
+      &:hover
+        background-color var(--sb-gray-900)
+
+  .datasetAppLinkLabel
+    min-width 0
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
+
+  .quickReplyWrap
+    display inline-block
+    vertical-align middle
+    margin var(--p-1) var(--p-1) var(--p-1) 0
+
+  .downloadButtons
+    display flex
+    gap var(--p-2)
+    margin-top var(--p-4)
+
+  .downloadCard
+    display flex
+    align-items center
+    gap var(--p-4)
+    padding var(--p-3)
+    padding-right var(--p-4)
+    margin-top var(--p-3)
+    background-color var(--background)
+    width fit-content
+    // border 1px solid var(--border)
+    box-shadow 0 0 0 1px var(--border)
+    border-radius var(--p-3)
+    cursor pointer
+    transition all 150ms
+
+    &:hover
+      background-color var(--sb-gray-50)
+      border-color var(--border)
+
+    :global(.dark) &
+      background-color var(--sb-gray-900)
+      border-color var(--border)
+
+      &:hover
+        background-color var(--sb-gray-800)
+
+  .downloadCardIcon
+    display flex
+    align-items center
+    justify-content center
+    width 32px
+    height 32px
+    border-radius var(--p-2)
+    flex-shrink 0
+
+  .downloadCardContent
+    display flex
+    flex-direction column
+    // gap var(--p-1)
+    flex 1
+    min-width 0
+
+  .downloadCardTitle
+    font-size var(--text-base)
+    font-weight 600
+    line-height 1.4
+
+  .downloadCardSubtitle
+    font-size var(--text-sm)
+    color var(--muted-foreground)
+    line-height 1.4

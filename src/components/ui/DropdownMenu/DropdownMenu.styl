@@ -1,0 +1,331 @@
+@import '../../../lib/theme.styl';
+
+.content
+  z-index 50
+  min-width 8rem
+  max-height var(--radix-dropdown-menu-content-available-height)
+  padding var(--p-1)
+  border-radius var(--p-4)
+  border 1px solid var(--border)
+  background-color var(--popover)
+  color var(--popover-foreground)
+  overflow-x hidden
+  overflow-y auto
+  transform-origin var(--radix-dropdown-menu-content-transform-origin)
+
+  &.elevation-sm
+    box-shadow 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)
+  &.elevation-md
+    box-shadow 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)
+  &.elevation-lg
+    box-shadow 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)
+
+  &[data-state="open"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out
+
+  &[data-state="closed"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+  &[data-state="open"][data-side="bottom"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-top 0.15s ease-out
+
+  &[data-state="open"][data-side="left"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-right 0.15s ease-out
+
+  &[data-state="open"][data-side="right"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-left 0.15s ease-out
+
+  &[data-state="open"][data-side="top"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-bottom 0.15s ease-out
+
+  &[data-state="closed"][data-side="bottom"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+  &[data-state="closed"][data-side="left"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+  &[data-state="closed"][data-side="right"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+  &[data-state="closed"][data-side="top"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+.item
+  position relative
+  display flex
+  align-items center
+  gap var(--p-2)
+  padding 6px var(--p-2)
+  border-radius var(--p-1)
+  font-size 0.875rem
+  outline 2px solid transparent
+  outline-offset 2px
+  user-select none
+  cursor: pointer;
+
+  a&
+    text-decoration: none;
+    color: inherit;
+
+  &:focus
+    background-color var(--accent)
+    color var(--accent-foreground)
+
+  &:first-child
+    border-top-left-radius var(--p-3)
+    border-top-right-radius var(--p-3)
+  &:last-child
+    border-bottom-left-radius var(--p-3)
+    border-bottom-right-radius var(--p-3)
+
+  [role="group"] &
+    border-radius 0
+  [role="group"]:first-child &:first-child
+    border-top-left-radius var(--p-3)
+    border-top-right-radius var(--p-3)
+  [role="group"]:last-child &:last-child
+    border-bottom-left-radius var(--p-3)
+    border-bottom-right-radius var(--p-3)
+
+  &[data-variant="destructive"]
+    color var(--destructive)
+
+    &:focus
+      background-color var(--destructive-100)
+      color var(--destructive)
+
+    svg
+      color var(--destructive) !important
+
+  :global(.dark) &[data-variant="destructive"]:focus
+    background-color var(--destructive-200)
+
+  &[data-disabled]
+    pointer-events none
+    opacity 0.5
+
+  &[data-inset]
+    padding-left var(--p-8)
+
+  svg:not([class*='text-'])
+    color var(--muted-foreground)
+
+  svg
+    pointer-events none
+    flex-shrink 0
+
+  svg:not([class*='size-'])
+    width 1rem
+    height 1rem
+
+.checkboxItem
+  position relative
+  display flex
+  align-items center
+  gap var(--p-2)
+  padding 6px var(--p-2) 6px var(--p-8)
+  border-radius 0.125rem
+  font-size 0.875rem
+  outline 2px solid transparent
+  outline-offset 2px
+  user-select none
+
+  &:focus
+    background-color var(--accent)
+    color var(--accent-foreground)
+
+  &[data-disabled]
+    pointer-events none
+    opacity 0.5
+
+  svg
+    pointer-events none
+    flex-shrink 0
+
+  svg:not([class*='size-'])
+    width 1rem
+    height 1rem
+
+.radioItem
+  position relative
+  display flex
+  align-items center
+  gap var(--p-2)
+  padding 6px var(--p-2) 6px var(--p-8)
+  border-radius 0.125rem
+  font-size 0.875rem
+  outline 2px solid transparent
+  outline-offset 2px
+  user-select none
+
+  &:focus
+    background-color var(--accent)
+    color var(--accent-foreground)
+
+  &[data-disabled]
+    pointer-events none
+    opacity 0.5
+
+  svg
+    pointer-events none
+    flex-shrink 0
+
+  svg:not([class*='size-'])
+    width 1rem
+    height 1rem
+
+.label
+  // padding 6px var(--p-2)
+  font-size 0.875rem
+  font-weight 500
+
+  &[data-inset]
+    padding-left var(--p-8)
+
+.separator
+  margin-left calc(var(--p-1) * -1)
+  margin-right calc(var(--p-1) * -1)
+  margin-top var(--p-1)
+  margin-bottom var(--p-1)
+  height 1px
+  background-color var(--border)
+
+.shortcut
+  margin-left auto
+  font-size 0.75rem
+  letter-spacing 0.1em
+  color var(--muted-foreground)
+
+.subTrigger
+  display flex
+  align-items center
+  padding 6px var(--p-2)
+  border-radius 0.125rem
+  font-size 0.875rem
+  outline 2px solid transparent
+  outline-offset 2px
+  user-select none
+
+  &:focus
+    background-color var(--accent)
+    color var(--accent-foreground)
+
+  &[data-state="open"]
+    background-color var(--accent)
+    color var(--accent-foreground)
+
+  &[data-inset]
+    padding-left var(--p-8)
+
+.subContent
+  z-index 50
+  min-width 8rem
+  padding var(--p-1)
+  border-radius 0.375rem
+  border 1px solid var(--border)
+  background-color var(--popover)
+  color var(--popover-foreground)
+  box-shadow 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)
+  overflow hidden
+  transform-origin var(--radix-dropdown-menu-content-transform-origin)
+
+  &[data-state="open"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out
+
+  &[data-state="closed"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+  &[data-state="open"][data-side="bottom"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-top 0.15s ease-out
+
+  &[data-state="open"][data-side="left"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-right 0.15s ease-out
+
+  &[data-state="open"][data-side="right"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-left 0.15s ease-out
+
+  &[data-state="open"][data-side="top"]
+    animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-bottom 0.15s ease-out
+
+  &[data-state="closed"][data-side="bottom"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+  &[data-state="closed"][data-side="left"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+  &[data-state="closed"][data-side="right"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+  &[data-state="closed"][data-side="top"]
+    animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
+
+.indicator
+  pointer-events none
+  position absolute
+  left var(--p-2)
+  display flex
+  width 0.875rem
+  height 0.875rem
+  align-items center
+  justify-content center
+
+@keyframes fade-in
+  from
+    opacity 0
+  to
+    opacity 1
+
+@keyframes fade-out
+  from
+    opacity 1
+  to
+    opacity 0
+
+@keyframes zoom-in
+  from
+    opacity 0
+    transform scale(0.95)
+  to
+    opacity 1
+    transform scale(1)
+
+@keyframes zoom-out
+  from
+    opacity 1
+    transform scale(1)
+  to
+    opacity 0
+    transform scale(0.95)
+
+@keyframes slide-in-from-top
+  from
+    opacity 0
+    transform translateY(-0.5rem)
+  to
+    opacity 1
+    transform translateY(0)
+
+@keyframes slide-in-from-right
+  from
+    opacity 0
+    transform translateX(0.5rem)
+  to
+    opacity 1
+    transform translateX(0)
+
+@keyframes slide-in-from-left
+  from
+    opacity 0
+    transform translateX(-0.5rem)
+  to
+    opacity 1
+    transform translateX(0)
+
+@keyframes slide-in-from-bottom
+  from
+    opacity 0
+    transform translateY(0.5rem)
+  to
+    opacity 1
+    transform translateY(0)
+

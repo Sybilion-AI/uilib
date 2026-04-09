@@ -1,0 +1,67 @@
+.root
+  display flex
+  width 100%
+  min-width 0
+  background-color transparent
+  outline none
+  transition color, box-shadow
+  transition-duration 150ms
+
+  &.variant-default
+    padding 4px 12px
+    border-radius var(--p-4)
+    box-shadow 0 0 0 1px var(--border)
+
+    &:focus
+      box-shadow: inset 0 0 0 2px var(--sb-cyan-400);
+
+
+  &.size-sm
+    height 32px
+    font-size var(--text-xs)
+
+  &.size-md
+    height 40px
+    font-size var(--text-sm)
+
+  &.size-lg
+    height 48px
+    font-size var(--text-base)
+
+  &:placeholder
+    color var(--muted-foreground)
+
+  &::selection
+    background-color var(--primary)
+    color var(--primary-foreground)
+
+  &.variant-default
+    &:focus-visible
+      border-color var(--ring)
+      ring 3px var(--ring) / 0.5
+
+    &[aria-invalid="true"]
+      border-color var(--destructive)
+      ring 3px var(--destructive) / 0.2
+
+  &:disabled
+    pointer-events none
+    cursor not-allowed
+    opacity 0.5
+
+  &[type="file"]
+    &::file-selector-button
+      display inline-flex
+      height 28px
+      border 0
+      background-color transparent
+      font-size 14px
+      font-weight 500
+      color var(--foreground)
+
+  // Dark mode styles
+  :global(.dark) &
+    background-color var(--input) / 0.3
+
+    &[aria-invalid="true"]
+      ring 3px var(--destructive) / 0.4

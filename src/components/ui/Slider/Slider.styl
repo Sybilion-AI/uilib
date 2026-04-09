@@ -1,0 +1,77 @@
+.sliderRoot
+  position relative
+  display flex
+  align-items center
+  width 100%
+  height 20px
+  touch-action none
+  user-select none
+  overflow visible
+
+.sliderTrack
+  position relative
+  flex-grow 1
+  height calc(100% - 4px)
+  margin-left -8px
+  margin-right -8px
+  width calc(100% + 16px)
+  border-radius 20px
+  background-color var(--border)
+  cursor pointer
+  touch-action none
+
+  :global(.dark) &
+    background-color var(--input)
+
+.sliderRange
+  position absolute
+  height 100%
+  border-radius 20px
+  background-color var(--primary)
+
+.sliderThumbContainer
+  position absolute
+  left 8px
+  right 8px
+  height 100%
+  pointer-events none
+
+.sliderThumb
+  position absolute
+  top 50%
+  display block
+  width 16px
+  height 16px
+  border-radius 50%
+  background-color var(--card)
+  border 2px solid var(--primary)
+  box-shadow 0px 2px 4px rgba(0, 0, 0, 0.1)
+  cursor grab
+  transition transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out
+  outline none
+  transform translate(-50%, -50%)
+  touch-action none
+  user-select none
+  pointer-events auto
+
+  &:hover
+    transform translate(-50%, -50%) scale(1.1)
+    box-shadow 0px 4px 8px rgba(0, 0, 0, 0.15)
+
+  &:focus-visible
+    outline 2px solid var(--primary)
+    outline-offset 2px
+
+  &:active
+    cursor grabbing
+    transform translate(-50%, -50%) scale(1.15)
+    transition none
+
+.sliderRoot[data-dragging="true"] .sliderThumb
+  cursor grabbing
+  transform translate(-50%, -50%) scale(1.15)
+  transition none
+
+.sliderRoot[data-disabled="true"]
+  opacity 0.5
+  pointer-events none

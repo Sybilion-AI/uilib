@@ -1,0 +1,107 @@
+.root
+  touch-action pan-y
+
+// Chart overlay and pin styles
+.pinContainer
+  position absolute
+  inset 0
+  margin var(--p-5) var(--p-8) var(--p-24) var(--p-12)
+  pointer-events none
+  user-select none
+  transition transform 200ms ease-out, z-index 0ms
+  z-index 2
+  height calc(var(--chart-height) - 70px) // 520px
+  touch-action pan-y
+
+  .pinHovered &
+    z-index 10
+
+.pinLineBase
+  position absolute
+  height 100%
+  width 3px
+  pointer-events none
+
+  &::before
+    content ''
+    position absolute
+    top -8px
+    left -16px
+    width 36px
+    height 36px
+    box-shadow 0 4px 6px -1px var(--shadow-color)
+    border-radius 50%
+    z-index -1
+
+  &::after
+    content ''
+    z-index 1
+    position absolute
+    top 0
+    left 0
+    width 100%
+    bottom 0
+    transform translate3d(.5px, 0, 0)
+    background-color var(--background)
+    transition background-color 300ms ease-out
+    border-radius 12px
+
+  .pinDragging &::after
+    background-color var(--background-alpha-700)
+  .pinAnimating &
+    transition left 300ms ease-out
+
+.pinButton
+  position absolute
+  --offset -8px
+  top -18px
+  left var(--offset)
+  display flex
+  padding 10px
+  margin-left var(--offset)
+  align-items center
+  justify-content center
+  border-radius 9999px
+  transition transform 200ms ease-out
+  background-color var(--background)
+  cursor grab
+  user-select none
+  pointer-events auto
+  touch-action none
+
+  .pinDragging &
+    transition none
+
+  .pinHovered &
+    transform scale(1.1)
+
+  &:active
+    cursor grabbing
+
+.pinIcon
+  width 16px
+  height 16px
+  color var(--foreground)
+
+
+// Hover placeholder for better pin access - rendered on top of all chart layers
+.pinPlaceholder
+  position absolute
+  top var(--p-5)
+  width 72px
+  height 72px
+  margin-left -40px
+  margin-top -40px
+  z-index 20
+  pointer-events auto
+  cursor grab
+  touch-action none
+  // Debug: uncomment to visualize
+  // background-color rgba(255, 0, 0, 0.1)
+
+  .pinAnimating &
+    transition left 300ms ease-out
+
+  &:active
+    cursor grabbing
+

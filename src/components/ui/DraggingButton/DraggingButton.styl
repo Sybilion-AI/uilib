@@ -1,0 +1,74 @@
+@import '../../../lib/theme.styl'
+
+.root
+  z-index 10
+  position absolute
+  top 0
+  right 0
+
+  display flex
+  align-items center
+  justify-content center
+
+  background var(--background)
+  border 1px solid var(--input)
+  border-radius 9999px
+  cursor grab
+  pointer-events auto
+  touch-action none
+
+  transform translate(50%, -50%)
+  // transition all 0.2s
+
+  &::before
+    content ''
+    position absolute
+    top -50%
+    left -50%
+    width 200%
+    height 200%
+    border-radius inherit
+
+
+  @media (max-width: unit(MOBILE, 'px'))
+    transform translate(50%, -50%) scale(1.5)
+
+
+  &:hover
+    border-color var(--foreground)
+    background var(--accent)
+
+  &:active
+    cursor grabbing
+    border-color unset !important
+
+.size-md
+  width 36px
+  height 36px
+
+  svg
+    width 16px
+    height 16px
+    color var(--foreground)
+
+.size-sm
+  width 20px
+  height 20px
+
+  svg
+    width 10px
+    height 10px
+    color var(--foreground)
+
+.size-lg
+  width 44px
+  height 44px
+
+  svg
+    width 18px
+    height 18px
+    color var(--foreground)
+
+.dragging
+  cursor grabbing
+

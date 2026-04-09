@@ -1,0 +1,22 @@
+.root
+  position relative
+  height 4px
+  flex-shrink 0
+  width 100%
+  overflow hidden
+  background-color var(--sb-slate-100)
+  border-radius 20px
+
+  :global(.dark) &
+    background-color var(--sb-gray-800)
+
+.indicator
+  height 100%
+  width 100%
+  flex-grow 1
+  background var(--muted-foreground)
+  transition all .3s ease-out
+  border-radius inherit
+  border-top-right-radius 0
+  border-bottom-right-radius 0
+

@@ -1,0 +1,131 @@
+// Base button styles
+.root
+  display inline-flex
+  align-items center
+  justify-content center
+  gap 8px
+  flex-shrink 0
+  white-space nowrap
+  border-radius 14px
+  font-family 'Manrope', sans-serif
+  font-size 14px
+  font-weight 500
+  line-height 20px
+  outline none
+  cursor pointer
+  transition all 150ms
+  border 0
+
+  &:disabled
+    pointer-events none
+    opacity 0.5
+
+  &:focus-visible
+    border-color var(--ring)
+    ring 3px var(--ring-50)
+
+  &[aria-invalid="true"]
+    border-color var(--destructive)
+    ring 3px var(--destructive-200)
+
+  // SVG icon styles
+  svg
+    pointer-events none
+    flex-shrink 0
+    // width 16px
+    // height 16px
+
+// Variant styles
+.default
+  background-color var(--primary)
+  color var(--primary-foreground)
+
+  &:hover
+    background-color var(--sb-gray-800)
+
+.destructive
+  background-color var(--destructive)
+  color white
+
+  &:hover
+    background-color var(--destructive-900)
+
+  &:focus-visible
+    ring 3px var(--destructive-200)
+
+  :global(.dark) &
+    background-color var(--destructive-600)
+
+    &:focus-visible
+      ring 3px var(--destructive-400)
+
+.outline
+  border 1px solid var(--border)
+  background-color var(--background)
+
+  &:hover
+    background-color var(--sb-gray-50)
+    border-color var(--border)
+
+  :global(.dark) &
+    background-color var(--sb-gray-900)
+    border-color var(--border)
+
+    &:hover
+      background-color var(--sb-gray-800)
+
+.secondary
+  background-color var(--secondary)
+  color var(--secondary-foreground)
+
+  &:hover
+    background-color var(--secondary-800)
+
+.ghost
+  &:hover
+    background-color var(--accent)
+    color var(--accent-foreground)
+
+  :global(.dark) &:hover
+    background-color var(--accent-500)
+
+.link
+  color var(--primary)
+  text-decoration underline
+  text-underline-offset 4px
+
+  &:hover
+    text-decoration underline
+
+// Size styles
+.sizeMd
+  min-height 48px
+  padding 14px 16px
+
+  &:has(> svg)
+    padding-left 14px
+    padding-right 14px
+
+.sizeSm
+  height 36px
+  gap 6px
+  padding 0 12px
+  border-radius 14px
+
+  &:has(> svg)
+    padding-left 10px
+    padding-right 10px
+
+.sizeLg
+  height 40px
+  padding 0 24px
+  border-radius 14px
+
+  &:has(> svg)
+    padding-left 16px
+    padding-right 16px
+
+.sizeIcon
+  width 36px
+  height 36px
+  padding 0

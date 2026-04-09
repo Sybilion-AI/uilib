@@ -1,0 +1,661 @@
+@import '../../../lib/theme.styl';
+
+// Base sidebar wrapper styles (row: main app | chat panel mount)
+.sidebarWrapper
+  display flex
+  flex-direction row
+  align-items stretch
+  --welcome-alert-height: 44px;
+  height calc(100% - var(--welcome-alert-height))
+  width 100%
+  min-height 0
+
+  :global(#page-sidebar-actions)
+    min-height 100%
+
+  @media (max-width MOBILE)
+    flex-direction column
+    // Pin shell height so PageScroll (was 100vh) does not push chat below the viewport
+    height 100dvh
+    max-height 100dvh
+
+// Left: full app grid (PageScroll)
+.sidebarMainShell
+  flex 1
+  min-width 0
+  min-height 0
+  display flex
+  flex-direction column
+
+// Right: AI chat portal target
+.chatPanelMount
+  flex 0 0 var(--chat-panel-width, 0px)
+  width var(--chat-panel-width, 0px)
+  min-width 0
+  min-height 0
+  overflow hidden
+  border-left 1px solid var(--border)
+  background var(--background)
+
+  @media (max-width MOBILE)
+    flex 0 0 var(--chat-panel-height, 0px)
+    width 100%
+    height var(--chat-panel-height, 0px)
+    border-left none
+    border-top 1px solid var(--border)
+    transition flex-basis 0.2s ease, height 0.2s ease
+
+// Sidebar main container
+.sidebar
+  position fixed
+  height 0
+  --top-offset: -10px
+  --gap-top: calc(var(--header-height) + var(--top-offset))
+  top var(--gap-top)
+  align-self flex-start
+  display none
+  flex-direction column
+
+  width var(--sidebar-width)
+
+  color var(--sidebar-foreground)
+  // transition width 200ms ease-in-out
+
+  @media (min-width MOBILE)
+    &[data-state="expanded"]
+      display flex
+
+  &[data-collapsible="offcanvas"]
+    width 0
+    padding 0
+    overflow hidden
+
+// Sidebar trigger
+.sidebarTrigger
+  width var(--p-5)
+  height var(--p-5)
+  cursor pointer
+
+  svg
+    width 20px
+    height 20px
+
+// Sidebar rail
+.sidebarRail
+  position absolute
+  inset-y 0
+  z-index 20
+  display hidden
+  width 1rem
+  // transform translateX(-50%)
+  transition all ease-out
+  &:hover::after
+    background-color var(--sidebar-border)
+  &[data-side="left"]
+    right -1rem
+  &[data-side="right"]
+    left 0
+  &::after
+    content ""
+    position absolute
+    inset-y 0
+    left 50%
+    width 2px
+  @media (min-width 640px)
+    display flex
+  &[data-side="left"]
+    cursor w-resize
+  &[data-side="right"]
+    cursor e-resize
+  &[data-side="left"][data-state="collapsed"]
+    cursor e-resize
+  &[data-side="right"][data-state="collapsed"]
+    cursor w-resize
+  &[data-collapsible="offcanvas"]
+    transform translateX(0)
+    &:hover
+      background-color var(--sidebar)
+    &::after
+      left 100%
+  &[data-side="left"][data-collapsible="offcanvas"]
+    right -0.5rem
+  &[data-side="right"][data-collapsible="offcanvas"]
+    left -0.5rem
+
+// Sidebar resize handle
+.sidebarResizeHandle
+  position absolute
+  top -200px
+  // bottom 40px
+  height calc(100vh + 200px)
+  z-index 30
+  width 5px
+  border-radius 2.5px
+  user-select none
+  touch-action none
+  background-color transparent
+  transition opacity 150ms ease-out
+  background-color var(--page-color)
+  opacity 0
+
+  &::before
+    content ""
+    position absolute
+    right 0
+    height 100%
+    width 30px
+    cursor col-resize
+
+  &[data-side="left"]
+    right 2px
+  &[data-side="right"]
+    left 0
+  &:hover
+    opacity 1
+  &:active
+    opacity 0
+
+  .fullHeightResizer &
+    top -80px
+    height calc(100vh - var(--gap-top) * -1)
+
+// Sidebar input
+.sidebarInput
+  background-color var(--background)
+  height 2rem
+  width 100%
+  box-shadow none
+
+// Sidebar header
+.sidebarHeader
+  display flex
+  flex-direction column
+  gap 0
+  padding 0
+
+// Sidebar footer
+.sidebarFooter
+  display flex
+  flex-direction column
+  gap 0
+  padding 0
+
+// Sidebar separator
+.sidebarSeparator
+  background-color var(--sidebar-border)
+  margin-left 0
+  margin-right 0
+  width auto
+
+// Sidebar content
+.sidebarContent
+  position absolute
+  display flex
+  min-height 0
+  flex 1
+  flex-direction column
+  gap var(--p-16)
+  overflow auto
+
+  width 100%
+  max-height @height
+  height 100vh
+
+  @media (min-width MOBILE)
+    height calc(100vh - var(--gap-top))
+
+  &[data-collapsible="icon"]
+    overflow hidden
+
+// Sidebar group
+.sidebarGroup
+  position relative
+  display flex
+  width 100%
+  min-width 0
+  flex-direction column
+  padding 0
+  padding-top 40px
+
+// Sidebar group label
+.sidebarGroupLabel
+  color var(--sidebar-foreground)
+  opacity 0.7
+  display flex
+  height 2rem
+  flex-shrink 0
+  align-items center
+  border-radius 0.375rem
+  padding-left 0.5rem
+  padding-right 0.5rem
+  font-size 0.75rem
+  font-weight 500
+  outline none
+  transition margin 200ms ease-linear, opacity 200ms ease-linear
+  &:focus-visible
+    box-shadow 0 0 0 2px var(--sidebar-ring)
+  & > svg
+    width 1rem
+    height 1rem
+    flex-shrink 0
+  &[data-collapsible="icon"]
+    margin-top -2rem
+    opacity 0
+
+// Sidebar group action
+.sidebarGroupAction
+  color var(--sidebar-foreground)
+  position absolute
+  top 0.875rem
+  right 0.75rem
+  display flex
+  aspect-ratio 1
+  width 1.25rem
+  align-items center
+  justify-content center
+  border-radius 0.375rem
+  padding 0
+  outline none
+  transition transform
+  &:hover
+    background-color var(--sidebar-accent)
+    color var(--sidebar-accent-foreground)
+  &:focus-visible
+    box-shadow 0 0 0 2px var(--sidebar-ring)
+  & > svg
+    width 1rem
+    height 1rem
+    flex-shrink 0
+  &::after
+    content ""
+    position absolute
+    inset -0.5rem
+  @media (min-width 768px)
+    &::after
+      display none
+  &[data-collapsible="icon"]
+    display none
+
+// Sidebar group content
+.sidebarGroupContent
+  width 100%
+  font-size 0.875rem
+
+// Sidebar menu
+.sidebarMenu
+  display flex
+  flex-direction column
+  gap var(--p-4)
+  width 100%
+  min-width 0
+  padding 0 var(--p-11) var(--p-10) var(--p-8)
+
+  @media (max-width unit(MOBILE, 'px'))
+    padding-right var(--p-8)
+
+
+// Sidebar menu item
+.sidebarMenuItem
+  position relative
+  cursor pointer
+
+// Sidebar menu badge
+.sidebarMenuBadge
+  color var(--sidebar-foreground)
+  pointer-events none
+  position absolute
+  right 0.25rem
+  display flex
+  height 1.25rem
+  min-width 1.25rem
+  align-items center
+  justify-content center
+  border-radius 0.375rem
+  padding-left 0.25rem
+  padding-right 0.25rem
+  font-size 0.75rem
+  font-weight 500
+  user-select none
+  &[data-size="sm"]
+    top 0.25rem
+  &[data-size="md"]
+    top 0.375rem
+  &[data-size="lg"]
+    top 0.625rem
+  &[data-collapsible="icon"]
+    display none
+
+// Sidebar menu skeleton
+.sidebarMenuSkeleton
+  display flex
+  height 2rem
+  align-items center
+  gap 0.5rem
+  border-radius 0.375rem
+  padding-left 0.5rem
+  padding-right 0.5rem
+
+.sidebarMenuSkeletonIcon
+  width 1rem
+  height 1rem
+  border-radius 0.375rem
+
+.sidebarMenuSkeletonText
+  height 1rem
+  flex 1
+  max-width var(--skeleton-width)
+
+// Sidebar menu sub
+.sidebarMenuSub
+  display flex
+  flex-direction column
+  gap var(--p-2)
+
+  min-width 0
+  padding 0
+  padding-top var(--p-1)
+  margin-left 0
+  margin-right 0
+
+  border-color var(--sidebar-border)
+  transform translateX(1px)
+  border-left none
+  &[data-collapsible="icon"]
+    display none
+
+// Sidebar menu sub item
+.sidebarMenuSubItem
+  position relative
+
+  a:hover
+    text-decoration: none;
+
+// Sheet content sidebar
+.sheetContentSidebar
+  color var(--sidebar-foreground)
+  width var(--sidebar-width)
+  padding 0
+  & > button
+    display none
+
+  @media (max-width: MOBILE)
+    z-index 100
+
+// Sheet sidebar inner
+.sheetSidebarInner
+  display flex
+  height 100%
+  width 100%
+  flex-direction column
+  background-color var(--sidebar)
+
+// Sidebar none
+.sidebarNone
+  color var(--sidebar-foreground)
+  display flex
+  height 100%
+  width var(--sidebar-width)
+  flex-direction column
+
+// Variant styles
+.variant-floating
+  padding 0.5rem
+  &[data-collapsible="icon"]
+    width calc(var(--sidebar-width-icon) + 1rem + 2px)
+
+.variant-inset
+  &[data-collapsible="icon"]
+    width calc(var(--sidebar-width-icon) + 1rem + 2px)
+
+.variant-sidebar
+  &[data-collapsible="icon"]
+    width var(--sidebar-width-icon)
+  &[data-side="left"]
+    border-right 1px solid #e5e7eb
+  &[data-side="right"]
+    border-left 1px solid #e5e7eb
+
+.sidebarMenuButton > span
+.sidebarMenuSubButton > span
+  text-transform capitalize
+  min-width 0
+
+  &:first-child
+    flex-grow 1
+
+// Menu button variants
+.sidebarMenuButton
+  display flex
+  width 100%
+  align-items center
+  justify-content  flex-start
+  gap var(--p-2)
+  overflow hidden
+  border-radius var(--p-3)
+  padding var(--p-6) var(--p-3)
+  text-align left
+  font-size 0.875rem
+  outline none
+  cursor pointer
+  transition all
+
+  .sidebarMenuSubItem:hover &, .sidebarMenuSubItem:active &, .sidebarMenuSubItem[data-state="open"] &
+  // &:hover, &:active, &[data-state="open"]:hover
+    background-color var(--sidebar-accent)
+    color var(--sidebar-accent-foreground)
+
+  &:focus-visible
+    box-shadow 0 0 0 2px var(--sidebar-ring)
+
+  &:disabled, &[aria-disabled="true"]
+    pointer-events none
+    opacity 0.5
+
+  &[data-active="true"]
+    background-color var(--sidebar-accent)
+    font-weight 500
+    color var(--sidebar-accent-foreground)
+
+  &[data-collapsible="icon"]
+    width 2rem !important
+    height 2rem !important
+    padding 0.5rem !important
+
+  & > span
+    flex-grow 1
+    line-height 20px
+    white-space nowrap
+    overflow hidden
+
+  & > svg
+    width var(--p-5)
+    height var(--p-5)
+    flex-shrink 0
+
+  // Size variants
+  &.size-sm
+    height 1.75rem
+    font-size 0.75rem
+  &.size-md
+    height var(--p-12)
+    font-size 0.875rem
+  &.size-lg
+    height 3rem
+    font-size 0.875rem
+    &[data-collapsible="icon"]
+      padding 0 !important
+
+  // Variant styles
+  &.variant-outline
+    background-color var(--background)
+    box-shadow 0 0 0 1px var(--sidebar-border)
+    &:hover
+      background-color var(--sidebar-accent)
+      color var(--sidebar-accent-foreground)
+      box-shadow 0 0 0 1px var(--sidebar-accent)
+
+// Full-width primary CTA in sidebar (uses ui/Button variant=default; avoids nav hover conflicts)
+.sidebarMenuButtonCta
+  display flex
+  width 100%
+  justify-content flex-start
+  text-align left
+
+  & > svg
+    width var(--p-5)
+    height var(--p-5)
+    flex-shrink 0
+
+// Menu action variants
+.sidebarMenuAction
+  color var(--sidebar-foreground)
+  position absolute
+  top var(--p-2)
+  right var(--p-2)
+  display flex
+  aspect-ratio 1
+  width 1.25rem
+  align-items center
+  justify-content center
+  border-radius 0.375rem
+  padding 0
+  outline none
+  opacity 0
+  cursor pointer
+  transition transform
+
+  &::before
+    content ""
+    position absolute
+    right 0
+    width calc(100% + var(--p-4))
+    height 100%
+    background-image linear-gradient(to left, var(--sidebar-accent) 70%, transparent 100%)
+    transition opacity 0.2s ease-in-out
+    pointer-events none
+
+  .sidebarMenuSubItem:hover &
+    opacity 1
+
+  &:focus-visible
+    box-shadow 0 0 0 2px var(--sidebar-ring)
+
+  & > svg
+    pointer-events none
+    z-index 1
+    width 1rem
+    height 1rem
+    flex-shrink 0
+    opacity .5
+    transition opacity 0.2s ease-in-out
+
+  &:hover > svg
+    opacity 1
+
+  &::after
+    content ""
+    position absolute
+    inset -0.5rem
+    @media (min-width 768px)
+      display none
+
+  &[data-size="sm"]
+    top 0.25rem
+  &[data-size="md"]
+    top 0.375rem
+  &[data-size="lg"]
+    top 0.625rem
+
+  &[data-collapsible="icon"]
+    display none
+
+  &.showOnHover
+    &[data-active="true"]
+      color var(--sidebar-accent-foreground)
+    &[data-state="open"]
+      opacity 1
+    @media (min-width 768px)
+      opacity 0
+      &:focus-within, &:hover
+        opacity 1
+
+// Menu sub button variants
+.sidebarMenuSubButton
+  color var(--sidebar-foreground)
+  display flex
+  height var(--p-9)
+  min-width 0
+  transform translateX(-1px)
+  align-items center
+  gap var(--p-1)
+  overflow hidden
+  border-radius var(--p-3)
+  padding var(--p-1) var(--p-2)
+  margin-left var(--p-3)
+  outline none
+  cursor pointer
+
+  .sidebarMenuSubItem:hover &, .sidebarMenuSubItem:active &
+    background-color var(--sidebar-accent)
+    color var(--sidebar-accent-foreground)
+
+  &:focus-visible
+    box-shadow 0 0 0 2px var(--sidebar-ring)
+
+  &:disabled, &[aria-disabled="true"]
+    pointer-events none
+    opacity 0.5
+
+  &[data-active="true"]
+    background-color var(--sidebar-accent)
+    color var(--sidebar-accent-foreground)
+
+  &[data-collapsible="icon"]
+    display none
+
+  & > span:first-child
+    white-space nowrap
+    overflow hidden
+
+  & > svg
+    width 1rem
+    height 1rem
+    flex-shrink 0
+    color var(--sidebar-accent-foreground)
+
+  // Size variants
+  &.size-sm
+    font-size 0.75rem
+  &.size-md
+    font-size 0.875rem
+  &.size-lg
+    font-size 1rem
+
+// View Transition API: opacity cross-fade is the UA default on old/new pseudos.
+// Setting animation-name below replaces that default; keyframes keep opacity + add blur.
+
+@keyframes sidebarVtOld
+  from
+    opacity 1
+  to
+    opacity 0
+
+@keyframes sidebarVtNew
+  from
+    opacity 0
+  to
+    opacity 1
+
+:global(::view-transition-old(sidebar-gap)),
+:global(::view-transition-old(sidebar-container))
+  animation-name sidebarVtOld
+  animation-duration 200ms
+  animation-timing-function ease-out
+  transform translateZ(0)
+
+:global(::view-transition-new(sidebar-gap)),
+:global(::view-transition-new(sidebar-container))
+  animation-name sidebarVtNew
+  animation-duration 200ms
+  animation-timing-function ease-out
+  transform translateZ(0)

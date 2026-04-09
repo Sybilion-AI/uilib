@@ -1,0 +1,96 @@
+
+.root
+.chartContainer
+  min-height 100%
+
+.root
+  position relative
+  width 100%
+
+// Separate layers for proper z-index ordering
+.gridLayer
+  position absolute
+  z-index 1
+  pointer-events none
+
+  // Allow axis labels to be visible
+  :global
+    .recharts-cartesian-axis
+      z-index 1
+      pointer-events auto
+
+.chartLayer
+  position relative
+  inset 0
+  z-index 3
+  pointer-events auto
+
+  // Make the SVG background transparent so grid shows through
+  :global
+    .recharts-surface
+      background transparent
+
+    .recharts-layer
+      pointer-events none
+
+    .recharts-tooltip-wrapper
+      visibility visible !important
+
+// Hide axis labels in main chart layer (already shown in grid layer)
+.invisibleAxis
+  :global
+    .recharts-cartesian-axis-tick
+      visibility hidden
+
+
+// Legend styles
+.legend
+  position absolute
+  top 100%
+  width 100%
+
+.noLegend
+  display block
+
+.hideChartAxesLegend :global(.recharts-cartesian-axis-tick-label)
+  display none !important
+
+.chartLoadingContainer
+  display flex
+  width 100%
+  height var(--chart-height)
+  align-items center
+  justify-content center
+
+.loadingOverlay
+  position absolute
+  inset 0
+  z-index 10
+  height 100%
+  width 100%
+  opacity .5
+  transition opacity 0.1s ease-out
+  pointer-events none
+
+  [data-slot="skeleton"]
+    border-radius var(--p-4) !important
+
+
+  .loaded &
+    opacity 0
+
+.errorContainer
+  display flex
+  align-items center
+  justify-content center
+  min-height 250px
+  color var(--destructive)
+
+.errorMessage
+  color var(--destructive)
+
+.footer
+  display flex
+  align-items center
+  justify-content space-between
+  gap var(--p-2)

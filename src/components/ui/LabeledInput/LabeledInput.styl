@@ -1,0 +1,32 @@
+.root
+  position relative
+
+.label
+  margin-bottom 0
+  padding-bottom var(--p-1)
+
+.inputWrapper
+  position relative
+
+.input
+  width 100%
+  padding-right 32px
+  .size-sm &
+    height 32px
+    font-size var(--text-xs)
+  .size-md &
+    height 40px
+    font-size var(--text-sm)
+  .size-lg &
+    font-size var(--text-base)
+    height 48px
+
+.checkmark
+  position absolute
+  right 8px
+  top 50%
+  transform translateY(-50%)
+  width 20px
+  height 20px
+  color #22c55e
+  pointer-events none

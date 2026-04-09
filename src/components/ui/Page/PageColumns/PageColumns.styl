@@ -1,0 +1,28 @@
+@import 'lib/theme.styl'
+
+.root
+  display flex
+  // flex-direction column
+  gap var(--p-10)
+  width 100%
+  // margin 0 var(--page-x-padding)
+
+.column
+  position relative
+  flex-shrink 1
+  min-width 360px
+  max-width 360px
+
+@media (max-width: MOBILE)
+  .root
+    flex-direction column
+  .column
+    min-width 100%
+    max-width 100%
+
+.fillLeft .column:first-child
+.fillRight .column:last-child
+.fillAll .column
+  flex-grow 1
+  max-width unset
+

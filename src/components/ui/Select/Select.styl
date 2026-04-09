@@ -1,0 +1,321 @@
+.selectTrigger
+  position relative
+  display flex
+  width fit-content
+  align-items center
+  justify-content space-between
+  gap var(--p-1)
+
+  max-width calc(90vw - var(--page-x-padding) * 2)
+  overflow hidden
+
+  padding var(--p-1) var(--p-3)
+  // Match ToggleGroup_item styling
+  border-radius var(--p-4)
+  border none
+  box-shadow none
+  background-color var(--background)
+  font-size var(--text-sm)
+  font-weight 500
+  color var(--foreground)
+  white-space nowrap
+  outline none
+  cursor pointer
+  transition all 0.2s ease-in-out
+
+  // fade complex (non-text) content:
+  &::before
+    position absolute
+    left 60vw
+    content ''
+    display block
+    width var(--page-x-padding)
+    min-width var(--page-x-padding)
+    background-image linear-gradient(to right, transparent, var(--background))
+    height 100%
+    min-height 100%
+    width 20%
+
+  &[aria-expanded="true"]::before
+    display none
+
+  &.darker
+    background-color var(--muted)
+
+  &:hover
+    box-shadow 0 0 0 2px var(--background)
+    // color var(--muted-foreground)
+
+  &[data-size="md"]
+    height 1.75rem
+
+  &[data-size="sm"]
+    height 1.75rem
+    font-size var(--text-xs)
+
+  &[data-size="lg"]
+    height 2.25rem
+    font-size var(--text-sm)
+
+  &[data-placeholder]
+    color var(--muted-foreground)
+
+  &:focus-visible
+    border-color var(--ring)
+
+  &[aria-invalid="true"]
+    border-color var(--destructive)
+
+  &:disabled
+    cursor not-allowed
+    opacity 0.5
+
+  :global([data-slot="select-value"])
+    display flex
+    align-items center
+    gap var(--p-2)
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
+
+  svg
+    pointer-events none
+    flex-shrink 0
+
+    &:not([class*='text-'])
+      color var(--foreground)
+
+    &:not([class*='size-'])
+      width 1rem
+      height 1rem
+
+  :global(.dark) &:not(.darker)
+    background-color var(--background)
+
+    &:hover
+      background-color var(--background-alpha-800)
+
+
+.clear
+  padding 0
+  border none
+  background-color transparent
+  box-shadow none
+
+  &:focus-visible
+    border none
+    box-shadow none
+
+  @media (prefers-color-scheme: dark)
+    background-color transparent
+
+    &:hover
+      background-color transparent
+
+.selectContent
+  position relative
+  z-index 1100
+  min-width 8rem
+  max-height var(--radix-select-content-available-height)
+  // Match Tooltip tooltipContent styling
+  background-color var(--popover)
+  border-radius var(--p-4)
+  box-shadow 0 10px 15px -3px rgba(0, 0, 0, 0.1)
+  border 1px solid var(--border)
+  color var(--popover-foreground)
+  overflow-x hidden
+  overflow-y auto
+  transform-origin var(--radix-select-content-transform-origin)
+
+  &[data-state="open"]
+    animation fadeIn 250ms, zoomIn 100ms
+
+  &[data-state="closed"]
+    animation fadeOut 250ms, zoomOut 100ms
+
+  &[data-side="bottom"]
+    animation fadeIn 250ms, slideInFromTop 100ms
+
+  &[data-side="left"]
+    animation fadeIn 250ms, slideInFromRight 100ms
+
+  &[data-side="right"]
+    animation fadeIn 250ms, slideInFromLeft 100ms
+
+  &[data-side="top"]
+    animation fadeIn 250ms, slideInFromBottom 100ms
+
+.selectContentPopper
+  &[data-side="bottom"]
+    transform translateY(0.25rem)
+
+  &[data-side="left"]
+    transform translateX(-0.25rem)
+
+  &[data-side="right"]
+    transform translateX(0.25rem)
+
+  &[data-side="top"]
+    transform translateY(-0.25rem)
+
+.selectViewport
+  padding var(--p-1)
+
+.selectViewportPopper
+  height var(--radix-select-trigger-height)
+  width 100%
+  min-width var(--radix-select-trigger-width)
+  scroll-margin var(--p-1) 0
+
+.selectLabel
+  padding var(--p-2) var(--p-2)
+  padding-top var(--p-2)
+  padding-bottom var(--p-2)
+  font-size var(--text-xs)
+  color var(--muted-foreground)
+
+.selectItem
+  position relative
+  display flex
+  flex-grow 1
+  width 100%
+  cursor default
+  align-items center
+  gap var(--p-2)
+  padding var(--p-1) var(--p-2)
+  // padding-right var(--p-8)
+  border-radius var(--radius-sm)
+  font-size var(--text-sm)
+  outline none
+  user-select none
+
+  &.selected
+    font-weight 600
+    background-color var(--accent)
+
+  &:first-child
+    border-top-left-radius var(--p-3)
+    border-top-right-radius var(--p-3)
+
+  &:last-child
+    border-bottom-left-radius var(--p-3)
+    border-bottom-right-radius var(--p-3)
+
+  &:focus
+    background-color var(--accent)
+    color var(--accent-foreground)
+
+  &[data-disabled]
+    pointer-events none
+    opacity 0.5
+
+  svg
+    pointer-events none
+    flex-shrink 0
+
+    &:not([class*='text-'])
+      color var(--muted-foreground)
+
+    &:not([class*='size-'])
+      width 1rem
+      height 1rem
+
+  span
+    display flex
+    width 100%
+    flex-grow 1
+
+  span:last-child
+    display flex
+    align-items center
+    gap var(--p-2)
+
+.selectItemText
+  display flex
+  align-items center
+  gap var(--p-1)
+
+.selectItemIndicatorContainer
+  position absolute
+  right 0
+  display flex
+  align-items center
+  justify-content center
+  width var(--p-8)
+  height var(--p-8)
+
+.selectItemIndicator
+  width 1rem
+  height 1rem
+
+.selectSeparator
+  pointer-events none
+  margin -0.25rem var(--p-1) var(--p-1)
+  height 1px
+  background-color var(--border)
+
+.selectScrollButton
+  display flex
+  cursor default
+  align-items center
+  justify-content center
+  padding var(--p-1) 0
+
+.selectIcon
+  width 1rem
+  height 1rem
+  opacity 0.5
+  margin-right calc(var(--p-1) * -1)
+
+.selectScrollIcon
+  width 1rem
+  height 1rem
+
+@keyframes fadeIn
+  from
+    opacity 0
+  to
+    opacity 1
+
+@keyframes fadeOut
+  from
+    opacity 1
+  to
+    opacity 0
+
+@keyframes zoomIn
+  from
+    transform scale(0.95)
+  to
+    transform scale(1)
+
+@keyframes zoomOut
+  from
+    transform scale(1)
+  to
+    transform scale(0.95)
+
+@keyframes slideInFromTop
+  from
+    transform translateY(-0.5rem)
+  to
+    transform translateY(.2)
+
+@keyframes slideInFromBottom
+  from
+    transform translateY(0.5rem)
+  to
+    transform translateY(.2)
+
+@keyframes slideInFromLeft
+  from
+    transform translateX(-0.5rem)
+  to
+    transform translateX(.2)
+
+@keyframes slideInFromRight
+  from
+    transform translateX(0.5rem)
+  to
+    transform translateY(.2)
+

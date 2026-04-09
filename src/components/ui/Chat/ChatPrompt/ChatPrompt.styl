@@ -1,0 +1,84 @@
+@import 'lib/theme.styl';
+
+.root
+  position relative
+  display flex
+  flex-direction column
+  gap var(--p-2)
+  align-items center
+  padding var(--p-6)
+
+.input
+  flex 1
+  min-height 70px
+  resize none
+  border none
+  padding 0 !important
+  border-radius 0 !important
+  box-shadow none !important
+
+  &:focus
+    box-shadow none !important
+
+.actions
+  display flex
+  align-items center
+  flex-direction row-reverse
+  justify-content space-between
+  gap var(--p-2)
+
+  width 100%
+
+  & > button:focus
+    box-shadow 0 0 0 2px var(--sb-cyan-500) !important
+
+  & > button:first-child // submit button
+    position relative
+    border none
+
+    transition all 0.2s
+
+    &:focus
+      transform scale(1.2)
+
+    &::before
+      content ''
+      position absolute
+      top -100%
+      left -100%
+      right -100%
+      bottom -100%
+
+  .attachButton
+    background-color var(--page-color)
+    box-shadow 0 0 20px var(--background)
+
+.selectorWrapper
+  display flex
+  align-items center
+  gap var(--p-2)
+  min-width 200px
+  z-index 1000
+
+  & > button:first-child
+    flex 1
+  & > button:last-child
+    border-radius 50px
+    opacity 0.3
+
+  &:hover > button:last-child
+    opacity 1
+
+.selector
+  box-shadow 0 0 0 1px var(--border) !important
+
+.notice
+  font-size var(--text-xs)
+  text-align center
+  color var(--muted-foreground)
+  width 100%
+  // padding 0 var(--p-9)
+  // text-align center
+
+  @media (max-width MOBILE)
+    font-size 10px
