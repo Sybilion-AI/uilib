@@ -1,0 +1,10 @@
+import { SheetCloseProps, SheetContentProps, SheetDescriptionProps, SheetFooterProps, SheetHeaderProps, SheetProps, SheetTitleProps, SheetTriggerProps } from './Sheet.types';
+declare function Sheet({ ...props }: SheetProps): import("react/jsx-runtime").JSX.Element;
+declare function SheetTrigger({ ...props }: SheetTriggerProps): import("react/jsx-runtime").JSX.Element;
+declare function SheetClose({ ...props }: SheetCloseProps): import("react/jsx-runtime").JSX.Element;
+declare function SheetContent({ className, children, side, fullWidth, ...props }: SheetContentProps): import("react/jsx-runtime").JSX.Element;
+declare function SheetHeader({ className, ...props }: SheetHeaderProps): import("react/jsx-runtime").JSX.Element;
+declare function SheetFooter({ className, ...props }: SheetFooterProps): import("react/jsx-runtime").JSX.Element;
+declare function SheetTitle({ className, ...props }: SheetTitleProps): import("react/jsx-runtime").JSX.Element;
+declare function SheetDescription({ className, ...props }: SheetDescriptionProps): import("react/jsx-runtime").JSX.Element;
+export { Sheet, SheetTrigger, SheetClose, SheetContent, SheetHeader, SheetFooter, SheetTitle, SheetDescription, };

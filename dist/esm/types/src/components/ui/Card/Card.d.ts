@@ -1,0 +1,11 @@
+import { AnchorHTMLAttributes, DetailedHTMLProps } from 'react';
+import type { CardActionProps, CardContentProps, CardDescriptionProps, CardFooterProps, CardHeaderProps, CardProps, CardTitleProps } from './Card.types';
+declare function Card({ className, paddingSize, ...props }: CardProps): import("react/jsx-runtime").JSX.Element;
+declare function LinkCard({ className, ...props }: CardProps & DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>): import("react/jsx-runtime").JSX.Element;
+declare function CardHeader({ className, icon, iconWithBackground, textsClassName, title, titleClassName, description, descriptionClassName, children, tooltipProps, ...props }: CardHeaderProps): import("react/jsx-runtime").JSX.Element;
+declare function CardTitle({ className, ...props }: CardTitleProps): import("react/jsx-runtime").JSX.Element;
+declare function CardDescription({ className, ...props }: CardDescriptionProps): import("react/jsx-runtime").JSX.Element;
+declare function CardAction({ className, ...props }: CardActionProps): import("react/jsx-runtime").JSX.Element;
+declare function CardContent({ className, centered, fullHeight, noScroll, children, autoScrollBottom, ...props }: CardContentProps): import("react/jsx-runtime").JSX.Element;
+declare function CardFooter({ className, ...props }: CardFooterProps): import("react/jsx-runtime").JSX.Element;
+export { Card, LinkCard, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent, };

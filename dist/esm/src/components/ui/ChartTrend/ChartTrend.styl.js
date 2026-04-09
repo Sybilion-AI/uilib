@@ -1,0 +1,7 @@
+import styleInject from '../../../../node_modules/style-inject/dist/style-inject.es.js';
+
+var css_248z = ".ChartTrend_root__859OA{position:relative;width:100%}.ChartTrend_chartContainer__VFxdk{position:relative;transition:opacity .3s ease-out;width:100%}.ChartTrend_chartContainer__VFxdk.ChartTrend_loading__t2QQD{opacity:.3;pointer-events:none}.ChartTrend_loadingOverlay__qDLF3{align-items:center;background-color:hsla(0,0%,100%,.8);display:flex;inset:0;justify-content:center;position:absolute;z-index:10}.dark .ChartTrend_loadingOverlay__qDLF3{background-color:rgba(0,0,0,.8)}.ChartTrend_loadingSpinner__FJCO1{animation:ChartTrend_spin__MAlxb .8s linear infinite;border:2px solid var(--muted-foreground);border-radius:50%;border-top-color:var(--foreground);height:2rem;width:2rem}.ChartTrend_errorContainer__aHhjL{align-items:center;color:var(--muted-foreground);display:flex;justify-content:center;min-height:250px}.recharts-legend-wrapper .recharts-legend-item{cursor:pointer;margin-right:24px!important}.recharts-legend-wrapper .recharts-legend-item:hover{opacity:.8}@keyframes ChartTrend_spin__MAlxb{to{transform:rotate(1turn)}}";
+var S = {"root":"ChartTrend_root__859OA","chartContainer":"ChartTrend_chartContainer__VFxdk","loading":"ChartTrend_loading__t2QQD","loadingOverlay":"ChartTrend_loadingOverlay__qDLF3","loadingSpinner":"ChartTrend_loadingSpinner__FJCO1","spin":"ChartTrend_spin__MAlxb","errorContainer":"ChartTrend_errorContainer__aHhjL"};
+styleInject(css_248z);
+
+export { S as default };

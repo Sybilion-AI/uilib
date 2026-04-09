@@ -1,0 +1,7 @@
+import styleInject from '../../../../node_modules/style-inject/dist/style-inject.es.js';
+
+var css_248z = "@media (max-width:768px){:root{--page-x-padding:var(--p-6);--page-y-padding:var(--p-6)}}.Foldable_root__a-aH-{background-color:var(--background);border:1px solid var(--border);border-radius:var(--p-3);display:flex;flex-direction:column;overflow:hidden}.Foldable_root__a-aH-+.Foldable_root__a-aH-{margin-top:var(--p-1)}.Foldable_header__nagB6{align-items:center;cursor:pointer;display:flex;justify-content:space-between;padding:var(--p-2);transition:background-color .2s ease;-webkit-user-select:none;-moz-user-select:none;user-select:none}.Foldable_header__nagB6:hover,.Foldable_unfolded__9vrPw .Foldable_header__nagB6{background-color:var(--page-color-alpha-800)}.Foldable_headerContent__elQXO{align-items:center;display:flex;flex:1}.Foldable_toggle__9Mjwd{align-items:center;display:flex;margin-left:var(--p-2)}.Foldable_icon__NkmVx{color:var(--text-color-secondary);transition:transform .2s ease}.Foldable_content__OqJ-R{display:flex;flex-direction:column;gap:var(--p-3);padding:0 var(--p-4) var(--p-4) var(--p-4)}.Foldable_unfolded__9vrPw .Foldable_content__OqJ-R{background-color:var(--page-color-alpha-800)}";
+var S = {"root":"Foldable_root__a-aH-","header":"Foldable_header__nagB6","unfolded":"Foldable_unfolded__9vrPw","headerContent":"Foldable_headerContent__elQXO","toggle":"Foldable_toggle__9Mjwd","icon":"Foldable_icon__NkmVx","content":"Foldable_content__OqJ-R"};
+styleInject(css_248z);
+
+export { S as default };

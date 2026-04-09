@@ -1,0 +1,12 @@
+import type { DrawerCloseProps, DrawerContentProps, DrawerDescriptionProps, DrawerFooterProps, DrawerHeaderProps, DrawerOverlayProps, DrawerPortalProps, DrawerProps, DrawerTitleProps, DrawerTriggerProps } from './Drawer.types';
+declare function Drawer({ ...props }: DrawerProps): import("react/jsx-runtime").JSX.Element;
+declare function DrawerTrigger({ ...props }: DrawerTriggerProps): import("react/jsx-runtime").JSX.Element;
+declare function DrawerPortal({ ...props }: DrawerPortalProps): import("react/jsx-runtime").JSX.Element;
+declare function DrawerClose({ ...props }: DrawerCloseProps): import("react/jsx-runtime").JSX.Element;
+declare function DrawerOverlay({ className, ...props }: DrawerOverlayProps): import("react/jsx-runtime").JSX.Element;
+declare function DrawerContent({ className, children, ...props }: DrawerContentProps): import("react/jsx-runtime").JSX.Element;
+declare function DrawerHeader({ className, ...props }: DrawerHeaderProps): import("react/jsx-runtime").JSX.Element;
+declare function DrawerFooter({ className, ...props }: DrawerFooterProps): import("react/jsx-runtime").JSX.Element;
+declare function DrawerTitle({ className, ...props }: DrawerTitleProps): import("react/jsx-runtime").JSX.Element;
+declare function DrawerDescription({ className, ...props }: DrawerDescriptionProps): import("react/jsx-runtime").JSX.Element;
+export { Drawer, DrawerPortal, DrawerOverlay, DrawerTrigger, DrawerClose, DrawerContent, DrawerHeader, DrawerFooter, DrawerTitle, DrawerDescription, };
