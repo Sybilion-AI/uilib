@@ -36,6 +36,7 @@ export * from './components/ui/Renamer';
 export * from './components/ui/Select';
 export * from './components/ui/Separator';
 export * from './components/ui/Sheet';
+export * from './components/ui/Sidebar/Sidebar';
 export * from './components/ui/Skeleton';
 export * from './components/ui/Slider';
 export * from './components/ui/SmartTextTruncate';

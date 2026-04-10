@@ -5,5 +5,8 @@ import S from './PageContent.styl.js';
 function PageContent({ className, children, variant = 'default', }) {
     return (jsx("div", { className: cn(S.root, S[`variant-${variant}`], className), children: children }));
 }
+function PageContentSection({ className, children, }) {
+    return jsx("div", { className: cn(S.section, className), children: children });
+}
 
-export { PageContent };
+export { PageContent, PageContentSection };

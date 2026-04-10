@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Sybilion Design System — React UI components (Webpack + Stylus)",
   "type": "module",
-  "main": "./dist/esm/index.js",
-  "module": "./dist/esm/index.js",
+  "main": "./dist/esm/src/index.js",
+  "module": "./dist/esm/src/index.js",
   "types": "./dist/esm/types/index.d.ts",
   "sideEffects": [
     "**/*.styl",
@@ -17,8 +17,8 @@
   "exports": {
     ".": {
       "types": "./dist/esm/types/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "default": "./dist/esm/index.js"
+      "import": "./dist/esm/src/index.js",
+      "default": "./dist/esm/src/index.js"
     },
     "./src": {
       "types": "./src/index.ts",
