@@ -23,7 +23,7 @@ function TooltipProvider({
   );
 }
 
-function Tooltip({ ...props }: TooltipProps) {
+function Tooltip(props: TooltipProps) {
   return (
     <TooltipProvider>
       <TooltipPrimitive.Root data-slot="tooltip" {...props} />

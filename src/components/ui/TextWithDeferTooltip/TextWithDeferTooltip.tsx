@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useRef, useState } from 'react';
+import { CSSProperties, useRef, useState } from 'react';
 
 import {
   Tooltip,
@@ -11,6 +11,7 @@ import type { TextWithDeferTooltipProps } from './TextWithDeferTooltip.types';
 function TextWithDeferTooltip({
   className,
   children,
+  width,
   maxWidth,
   side = 'bottom',
   overTrigger = false,
@@ -20,8 +21,6 @@ function TextWithDeferTooltip({
   const [tooltipStyles, setTooltipStyles] = useState<CSSProperties>({});
   const ref = useRef<HTMLDivElement>(null);
   const cachedFontSizeRef = useRef<string | null>(null);
-
-  const handleMouseLeave = () => setWithTooltip(false);
 
   const handleMouseEnter = () => {
     if (!ref.current) return;
@@ -37,9 +36,13 @@ function TextWithDeferTooltip({
       };
 
       if (ref.current) {
-        const { width, left, top } = ref.current.getBoundingClientRect();
+        const {
+          width: rectWidth,
+          left,
+          top,
+        } = ref.current.getBoundingClientRect();
 
-        styles.width = `${width}px`;
+        styles.width = `${width ?? rectWidth}px`;
 
         if (!cachedFontSizeRef.current) {
           const { fontSize } = window.getComputedStyle(ref.current);
@@ -64,7 +67,6 @@ function TextWithDeferTooltip({
       ref={ref}
       className={className}
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       {...props}
     >
       {children}
@@ -75,7 +77,7 @@ function TextWithDeferTooltip({
     const tooltipSide = overTrigger ? 'bottom' : side;
 
     return (
-      <Tooltip>
+      <Tooltip open={withTooltip} onOpenChange={setWithTooltip}>
         <TooltipTrigger asChild>{textElement}</TooltipTrigger>
         <TooltipContent
           side={tooltipSide}

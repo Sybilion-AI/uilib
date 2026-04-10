@@ -16,7 +16,9 @@
   box-shadow 0 10px 15px -3px rgba(0, 0, 0, 0.1)
   border 1px solid var(--border)
 
+  // Radix sets instant-open (immediate) or delayed-open (after delayDuration), not "open"
   &[data-state="open"],
+  &[data-state="instant-open"],
   &[data-state="delayed-open"]
     animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out
 
@@ -24,18 +26,22 @@
     animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
 
   &[data-state="open"][data-side="bottom"],
+  &[data-state="instant-open"][data-side="bottom"],
   &[data-state="delayed-open"][data-side="bottom"]
     animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-top-2 0.15s ease-out
 
   &[data-state="open"][data-side="left"],
+  &[data-state="instant-open"][data-side="left"],
   &[data-state="delayed-open"][data-side="left"]
     animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-right-2 0.15s ease-out
 
   &[data-state="open"][data-side="right"],
+  &[data-state="instant-open"][data-side="right"],
   &[data-state="delayed-open"][data-side="right"]
     animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-left-2 0.15s ease-out
 
   &[data-state="open"][data-side="top"],
+  &[data-state="instant-open"][data-side="top"],
   &[data-state="delayed-open"][data-side="top"]
     animation fade-in 0.15s ease-out, zoom-in 0.15s ease-out, slide-in-from-bottom-2 0.15s ease-out
 
