@@ -29,6 +29,7 @@ export { ImageWithFallback } from './components/ui/ImageWithFallback/ImageWithFa
 export { Input } from './components/ui/Input/Input.js';
 export { InteractiveContent } from './components/ui/InteractiveContent/InteractiveContent.js';
 export { Label } from './components/ui/Label/Label.js';
+export { LabeledInput } from './components/ui/LabeledInput/LabeledInput.js';
 export { AltKeyProvider } from './components/ui/LabelWithId/AltKeyProvider.js';
 export { LabelWithId } from './components/ui/LabelWithId/LabelWithId.js';
 export { LegacyPlatformLink } from './components/ui/LegacyPlatformLink/LegacyPlatformLink.js';

@@ -64,6 +64,8 @@
   @media (min-width MOBILE)
     &[data-state="expanded"]
       display flex
+      height calc(100vh - var(--gap-top))
+      min-height 0
 
   &[data-collapsible="offcanvas"]
     width 0
@@ -198,8 +200,8 @@
   overflow auto
 
   width 100%
-  max-height @height
   height 100vh
+  max-height @height
 
   @media (min-width MOBILE)
     height calc(100vh - var(--gap-top))

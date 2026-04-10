@@ -1,5 +1,5 @@
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import logger from '@/lib/logger';
+import logger from '../../../../lib/logger.js';
 import S from './ChatMessage.styl.js';
 
 const injectHeaders = (content) => {

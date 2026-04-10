@@ -23,6 +23,7 @@ export * from './components/ui/ImageWithFallback';
 export * from './components/ui/Input';
 export * from './components/ui/InteractiveContent';
 export * from './components/ui/Label';
+export * from './components/ui/LabeledInput/LabeledInput';
 export * from './components/ui/LabelWithId';
 export * from './components/ui/LegacyPlatformLink';
 export * from './components/ui/Logo';

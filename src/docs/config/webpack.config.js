@@ -3,7 +3,6 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import { config as loadEnv } from 'dotenv';
 import { existsSync } from 'fs';
-import HtmlWebpackPartialsPlugin from 'html-webpack-partials-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { createRequire } from 'module';
@@ -151,13 +150,7 @@ export default (env, argv) => {
           },
         ],
       }),
-      existsSync(analyticsPath) &&
-        !isDev &&
-        new HtmlWebpackPartialsPlugin({
-          path: analyticsPath,
-          location: 'body',
-          priority: 'low',
-        }),
+
       new HtmlWebpackPlugin({
         lang: 'en',
         baseUrl: '/',
