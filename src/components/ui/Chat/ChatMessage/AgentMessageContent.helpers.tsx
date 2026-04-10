@@ -1,6 +1,6 @@
 import React from 'react';
 
-import logger from '#uilib/lib/logger';
+import logger from '@/lib/logger';
 
 import S from './ChatMessage.styl';
 
@@ -30,6 +30,22 @@ const injectHeaders = (content: string) => {
   };
 };
 
+/** Match sits inside list/table HTML (those blocks use dangerouslySetInnerHTML elsewhere). */
+const isInsideHtmlListOrTable = (content: string, matchStartIndex: number) => {
+  const before = content.substring(0, matchStartIndex);
+  const lastOpen = Math.max(
+    before.lastIndexOf('<ul'),
+    before.lastIndexOf('<ol'),
+    before.lastIndexOf('<table'),
+  );
+  const lastClose = Math.max(
+    before.lastIndexOf('</ul>'),
+    before.lastIndexOf('</ol>'),
+    before.lastIndexOf('</table>'),
+  );
+  return lastOpen > lastClose;
+};
+
 const injectHTMLTags = (content: string) => {
   // Match <strong> or <b> tags (with optional whitespace, handles nested tags)
   const regex = /<(strong|b)\s*>([\s\S]*?)<\/\1\s*>/i;
@@ -37,21 +53,7 @@ const injectHTMLTags = (content: string) => {
 
   if (!matches) return null;
 
-  // Don't process if this is inside a list/table tag (those are handled separately)
-  const beforeMatch = content.substring(0, matches.index!);
-  const lastListTag = Math.max(
-    beforeMatch.lastIndexOf('<ul'),
-    beforeMatch.lastIndexOf('<ol'),
-    beforeMatch.lastIndexOf('<table'),
-  );
-  const lastClosingTag = Math.max(
-    beforeMatch.lastIndexOf('</ul>'),
-    beforeMatch.lastIndexOf('</ol>'),
-    beforeMatch.lastIndexOf('</table>'),
-  );
-
-  // If we're inside a list/table, skip processing (it will be handled by dangerouslySetInnerHTML)
-  if (lastListTag > lastClosingTag) {
+  if (isInsideHtmlListOrTable(content, matches.index!)) {
     return null;
   }
 
@@ -269,6 +271,16 @@ const convertMarkdownTableToHTML = (text: string): string => {
   return result;
 };
 
+/** http(s), mailto, or same-app path (single leading slash). */
+const isAllowedHref = (href: string): boolean => {
+  const h = href.trim();
+  if (!h) return false;
+  if (/^https?:\/\//i.test(h)) return true;
+  if (/^mailto:/i.test(h)) return true;
+  if (h.startsWith('/') && !h.startsWith('//')) return true;
+  return false;
+};
+
 type Injector = (
   content: string,
 ) => { elem: React.ReactNode; index: number; length: number } | null;
@@ -313,9 +325,60 @@ const runFormattingPipeline = (
   return result;
 };
 
+const injectAnchor: Injector = (content: string) => {
+  const regex = /<a\s+([^>]+)>([\s\S]*?)<\/a\s*>/i;
+  const matches = content.match(regex);
+
+  if (!matches) return null;
+
+  if (isInsideHtmlListOrTable(content, matches.index!)) {
+    return null;
+  }
+
+  const attrs = matches[1];
+  const inner = matches[2];
+
+  const hrefMatch = attrs.match(
+    /href\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i,
+  );
+  const href = hrefMatch
+    ? (hrefMatch[1] ?? hrefMatch[2] ?? hrefMatch[3] ?? '').trim()
+    : '';
+
+  const targetMatch = attrs.match(
+    /target\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i,
+  );
+  const targetRaw = targetMatch
+    ? (targetMatch[1] ?? targetMatch[2] ?? targetMatch[3] ?? '').trim()
+    : '';
+
+  if (!href || !isAllowedHref(href)) {
+    return null;
+  }
+
+  const opensNewTab = targetRaw.toLowerCase() === '_blank';
+  const target = opensNewTab ? '_blank' : targetRaw || undefined;
+  const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
+
+  return {
+    elem: (
+      <a href={href} target={target} rel={rel}>
+        {runFormattingPipeline(inner, [
+          injectHTMLTags,
+          injectBold,
+          injectNewlines,
+        ])}
+      </a>
+    ),
+    index: matches.index!,
+    length: matches[0].length,
+  };
+};
+
 const applyFormatting = (text: string): React.ReactNode[] =>
   runFormattingPipeline(text, [
     injectHeaders,
+    injectAnchor,
     injectHTMLTags,
     injectBullet,
     injectBold,
@@ -323,10 +386,16 @@ const applyFormatting = (text: string): React.ReactNode[] =>
   ]);
 
 const applyFormattingInline = (text: string): React.ReactNode[] =>
-  runFormattingPipeline(text, [injectHTMLTags, injectBold, injectNewlines]);
+  runFormattingPipeline(text, [
+    injectAnchor,
+    injectHTMLTags,
+    injectBold,
+    injectNewlines,
+  ]);
 
 export {
   injectHeaders,
+  injectAnchor,
   injectBold,
   injectBullet,
   injectNewlines,
