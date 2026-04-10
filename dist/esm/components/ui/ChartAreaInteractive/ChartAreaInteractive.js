@@ -17,9 +17,9 @@ function ChartAreaInteractive({ className, chartContainerClassName, legendClassN
     const seriesHidden = hiddenSeries ?? new Set();
     const hiddenSeriesRef = useRef(seriesHidden);
     const prevSelectedAnalysisIdRef = useRef(selectedAnalysisId);
-    // Keep ref in sync with hiddenSeries
+    // Keep ref in sync with hiddenSeries (use seriesHidden so ref is always a Set)
     useEffect(() => {
-        hiddenSeriesRef.current = hiddenSeries;
+        hiddenSeriesRef.current = seriesHidden;
     }, [seriesHidden]);
     // When analysis selected in CardTable, ensure it's visible in chart legend
     // Only run when selectedAnalysisId changes, not when hiddenSeries changes
