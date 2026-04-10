@@ -3,6 +3,7 @@ import { PageFooter } from '#uilib/components/ui/Page/PageFooter/PageFooter';
 import { PageHeader } from '#uilib/components/ui/Page/PageHeader/PageHeader';
 import { PageScroll } from '#uilib/components/ui/Page/PageScroll/PageScroll';
 
+import LogoSvg from '../../../assets/logo.svg';
 import S from './App.styl';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -24,7 +25,11 @@ export default function App() {
           scrolled styling when scroll tracking is enabled.
         </p>
       </div>
-      <PageFooter versionLink="/releases" versionLabel="1.0.0-docs">
+      <PageFooter
+        logo={<LogoSvg />}
+        versionLink="/releases"
+        versionLabel="1.0.0-docs"
+      >
         <p>
           Optional middle slot: compose app-only UI here (debug panel, forms).
         </p>

@@ -72,9 +72,9 @@ export function ChartAreaInteractive({
     selectedAnalysisId,
   );
 
-  // Keep ref in sync with hiddenSeries
+  // Keep ref in sync with hiddenSeries (use seriesHidden so ref is always a Set)
   useEffect(() => {
-    hiddenSeriesRef.current = hiddenSeries;
+    hiddenSeriesRef.current = seriesHidden;
   }, [seriesHidden]);
 
   // When analysis selected in CardTable, ensure it's visible in chart legend
