@@ -2,12 +2,11 @@ import { jsx, jsxs } from 'react/jsx-runtime';
 import { useState, useRef } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip/Tooltip.js';
 
-function TextWithDeferTooltip({ className, children, maxWidth, side = 'bottom', overTrigger = false, ...props }) {
+function TextWithDeferTooltip({ className, children, width, maxWidth, side = 'bottom', overTrigger = false, ...props }) {
     const [withTooltip, setWithTooltip] = useState(false);
     const [tooltipStyles, setTooltipStyles] = useState({});
     const ref = useRef(null);
     const cachedFontSizeRef = useRef(null);
-    const handleMouseLeave = () => setWithTooltip(false);
     const handleMouseEnter = () => {
         if (!ref.current)
             return;
@@ -18,8 +17,8 @@ function TextWithDeferTooltip({ className, children, maxWidth, side = 'bottom', 
                 fontSize: cachedFontSizeRef.current || undefined,
             };
             if (ref.current) {
-                const { width, left, top } = ref.current.getBoundingClientRect();
-                styles.width = `${width}px`;
+                const { width: rectWidth, left, top, } = ref.current.getBoundingClientRect();
+                styles.width = `${width ?? rectWidth}px`;
                 if (!cachedFontSizeRef.current) {
                     const { fontSize } = window.getComputedStyle(ref.current);
                     cachedFontSizeRef.current = fontSize;
@@ -35,10 +34,10 @@ function TextWithDeferTooltip({ className, children, maxWidth, side = 'bottom', 
             setWithTooltip(true);
         }
     };
-    const textElement = (jsx("div", { ref: ref, className: className, onMouseEnter: handleMouseEnter, onMouseLeave: handleMouseLeave, ...props, children: children }));
+    const textElement = (jsx("div", { ref: ref, className: className, onMouseEnter: handleMouseEnter, ...props, children: children }));
     if (withTooltip) {
         const tooltipSide = overTrigger ? 'bottom' : side;
-        return (jsxs(Tooltip, { children: [jsx(TooltipTrigger, { asChild: true, children: textElement }), jsx(TooltipContent, { side: tooltipSide, style: {
+        return (jsxs(Tooltip, { open: withTooltip, onOpenChange: setWithTooltip, children: [jsx(TooltipTrigger, { asChild: true, children: textElement }), jsx(TooltipContent, { side: tooltipSide, style: {
                         ...(maxWidth !== undefined && { maxWidth: `${maxWidth}px` }),
                         ...tooltipStyles,
                     }, children: children })] }));

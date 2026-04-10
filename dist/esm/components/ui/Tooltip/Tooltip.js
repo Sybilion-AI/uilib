@@ -6,7 +6,7 @@ import S from './Tooltip.styl.js';
 function TooltipProvider({ delayDuration = 0, ...props }) {
     return (jsx(TooltipPrimitive.Provider, { "data-slot": "tooltip-provider", delayDuration: delayDuration, ...props }));
 }
-function Tooltip({ ...props }) {
+function Tooltip(props) {
     return (jsx(TooltipProvider, { children: jsx(TooltipPrimitive.Root, { "data-slot": "tooltip", ...props }) }));
 }
 function TooltipTrigger({ ...props }) {

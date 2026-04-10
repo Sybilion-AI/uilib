@@ -20,6 +20,12 @@ declare const injectNewlines: (content: string) => {
     length: number;
 };
 declare const convertMarkdownTableToHTML: (text: string) => string;
+type Injector = (content: string) => {
+    elem: React.ReactNode;
+    index: number;
+    length: number;
+} | null;
+declare const injectAnchor: Injector;
 declare const applyFormatting: (text: string) => React.ReactNode[];
 declare const applyFormattingInline: (text: string) => React.ReactNode[];
-export { injectHeaders, injectBold, injectBullet, injectNewlines, convertMarkdownTableToHTML, applyFormatting, applyFormattingInline, };
+export { injectHeaders, injectAnchor, injectBold, injectBullet, injectNewlines, convertMarkdownTableToHTML, applyFormatting, applyFormattingInline, };

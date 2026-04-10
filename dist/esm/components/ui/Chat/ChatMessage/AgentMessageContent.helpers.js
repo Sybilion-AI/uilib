@@ -1,5 +1,5 @@
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import logger from '../../../../lib/logger.js';
+import logger from '@/lib/logger';
 import S from './ChatMessage.styl.js';
 
 const injectHeaders = (content) => {
@@ -23,18 +23,20 @@ const injectHeaders = (content) => {
         length: length,
     };
 };
+/** Match sits inside list/table HTML (those blocks use dangerouslySetInnerHTML elsewhere). */
+const isInsideHtmlListOrTable = (content, matchStartIndex) => {
+    const before = content.substring(0, matchStartIndex);
+    const lastOpen = Math.max(before.lastIndexOf('<ul'), before.lastIndexOf('<ol'), before.lastIndexOf('<table'));
+    const lastClose = Math.max(before.lastIndexOf('</ul>'), before.lastIndexOf('</ol>'), before.lastIndexOf('</table>'));
+    return lastOpen > lastClose;
+};
 const injectHTMLTags = (content) => {
     // Match <strong> or <b> tags (with optional whitespace, handles nested tags)
     const regex = /<(strong|b)\s*>([\s\S]*?)<\/\1\s*>/i;
     const matches = content.match(regex);
     if (!matches)
         return null;
-    // Don't process if this is inside a list/table tag (those are handled separately)
-    const beforeMatch = content.substring(0, matches.index);
-    const lastListTag = Math.max(beforeMatch.lastIndexOf('<ul'), beforeMatch.lastIndexOf('<ol'), beforeMatch.lastIndexOf('<table'));
-    const lastClosingTag = Math.max(beforeMatch.lastIndexOf('</ul>'), beforeMatch.lastIndexOf('</ol>'), beforeMatch.lastIndexOf('</table>'));
-    // If we're inside a list/table, skip processing (it will be handled by dangerouslySetInnerHTML)
-    if (lastListTag > lastClosingTag) {
+    if (isInsideHtmlListOrTable(content, matches.index)) {
         return null;
     }
     return {
@@ -214,6 +216,19 @@ const convertMarkdownTableToHTML = (text) => {
     }
     return result;
 };
+/** http(s), mailto, or same-app path (single leading slash). */
+const isAllowedHref = (href) => {
+    const h = href.trim();
+    if (!h)
+        return false;
+    if (/^https?:\/\//i.test(h))
+        return true;
+    if (/^mailto:/i.test(h))
+        return true;
+    if (h.startsWith('/') && !h.startsWith('//'))
+        return true;
+    return false;
+};
 const runFormattingPipeline = (text, injectors) => {
     let result = [text];
     try {
@@ -245,13 +260,53 @@ const runFormattingPipeline = (text, injectors) => {
     }
     return result;
 };
+const injectAnchor = (content) => {
+    const regex = /<a\s+([^>]+)>([\s\S]*?)<\/a\s*>/i;
+    const matches = content.match(regex);
+    if (!matches)
+        return null;
+    if (isInsideHtmlListOrTable(content, matches.index)) {
+        return null;
+    }
+    const attrs = matches[1];
+    const inner = matches[2];
+    const hrefMatch = attrs.match(/href\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i);
+    const href = hrefMatch
+        ? (hrefMatch[1] ?? hrefMatch[2] ?? hrefMatch[3] ?? '').trim()
+        : '';
+    const targetMatch = attrs.match(/target\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i);
+    const targetRaw = targetMatch
+        ? (targetMatch[1] ?? targetMatch[2] ?? targetMatch[3] ?? '').trim()
+        : '';
+    if (!href || !isAllowedHref(href)) {
+        return null;
+    }
+    const opensNewTab = targetRaw.toLowerCase() === '_blank';
+    const target = opensNewTab ? '_blank' : targetRaw || undefined;
+    const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
+    return {
+        elem: (jsx("a", { href: href, target: target, rel: rel, children: runFormattingPipeline(inner, [
+                injectHTMLTags,
+                injectBold,
+                injectNewlines,
+            ]) })),
+        index: matches.index,
+        length: matches[0].length,
+    };
+};
 const applyFormatting = (text) => runFormattingPipeline(text, [
     injectHeaders,
+    injectAnchor,
     injectHTMLTags,
     injectBullet,
     injectBold,
     injectNewlines,
 ]);
-const applyFormattingInline = (text) => runFormattingPipeline(text, [injectHTMLTags, injectBold, injectNewlines]);
+const applyFormattingInline = (text) => runFormattingPipeline(text, [
+    injectAnchor,
+    injectHTMLTags,
+    injectBold,
+    injectNewlines,
+]);
 
-export { applyFormatting, applyFormattingInline, convertMarkdownTableToHTML, injectBold, injectBullet, injectHeaders, injectNewlines };
+export { applyFormatting, applyFormattingInline, convertMarkdownTableToHTML, injectAnchor, injectBold, injectBullet, injectHeaders, injectNewlines };

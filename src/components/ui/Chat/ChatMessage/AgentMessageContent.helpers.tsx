@@ -1,6 +1,6 @@
 import React from 'react';
 
-import logger from '@/lib/logger';
+import logger from '#uilib/lib/logger';
 
 import S from './ChatMessage.styl';
 
