@@ -1,4 +1,4 @@
-export { ChatContext, useChat, useChats, useChatsForDataset, useCurrentChat } from './contexts/chat-context.js';
+export { ChatContext, ChatProvider, useChat, useChats, useChatsForDataset, useChatsForScopeId, useCurrentChat } from './contexts/chat-context.js';
 export { AnalysesSelector } from './components/ui/AnalysesSelector/AnalysesSelector.js';
 export { AnalysisLineIcon } from './components/ui/AnalysisLineIcon/AnalysisLineIcon.js';
 export { Avatar, AvatarFallback, AvatarImage } from './components/ui/Avatar/Avatar.js';

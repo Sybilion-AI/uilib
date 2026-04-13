@@ -1,14 +1,14 @@
 import { jsxs, jsx } from 'react/jsx-runtime';
-import { useChatsForDataset } from '../../../../contexts/chat-context.js';
+import { useChatsForScopeId } from '../../../../contexts/chat-context.js';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../../Select/Select.js';
 
 function ChatSelector({ id, className }) {
-    const { chats, currentChatId, setCurrentChatId, newChat } = useChatsForDataset(id);
+    const { chats, currentChatId, setCurrentChatId, newChat } = useChatsForScopeId(id);
     const handleValueChange = (value) => {
         if (value === 'new') {
             newChat();
         }
-        else {
+        else if (value) {
             setCurrentChatId(value);
         }
     };

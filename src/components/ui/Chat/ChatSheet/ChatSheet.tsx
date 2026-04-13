@@ -28,7 +28,7 @@ import {
   usedPresetIdsFromMessages,
 } from '#uilib/components/ui/Chat/chat-preset-utils';
 import { TextShimmer } from '#uilib/components/ui/TextShimmer';
-import { useChat, useChatsForDataset } from '#uilib/contexts/chat-context';
+import { useChat, useChatsForScopeId } from '#uilib/contexts/chat-context';
 import useEvent from '#uilib/hooks/useEvent';
 import { useIsMobile } from '#uilib/hooks/useIsMobile';
 import { useQueryParams } from '#uilib/hooks/useQueryParams';
@@ -59,7 +59,8 @@ export interface ChatSheetProps {
   triggerAriaLabel?: string;
   presets?: ChatPreset[];
   label?: string;
-  datasetId?: string | null;
+  /** Composite chat scope (e.g. `${userId}-${datasetId}`, `${userId}-dashboard`, `${userId}-report-${reportId}`). */
+  scopeId?: string | null;
   onMessage?: (message: string) => void;
   /** Fires when a preset script has no further `[Label|branchKey]` steps (graph leaf or linear script end). */
   onScriptComplete?: (payload: ScriptCompletePayload) => void;
@@ -76,7 +77,8 @@ type IntakeScriptState = {
   answers: Record<string, string>;
 };
 
-const NO_DATASET_ID = '0';
+/** Fallback when `scopeId` prop omitted; apps should pass an explicit composite scope (e.g. `${userId}-dashboard`). */
+const NO_SCOPE_FALLBACK = '__uilib_chat_scope_unset__';
 
 type PresetScriptState = {
   lines: string[];
@@ -95,13 +97,13 @@ export function ChatSheet({
   actionsRef,
   renderTrigger,
   presets,
-  datasetId,
+  scopeId,
   onMessage,
   onScriptComplete,
   onGenerateDashboard,
   renderMessageChart,
 }: ChatSheetProps) {
-  const effectiveDatasetId = datasetId ?? NO_DATASET_ID;
+  const effectiveScopeId = scopeId ?? NO_SCOPE_FALLBACK;
   const isMobile = useIsMobile();
   const {
     chatPanelContainer,
@@ -120,8 +122,8 @@ export function ChatSheet({
     sendMessage,
     addMessage,
     removeMessageById,
-  } = useChatsForDataset(effectiveDatasetId);
-  const chat = useChat(effectiveDatasetId, currentChatId);
+  } = useChatsForScopeId(effectiveScopeId);
+  const chat = useChat(effectiveScopeId, currentChatId);
 
   const { searchParams, addSearchParams, removeSearchParams } =
     useQueryParams();
@@ -1027,7 +1029,7 @@ export function ChatSheet({
 
           <div className={S.footer}>
             <Chat.Prompt
-              id={effectiveDatasetId}
+              id={effectiveScopeId}
               onSubmit={handlePromptSubmit}
               disabled={isLoading}
               onChatDeleted={endLocalDemoFlow}

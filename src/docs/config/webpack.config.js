@@ -119,6 +119,10 @@ export default (env, argv) => {
             },
           },
         },
+        {
+          test: /\.(png|jpe?g|gif|webp)$/,
+          type: 'asset/resource',
+        },
       ],
     },
 

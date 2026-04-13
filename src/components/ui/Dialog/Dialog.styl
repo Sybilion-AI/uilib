@@ -130,3 +130,12 @@
   to
     opacity 0
     transform translateX(-50%) translateY(-50%) scale(0.95)
+
+// Footer alignment (overrides Card .footer justify-content)
+.dialogContent [data-slot="card-footer"]
+  &.align-left
+    justify-content flex-start
+  &.align-center
+    justify-content center
+  &.align-right
+    justify-content flex-end

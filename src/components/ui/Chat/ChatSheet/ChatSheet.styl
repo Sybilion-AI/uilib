@@ -9,11 +9,23 @@
   overflow hidden
 
 .chatResizeHandle
-  top 0 !important
-  height 100% !important
+  position: absolute;
+  // top 0 !important
+  top -200px
+  // height 100% !important
+  height calc(100vh + 200px)
   left 0
   right auto
-  z-index 1000
+  // z-index 1000
+  z-index 30
+
+  width 5px
+  border-radius 2.5px
+  user-select none
+  touch-action none
+  transition opacity 150ms ease-out
+  background-color var(--page-color)
+  opacity 0
 
   &::before
     left 0

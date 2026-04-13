@@ -2,7 +2,7 @@ import { jsxs, jsx } from 'react/jsx-runtime';
 import cn from 'classnames';
 import { useState } from 'react';
 import { ChatSelector } from '../ChatSheet/ChatSelector.js';
-import { useChatsForDataset } from '../../../../contexts/chat-context.js';
+import { useChatsForScopeId } from '../../../../contexts/chat-context.js';
 import useEvent from '../../../../hooks/useEvent.js';
 import { SendHorizontalIcon, Trash2Icon } from 'lucide-react';
 import { Button } from '../../Button/Button.js';
@@ -11,7 +11,7 @@ import S from './ChatPrompt.styl.js';
 
 function ChatPrompt({ onSubmit, placeholder, className, footer, id, onChatDeleted, }) {
     const [message, setMessage] = useState('');
-    const { currentChatId, deleteChat, chats } = useChatsForDataset(id);
+    const { currentChatId, deleteChat, chats } = useChatsForScopeId(id);
     const handleDeleteChat = () => {
         if (!currentChatId)
             return;

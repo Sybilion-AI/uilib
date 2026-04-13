@@ -14,6 +14,7 @@ export interface DialogProps {
     contentClassName?: string;
     footer?: ReactNode;
     footerClassName?: string;
+    footerAlignment?: 'left' | 'center' | 'right';
     size?: 'login' | 'wide' | 'default';
     className?: string;
     noScroll?: boolean;

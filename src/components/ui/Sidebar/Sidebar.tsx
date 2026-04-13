@@ -494,7 +494,7 @@ function SidebarTrigger({
       {...props}
     >
       <PanelLeft size={20} strokeWidth={1.5} className="text-foreground" />
-      <span className="sr-only">Toggle Sidebar</span>
+      {/* <span className="sr-only">Toggle Sidebar</span> */}
     </Button>
   );
 }

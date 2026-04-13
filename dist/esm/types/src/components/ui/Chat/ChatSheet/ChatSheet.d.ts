@@ -14,7 +14,8 @@ export interface ChatSheetProps {
     triggerAriaLabel?: string;
     presets?: ChatPreset[];
     label?: string;
-    datasetId?: string | null;
+    /** Composite chat scope (e.g. `${userId}-${datasetId}`, `${userId}-dashboard`, `${userId}-report-${reportId}`). */
+    scopeId?: string | null;
     onMessage?: (message: string) => void;
     /** Fires when a preset script has no further `[Label|branchKey]` steps (graph leaf or linear script end). */
     onScriptComplete?: (payload: ScriptCompletePayload) => void;
@@ -23,4 +24,4 @@ export interface ChatSheetProps {
     /** Renders `[CHART]` tokens in assistant messages. */
     renderMessageChart?: () => React.ReactNode;
 }
-export declare function ChatSheet({ triggerLabel, triggerAriaLabel, actionsRef, renderTrigger, presets, datasetId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, }: ChatSheetProps): import("react/jsx-runtime").JSX.Element;
+export declare function ChatSheet({ triggerLabel, triggerAriaLabel, actionsRef, renderTrigger, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, }: ChatSheetProps): import("react/jsx-runtime").JSX.Element;

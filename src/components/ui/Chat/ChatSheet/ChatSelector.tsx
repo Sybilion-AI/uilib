@@ -1,5 +1,5 @@
 import { Chat } from '#uilib/components/ui/Chat/Chat.types';
-import { useChatsForDataset } from '#uilib/contexts/chat-context';
+import { useChatsForScopeId } from '#uilib/contexts/chat-context';
 
 import {
   Select,
@@ -16,12 +16,12 @@ export interface ChatSelectorProps {
 
 export function ChatSelector({ id, className }: ChatSelectorProps) {
   const { chats, currentChatId, setCurrentChatId, newChat } =
-    useChatsForDataset(id);
+    useChatsForScopeId(id);
 
   const handleValueChange = (value: string) => {
     if (value === 'new') {
       newChat();
-    } else {
+    } else if (value) {
       setCurrentChatId(value);
     }
   };

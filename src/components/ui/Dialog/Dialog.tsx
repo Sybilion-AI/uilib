@@ -13,6 +13,15 @@ import { XIcon } from '@phosphor-icons/react';
 import S from './Dialog.styl';
 import type { DialogProps } from './Dialog.types';
 
+const FOOTER_ALIGN_CLASS: Record<
+  NonNullable<DialogProps['footerAlignment']>,
+  string
+> = {
+  left: S.footerAlignLeft,
+  center: S.footerAlignCenter,
+  right: S.footerAlignRight,
+};
+
 export function Dialog({
   open,
   onOpenChange,
@@ -24,6 +33,7 @@ export function Dialog({
   content,
   contentClassName,
   footer,
+  footerAlignment = 'center',
   size = 'default',
   className,
   noScroll,
@@ -204,7 +214,11 @@ export function Dialog({
           </CardContent>
         )}
 
-        {footer && <CardFooter>{footer}</CardFooter>}
+        {footer && (
+          <CardFooter className={S[`align-${footerAlignment}`]}>
+            {footer}
+          </CardFooter>
+        )}
       </Card>
     </>
   );

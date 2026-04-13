@@ -6,7 +6,7 @@ import { MessageRole, GENERATING_DASHBOARD_SYSTEM_TEXT } from '../Chat.types.js'
 import { isGraphIntakeAssistantStepComplete, matchUserTextToQuickReply, parseScriptLine, textHasQuickReplyMarkers, branchKeysUsedFromChatHistory, branchKeysUsedByUserMessages, extractQuickReplyLabelKeyPairsFromText, entryBranchKeyBeforeLastAssistant, displayLabelForBranchKeyFromMessages, humanizeBranchKey, isPresetScriptGraph, branchesFromPresetScriptGraph } from '../ChatMessage/presetScript.js';
 import { usedPresetIdsFromMessages, formatChatTranscript } from '../chat-preset-utils.js';
 import { TextShimmer } from '../../TextShimmer/TextShimmer.js';
-import { useChatsForDataset, useChat } from '../../../../contexts/chat-context.js';
+import { useChatsForScopeId, useChat } from '../../../../contexts/chat-context.js';
 import useEvent from '../../../../hooks/useEvent.js';
 import { useIsMobile } from '../../../../hooks/useIsMobile.js';
 import { useQueryParams } from '../../../../hooks/useQueryParams.js';
@@ -20,17 +20,18 @@ import SidebarStem from '../../Sidebar/Sidebar.styl.js';
 import { Chat } from '../Chat.js';
 import S from './ChatSheet.styl.js';
 
-const NO_DATASET_ID = '0';
+/** Fallback when `scopeId` prop omitted; apps should pass an explicit composite scope (e.g. `${userId}-dashboard`). */
+const NO_SCOPE_FALLBACK = '__uilib_chat_scope_unset__';
 const SCRIPT_STEP_DELAY_MS = 1200;
 const CHAT_NEW_SHORTCUT_KEY = 'o';
 /** When chat panel is open, collapse left nav below this width so both don't crowd the viewport. */
 const CHAT_NAV_COLLAPSE_BREAKPOINT_PX = 1400;
-function ChatSheet({ triggerLabel = 'Open Chat', triggerAriaLabel, actionsRef, renderTrigger, presets, datasetId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, }) {
-    const effectiveDatasetId = datasetId ?? NO_DATASET_ID;
+function ChatSheet({ triggerLabel = 'Open Chat', triggerAriaLabel, actionsRef, renderTrigger, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, }) {
+    const effectiveScopeId = scopeId ?? NO_SCOPE_FALLBACK;
     const isMobile = useIsMobile();
     const { chatPanelContainer, isOpen: sidebarNavOpen, setOpen: setSidebarNavOpen, chatWidthPx, setChatWidthPx, getShellWidth, setChatPanelOpen, } = useSidebar();
-    const { chats, currentChatId, setCurrentChatId, newChat, sendMessage, addMessage, removeMessageById, } = useChatsForDataset(effectiveDatasetId);
-    const chat = useChat(effectiveDatasetId, currentChatId);
+    const { chats, currentChatId, setCurrentChatId, newChat, sendMessage, addMessage, removeMessageById, } = useChatsForScopeId(effectiveScopeId);
+    const chat = useChat(effectiveScopeId, currentChatId);
     const { searchParams, addSearchParams, removeSearchParams } = useQueryParams();
     const chatOpen = searchParams.has('chat');
     const [isLoading, setIsLoading] = useState(false);
@@ -701,7 +702,7 @@ function ChatSheet({ triggerLabel = 'Open Chat', triggerAriaLabel, actionsRef, r
                                                 })
                                                 : null, isScriptComplete &&
                                                 onGenerateDashboard &&
-                                                !generatingDashboard ? (jsxs(Button, { type: "button", variant: "default", size: "lg", disabled: isLoading, onClick: () => void handleGenerateDashboard(), children: [jsx(ChartLineIcon, {}), "Generate Dashboard"] })) : null] })), showInlinePresets && renderPresets('inline'), isLoading && isLastMessageFromUser && (jsx(TextShimmer, { duration: 1, spread: 5, className: S.loader, children: "Thinking..." }))] }) })), jsx("div", { className: S.footer, children: jsx(Chat.Prompt, { id: effectiveDatasetId, onSubmit: handlePromptSubmit, disabled: isLoading, onChatDeleted: endLocalDemoFlow }) })] }) })] }));
+                                                !generatingDashboard ? (jsxs(Button, { type: "button", variant: "default", size: "lg", disabled: isLoading, onClick: () => void handleGenerateDashboard(), children: [jsx(ChartLineIcon, {}), "Generate Dashboard"] })) : null] })), showInlinePresets && renderPresets('inline'), isLoading && isLastMessageFromUser && (jsx(TextShimmer, { duration: 1, spread: 5, className: S.loader, children: "Thinking..." }))] }) })), jsx("div", { className: S.footer, children: jsx(Chat.Prompt, { id: effectiveScopeId, onSubmit: handlePromptSubmit, disabled: isLoading, onChatDeleted: endLocalDemoFlow }) })] }) })] }));
     const toggleOpen = () => onOpenChange(!isOpen);
     if (actionsRef) {
         actionsRef.current = {

@@ -2,7 +2,7 @@ import cn from 'classnames';
 import { FormEvent, useState } from 'react';
 
 import { ChatSelector } from '#uilib/components/ui/Chat/ChatSheet/ChatSelector';
-import { useChatsForDataset } from '#uilib/contexts/chat-context';
+import { useChatsForScopeId } from '#uilib/contexts/chat-context';
 import useEvent from '#uilib/hooks/useEvent';
 import { SendHorizontalIcon, Trash2Icon } from 'lucide-react';
 
@@ -20,7 +20,7 @@ export function ChatPrompt({
   onChatDeleted,
 }: ChatPromptProps) {
   const [message, setMessage] = useState('');
-  const { currentChatId, deleteChat, chats } = useChatsForDataset(id);
+  const { currentChatId, deleteChat, chats } = useChatsForScopeId(id);
 
   const handleDeleteChat = () => {
     if (!currentChatId) return;

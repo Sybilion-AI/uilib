@@ -288,10 +288,10 @@ function Sidebar({ defaultOpen = true, open: openProp, onOpenChange: setOpenProp
 }
 function SidebarTrigger({ className, onClick, ...props }) {
     const { toggleSidebar } = useSidebar();
-    return (jsxs(Button, { "data-sidebar": "trigger", "data-slot": "sidebar-trigger", variant: "ghost", icon: true, className: cn(SidebarStem.sidebarTrigger, className), onClick: event => {
+    return (jsx(Button, { "data-sidebar": "trigger", "data-slot": "sidebar-trigger", variant: "ghost", icon: true, className: cn(SidebarStem.sidebarTrigger, className), onClick: event => {
             onClick?.(event);
             toggleSidebar();
-        }, ...props, children: [jsx(PanelLeft, { size: 20, strokeWidth: 1.5, className: "text-foreground" }), jsx("span", { className: "sr-only", children: "Toggle Sidebar" })] }));
+        }, ...props, children: jsx(PanelLeft, { size: 20, strokeWidth: 1.5, className: "text-foreground" }) }));
 }
 function SidebarRail({ className, ...props }) {
     const { toggleSidebar } = useSidebar();

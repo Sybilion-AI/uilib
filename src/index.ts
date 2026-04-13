@@ -1,4 +1,5 @@
 export * from './contexts/chat-context';
+export * from './types/chat-api.types';
 export * from './components/ui/AnalysesSelector';
 export * from './components/ui/AnalysisLineIcon';
 export * from './components/ui/Avatar';
