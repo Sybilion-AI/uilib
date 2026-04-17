@@ -9,5 +9,6 @@ export type {
   Chat as ChatType,
   Message,
   ChatProps,
-  ChatPreset,
+  ChatPreset as ChatPresetType,
 } from './Chat.types';
+export { MessageRole } from './Chat.types';

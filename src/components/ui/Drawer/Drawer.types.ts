@@ -1,3 +1,8 @@
+import type {
+  DialogCloseProps,
+  DialogTriggerProps,
+} from '@radix-ui/react-dialog';
+
 export interface DrawerProps {
   shouldScaleBackground?: boolean;
   open?: boolean;
@@ -8,14 +13,14 @@ export interface DrawerProps {
   children?: React.ReactNode;
 }
 
-export interface DrawerTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+export interface DrawerTriggerProps extends DialogTriggerProps {}
 
 export interface DrawerPortalProps {
   children?: React.ReactNode;
   container?: HTMLElement;
 }
 
-export interface DrawerCloseProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+export interface DrawerCloseProps extends DialogCloseProps {}
 
 export interface DrawerOverlayProps extends React.HTMLAttributes<HTMLDivElement> {}
 

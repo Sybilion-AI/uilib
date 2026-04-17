@@ -18,10 +18,12 @@ export { ChatSheet } from './components/ui/Chat/ChatSheet/ChatSheet.js';
 export { ChatMessage } from './components/ui/Chat/ChatMessage/ChatMessage.js';
 export { ChatPrompt } from './components/ui/Chat/ChatPrompt/ChatPrompt.js';
 export { ChatPresets } from './components/ui/Chat/ChatPresets/ChatPresets.js';
+export { MessageRole } from './components/ui/Chat/Chat.types.js';
 export { Checkbox } from './components/ui/Checkbox/Checkbox.js';
 export { Dialog } from './components/ui/Dialog/Dialog.js';
 export { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerPortal, DrawerTitle, DrawerTrigger } from './components/ui/Drawer/Drawer.js';
 export { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from './components/ui/DropdownMenu/DropdownMenu.js';
+export { DropZone } from './components/ui/DropZone/DropZone.js';
 export { FlickeringGrid } from './components/ui/FlickeringGrid/FlickeringGrid.js';
 export { Foldable } from './components/ui/Foldable/Foldable.js';
 export { Image } from './components/ui/Image/Image.js';
@@ -74,4 +76,5 @@ export { CustomChartLegend } from './components/ui/Chart/components/CustomChartL
 export { ChartContainer, ChartStyle } from './components/ui/Chart/components/ChartContainer.js';
 export { ChartTooltipContent } from './components/ui/Chart/components/ChartTooltipContent.js';
 export { ChartLegendContent } from './components/ui/Chart/components/ChartLegendContent.js';
+export { BaseChartWrapper } from './components/ui/Chart/components/BaseChartWrapper.js';
 export { default as DialogStyles } from './components/ui/Dialog/Dialog.styl.js';

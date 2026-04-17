@@ -1,5 +1,6 @@
 import * as RechartsPrimitive from 'recharts';
 
+import { BaseChartWrapper } from './components/BaseChartWrapper';
 import { ChartContainer, ChartStyle } from './components/ChartContainer';
 import { ChartLegendContent } from './components/ChartLegendContent';
 import { ChartTooltipContent } from './components/ChartTooltipContent';
@@ -18,4 +19,5 @@ export {
   ChartLegend,
   ChartLegendContent,
   ChartStyle,
+  BaseChartWrapper,
 };

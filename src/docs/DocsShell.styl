@@ -1,0 +1,43 @@
+@import '../lib/theme.styl'
+
+.root
+  display flex
+  flex-direction column
+  height 100vh
+
+.shell
+  display grid
+  flex 1
+  min-height 0
+  width 100%
+  grid-template-columns 1fr
+  grid-template-areas "main"
+
+  @media (min-width MOBILE)
+    grid-template-columns var(--sidebar-width) 1fr
+    grid-template-areas "sidebar main"
+
+  :global([data-slot="sidebar-wrapper"][data-state="collapsed"]) &
+    @media (min-width MOBILE)
+      grid-template-columns 0 1fr
+
+.areaSidebar
+  grid-area sidebar
+  min-width 0
+
+  @media (max-width MOBILE)
+    display none
+
+.areaMain
+  grid-area main
+  min-width 0
+  display flex
+  flex-direction column
+  padding 0 var(--p-4) var(--p-4)
+
+.footerSlot
+  flex-shrink 0
+
+.loading
+  padding var(--p-8)
+  color var(--muted-foreground)

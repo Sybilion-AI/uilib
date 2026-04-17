@@ -1,4 +1,5 @@
 import * as RechartsPrimitive from 'recharts';
+export { BaseChartWrapper } from './components/BaseChartWrapper.js';
 import 'react/jsx-runtime';
 import 'classnames';
 import 'react';

@@ -66,6 +66,8 @@ Install these in the consuming app:
 - `react-router-dom` (>= 6) — required for components that use `Link` or routing-aware layout (for example `PageFooter`, `Breadcrumbs`)
 - `@homecode/ui` (>= 4.17) — still required for Scroll/LS-related pieces until those are replaced
 
+`@homecode/ui` is a **peer** dependency only (it is not listed under `dependencies`). The app must provide a single installed copy. Bundling `@homecode/ui` as a nested dependency of `uilib` previously pulled a second `react` and caused **invalid hook call** errors in components such as `DropZone`.
+
 Runtime dependencies of this package (Recharts, Radix, `motion`, `vaul`, `@vimeo/player`, etc.) are declared in `package.json` and should be satisfied by the consumer’s install tree.
 
 ## Maintainers: keeping `dist/` in sync

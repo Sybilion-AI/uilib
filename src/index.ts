@@ -17,6 +17,7 @@ export * from './components/ui/Checkbox';
 export * from './components/ui/Dialog';
 export * from './components/ui/Drawer';
 export * from './components/ui/DropdownMenu';
+export * from './components/ui/DropZone/DropZone';
 export * from './components/ui/FlickeringGrid';
 export * from './components/ui/Foldable';
 export * from './components/ui/Image';

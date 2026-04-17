@@ -1,5 +1,5 @@
 export interface LabelWithIdProps {
-    id: string;
+    id: string | number;
     label: React.ReactNode;
     className?: string;
 }

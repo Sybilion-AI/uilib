@@ -13,15 +13,6 @@ import { XIcon } from '@phosphor-icons/react';
 import S from './Dialog.styl';
 import type { DialogProps } from './Dialog.types';
 
-const FOOTER_ALIGN_CLASS: Record<
-  NonNullable<DialogProps['footerAlignment']>,
-  string
-> = {
-  left: S.footerAlignLeft,
-  center: S.footerAlignCenter,
-  right: S.footerAlignRight,
-};
-
 export function Dialog({
   open,
   onOpenChange,
