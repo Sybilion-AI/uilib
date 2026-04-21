@@ -44,7 +44,7 @@ Yarn/npm substitute `${NODE_AUTH_TOKEN}` at install time.
 
 **Different repository than the package (typical for `design-demo` → `uilib`)**
 
-- Use a **PAT** or org-level credential with `read:packages` stored as a repository/org secret (e.g. `PACKAGES_READ_TOKEN`).
+- Use a **PAT** with `read:packages` stored as a repository/org secret. Name is arbitrary; examples below use `PACKAGES_READ_TOKEN` for clarity, or reuse an existing org secret like `PAT` if it already has `read:packages`.
 - `GITHUB_TOKEN` alone often **cannot** install private packages published from another repository; use a PAT unless GitHub documents an exception for your setup.
 
 ## 4. GitHub Actions (install job)
@@ -66,23 +66,23 @@ jobs:
           scope: '@Mir-Insight'
       - run: yarn install --frozen-lockfile
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN || secrets.PAT }}
 ```
 
-`setup-node` can write `.npmrc`; if you already committed `.npmrc` with `${NODE_AUTH_TOKEN}`, passing `NODE_AUTH_TOKEN` in `env` is enough.
+`setup-node` can write `.npmrc`; if you already committed `.npmrc` with `${NODE_AUTH_TOKEN}`, passing `NODE_AUTH_TOKEN` in `env` is enough. Use whichever secret name your org uses for a PAT with `read:packages`.
 
 ## 5. Docker builds
 
 Do **not** pass tokens as plain `ARG` (they can leak in image history). Use **BuildKit secrets** and export `NODE_AUTH_TOKEN` only inside the `RUN` that runs `yarn install` / `npm ci`.
 
-`design-demo`’s `deployment/Dockerfile` mounts an optional secret `gh_token` and exports it as `NODE_AUTH_TOKEN` before install. The workflow passes:
+`design-demo`’s `deployment/Dockerfile` mounts an optional secret `gh_token` and appends it to `.npmrc` before install. The workflow passes (first match wins):
 
 ```yaml
 secrets: |
-  gh_token=${{ secrets.PACKAGES_READ_TOKEN }}
+  gh_token=${{ secrets.PACKAGES_READ_TOKEN || secrets.PAT || github.token }}
 ```
 
-If you are not using GitHub Packages yet, omit the secret; the mount stays optional (`required=false`) and installs that only use `github:` or public npm still work.
+If you are not using GitHub Packages yet, omit the PAT secrets; the mount stays optional (`required=false`) and installs that only use `github:` or public npm still work.
 
 ## 6. Migrating from `github:` dependency
 
