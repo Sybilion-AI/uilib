@@ -192,7 +192,6 @@ export function Dialog({
           type="button"
         >
           <XIcon size={16} />
-          <span className="sr-only">Close</span>
         </button>
 
         {content && (
