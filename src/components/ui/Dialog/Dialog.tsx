@@ -24,6 +24,7 @@ export function Dialog({
   content,
   contentClassName,
   footer,
+  footerClassName,
   footerAlignment = 'center',
   size = 'default',
   className,
@@ -205,7 +206,9 @@ export function Dialog({
         )}
 
         {footer && (
-          <CardFooter className={S[`align-${footerAlignment}`]}>
+          <CardFooter
+            className={cn(S[`align-${footerAlignment}`], footerClassName)}
+          >
             {footer}
           </CardFooter>
         )}

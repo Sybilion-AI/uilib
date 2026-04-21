@@ -6,7 +6,7 @@ import { Card, CardHeader, CardContent, CardFooter } from '../Card/Card.js';
 import { XIcon } from '@phosphor-icons/react';
 import S from './Dialog.styl.js';
 
-function Dialog({ open, onOpenChange, disabled, trigger, title, subtitle, icon, content, contentClassName, footer, footerAlignment = 'center', size = 'default', className, noScroll, maxHeight, autoScrollBottom, width, }) {
+function Dialog({ open, onOpenChange, disabled, trigger, title, subtitle, icon, content, contentClassName, footer, footerClassName, footerAlignment = 'center', size = 'default', className, noScroll, maxHeight, autoScrollBottom, width, }) {
     const [isMounted, setIsMounted] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const dialogRef = useRef(null);
@@ -118,7 +118,7 @@ function Dialog({ open, onOpenChange, disabled, trigger, title, subtitle, icon, 
                     maxHeight: maxHeight
                         ? `min(${maxHeight}, calc(100% - var(--p-4)))`
                         : null,
-                }, children: [(title || subtitle || icon) && (jsx(CardHeader, { icon: icon, title: title, description: subtitle })), jsx("button", { className: S.dialogClose, onClick: handleCloseClick, "aria-label": "Close dialog", type: "button", children: jsx(XIcon, { size: 16 }) }), content && (jsx(CardContent, { className: contentClassName, noScroll: noScroll, autoScrollBottom: autoScrollBottom, children: content })), footer && (jsx(CardFooter, { className: S[`align-${footerAlignment}`], children: footer }))] })] }));
+                }, children: [(title || subtitle || icon) && (jsx(CardHeader, { icon: icon, title: title, description: subtitle })), jsx("button", { className: S.dialogClose, onClick: handleCloseClick, "aria-label": "Close dialog", type: "button", children: jsx(XIcon, { size: 16 }) }), content && (jsx(CardContent, { className: contentClassName, noScroll: noScroll, autoScrollBottom: autoScrollBottom, children: content })), footer && (jsx(CardFooter, { className: cn(S[`align-${footerAlignment}`], footerClassName), children: footer }))] })] }));
     const onTriggerClick = !disabled ? () => onOpenChange(true) : undefined;
     return (jsxs(Fragment, { children: [trigger && jsx("div", { onClick: onTriggerClick, children: trigger }), open && !disabled && createPortal(dialogContent, document.body)] }));
 }
