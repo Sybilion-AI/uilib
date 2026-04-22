@@ -3,7 +3,7 @@ export declare function PageTabs({ className, contentClassName, items, tabsListP
     items: {
         value: string;
         label: string;
-        content: React.ReactNode;
+        content?: React.ReactNode;
     }[];
     tabsListProps?: TabsListProps & {
         fullWidth?: boolean;

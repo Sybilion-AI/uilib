@@ -1,7 +1,11 @@
 export { Chat } from './Chat';
 export { usedPresetIdsFromMessages } from './chat-preset-utils';
-export { ChatSheet } from './ChatSheet';
-export type { ChatSheetActions } from './ChatSheet';
+export { ChatChrome } from './ChatChrome';
+export type { ChatChromeProps, ChatChromeResizeHandleConfig, } from './ChatChrome';
+export { ChatSheet } from './ChatSheet/ChatSheet';
+export { useChatPanelChromeModel } from './ChatSheet/useChatPanelChromeModel';
+export type { ChatSheetActions, ChatSheetProps, } from './ChatSheet/ChatSheet';
+export type { UseChatPanelChromeModelInput, UseChatPanelChromeModelResult, } from './ChatSheet/useChatPanelChromeModel';
 export { ChatMessage } from './ChatMessage';
 export { ChatPrompt } from './ChatPrompt';
 export { ChatPresets } from './ChatPresets';

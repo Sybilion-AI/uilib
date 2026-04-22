@@ -14,7 +14,9 @@ export { ChartForecastProbabilistic } from './components/ui/ChartForecastProbabi
 export { ChartTrend } from './components/ui/ChartTrend/ChartTrend.js';
 export { Chat } from './components/ui/Chat/Chat.js';
 export { usedPresetIdsFromMessages } from './components/ui/Chat/chat-preset-utils.js';
+export { ChatChrome } from './components/ui/Chat/ChatChrome/ChatChrome.js';
 export { ChatSheet } from './components/ui/Chat/ChatSheet/ChatSheet.js';
+export { useChatPanelChromeModel } from './components/ui/Chat/ChatSheet/useChatPanelChromeModel.js';
 export { ChatMessage } from './components/ui/Chat/ChatMessage/ChatMessage.js';
 export { ChatPrompt } from './components/ui/Chat/ChatPrompt/ChatPrompt.js';
 export { ChatPresets } from './components/ui/Chat/ChatPresets/ChatPresets.js';

@@ -12,6 +12,14 @@ import {
 
 import S from './PageTabs.styl';
 
+function hasTabPanelContent(content: React.ReactNode | undefined): boolean {
+  if (content == null) return false;
+  if (typeof content === 'boolean') return false;
+  if (Array.isArray(content) && content.length === 0) return false;
+  if (content === '') return false;
+  return true;
+}
+
 export function PageTabs({
   className,
   contentClassName,
@@ -19,7 +27,7 @@ export function PageTabs({
   tabsListProps,
   ...props
 }: {
-  items: { value: string; label: string; content: React.ReactNode }[];
+  items: { value: string; label: string; content?: React.ReactNode }[];
   tabsListProps?: TabsListProps & {
     fullWidth?: boolean;
     withPaddings?: boolean;
@@ -31,7 +39,7 @@ export function PageTabs({
         {...tabsListProps}
         className={cn(S.list, tabsListProps?.withPaddings && S.withPaddings)}
       >
-        <PageXScroll scrollbarClassName={S.scrollbar}>
+        <PageXScroll size="sm" scrollbarClassName={S.scrollbar}>
           {items.map(item => (
             <TabsTrigger value={item.value} key={item.value}>
               {item.label}
@@ -40,15 +48,17 @@ export function PageTabs({
         </PageXScroll>
       </TabsList>
 
-      {items.map(item => (
-        <TabsContent
-          value={item.value}
-          key={item.value}
-          className={cn(S.content, contentClassName)}
-        >
-          {item.content}
-        </TabsContent>
-      ))}
+      {items.map(item =>
+        hasTabPanelContent(item.content) ? (
+          <TabsContent
+            value={item.value}
+            key={item.value}
+            className={cn(S.content, contentClassName)}
+          >
+            {item.content}
+          </TabsContent>
+        ) : null,
+      )}
     </Tabs>
   );
 }
