@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.3](https://github.com/Mir-Insight/uilib/compare/v1.0.2...v1.0.3) (2026-04-22)
+
+
+### Features
+
+* PageTabs, ChatSheet - Tab UI and chat chrome ([8f28853](https://github.com/Mir-Insight/uilib/commit/8f288538a199db45bb09d24b43cd0c48022e45f6))
+
 ### [1.0.2](https://github.com/Mir-Insight/uilib/compare/v1.0.1...v1.0.2) (2026-04-21)
 
 
