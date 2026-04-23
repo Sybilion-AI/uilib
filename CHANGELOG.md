@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.8](https://github.com/Mir-Insight/uilib/compare/v1.0.7...v1.0.8) (2026-04-23)
+
+
+### Bug Fixes
+
+* Tabs variant=link - underline style ([1289b8f](https://github.com/Mir-Insight/uilib/commit/1289b8fe083ed2a7ac6c04233b7dd5e6e2f14fe8))
+
 ### [1.0.7](https://github.com/Mir-Insight/uilib/compare/v1.0.6...v1.0.7) (2026-04-23)
 
 
