@@ -1,11 +1,16 @@
 import S from './ChatEmptyState.styl';
+import type { ChatEmptyStateProps } from './ChatEmptyState.types';
 
-export function ChatEmptyState() {
+export function ChatEmptyState({
+  icon,
+  title,
+  description,
+}: ChatEmptyStateProps) {
   return (
     <div className={S.root}>
-      <div className={S.icon} />
-      <h2>Chat with a forecast.</h2>
-      <p>Instantly get answers about the forecast’s output and reasoning.</p>
+      {icon && <div className={S.icon}>{icon}</div>}
+      {title && <h2>{title}</h2>}
+      {description && <p>{description}</p>}
     </div>
   );
 }

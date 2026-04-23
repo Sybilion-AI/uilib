@@ -1,14 +1,11 @@
 import cn from 'classnames';
-import type { RefObject } from 'react';
 
-import type { Message } from '#uilib/components/ui/Chat/Chat.types';
 import {
   displayLabelForBranchKeyFromMessages,
   humanizeBranchKey,
 } from '#uilib/components/ui/Chat/ChatMessage/presetScript';
-import type { ChatPresetsLayout } from '#uilib/components/ui/Chat/ChatPresets';
 import { TextShimmer } from '#uilib/components/ui/TextShimmer';
-import { Scroll, ScrollRef } from '@homecode/ui';
+import { Scroll } from '@homecode/ui';
 import { ChartLineIcon, PaperPlaneRightIcon, X } from '@phosphor-icons/react';
 
 import { Button } from '../../Button';
@@ -16,49 +13,7 @@ import { PanelResizeHandle } from '../../Sidebar/Sidebar';
 import SidebarStem from '../../Sidebar/Sidebar.styl';
 import { Chat } from '../Chat';
 import S from './ChatChrome.styl';
-
-export type ChatChromeResizeHandleConfig = {
-  isActive: boolean;
-  startWidthPx: number;
-  getShellWidth: () => number;
-  onDragWidth: (rawPx: number) => void;
-  onDragComplete: (finalRawPx: number) => void;
-};
-
-export interface ChatChromeProps {
-  showResizeHandle: boolean;
-  resizeHandle: ChatChromeResizeHandleConfig | undefined;
-  onClose: (() => void) | undefined;
-  isEmpty: boolean;
-  renderPresets: (layout: ChatPresetsLayout) => React.ReactNode;
-  /** Message list for the scroll area; use `[]` when empty. */
-  messages: Message[];
-  onQuickReply: (branchKey: string, displayLabel: string) => void;
-  suppressedQuickReplyKeys: ReadonlySet<string>;
-  isLoading: boolean;
-  scriptContinueLabel: string | undefined;
-  onScriptContinue: (() => void) | undefined;
-  renderMessageChart?: () => React.ReactNode;
-  showBranchActionsRow: boolean;
-  showSyntheticBranchButtons: boolean;
-  unusedBranchKeys: string[];
-  isScriptComplete: boolean;
-  onGenerateDashboard:
-    | ((transcript: string) => void | Promise<void>)
-    | undefined;
-  generatingDashboard: boolean;
-  onGenerateDashboardClick: () => void;
-  showInlinePresets: boolean;
-  isLastMessageFromUser: boolean;
-  scrollRef: RefObject<ScrollRef | null>;
-  effectiveScopeId: string;
-  onPromptSubmit: (message: string) => void | Promise<void>;
-  onChatDeleted: (sessionId: string) => void;
-  /** `?prompt=` deep link text for one-shot composer pre-fill. */
-  promptPrefill?: string | null;
-  variant?: 'default' | 'sidebar';
-  footerClassName?: string;
-}
+import type { ChatChromeProps } from './ChatChrome.types';
 
 export function ChatChrome({
   showResizeHandle,
@@ -89,6 +44,7 @@ export function ChatChrome({
   promptPrefill,
   variant = 'sidebar',
   footerClassName,
+  emptyState,
 }: ChatChromeProps) {
   return (
     <div className={cn(S.panelRoot, S[`variant-${variant}`])}>
@@ -121,7 +77,7 @@ export function ChatChrome({
         <Chat isEmpty={isEmpty}>
           {isEmpty ? (
             <>
-              <Chat.EmptyState />
+              <Chat.EmptyState {...emptyState} />
               {renderPresets('fixed')}
             </>
           ) : (
