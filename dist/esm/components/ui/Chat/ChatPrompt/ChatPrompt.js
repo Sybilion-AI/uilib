@@ -1,6 +1,6 @@
 import { jsxs, jsx } from 'react/jsx-runtime';
 import cn from 'classnames';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChatSelector } from '../ChatSheet/ChatSelector.js';
 import { useChatsForScopeId } from '../../../../contexts/chat-context.js';
 import useEvent from '../../../../hooks/useEvent.js';
@@ -9,9 +9,14 @@ import { Button } from '../../Button/Button.js';
 import { Input } from '../../Input/Input.js';
 import S from './ChatPrompt.styl.js';
 
-function ChatPrompt({ onSubmit, placeholder, className, footer, id, onChatDeleted, }) {
+function ChatPrompt({ onSubmit, placeholder, className, footer, id, onChatDeleted, prefillMessage, }) {
     const [message, setMessage] = useState('');
     const { currentChatId, deleteChat, chats } = useChatsForScopeId(id);
+    useEffect(() => {
+        if (prefillMessage != null && prefillMessage !== '') {
+            setMessage(prefillMessage);
+        }
+    }, [prefillMessage]);
     const handleDeleteChat = () => {
         if (!currentChatId)
             return;

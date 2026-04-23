@@ -22,7 +22,19 @@ function useQueryParams() {
             return next;
         }, { replace: true });
     }, [setSearchParams]);
-    return { searchParams, addSearchParams, removeSearchParams };
+    const mutateSearchParams = useCallback((fn) => {
+        setSearchParams(prev => {
+            const next = new URLSearchParams(prev);
+            fn(next);
+            return next;
+        }, { replace: true });
+    }, [setSearchParams]);
+    return {
+        searchParams,
+        addSearchParams,
+        removeSearchParams,
+        mutateSearchParams,
+    };
 }
 
 export { useQueryParams };

@@ -36,7 +36,9 @@ export interface ChatChromeProps {
     effectiveScopeId: string;
     onPromptSubmit: (message: string) => void | Promise<void>;
     onChatDeleted: (sessionId: string) => void;
+    /** `?prompt=` deep link text for one-shot composer pre-fill. */
+    promptPrefill?: string | null;
     variant?: 'default' | 'sidebar';
     footerClassName?: string;
 }
-export declare function ChatChrome({ showResizeHandle, resizeHandle, onClose, isEmpty, renderPresets, messages, onQuickReply, suppressedQuickReplyKeys, isLoading, scriptContinueLabel, onScriptContinue, renderMessageChart, showBranchActionsRow, showSyntheticBranchButtons, unusedBranchKeys, isScriptComplete, onGenerateDashboard, generatingDashboard, onGenerateDashboardClick, showInlinePresets, isLastMessageFromUser, scrollRef, effectiveScopeId, onPromptSubmit, onChatDeleted, variant, footerClassName, }: ChatChromeProps): import("react/jsx-runtime").JSX.Element;
+export declare function ChatChrome({ showResizeHandle, resizeHandle, onClose, isEmpty, renderPresets, messages, onQuickReply, suppressedQuickReplyKeys, isLoading, scriptContinueLabel, onScriptContinue, renderMessageChart, showBranchActionsRow, showSyntheticBranchButtons, unusedBranchKeys, isScriptComplete, onGenerateDashboard, generatingDashboard, onGenerateDashboardClick, showInlinePresets, isLastMessageFromUser, scrollRef, effectiveScopeId, onPromptSubmit, onChatDeleted, promptPrefill, variant, footerClassName, }: ChatChromeProps): import("react/jsx-runtime").JSX.Element;

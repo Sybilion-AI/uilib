@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 import { ChatSelector } from '#uilib/components/ui/Chat/ChatSheet/ChatSelector';
 import { useChatsForScopeId } from '#uilib/contexts/chat-context';
@@ -18,9 +18,16 @@ export function ChatPrompt({
   footer,
   id,
   onChatDeleted,
+  prefillMessage,
 }: ChatPromptProps) {
   const [message, setMessage] = useState('');
   const { currentChatId, deleteChat, chats } = useChatsForScopeId(id);
+
+  useEffect(() => {
+    if (prefillMessage != null && prefillMessage !== '') {
+      setMessage(prefillMessage);
+    }
+  }, [prefillMessage]);
 
   const handleDeleteChat = () => {
     if (!currentChatId) return;

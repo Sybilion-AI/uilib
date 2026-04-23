@@ -80,6 +80,10 @@ const CHAT_NEW_SHORTCUT_KEY = 'o';
 /** When chat panel is open, collapse left nav below this width so both don't crowd the viewport. */
 const CHAT_NAV_COLLAPSE_BREAKPOINT_PX = 1400;
 
+const CHAT_QUERY_PARAM = 'chat';
+const CHAT_OPEN_VALUE = 'open';
+const PROMPT_QUERY_PARAM = 'prompt';
+
 export function useChatPanelChromeModel({
   embedAsPage,
   presets,
@@ -111,11 +115,21 @@ export function useChatPanelChromeModel({
   } = useChatsForScopeId(effectiveScopeId);
   const chat = useChat(effectiveScopeId, currentChatId);
 
-  const { searchParams, addSearchParams, removeSearchParams } =
-    useQueryParams();
-  const chatOpen = searchParams.has('chat');
+  const {
+    searchParams,
+    addSearchParams,
+    removeSearchParams,
+    mutateSearchParams,
+  } = useQueryParams();
+  const chatOpen = searchParams.has(CHAT_QUERY_PARAM);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  /** `?prompt=` deep link text for one-shot composer pre-fill (see ChatPrompt). */
+  const [promptLinkPrefill, setPromptLinkPrefill] = useState<string | null>(
+    null,
+  );
+  /** Deduplicate Strict Mode double `useEffect` on the same mount. */
+  const promptParamHandledInEffectRef = useRef(false);
   const panelActive = embedAsPage || isOpen;
 
   // Ensure valid currentChatId when chat opens
@@ -258,13 +272,68 @@ export function useChatPanelChromeModel({
       // Avoid a second setSearchParams when `chat` is already set (e.g. Reports merges
       // reportId + chat in one update). A redundant add can merge from a stale `prev`
       // and drop other query keys.
-      if (!searchParams.has('chat')) {
-        addSearchParams({ chat: 'open' });
+      if (!searchParams.has(CHAT_QUERY_PARAM)) {
+        addSearchParams({ [CHAT_QUERY_PARAM]: CHAT_OPEN_VALUE });
       }
     } else {
-      removeSearchParams('chat');
+      removeSearchParams(CHAT_QUERY_PARAM);
     }
   };
+
+  /**
+   * App link: `?prompt=…` — open panel, pre-fill composer, strip param (read once on mount
+   * from `location.search`). If the selected session already has messages, `newChat()` first.
+   */
+  useEffect(() => {
+    if (embedAsPage) {
+      return;
+    }
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.get(PROMPT_QUERY_PARAM);
+    if (raw == null) {
+      return;
+    }
+
+    if (raw.trim() === '') {
+      mutateSearchParams(n => {
+        n.delete(PROMPT_QUERY_PARAM);
+      });
+      return;
+    }
+
+    if (promptParamHandledInEffectRef.current) {
+      return;
+    }
+    promptParamHandledInEffectRef.current = true;
+
+    const selected = currentChatId
+      ? chats.find(c => c.session_id === currentChatId)
+      : undefined;
+    const selectedHasMessages = (selected?.messages?.length ?? 0) > 0;
+    const needsFirstSession = chats.length === 0;
+
+    if (selectedHasMessages || needsFirstSession) {
+      const sessionId = newChat();
+      if (sessionId == null) {
+        logger.warn('Chat prompt link: sign in to use the assistant.');
+        mutateSearchParams(n => {
+          n.delete(PROMPT_QUERY_PARAM);
+        });
+        promptParamHandledInEffectRef.current = false;
+        return;
+      }
+    }
+
+    setPromptLinkPrefill(raw.trim());
+
+    mutateSearchParams(n => {
+      n.set(CHAT_QUERY_PARAM, CHAT_OPEN_VALUE);
+      n.delete(PROMPT_QUERY_PARAM);
+    });
+    setIsOpen(true);
+    setChatPanelOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only; reads `window.location` and first-render `chats` / `currentChatId`
+  }, []);
 
   useEvent({
     event: 'keydown',
@@ -938,6 +1007,7 @@ export function useChatPanelChromeModel({
     effectiveScopeId,
     onPromptSubmit: handlePromptSubmit,
     onChatDeleted: endLocalDemoFlow,
+    promptPrefill: promptLinkPrefill,
   };
 
   const toggleOpen = () => onOpenChange(!isOpen);

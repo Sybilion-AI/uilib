@@ -54,6 +54,8 @@ export interface ChatChromeProps {
   effectiveScopeId: string;
   onPromptSubmit: (message: string) => void | Promise<void>;
   onChatDeleted: (sessionId: string) => void;
+  /** `?prompt=` deep link text for one-shot composer pre-fill. */
+  promptPrefill?: string | null;
   variant?: 'default' | 'sidebar';
   footerClassName?: string;
 }
@@ -84,6 +86,7 @@ export function ChatChrome({
   effectiveScopeId,
   onPromptSubmit,
   onChatDeleted,
+  promptPrefill,
   variant = 'sidebar',
   footerClassName,
 }: ChatChromeProps) {
@@ -219,6 +222,7 @@ export function ChatChrome({
               onSubmit={onPromptSubmit}
               disabled={isLoading}
               onChatDeleted={onChatDeleted}
+              prefillMessage={promptPrefill ?? undefined}
             />
           </div>
         </Chat>

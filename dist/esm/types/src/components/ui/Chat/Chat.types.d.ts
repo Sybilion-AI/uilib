@@ -53,6 +53,8 @@ export interface ChatPromptProps {
     disabled?: boolean;
     footer?: ReactNode;
     onChatDeleted?: (sessionId: string) => void;
+    /** Deep link `?prompt=` — one-shot composer pre-fill (see useChatPanelChromeModel). */
+    prefillMessage?: string | null;
 }
 export interface ChatMessageProps {
     role: MessageRole;
