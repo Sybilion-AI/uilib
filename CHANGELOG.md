@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.7](https://github.com/Mir-Insight/uilib/compare/v1.0.6...v1.0.7) (2026-04-23)
+
+
+### Features
+
+* CookieConsent - Per-user storage and legacy migration in uilib ([6d30e64](https://github.com/Mir-Insight/uilib/commit/6d30e641b0ba81c6430ce68d39d486672c633f36))
+
+
+### Bug Fixes
+
+* Tabs - no capitalize ([c6d83dd](https://github.com/Mir-Insight/uilib/commit/c6d83ddf5c5ecd72368175e535c2840c5f004643))
+
 ### [1.0.6](https://github.com/Mir-Insight/uilib/compare/v1.0.4...v1.0.6) (2026-04-23)
 
 
