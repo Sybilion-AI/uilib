@@ -15,7 +15,7 @@ import { Button } from '../../Button';
 import { PanelResizeHandle } from '../../Sidebar/Sidebar';
 import SidebarStem from '../../Sidebar/Sidebar.styl';
 import { Chat } from '../Chat';
-import S from '../ChatSheet/ChatSheet.styl';
+import S from './ChatChrome.styl';
 
 export type ChatChromeResizeHandleConfig = {
   isActive: boolean;
