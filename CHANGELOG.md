@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.9](https://github.com/Mir-Insight/uilib/compare/v1.0.8...v1.0.9) (2026-04-23)
+
+
+### Bug Fixes
+
+* ChatSheet - Restore prompt query deep link ([8d795b3](https://github.com/Mir-Insight/uilib/commit/8d795b3ebba3c4c4da40a6c363f9867518936bcf))
+
 ### [1.0.8](https://github.com/Mir-Insight/uilib/compare/v1.0.7...v1.0.8) (2026-04-23)
 
 
