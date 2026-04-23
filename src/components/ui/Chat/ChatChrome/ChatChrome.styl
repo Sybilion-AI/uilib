@@ -8,6 +8,17 @@
   min-height 0
   overflow hidden
 
+  &.variant-sidebar
+    .footer
+      backdrop-filter blur(30px)
+      background-color var(--background-alpha-800)
+      box-shadow 0 0 20px 16px var(--background)
+      border-top 1px solid var(--border)
+
+  &.variant-default
+    .footer
+      --chat-chrome-footer-variant default
+
 .chatResizeHandle
   position: absolute;
   // top 0 !important
@@ -92,11 +103,6 @@
   position absolute
   bottom 0
   width 100%;
-
-  backdrop-filter blur(30px)
-  background-color var(--background-alpha-800)
-  box-shadow 0 0 20px 16px var(--background)
-  border-top 1px solid var(--border)
 
 
 .loader

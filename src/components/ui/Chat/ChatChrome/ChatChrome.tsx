@@ -54,6 +54,8 @@ export interface ChatChromeProps {
   effectiveScopeId: string;
   onPromptSubmit: (message: string) => void | Promise<void>;
   onChatDeleted: (sessionId: string) => void;
+  variant?: 'default' | 'sidebar';
+  footerClassName?: string;
 }
 
 export function ChatChrome({
@@ -82,9 +84,11 @@ export function ChatChrome({
   effectiveScopeId,
   onPromptSubmit,
   onChatDeleted,
+  variant = 'sidebar',
+  footerClassName,
 }: ChatChromeProps) {
   return (
-    <div className={S.panelRoot}>
+    <div className={cn(S.panelRoot, S[`variant-${variant}`])}>
       {showResizeHandle && resizeHandle ? (
         <PanelResizeHandle
           edge="leading"
@@ -209,7 +213,7 @@ export function ChatChrome({
             </div>
           )}
 
-          <div className={S.footer}>
+          <div className={cn(S.footer, footerClassName)}>
             <Chat.Prompt
               id={effectiveScopeId}
               onSubmit={onPromptSubmit}
