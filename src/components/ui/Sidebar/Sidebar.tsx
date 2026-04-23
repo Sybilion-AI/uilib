@@ -129,11 +129,13 @@ function SidebarProvider({
   className,
   style,
   children,
+  userId,
   ...props
 }: ComponentProps<'div'> & {
   defaultOpen?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  userId?: string | number | null;
 }) {
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(isMobile ? false : defaultOpen);
@@ -181,11 +183,11 @@ function SidebarProvider({
         chatWidthPx,
       });
       _setSidebarWidthPx(next);
-      if (persist && getCookiePreferences()?.functional) {
+      if (persist && getCookiePreferences(userId)?.functional) {
         LS.set(SIDEBAR_WIDTH_STORAGE_KEY_PX, next);
       }
     },
-    [getShellWidth, chatPanelOpen, chatWidthPx],
+    [getShellWidth, chatPanelOpen, chatWidthPx, userId],
   );
 
   const setChatWidthPx = useCallback(
@@ -195,11 +197,11 @@ function SidebarProvider({
       const effectiveSidebarW = isOpen ? sidebarWidthPx : 0;
       const next = clampChatWidthPx(px, shellW, effectiveSidebarW);
       _setChatWidthPx(next);
-      if (persist && getCookiePreferences()?.functional) {
+      if (persist && getCookiePreferences(userId)?.functional) {
         LS.set(CHAT_WIDTH_STORAGE_KEY, next);
       }
     },
-    [getShellWidth, isOpen, sidebarWidthPx],
+    [getShellWidth, isOpen, sidebarWidthPx, userId],
   );
 
   const handleShellResize = useCallback(
@@ -225,14 +227,14 @@ function SidebarProvider({
         });
         _setSidebarWidthPx(sNext);
         _setChatWidthPx(cNext);
-        if (getCookiePreferences()?.functional) {
+        if (getCookiePreferences(userId)?.functional) {
           LS.set(SIDEBAR_WIDTH_STORAGE_KEY_PX, sNext);
           LS.set(CHAT_WIDTH_STORAGE_KEY, cNext);
         }
       }
       prevShellWidthRef.current = shellW;
     },
-    [chatPanelOpen, isOpen],
+    [chatPanelOpen, isOpen, userId],
   );
 
   const fitPanelWidthsToShell = useCallback(() => {
@@ -254,12 +256,12 @@ function SidebarProvider({
     if (sNext !== s || cNext !== c) {
       _setSidebarWidthPx(sNext);
       _setChatWidthPx(cNext);
-      if (getCookiePreferences()?.functional) {
+      if (getCookiePreferences(userId)?.functional) {
         LS.set(SIDEBAR_WIDTH_STORAGE_KEY_PX, sNext);
         LS.set(CHAT_WIDTH_STORAGE_KEY, cNext);
       }
     }
-  }, [chatPanelOpen, getShellWidth, isOpen]);
+  }, [chatPanelOpen, getShellWidth, isOpen, userId]);
 
   useLayoutEffect(() => {
     if (!shellEl || isMobile) return;
@@ -282,11 +284,11 @@ function SidebarProvider({
         setIsOpen(value);
       }
 
-      if (getCookiePreferences()?.functional) {
+      if (getCookiePreferences(userId)?.functional) {
         setCookie('isSidebarOpen', value.toString(), 60 * 60 * 24 * 7);
       }
     },
-    [isMobile],
+    [isMobile, userId],
   );
 
   const toggleSidebar = useCallback(() => setOpen(!isOpen), [isOpen, setOpen]);

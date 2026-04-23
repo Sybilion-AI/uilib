@@ -33,10 +33,11 @@ type SidebarProps = ComponentProps<'div'> & {
     fullHeightResizer?: boolean;
 };
 declare function useSidebar(): SidebarContextProps;
-declare function SidebarProvider({ defaultOpen, className, style, children, ...props }: ComponentProps<'div'> & {
+declare function SidebarProvider({ defaultOpen, className, style, children, userId, ...props }: ComponentProps<'div'> & {
     defaultOpen?: boolean;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
+    userId?: string | number | null;
 }): import("react/jsx-runtime").JSX.Element;
 declare function Sidebar({ defaultOpen, open: openProp, onOpenChange: setOpenProp, className, side, variant, collapsible, children, fullHeightResizer, ...props }: SidebarProps): import("react/jsx-runtime").JSX.Element;
 declare function SidebarTrigger({ className, onClick, ...props }: ComponentProps<typeof Button>): import("react/jsx-runtime").JSX.Element;
