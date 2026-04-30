@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.11](https://github.com/Mir-Insight/uilib/compare/v1.0.10...v1.0.11) (2026-04-30)
+
+
+### Bug Fixes
+
+* RollupPostCSS - Single cssnano pass for Styl bundles ([c038453](https://github.com/Mir-Insight/uilib/commit/c038453dbda8b7635231f71a2dcd42f3373d98db))
+
 ### [1.0.10](https://github.com/Mir-Insight/uilib/compare/v1.0.9...v1.0.10) (2026-04-30)
 
 
