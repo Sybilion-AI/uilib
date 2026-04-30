@@ -81,7 +81,10 @@ export default [
         // package name so bundlers resolve node_modules/style-inject correctly.
         inject: cssVariableName =>
           `\nimport styleInject from 'style-inject';\nstyleInject(${cssVariableName});\n`,
-        minimize: true,
+        // rollup-plugin-postcss with minimize:true runs its *nested* cssnano v5 after our plugins.
+        // We already minify via `plugins` below with root cssnano v6 — double pass + two majors
+        // broke sidebar (and other) @media rules in published dist; yarn link often masked it.
+        minimize: false,
         modules: true,
         use: {
           sass: {},
