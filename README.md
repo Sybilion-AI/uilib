@@ -22,6 +22,41 @@ Equivalent in `package.json`:
 }
 ```
 
+### GitHub Packages + bare `uilib` imports
+
+When consuming the published GitHub Packages build (`@Mir-Insight/uilib`) but
+keeping existing imports as `from 'uilib'`, add a bundler alias and matching
+TypeScript paths in the host app:
+
+```json
+{
+  "compilerOptions": {
+    "paths": {
+      "uilib": ["node_modules/@Mir-Insight/uilib"],
+      "uilib/*": ["node_modules/@Mir-Insight/uilib/*"]
+    }
+  }
+}
+```
+
+Webpack example:
+
+```js
+resolve: {
+  alias: {
+    uilib: path.join(paths.modules, '@Mir-Insight/uilib'),
+  },
+}
+```
+
+CI installs from GitHub Packages also need npm auth:
+
+```text
+@Mir-Insight:registry=https://npm.pkg.github.com/
+//npm.pkg.github.com/:_authToken=<token with read:packages>
+always-auth=true
+```
+
 ### Default: prebuilt (`dist/esm`)
 
 The package [`exports`](./package.json) entry `.` resolves to Rollup output and generated declarations:
