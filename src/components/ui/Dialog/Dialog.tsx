@@ -20,6 +20,7 @@ export function Dialog({
   trigger,
   title,
   subtitle,
+  disableCloseButton,
   icon,
   content,
   contentClassName,
@@ -186,14 +187,16 @@ export function Dialog({
           <CardHeader icon={icon} title={title} description={subtitle} />
         )}
 
-        <button
-          className={S.dialogClose}
-          onClick={handleCloseClick}
-          aria-label="Close dialog"
-          type="button"
-        >
-          <XIcon size={16} />
-        </button>
+        {!disableCloseButton && (
+          <button
+            className={S.dialogClose}
+            onClick={handleCloseClick}
+            aria-label="Close dialog"
+            type="button"
+          >
+            <XIcon size={16} />
+          </button>
+        )}
 
         {content && (
           <CardContent

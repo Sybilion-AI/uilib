@@ -3,6 +3,8 @@ import { CSSProperties, ReactNode } from 'react';
 export interface DialogProps {
   open: boolean;
   disabled?: boolean;
+  /** When true, the header close control is hidden. */
+  disableCloseButton?: boolean;
   onOpenChange: (isOpen: boolean) => void;
   trigger?: ReactNode;
   triggerClassName?: string;
