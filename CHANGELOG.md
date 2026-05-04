@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.12](https://github.com/Mir-Insight/uilib/compare/v1.0.11...v1.0.12) (2026-05-04)
+
+
+### Features
+
+* Dialog - Optional hide header close control ([79e703c](https://github.com/Mir-Insight/uilib/commit/79e703c4cded7044000b8721023ad200fc1fe2c4))
+
 ### [1.0.11](https://github.com/Mir-Insight/uilib/compare/v1.0.10...v1.0.11) (2026-04-30)
 
 
