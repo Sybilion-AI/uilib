@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.13](https://github.com/Mir-Insight/uilib/compare/v1.0.12...v1.0.13) (2026-05-05)
+
+
+### Bug Fixes
+
+* Table - Scope row ::before to last tbody ([49028ab](https://github.com/Mir-Insight/uilib/commit/49028ab8a459e9b56843ac4fb9c0c181e7ce25f6))
+
 ### [1.0.12](https://github.com/Mir-Insight/uilib/compare/v1.0.11...v1.0.12) (2026-05-04)
 
 
