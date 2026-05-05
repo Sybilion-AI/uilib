@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.14](https://github.com/Mir-Insight/uilib/compare/v1.0.13...v1.0.14) (2026-05-05)
+
+
+### Bug Fixes
+
+* Table - Row hover without invalid tr::before ([f0ca354](https://github.com/Mir-Insight/uilib/commit/f0ca354cb83d48e6429bf6fe4f889b82fae48673))
+
 ### [1.0.13](https://github.com/Mir-Insight/uilib/compare/v1.0.12...v1.0.13) (2026-05-05)
 
 
