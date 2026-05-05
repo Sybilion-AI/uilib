@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.15](https://github.com/Mir-Insight/uilib/compare/v1.0.14...v1.0.15) (2026-05-05)
+
+
+### Bug Fixes
+
+* build Table ([80fda22](https://github.com/Mir-Insight/uilib/commit/80fda22b5ece4289323423b645a2786f05346f01))
+
 ### [1.0.14](https://github.com/Mir-Insight/uilib/compare/v1.0.13...v1.0.14) (2026-05-05)
 
 
