@@ -62,29 +62,19 @@
 
 .tableRow
   position relative
-  transition-property color, border-color, text-decoration-color, fill, stroke
+  transition-property background-color, color, border-color, text-decoration-color, fill, stroke
   transition-timing-function cubic-bezier(0.4, 0, 0.2, 1)
   transition-duration 150ms
 
-  .tableBody:last-child &::before
-    content ''
-    position absolute
-    z-index 0
-    --gap: 2px;
-    left var(--gap)
-    top var(--gap)
-    height calc(100% - calc(var(--gap) * 2))
-    width calc(100% - calc(var(--gap) * 2))
-    transition background-color 0.1s ease-in-out
-
-  &:last-child::before
-    border-bottom-left-radius var(--p-3)
-    border-bottom-right-radius var(--p-3)
+  .tableBody &:last-child
+    .tableCell:first-child
+      border-bottom-left-radius var(--p-3)
+    .tableCell:last-child
+      border-bottom-right-radius var(--p-3)
 
   .tableBody &:hover
   &[data-state="selected"]
-    &::before
-      background-color var(--muted-50)
+    background-color var(--muted-50)
 
 .tableHead
   min-width 0
