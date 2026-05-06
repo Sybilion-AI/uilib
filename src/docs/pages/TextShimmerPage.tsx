@@ -1,3 +1,4 @@
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { TextShimmer } from '#uilib/components/ui/TextShimmer';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -12,7 +13,11 @@ export default function TextShimmerPage() {
         subheader="Shimmer loading text."
         actions={<DocsHeaderActions />}
       />
-      <TextShimmer>Generating…</TextShimmer>
+      <PageContentSection>
+        <span>
+          <TextShimmer>Generating…</TextShimmer>
+        </span>
+      </PageContentSection>
     </>
   );
 }

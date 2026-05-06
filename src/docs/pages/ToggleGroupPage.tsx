@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { ToggleGroup, ToggleGroupItem } from '#uilib/components/ui/ToggleGroup';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -16,17 +17,19 @@ export default function ToggleGroupPage() {
         subheader="Single-select group."
         actions={<DocsHeaderActions />}
       />
-      <ToggleGroup
-        type="single"
-        value={v}
-        onValueChange={val => {
-          if (val) setV(val);
-        }}
-      >
-        <ToggleGroupItem value="left">Left</ToggleGroupItem>
-        <ToggleGroupItem value="center">Center</ToggleGroupItem>
-        <ToggleGroupItem value="right">Right</ToggleGroupItem>
-      </ToggleGroup>
+      <PageContentSection>
+        <ToggleGroup
+          type="single"
+          value={v}
+          onValueChange={val => {
+            if (val) setV(val);
+          }}
+        >
+          <ToggleGroupItem value="left">Left</ToggleGroupItem>
+          <ToggleGroupItem value="center">Center</ToggleGroupItem>
+          <ToggleGroupItem value="right">Right</ToggleGroupItem>
+        </ToggleGroup>
+      </PageContentSection>
     </>
   );
 }

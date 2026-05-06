@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { RegionSelector } from '#uilib/components/ui/RegionCoords';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -21,17 +22,19 @@ export default function RegionCoordsPage() {
         subheader="RegionSelector — pick a region from map coordinates."
         actions={<DocsHeaderActions />}
       />
-      <RegionSelector
-        regions={REGIONS}
-        onSelect={(name, coords) => {
-          setPicked(
-            `${name}: ${coords.latitude.toFixed(2)}, ${coords.longitude.toFixed(2)}`,
-          );
-        }}
-      >
-        <span style={{ marginRight: 8 }}>Map region</span>
-      </RegionSelector>
-      {picked ? <p style={{ marginTop: 12 }}>{picked}</p> : null}
+      <PageContentSection>
+        <RegionSelector
+          regions={REGIONS}
+          onSelect={(name, coords) => {
+            setPicked(
+              `${name}: ${coords.latitude.toFixed(2)}, ${coords.longitude.toFixed(2)}`,
+            );
+          }}
+        >
+          <span style={{ marginRight: 8 }}>Map region</span>
+        </RegionSelector>
+        {picked ? <p style={{ marginTop: 12 }}>{picked}</p> : null}
+      </PageContentSection>
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { FlickeringGrid } from '#uilib/components/ui/FlickeringGrid';
+import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
@@ -12,9 +13,11 @@ export default function FlickeringGridPage() {
         subheader="Decorative animated grid background."
         actions={<DocsHeaderActions />}
       />
-      <div style={{ height: 200, position: 'relative', overflow: 'hidden' }}>
+      <PageContentSection
+        style={{ height: 200, position: 'relative', overflow: 'hidden' }}
+      >
         <FlickeringGrid className="" />
-      </div>
+      </PageContentSection>
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { PageContentSection } from '#uilib/components/ui/Page';
 import {
   Tabs,
   TabsContent,
@@ -17,14 +18,16 @@ export default function TabsPage() {
         subheader="Tabbed panels."
         actions={<DocsHeaderActions />}
       />
-      <Tabs defaultValue="a" style={{ maxWidth: 400 }}>
-        <TabsList>
-          <TabsTrigger value="a">Tab A</TabsTrigger>
-          <TabsTrigger value="b">Tab B</TabsTrigger>
-        </TabsList>
-        <TabsContent value="a">Content for tab A.</TabsContent>
-        <TabsContent value="b">Content for tab B.</TabsContent>
-      </Tabs>
+      <PageContentSection>
+        <Tabs defaultValue="a" style={{ maxWidth: 400 }}>
+          <TabsList>
+            <TabsTrigger value="a">Tab A</TabsTrigger>
+            <TabsTrigger value="b">Tab B</TabsTrigger>
+          </TabsList>
+          <TabsContent value="a">Content for tab A.</TabsContent>
+          <TabsContent value="b">Content for tab B.</TabsContent>
+        </Tabs>
+      </PageContentSection>
     </>
   );
 }

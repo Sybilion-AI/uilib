@@ -3,6 +3,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '#uilib/components/ui/Avatar';
+import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
@@ -16,7 +17,9 @@ export default function AvatarPage() {
         subheader="Image with fallback initials."
         actions={<DocsHeaderActions />}
       />
-      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+      <PageContentSection
+        style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}
+      >
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
           <AvatarFallback>CN</AvatarFallback>
@@ -24,7 +27,7 @@ export default function AvatarPage() {
         <Avatar>
           <AvatarFallback>AB</AvatarFallback>
         </Avatar>
-      </div>
+      </PageContentSection>
     </>
   );
 }

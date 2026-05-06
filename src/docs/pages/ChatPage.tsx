@@ -6,6 +6,7 @@ import {
   ChatPrompt,
   MessageRole,
 } from '#uilib/components/ui/Chat';
+import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
@@ -21,7 +22,7 @@ export default function ChatPage() {
         subheader="Chat shell with message list and prompt."
         actions={<DocsHeaderActions />}
       />
-      <div
+      <PageContentSection
         style={{
           maxWidth: 560,
           border: '1px solid var(--border)',
@@ -54,7 +55,7 @@ export default function ChatPage() {
             </p>
           ) : null}
         </Chat>
-      </div>
+      </PageContentSection>
     </>
   );
 }

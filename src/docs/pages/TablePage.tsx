@@ -1,3 +1,4 @@
+import { PageContentSection } from '#uilib/components/ui/Page';
 import {
   Table,
   TableBody,
@@ -19,24 +20,26 @@ export default function TablePage() {
         subheader="Semantic table primitives."
         actions={<DocsHeaderActions />}
       />
-      <Table withBackground withPaddings>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Role</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell>Ada</TableCell>
-            <TableCell>Admin</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Bob</TableCell>
-            <TableCell>Viewer</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+      <PageContentSection>
+        <Table withBackground withPaddings>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Role</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell>Ada</TableCell>
+              <TableCell>Admin</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Bob</TableCell>
+              <TableCell>Viewer</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </PageContentSection>
     </>
   );
 }

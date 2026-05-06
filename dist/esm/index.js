@@ -43,6 +43,7 @@ export { NumberControl } from './components/ui/NumberControl/NumberControl.js';
 export { PageHeader } from './components/ui/Page/PageHeader/PageHeader.js';
 export { PageEmptyCanvas } from './components/ui/Page/PageEmptyCanvas/PageEmptyCanvas.js';
 export { PageContent, PageContentSection } from './components/ui/Page/PageContent/PageContent.js';
+export { PageMainContent } from './components/ui/Page/PageMainContent/PageMainContent.js';
 export { PageScroll } from './components/ui/Page/PageScroll/PageScroll.js';
 export { PageXScroll } from './components/ui/Page/PageXScroll/PageXScroll.js';
 export { Breadcrumbs } from './components/ui/Page/Breadcrumbs/Breadcrumbs.js';

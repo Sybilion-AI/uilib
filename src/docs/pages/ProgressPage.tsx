@@ -1,3 +1,4 @@
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { Progress } from '#uilib/components/ui/Progress';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -12,7 +13,9 @@ export default function ProgressPage() {
         subheader="Progress bar."
         actions={<DocsHeaderActions />}
       />
-      <Progress value={45} style={{ maxWidth: 320 }} />
+      <PageContentSection>
+        <Progress value={45} style={{ maxWidth: 320 }} />
+      </PageContentSection>
     </>
   );
 }

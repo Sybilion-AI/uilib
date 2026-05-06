@@ -58,19 +58,21 @@ function isEditableKeyboardTarget(el: Element | null): boolean {
   return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
 }
 
-function readInitialSidebarWidthPx(): number {
+function readInitialSidebarWidthPx(storageKeyPx: string): number {
   if (typeof window === 'undefined') return SIDEBAR_WIDTH_DEFAULT_PX;
-  const stored = LS.get(SIDEBAR_WIDTH_STORAGE_KEY_PX);
+  const stored = LS.get(storageKeyPx);
   if (typeof stored === 'number' && stored >= SIDEBAR_WIDTH_MIN_PX) {
     return stored;
   }
-  const legacyPct = LS.get(SIDEBAR_WIDTH_STORAGE_KEY_PCT);
-  if (typeof legacyPct === 'number' && legacyPct > 0) {
-    const w = window.innerWidth;
-    return clampSidebarWidthPx(Math.round((legacyPct / 100) * w), w, {
-      chatPanelOpen: false,
-      chatWidthPx: 0,
-    });
+  if (storageKeyPx === SIDEBAR_WIDTH_STORAGE_KEY_PX) {
+    const legacyPct = LS.get(SIDEBAR_WIDTH_STORAGE_KEY_PCT);
+    if (typeof legacyPct === 'number' && legacyPct > 0) {
+      const w = window.innerWidth;
+      return clampSidebarWidthPx(Math.round((legacyPct / 100) * w), w, {
+        chatPanelOpen: false,
+        chatWidthPx: 0,
+      });
+    }
   }
   return SIDEBAR_WIDTH_DEFAULT_PX;
 }
@@ -86,9 +88,12 @@ function readInitialChatWidthPx(): number {
 
 type SetPanelWidthOptions = { persist?: boolean };
 
+/** Pass `viewTransition: false` to avoid nesting `document.startViewTransition` (e.g. chat open already animating). */
+export type SetSidebarOpenOptions = { viewTransition?: boolean };
+
 type SidebarContextProps = {
   isOpen: boolean;
-  setOpen: (open: boolean) => void;
+  setOpen: (open: boolean, options?: SetSidebarOpenOptions) => void;
   toggleSidebar: () => void;
   sidebarWidthPx: number;
   setSidebarWidthPx: (px: number, options?: SetPanelWidthOptions) => void;
@@ -130,13 +135,24 @@ function SidebarProvider({
   style,
   children,
   userId,
+  sidebarWidthStorageKey,
+  persistSidebarWidthWithoutConsent = false,
   ...props
 }: ComponentProps<'div'> & {
   defaultOpen?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   userId?: string | number | null;
+  /** LocalStorage key for sidebar width (pixels). Defaults to `sidebarWidthPx`. */
+  sidebarWidthStorageKey?: string;
+  /** When true, sidebar width is saved without functional cookie consent (e.g. internal docs). */
+  persistSidebarWidthWithoutConsent?: boolean;
 }) {
+  const sidebarLsKey = sidebarWidthStorageKey ?? SIDEBAR_WIDTH_STORAGE_KEY_PX;
+  const allowPersistSidebarWidth =
+    persistSidebarWidthWithoutConsent ||
+    Boolean(getCookiePreferences(userId)?.functional);
+
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(isMobile ? false : defaultOpen);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -149,8 +165,8 @@ function SidebarProvider({
     setChatPanelContainer(node);
   }, []);
 
-  const [sidebarWidthPx, _setSidebarWidthPx] = useState(
-    readInitialSidebarWidthPx,
+  const [sidebarWidthPx, _setSidebarWidthPx] = useState(() =>
+    readInitialSidebarWidthPx(sidebarLsKey),
   );
   const [chatWidthPx, _setChatWidthPx] = useState(readInitialChatWidthPx);
   const [chatPanelOpen, setChatPanelOpen] = useState(false);
@@ -183,11 +199,17 @@ function SidebarProvider({
         chatWidthPx,
       });
       _setSidebarWidthPx(next);
-      if (persist && getCookiePreferences(userId)?.functional) {
-        LS.set(SIDEBAR_WIDTH_STORAGE_KEY_PX, next);
+      if (persist && allowPersistSidebarWidth) {
+        LS.set(sidebarLsKey, next);
       }
     },
-    [getShellWidth, chatPanelOpen, chatWidthPx, userId],
+    [
+      getShellWidth,
+      chatPanelOpen,
+      chatWidthPx,
+      sidebarLsKey,
+      allowPersistSidebarWidth,
+    ],
   );
 
   const setChatWidthPx = useCallback(
@@ -227,14 +249,16 @@ function SidebarProvider({
         });
         _setSidebarWidthPx(sNext);
         _setChatWidthPx(cNext);
+        if (allowPersistSidebarWidth) {
+          LS.set(sidebarLsKey, sNext);
+        }
         if (getCookiePreferences(userId)?.functional) {
-          LS.set(SIDEBAR_WIDTH_STORAGE_KEY_PX, sNext);
           LS.set(CHAT_WIDTH_STORAGE_KEY, cNext);
         }
       }
       prevShellWidthRef.current = shellW;
     },
-    [chatPanelOpen, isOpen, userId],
+    [chatPanelOpen, isOpen, userId, sidebarLsKey, allowPersistSidebarWidth],
   );
 
   const fitPanelWidthsToShell = useCallback(() => {
@@ -256,12 +280,21 @@ function SidebarProvider({
     if (sNext !== s || cNext !== c) {
       _setSidebarWidthPx(sNext);
       _setChatWidthPx(cNext);
+      if (allowPersistSidebarWidth) {
+        LS.set(sidebarLsKey, sNext);
+      }
       if (getCookiePreferences(userId)?.functional) {
-        LS.set(SIDEBAR_WIDTH_STORAGE_KEY_PX, sNext);
         LS.set(CHAT_WIDTH_STORAGE_KEY, cNext);
       }
     }
-  }, [chatPanelOpen, getShellWidth, isOpen, userId]);
+  }, [
+    chatPanelOpen,
+    getShellWidth,
+    isOpen,
+    userId,
+    sidebarLsKey,
+    allowPersistSidebarWidth,
+  ]);
 
   useLayoutEffect(() => {
     if (!shellEl || isMobile) return;
@@ -271,12 +304,14 @@ function SidebarProvider({
   useShellWidthObserver(shellEl, handleShellResize);
 
   const setOpen = useCallback(
-    (value: boolean) => {
-      if (
+    (value: boolean, options?: SetSidebarOpenOptions) => {
+      const useViewTransition =
+        options?.viewTransition !== false &&
         !isMobile &&
         'startViewTransition' in document &&
-        document.startViewTransition
-      ) {
+        document.startViewTransition;
+
+      if (useViewTransition) {
         document.startViewTransition(() => {
           setIsOpen(value);
         });

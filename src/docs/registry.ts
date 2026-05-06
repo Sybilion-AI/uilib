@@ -9,7 +9,6 @@ export type DocEntry = {
 
 /** Sidebar group order */
 export const DOC_SECTION_ORDER = [
-  'Actions',
   'Forms',
   'Feedback',
   'Layout',
@@ -28,7 +27,7 @@ export const DOC_REGISTRY: DocEntry[] = [
   {
     slug: 'button',
     title: 'Button',
-    section: 'Actions',
+    section: 'Forms',
     load: () => import('./pages/ButtonPage'),
   },
   {

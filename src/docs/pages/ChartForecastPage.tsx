@@ -3,6 +3,7 @@ import type {
   ForecastData,
   TimeSeriesPoint,
 } from '#uilib/components/ui/ChartForecast/ChartForecast.types';
+import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
@@ -29,15 +30,17 @@ export default function ChartForecastPage() {
         subheader="Historical line with deterministic forecast."
         actions={<DocsHeaderActions />}
       />
-      <ChartForecast
-        historicalData={HISTORICAL}
-        forecastData={FORECAST}
-        mode="deterministic"
-        showConfidenceBands
-        loading={false}
-        isDarkTheme={false}
-        height={320}
-      />
+      <PageContentSection>
+        <ChartForecast
+          historicalData={HISTORICAL}
+          forecastData={FORECAST}
+          mode="deterministic"
+          showConfidenceBands
+          loading={false}
+          isDarkTheme={false}
+          height={320}
+        />
+      </PageContentSection>
     </>
   );
 }

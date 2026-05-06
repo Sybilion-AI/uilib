@@ -1,5 +1,6 @@
 import { ChartContainer } from '#uilib/components/ui/Chart';
 import type { ChartConfig } from '#uilib/components/ui/Chart';
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -25,20 +26,25 @@ export default function ChartPage() {
         subheader="ChartContainer + Recharts line chart."
         actions={<DocsHeaderActions />}
       />
-      <ChartContainer config={config} style={{ minHeight: 240, width: '100%' }}>
-        <LineChart data={DATA} accessibilityLayer>
-          <CartesianGrid vertical={false} />
-          <XAxis dataKey="month" tickLine={false} axisLine={false} />
-          <YAxis tickLine={false} axisLine={false} width={32} />
-          <Line
-            dataKey="v"
-            type="natural"
-            stroke="var(--color-chart-1)"
-            strokeWidth={2}
-            dot={false}
-          />
-        </LineChart>
-      </ChartContainer>
+      <PageContentSection>
+        <ChartContainer
+          config={config}
+          style={{ minHeight: 240, width: '100%' }}
+        >
+          <LineChart data={DATA} accessibilityLayer>
+            <CartesianGrid vertical={false} />
+            <XAxis dataKey="month" tickLine={false} axisLine={false} />
+            <YAxis tickLine={false} axisLine={false} width={32} />
+            <Line
+              dataKey="v"
+              type="natural"
+              stroke="var(--color-chart-1)"
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
+        </ChartContainer>
+      </PageContentSection>
     </>
   );
 }

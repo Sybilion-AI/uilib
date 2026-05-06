@@ -291,6 +291,7 @@
   width 100%
   min-width 0
   padding 0 var(--p-11) var(--p-10) var(--p-8)
+  list-style none
 
   @media (max-width unit(MOBILE, 'px'))
     padding-right var(--p-8)
@@ -358,6 +359,7 @@
   padding-top var(--p-1)
   margin-left 0
   margin-right 0
+  list-style none
 
   border-color var(--sidebar-border)
   transform translateX(1px)
@@ -440,8 +442,18 @@
   outline none
   cursor pointer
   transition all
+  color var(--sidebar-foreground)
+  text-decoration none
 
-  .sidebarMenuSubItem:hover &, .sidebarMenuSubItem:active &, .sidebarMenuSubItem[data-state="open"] &
+  &:visited
+    color var(--sidebar-foreground)
+
+  &:hover
+    text-decoration none
+
+  .sidebarMenuSubItem:hover &
+  .sidebarMenuSubItem:active &
+  .sidebarMenuSubItem[data-state="open"] &
   // &:hover, &:active, &[data-state="open"]:hover
     background-color var(--sidebar-accent)
     color var(--sidebar-accent-foreground)
@@ -596,6 +608,13 @@
   margin-left var(--p-3)
   outline none
   cursor pointer
+  text-decoration none
+
+  &:visited
+    color var(--sidebar-foreground)
+
+  &:hover
+    text-decoration none
 
   .sidebarMenuSubItem:hover &, .sidebarMenuSubItem:active &
     background-color var(--sidebar-accent)
@@ -611,6 +630,9 @@
   &[data-active="true"]
     background-color var(--sidebar-accent)
     color var(--sidebar-accent-foreground)
+
+    &:visited
+      color var(--sidebar-accent-foreground)
 
   &[data-collapsible="icon"]
     display none

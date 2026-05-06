@@ -1,5 +1,6 @@
 import { Button } from '#uilib/components/ui/Button';
 import type { ButtonVariant } from '#uilib/components/ui/Button/Button.types';
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { Plus } from 'lucide-react';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -25,7 +26,9 @@ export default function ButtonPage() {
         subheader="Variants, sizes, icon mode, and disabled state."
         actions={<DocsHeaderActions />}
       />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <PageContentSection
+        style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
+      >
         <section>
           <h3 style={{ marginBottom: '1rem' }}>Variants × sizes</h3>
           <div style={{ overflowX: 'auto' }}>
@@ -133,7 +136,7 @@ export default function ButtonPage() {
             </Button>
           </div>
         </section>
-      </div>
+      </PageContentSection>
     </>
   );
 }

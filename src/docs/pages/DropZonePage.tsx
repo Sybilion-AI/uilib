@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { DropZone } from '#uilib/components/ui/DropZone/DropZone';
+import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
@@ -16,14 +17,16 @@ export default function DropZonePage() {
         subheader="Drag and drop or pick a file."
         actions={<DocsHeaderActions />}
       />
-      <DropZone
-        accept=".csv,.txt"
-        label="Drop a .csv or .txt file here"
-        onFile={file => setName(file.name)}
-      />
-      {name ? (
-        <p style={{ marginTop: 12, fontSize: 14 }}>Selected: {name}</p>
-      ) : null}
+      <PageContentSection>
+        <DropZone
+          accept=".csv,.txt"
+          label="Drop a .csv or .txt file here"
+          onFile={file => setName(file.name)}
+        />
+        {name ? (
+          <p style={{ marginTop: 12, fontSize: 14 }}>Selected: {name}</p>
+        ) : null}
+      </PageContentSection>
     </>
   );
 }

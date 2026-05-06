@@ -1,3 +1,4 @@
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { Sparkline } from '#uilib/components/ui/Sparkline';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -14,7 +15,9 @@ export default function SparklinePage() {
         subheader="Compact line chart."
         actions={<DocsHeaderActions />}
       />
-      <Sparkline data={DATA} width={120} height={36} showEndDot />
+      <PageContentSection>
+        <Sparkline data={DATA} width={120} height={36} showEndDot />
+      </PageContentSection>
     </>
   );
 }

@@ -7,9 +7,13 @@ import { Scroll } from '@homecode/ui';
 type SetPanelWidthOptions = {
     persist?: boolean;
 };
+/** Pass `viewTransition: false` to avoid nesting `document.startViewTransition` (e.g. chat open already animating). */
+export type SetSidebarOpenOptions = {
+    viewTransition?: boolean;
+};
 type SidebarContextProps = {
     isOpen: boolean;
-    setOpen: (open: boolean) => void;
+    setOpen: (open: boolean, options?: SetSidebarOpenOptions) => void;
     toggleSidebar: () => void;
     sidebarWidthPx: number;
     setSidebarWidthPx: (px: number, options?: SetPanelWidthOptions) => void;
@@ -33,11 +37,15 @@ type SidebarProps = ComponentProps<'div'> & {
     fullHeightResizer?: boolean;
 };
 declare function useSidebar(): SidebarContextProps;
-declare function SidebarProvider({ defaultOpen, className, style, children, userId, ...props }: ComponentProps<'div'> & {
+declare function SidebarProvider({ defaultOpen, className, style, children, userId, sidebarWidthStorageKey, persistSidebarWidthWithoutConsent, ...props }: ComponentProps<'div'> & {
     defaultOpen?: boolean;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
     userId?: string | number | null;
+    /** LocalStorage key for sidebar width (pixels). Defaults to `sidebarWidthPx`. */
+    sidebarWidthStorageKey?: string;
+    /** When true, sidebar width is saved without functional cookie consent (e.g. internal docs). */
+    persistSidebarWidthWithoutConsent?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
 declare function Sidebar({ defaultOpen, open: openProp, onOpenChange: setOpenProp, className, side, variant, collapsible, children, fullHeightResizer, ...props }: SidebarProps): import("react/jsx-runtime").JSX.Element;
 declare function SidebarTrigger({ className, onClick, ...props }: ComponentProps<typeof Button>): import("react/jsx-runtime").JSX.Element;

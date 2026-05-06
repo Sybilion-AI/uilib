@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { MobileAdaptiveSelector } from '#uilib/components/ui/MobileAdaptiveSelector';
+import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
@@ -22,12 +23,14 @@ export default function MobileAdaptiveSelectorPage() {
         subheader="Toggle group on desktop, select on mobile (or many items)."
         actions={<DocsHeaderActions />}
       />
-      <MobileAdaptiveSelector
-        value={value}
-        onChange={setValue}
-        items={ITEMS}
-        isDropdown={false}
-      />
+      <PageContentSection>
+        <MobileAdaptiveSelector
+          value={value}
+          onChange={setValue}
+          items={ITEMS}
+          isDropdown={false}
+        />
+      </PageContentSection>
     </>
   );
 }

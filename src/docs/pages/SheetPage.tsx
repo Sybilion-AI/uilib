@@ -1,4 +1,5 @@
 import { Button } from '#uilib/components/ui/Button';
+import { PageContentSection } from '#uilib/components/ui/Page';
 import {
   Sheet,
   SheetContent,
@@ -20,18 +21,20 @@ export default function SheetPage() {
         subheader="Slide-over panel (Radix dialog)."
         actions={<DocsHeaderActions />}
       />
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button type="button">Open sheet</Button>
-        </SheetTrigger>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Sheet title</SheetTitle>
-            <SheetDescription>Sheet description text.</SheetDescription>
-          </SheetHeader>
-          <p style={{ marginTop: 16 }}>Sheet body.</p>
-        </SheetContent>
-      </Sheet>
+      <PageContentSection>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button type="button">Open sheet</Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Sheet title</SheetTitle>
+              <SheetDescription>Sheet description text.</SheetDescription>
+            </SheetHeader>
+            <p style={{ marginTop: 16 }}>Sheet body.</p>
+          </SheetContent>
+        </Sheet>
+      </PageContentSection>
     </>
   );
 }

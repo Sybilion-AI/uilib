@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { ChartAreaInteractive } from '#uilib/components/ui/ChartAreaInteractive';
 import type { TimeRange } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.helpers';
 import type { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
+import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
@@ -40,19 +41,21 @@ export default function ChartAreaInteractivePage() {
         subheader="Interactive area chart shell with time range controls."
         actions={<DocsHeaderActions />}
       />
-      <ChartAreaInteractive
-        timeRange={timeRange}
-        onTimeRangeChange={v => setTimeRange(v as TimeRange)}
-        pinMonth={pinMonth}
-        onPinMonthChange={setPinMonth}
-        chartData={chartData}
-        forecastData={[]}
-        loading={false}
-        isDarkTheme={false}
-        toggleLegendSeries={toggleLegendSeries}
-        ensureAnalysisSeriesVisible={ensureAnalysisSeriesVisible}
-        hiddenSeries={hidden}
-      />
+      <PageContentSection>
+        <ChartAreaInteractive
+          timeRange={timeRange}
+          onTimeRangeChange={v => setTimeRange(v as TimeRange)}
+          pinMonth={pinMonth}
+          onPinMonthChange={setPinMonth}
+          chartData={chartData}
+          forecastData={[]}
+          loading={false}
+          isDarkTheme={false}
+          toggleLegendSeries={toggleLegendSeries}
+          ensureAnalysisSeriesVisible={ensureAnalysisSeriesVisible}
+          hiddenSeries={hidden}
+        />
+      </PageContentSection>
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { TextWithDeferTooltip } from '#uilib/components/ui/TextWithDeferTooltip';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -12,7 +13,7 @@ export default function TextWithDeferTooltipPage() {
         subheader="Tooltip only when text overflows."
         actions={<DocsHeaderActions />}
       />
-      <div
+      <PageContentSection
         style={{
           maxWidth: 120,
           border: '1px dashed var(--border)',
@@ -22,7 +23,7 @@ export default function TextWithDeferTooltipPage() {
         <TextWithDeferTooltip>
           This is a long label that should overflow and show a tooltip on hover.
         </TextWithDeferTooltip>
-      </div>
+      </PageContentSection>
     </>
   );
 }

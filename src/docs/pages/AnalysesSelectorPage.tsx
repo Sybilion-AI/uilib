@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { AnalysesSelector } from '#uilib/components/ui/AnalysesSelector';
+import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
@@ -36,7 +37,7 @@ export default function AnalysesSelectorPage() {
         subheader="Multi-select analyses with inline or dropdown layout."
         actions={<DocsHeaderActions />}
       />
-      <div style={{ maxWidth: 420 }}>
+      <PageContentSection style={{ maxWidth: 420 }}>
         <AnalysesSelector
           items={ITEMS}
           selectedIds={selectedIds}
@@ -50,7 +51,7 @@ export default function AnalysesSelectorPage() {
           }}
           placeholder="Analyses"
         />
-      </div>
+      </PageContentSection>
     </>
   );
 }

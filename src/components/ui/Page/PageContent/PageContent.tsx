@@ -21,9 +21,14 @@ export function PageContent({
 export function PageContentSection({
   className,
   children,
+  ...rest
 }: {
   className?: string;
   children: React.ReactNode;
-}) {
-  return <div className={cn(S.section, className)}>{children}</div>;
+} & Omit<React.ComponentProps<'div'>, 'className' | 'children'>) {
+  return (
+    <div className={cn(S.section, className)} {...rest}>
+      {children}
+    </div>
+  );
 }

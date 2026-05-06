@@ -1,3 +1,4 @@
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { Skeleton } from '#uilib/components/ui/Skeleton';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -12,7 +13,7 @@ export default function SkeletonPage() {
         subheader="Loading placeholder."
         actions={<DocsHeaderActions />}
       />
-      <div
+      <PageContentSection
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -23,7 +24,7 @@ export default function SkeletonPage() {
         <Skeleton style={{ height: 14, width: '100%' }} />
         <Skeleton style={{ height: 14, width: '80%' }} />
         <Skeleton style={{ height: 80, width: '100%' }} />
-      </div>
+      </PageContentSection>
     </>
   );
 }

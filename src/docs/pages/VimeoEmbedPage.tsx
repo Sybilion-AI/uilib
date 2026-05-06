@@ -1,3 +1,4 @@
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { VimeoEmbed } from '#uilib/components/ui/VimeoEmbed';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -12,9 +13,9 @@ export default function VimeoEmbedPage() {
         subheader="Vimeo player embed."
         actions={<DocsHeaderActions />}
       />
-      <div style={{ maxWidth: 560 }}>
+      <PageContentSection style={{ maxWidth: 560 }}>
         <VimeoEmbed videoId="148751763" />
-      </div>
+      </PageContentSection>
     </>
   );
 }

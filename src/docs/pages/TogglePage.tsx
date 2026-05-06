@@ -1,3 +1,4 @@
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { Toggle } from '#uilib/components/ui/Toggle';
 import { Bold } from 'lucide-react';
 
@@ -13,9 +14,11 @@ export default function TogglePage() {
         subheader="Pressable toggle (two-state)."
         actions={<DocsHeaderActions />}
       />
-      <Toggle aria-label="Bold" size="sm">
-        <Bold size={16} />
-      </Toggle>
+      <PageContentSection>
+        <Toggle aria-label="Bold" size="sm">
+          <Bold size={16} />
+        </Toggle>
+      </PageContentSection>
     </>
   );
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { TimeRangeControls } from '#uilib/components/ui/TimeRangeControls';
 import type { TimeRange } from '#uilib/components/ui/TimeRangeControls/TimeRangeControls.types';
 
@@ -17,11 +18,13 @@ export default function TimeRangeControlsPage() {
         subheader="Chart time range toggles."
         actions={<DocsHeaderActions />}
       />
-      <TimeRangeControls
-        timeRange={range}
-        onTimeRangeChange={v => setRange(v as TimeRange)}
-        loading={false}
-      />
+      <PageContentSection>
+        <TimeRangeControls
+          timeRange={range}
+          onTimeRangeChange={v => setRange(v as TimeRange)}
+          loading={false}
+        />
+      </PageContentSection>
     </>
   );
 }

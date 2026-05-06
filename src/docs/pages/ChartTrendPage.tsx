@@ -3,6 +3,7 @@ import type {
   MeanCPDData,
   TimeSeriesPoint,
 } from '#uilib/components/ui/ChartTrend/ChartTrend.types';
+import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
@@ -48,15 +49,17 @@ export default function ChartTrendPage() {
         subheader="Mean change-point trend with historical average."
         actions={<DocsHeaderActions />}
       />
-      <ChartTrend
-        historicalData={HISTORICAL}
-        meanCPD={MEAN_CPD}
-        trendType="mean"
-        showAnnotations
-        loading={false}
-        isDarkTheme={false}
-        height={320}
-      />
+      <PageContentSection>
+        <ChartTrend
+          historicalData={HISTORICAL}
+          meanCPD={MEAN_CPD}
+          trendType="mean"
+          showAnnotations
+          loading={false}
+          isDarkTheme={false}
+          height={320}
+        />
+      </PageContentSection>
     </>
   );
 }

@@ -70,7 +70,7 @@ function SheetContent({
         {children}
         <SheetPrimitive.Close className={cn(S.close)}>
           <X className="size-4" />
-          <span className="sr-only">Close</span>
+          {/* <span className="sr-only">Close</span> */}
         </SheetPrimitive.Close>
       </SheetPrimitive.Content>
     </SheetPortal>

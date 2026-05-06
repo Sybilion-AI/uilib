@@ -1,0 +1,18 @@
+@import 'lib/theme.styl'
+
+.root
+  display flex
+  flex-direction column
+  min-width 0
+  min-height 0
+  flex 1
+  margin var(--p-3) 0
+
+  [data-slot="sidebar-wrapper"][data-state="collapsed"] &
+    margin-left var(--p-3)
+
+
+.body
+  flex 1
+  min-height 0
+  min-width 0

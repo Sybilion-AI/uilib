@@ -5,6 +5,8 @@ const { colors, getColors, getConfig } = ThemeDefaults;
 const defaultColors = getColors();
 const defaultConfig = getConfig();
 
+const alphaMods = [0, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+
 export const colorsConfig = {
   light: {
     ...ThemeHelpers.colorsConfigToVars({
@@ -30,22 +32,22 @@ export function getThemeConfig(isDarkTheme: boolean) {
     ...colorsConfig[isDarkTheme ? 'dark' : 'light'],
     ...ThemeHelpers.colorsConfigToVars({
       active: {
-        color: '#00a9c7',
+        color: '#9c59ff',
         mods: {
           // @ts-ignore
-          alpha: [0, 50, 100, 200, ...defaultColors.active.mods.alpha],
+          alpha: alphaMods,
         },
       },
       danger: {
         color: '#ee0000',
         mods: {
-          alpha: [100, 200, 300, 500, 700],
+          alpha: alphaMods,
         },
       },
       warning: {
         color: '#ffa500',
         mods: {
-          alpha: [50, 100, 200, 900],
+          alpha: alphaMods,
         },
       },
     }),

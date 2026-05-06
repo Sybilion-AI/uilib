@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { Label } from '#uilib/components/ui/Label';
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { Switch } from '#uilib/components/ui/Switch';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -17,10 +18,12 @@ export default function SwitchPage() {
         subheader="Toggle switch."
         actions={<DocsHeaderActions />}
       />
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <PageContentSection
+        style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+      >
         <Switch id="sw" checked={on} onCheckedChange={setOn} />
         <Label htmlFor="sw">{on ? 'On' : 'Off'}</Label>
-      </div>
+      </PageContentSection>
     </>
   );
 }

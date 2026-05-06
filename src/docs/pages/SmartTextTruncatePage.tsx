@@ -1,3 +1,4 @@
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { SmartTextTruncate } from '#uilib/components/ui/SmartTextTruncate';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -15,11 +16,11 @@ export default function SmartTextTruncatePage() {
         subheader="Smart ellipsis for long strings."
         actions={<DocsHeaderActions />}
       />
-      <div
+      <PageContentSection
         style={{ maxWidth: 200, border: '1px solid var(--border)', padding: 8 }}
       >
         <SmartTextTruncate>{LONG}</SmartTextTruncate>
-      </div>
+      </PageContentSection>
     </>
   );
 }

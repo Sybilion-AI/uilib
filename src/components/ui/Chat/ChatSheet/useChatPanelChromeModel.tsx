@@ -802,7 +802,8 @@ export function useChatPanelChromeModel({
 
     const collapseNavIfNarrow = () => {
       if (window.innerWidth < CHAT_NAV_COLLAPSE_BREAKPOINT_PX) {
-        setSidebarNavOpen(false);
+        // Chat open uses `startViewTransition`; nested transition here aborts first → AbortError overlay.
+        setSidebarNavOpen(false, { viewTransition: false });
       }
     };
 

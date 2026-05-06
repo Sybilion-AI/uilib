@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { PageContentSection } from '#uilib/components/ui/Page';
 import { Renamer } from '#uilib/components/ui/Renamer';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -16,9 +17,11 @@ export default function RenamerPage() {
         subheader="Inline rename with pencil control."
         actions={<DocsHeaderActions />}
       />
-      <Renamer value={name} onChange={setName}>
-        {name}
-      </Renamer>
+      <PageContentSection>
+        <Renamer value={name} onChange={setName}>
+          {name}
+        </Renamer>
+      </PageContentSection>
     </>
   );
 }

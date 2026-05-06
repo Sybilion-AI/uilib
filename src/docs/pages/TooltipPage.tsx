@@ -1,4 +1,5 @@
 import { Button } from '#uilib/components/ui/Button';
+import { PageContentSection } from '#uilib/components/ui/Page';
 import {
   Tooltip,
   TooltipContent,
@@ -17,14 +18,18 @@ export default function TooltipPage() {
         subheader="Hover content."
         actions={<DocsHeaderActions />}
       />
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button type="button" variant="outline">
-            Hover me
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Tooltip text</TooltipContent>
-      </Tooltip>
+      <PageContentSection>
+        <span>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button type="button" variant="outline">
+                Hover me
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Tooltip text</TooltipContent>
+          </Tooltip>
+        </span>
+      </PageContentSection>
     </>
   );
 }

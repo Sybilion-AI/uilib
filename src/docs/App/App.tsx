@@ -6,7 +6,10 @@ import type { ChatResponse } from '#uilib/types/chat-api.types';
 
 import { DocPage } from '../DocPage';
 import { DocsShell } from '../DocsShell';
-import { DOCS_CHAT_USER_KEY } from '../docsConstants';
+import {
+  DOCS_CHAT_USER_KEY,
+  DOCS_SIDEBAR_WIDTH_LS_KEY,
+} from '../docsConstants';
 import { DOC_DEFAULT_SLUG } from '../registry';
 
 async function mockDocsSendChatMessage(
@@ -24,7 +27,10 @@ async function mockDocsSendChatMessage(
 
 export default function App() {
   return (
-    <SidebarProvider>
+    <SidebarProvider
+      sidebarWidthStorageKey={DOCS_SIDEBAR_WIDTH_LS_KEY}
+      persistSidebarWidthWithoutConsent
+    >
       <ChatProvider
         userSwitchKey={DOCS_CHAT_USER_KEY}
         sendChatMessage={mockDocsSendChatMessage}

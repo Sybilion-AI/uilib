@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { Input } from '#uilib/components/ui/Input';
 import { Label } from '#uilib/components/ui/Label';
+import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
@@ -17,7 +18,7 @@ export default function InputPage() {
         subheader="Text input."
         actions={<DocsHeaderActions />}
       />
-      <div
+      <PageContentSection
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -32,7 +33,7 @@ export default function InputPage() {
           onChange={e => setV(e.target.value)}
           placeholder="Type…"
         />
-      </div>
+      </PageContentSection>
     </>
   );
 }

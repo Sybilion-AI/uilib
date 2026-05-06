@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { PageContentSection } from '#uilib/components/ui/Page';
 import {
   Select,
   SelectContent,
@@ -22,16 +23,18 @@ export default function SelectPage() {
         subheader="Radix select."
         actions={<DocsHeaderActions />}
       />
-      <Select value={v} onValueChange={setV}>
-        <SelectTrigger style={{ width: 200 }}>
-          <SelectValue placeholder="Pick fruit" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="apple">Apple</SelectItem>
-          <SelectItem value="orange">Orange</SelectItem>
-          <SelectItem value="banana">Banana</SelectItem>
-        </SelectContent>
-      </Select>
+      <PageContentSection>
+        <Select value={v} onValueChange={setV}>
+          <SelectTrigger style={{ width: 200 }}>
+            <SelectValue placeholder="Pick fruit" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="apple">Apple</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+          </SelectContent>
+        </Select>
+      </PageContentSection>
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { PageContentSection } from '#uilib/components/ui/Page';
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -19,7 +20,7 @@ export default function SidebarPage() {
         subheader="Sidebar menu primitives (isolated preview)."
         actions={<DocsHeaderActions />}
       />
-      <div
+      <PageContentSection
         style={{
           border: '1px solid var(--border)',
           borderRadius: 8,
@@ -46,7 +47,7 @@ export default function SidebarPage() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-      </div>
+      </PageContentSection>
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { InteractiveContent } from '#uilib/components/ui/InteractiveContent';
+import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
@@ -14,9 +15,9 @@ export default function InteractiveContentPage() {
         subheader="Inline formatting from assistant-style text."
         actions={<DocsHeaderActions />}
       />
-      <p>
+      <PageContentSection>
         <InteractiveContent text={SAMPLE} />
-      </p>
+      </PageContentSection>
     </>
   );
 }

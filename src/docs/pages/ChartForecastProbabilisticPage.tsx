@@ -3,6 +3,7 @@ import type {
   ForecastData,
   TimeSeriesPoint,
 } from '#uilib/components/ui/ChartForecastProbabilistic/ChartForecastProbabilistic.types';
+import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
@@ -43,14 +44,16 @@ export default function ChartForecastProbabilisticPage() {
         subheader="Forecast with quantile bands."
         actions={<DocsHeaderActions />}
       />
-      <ChartForecastProbabilistic
-        historicalData={HISTORICAL}
-        forecastData={FORECAST}
-        showQuantiles
-        loading={false}
-        isDarkTheme={false}
-        height={320}
-      />
+      <PageContentSection>
+        <ChartForecastProbabilistic
+          historicalData={HISTORICAL}
+          forecastData={FORECAST}
+          showQuantiles
+          loading={false}
+          isDarkTheme={false}
+          height={320}
+        />
+      </PageContentSection>
     </>
   );
 }
