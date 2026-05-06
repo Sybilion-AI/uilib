@@ -1,14 +1,14 @@
 import { ReferenceLine } from 'recharts';
 
-import { FORECAST_COLORS } from '../../ChartForecast/ChartForecast.constants';
+import { FORECAST_COLORS } from '../chartForecastVisualization.constants';
 import type {
   ChangePointDetection,
-  ChartDataPoint,
-} from '../../ChartForecast/ChartForecast.types';
+  ForecastVisualizationRow,
+} from '../chartForecastVisualization.types';
 
 interface ForecastBoundariesProps {
   changePoints: ChangePointDetection;
-  chartData: ChartDataPoint[];
+  chartData: ForecastVisualizationRow[];
   isDarkTheme: boolean;
 }
 

@@ -3,7 +3,7 @@ import { Area } from 'recharts';
 import {
   ANIMATION_BEGIN,
   ANIMATION_DURATION,
-} from '../../ChartForecast/ChartForecast.constants';
+} from '../chartForecastVisualization.constants';
 
 interface ConfidenceBandsProps {
   color: string;

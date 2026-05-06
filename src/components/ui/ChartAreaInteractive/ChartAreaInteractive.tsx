@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { ChartConfig } from '#uilib/components/ui/Chart/Chart';
 import {
@@ -8,6 +8,7 @@ import {
 } from '#uilib/components/ui/Chart/components/BaseChartWrapper';
 import { InteractionOverlay } from '#uilib/components/ui/InteractionOverlay/InteractionOverlay';
 import { TimeRangeControls } from '#uilib/components/ui/TimeRangeControls/TimeRangeControls';
+import { ensureChartForecastBridge } from '#uilib/utils/chartConnectionPoint';
 
 import {
   longDateFormatter,
@@ -64,6 +65,7 @@ export function ChartAreaInteractive({
   ensureAnalysisSeriesVisible,
   overlayForecastData = {},
   hiddenSeries,
+  disableForecastHistoricalBridge,
   ...restProps
 }: ChartAreaInteractiveProps) {
   const seriesHidden = hiddenSeries ?? new Set<string>();
@@ -92,6 +94,16 @@ export function ChartAreaInteractive({
     }
   }, [selectedAnalysisId, ensureAnalysisSeriesVisible]);
 
+  const bridgedChartData = useMemo(
+    () =>
+      disableForecastHistoricalBridge
+        ? chartData
+        : ensureChartForecastBridge(chartData, {
+            forecastSeriesIds: forecastData?.map(f => f.id),
+          }),
+    [chartData, disableForecastHistoricalBridge, forecastData],
+  );
+
   // Extract quantileBands from restProps
   // const quantileBands = (restProps as any).quantileBands;
 
@@ -115,7 +127,7 @@ export function ChartAreaInteractive({
     renderId: chartRenderId?.toString(),
     xAxisClassName,
     yAxisClassName,
-    chartData,
+    chartData: bridgedChartData,
     chartClassName: S.chartContainer,
     // chartClassName: cn(S.chartContainer, chartContainerClassName),
     legendClassName,

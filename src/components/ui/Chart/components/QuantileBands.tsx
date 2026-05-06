@@ -4,7 +4,7 @@ import {
 } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
 import { Area } from 'recharts';
 
-import type { QuantileBandConfig } from '../../ChartForecastProbabilistic/ChartForecastProbabilistic.types';
+import type { QuantileBandConfig } from '../chartForecastVisualization.types';
 
 export const DEFAULT_QUANTILE_BAND_COLOR = FORECAST_COLORS_MAP['#04ADC3'];
 

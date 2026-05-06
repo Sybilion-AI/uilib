@@ -16,6 +16,7 @@ import {
   ChartTooltipContent,
   CustomChartLegend,
 } from '#uilib/components/ui/Chart/Chart';
+import type { QuantileBandConfig } from '#uilib/components/ui/Chart/chartForecastVisualization.types';
 import { QuantileBands } from '#uilib/components/ui/Chart/components/QuantileBands';
 import { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
 import {
@@ -23,7 +24,6 @@ import {
   ForecastItemData,
   getForecastColor,
 } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
-import { QuantileBandConfig } from '#uilib/components/ui/ChartForecastProbabilistic/ChartForecastProbabilistic.types';
 import { Skeleton } from '#uilib/components/ui/Skeleton';
 import { chartRenderQueue } from '#uilib/utils/chartRenderQueue';
 import { ComposedChart, LineChart } from 'recharts';

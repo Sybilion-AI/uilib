@@ -79,24 +79,6 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/ChartAreaInteractivePage'),
   },
   {
-    slug: 'chart-forecast',
-    title: 'ChartForecast',
-    section: 'Charts',
-    load: () => import('./pages/ChartForecastPage'),
-  },
-  {
-    slug: 'chart-forecast-probabilistic',
-    title: 'ChartForecastProbabilistic',
-    section: 'Charts',
-    load: () => import('./pages/ChartForecastProbabilisticPage'),
-  },
-  {
-    slug: 'chart-trend',
-    title: 'ChartTrend',
-    section: 'Charts',
-    load: () => import('./pages/ChartTrendPage'),
-  },
-  {
     slug: 'chat',
     title: 'Chat',
     section: 'Chat',

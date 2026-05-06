@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "strict": false,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "rootDir": ".",
+    "outDir": "packages/sybilion-ui/dist/esm",
+    "declaration": false,
+    "declarationMap": false,
+    "paths": {
+      "#uilib/*": ["./src/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./tests/mocks"],
+    "types": ["node"]
+  },
+  "include": ["packages/sybilion-ui/src/**/*", "src/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "packages/sybilion-ui/dist",
+    "src/docs",
+    "src/docs/**/*",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "tests"
+  ],
+  "files": ["src/declarations.d.ts"]
+}

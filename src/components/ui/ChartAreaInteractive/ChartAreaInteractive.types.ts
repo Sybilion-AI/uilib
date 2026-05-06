@@ -63,4 +63,6 @@ export interface ChartAreaInteractiveProps extends BaseChartWrapperProps {
   ensureAnalysisSeriesVisible: (analysisId: number | string) => void;
   /** Forecast quantile payloads keyed by analysis id (intervals/threshold overlays). */
   overlayForecastData?: Record<number, ForecastData>;
+  /** Skip automatic forecast bridge points at last historical month (legacy / custom-shaped data). */
+  disableForecastHistoricalBridge?: boolean;
 }

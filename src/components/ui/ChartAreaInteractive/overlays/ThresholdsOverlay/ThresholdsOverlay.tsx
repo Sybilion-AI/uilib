@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useRef } from 'react';
 
+import type { QuantileBandConfig } from '#uilib/components/ui/Chart/chartForecastVisualization.types';
 import { BaseChartWrapper } from '#uilib/components/ui/Chart/components';
 import { BaseChartWrapperProps } from '#uilib/components/ui/Chart/components/BaseChartWrapper';
-import { QuantileBandConfig } from '#uilib/components/ui/ChartForecastProbabilistic/ChartForecastProbabilistic.types';
 import { DraggingButton } from '#uilib/components/ui/DraggingButton/DraggingButton';
 import type { ForecastData } from '#uilib/types/forecast-data';
 import { formatQuantileRangeLabel } from '#uilib/utils/quantileFormat';

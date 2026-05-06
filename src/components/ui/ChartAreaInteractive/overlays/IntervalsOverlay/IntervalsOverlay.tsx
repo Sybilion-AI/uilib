@@ -1,9 +1,9 @@
 import cn from 'classnames';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import type { QuantileBandConfig } from '#uilib/components/ui/Chart/chartForecastVisualization.types';
 import { BaseChartWrapper } from '#uilib/components/ui/Chart/components';
 import { BaseChartWrapperProps } from '#uilib/components/ui/Chart/components/BaseChartWrapper';
-import { QuantileBandConfig } from '#uilib/components/ui/ChartForecastProbabilistic/ChartForecastProbabilistic.types';
 import { DraggingButton } from '#uilib/components/ui/DraggingButton/DraggingButton';
 import { useIsMobile } from '#uilib/hooks/useIsMobile';
 import type { ForecastData } from '#uilib/types/forecast-data';
