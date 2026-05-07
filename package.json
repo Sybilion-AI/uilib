@@ -1,6 +1,6 @@
 {
   "name": "@Mir-Insight/uilib",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Sybilion Design System — React UI components (Webpack + Stylus)",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

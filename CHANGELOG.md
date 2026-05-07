@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.16](https://github.com/Mir-Insight/uilib/compare/v1.0.15...v1.0.16) (2026-05-07)
+
+
+### Features
+
+* AppHeader - Add shell header component ([c5bced3](https://github.com/Mir-Insight/uilib/commit/c5bced3cdcd0b0c6d400edb2342dcab69fe2d5b8))
+* DocsShell - Collapsible nav, search, PageMainContent layout ([367c5ab](https://github.com/Mir-Insight/uilib/commit/367c5ab5aaecf04992dce099932ad9db09320797))
+* DocsShell - Extract sidebar, shell AppHeader, npm publish ([3ca2e26](https://github.com/Mir-Insight/uilib/commit/3ca2e2656815f2250e9aa65c75d1a19ca56b1a7c))
+
 ### [1.0.15](https://github.com/Mir-Insight/uilib/compare/v1.0.14...v1.0.15) (2026-05-05)
 
 
