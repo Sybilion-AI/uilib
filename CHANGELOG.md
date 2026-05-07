@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.19](https://github.com/Mir-Insight/uilib/compare/v1.0.18...v1.0.19) (2026-05-07)
+
+
+### Bug Fixes
+
+* AppHeader - Sidebar-aware layout ([25de87f](https://github.com/Mir-Insight/uilib/commit/25de87f22b615e5f221e218f5569310851d128ec))
+
 ### [1.0.18](https://github.com/Mir-Insight/uilib/compare/v1.0.17...v1.0.18) (2026-05-07)
 
 
