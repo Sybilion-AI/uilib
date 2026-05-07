@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.17](https://github.com/Mir-Insight/uilib/compare/v1.0.16...v1.0.17) (2026-05-07)
+
+
+### Features
+
+* AppShell - App chrome layout & header portals ([1e050cc](https://github.com/Mir-Insight/uilib/commit/1e050cce549ba0587a6fb166d38968d3c28a8d99))
+
 ### [1.0.16](https://github.com/Mir-Insight/uilib/compare/v1.0.15...v1.0.16) (2026-05-07)
 
 
