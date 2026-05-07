@@ -302,7 +302,10 @@ export function AnalysesSelector({
                 minWidth: 'auto',
                 height: 'auto',
                 fontSize: 'var(--text-xs)',
-                pointerEvents: items.length < 2 ? 'none' : undefined,
+                pointerEvents:
+                  items.length < 2 && unselectedItems.length === 0
+                    ? 'none'
+                    : undefined,
               }}
             >
               <SelectValue placeholder={selectPlaceholder} />

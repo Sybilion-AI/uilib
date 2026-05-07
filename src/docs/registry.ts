@@ -42,12 +42,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     section: 'Data display',
     load: () => import('./pages/AnalysisLineIconPage'),
   },
-  {
-    slug: 'app-header',
-    title: 'AppHeader',
-    section: 'Layout',
-    load: () => import('./pages/AppHeaderPage'),
-  },
+  // {
+  //   slug: 'app-header',
+  //   title: 'AppHeader',
+  //   section: 'Layout',
+  //   load: () => import('./pages/AppHeaderPage'),
+  // },
   {
     slug: 'avatar',
     title: 'Avatar',

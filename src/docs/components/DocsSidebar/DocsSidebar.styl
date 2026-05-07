@@ -1,0 +1,22 @@
+.sidebarSearch
+  z-index 10
+  position sticky
+  top 0 !important
+  padding var(--p-3) 0 !important
+  left var(--p-8)
+  width calc(100% - var(--p-19)) !important
+  box-shadow 0 8px 10px var(--background)
+
+  input
+    z-index 2
+    border-radius var(--p-3) !important
+    height var(--p-10) !important
+
+  &::before
+    content ''
+    position absolute
+    top 0
+    left 0
+    width 100%
+    height 100%
+    background-color var(--background)

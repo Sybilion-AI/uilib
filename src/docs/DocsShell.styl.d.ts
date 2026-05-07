@@ -5,11 +5,10 @@ interface CssExports {
   areaSidebar: string;
   chevronContainer: string;
   loading: string;
+  mainContent: string;
+  mainHeaderBar: string;
   root: string;
   shell: string;
-  sidebarSearch: string;
-  subMenu: string;
-  subMenuItem: string;
 }
 export const cssExports: CssExports;
 export default cssExports;

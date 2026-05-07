@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "Sybilion ChartAreaInteractive — public subset of @Mir-Insight/uilib",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "type": "module",
   "main": "./dist/esm/packages/sybilion-ui/src/index.js",

@@ -14,6 +14,9 @@ import { DocsHeaderActions } from '../docsHeaderActions';
 
 const DOCS_APP_HEADER_PREVIEW_SIDEBAR_KEY = 'uilib-docs-app-header-preview';
 
+/** Avoid duplicate id with shell AppHeader (`PAGE_HEADER_ACTIONS_ID`). */
+const PAGE_HEADER_ACTIONS_PREVIEW_ID = `${PAGE_HEADER_ACTIONS_ID}-preview`;
+
 function AppHeaderPreviewDemo() {
   const { isOpen, setOpen } = useSidebar();
 
@@ -50,10 +53,11 @@ function AppHeaderPreviewDemo() {
           <code>SidebarProvider</code>.
         </span>
       </div>
-      <AppHeader />
+      <AppHeader pageHeaderActionsAnchorId={PAGE_HEADER_ACTIONS_PREVIEW_ID} />
       <p style={{ margin: 0, padding: '12px 16px', fontSize: 13 }}>
         Portaled actions mount into the element with id{' '}
-        <code>{PAGE_HEADER_ACTIONS_ID}</code>.
+        <code>{PAGE_HEADER_ACTIONS_ID}</code> (docs shell) or a custom id when
+        embedding a preview alongside it.
       </p>
     </div>
   );
