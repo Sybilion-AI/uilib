@@ -8,7 +8,7 @@ function AppShellMainContent({ className, bodyClassName, children, header, foote
     return (jsxs("div", { className: cn(S.mainColumn, className), children: [header, jsx("div", { className: cn(S.mainBody, bodyClassName), children: children }), footer] }));
 }
 const AppShell = forwardRef(function AppShell({ className, ...props }, ref) {
-    return (jsx("div", { ref: ref, className: cn(S.root, className), ...props }));
+    return jsx("div", { ref: ref, className: cn(S.root, className), ...props });
 });
 
 export { AppShell, AppShellMainContent };
