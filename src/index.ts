@@ -2,6 +2,7 @@ export * from './contexts/chat-context';
 export * from './types/chat-api.types';
 export * from './components/ui/AnalysesSelector';
 export * from './components/ui/AnalysisLineIcon';
+export * from './components/ui/AppHeader';
 export * from './components/ui/Avatar';
 export * from './components/ui/Badge';
 export * from './components/ui/Breadcrumb';
