@@ -1,9 +1,11 @@
 import { Outlet } from 'react-router-dom';
 
-import { AppHeader } from '#uilib/components/ui/AppHeader';
+import { AppHeaderHost, AppHeaderPortal } from '#uilib/components/ui/AppHeader';
+import { Gap } from '#uilib/components/ui/Gap/Gap';
+import { AppShell, AppShellMainContent } from '#uilib/components/ui/Page';
 import { PageFooter } from '#uilib/components/ui/Page/PageFooter/PageFooter';
-import { PageMainContent } from '#uilib/components/ui/Page/PageMainContent/PageMainContent';
 import { PageScroll } from '#uilib/components/ui/Page/PageScroll/PageScroll';
+import { ThemeToggle } from '#uilib/docs/App/ThemeToggle';
 import { DocsSidebar } from '#uilib/docs/components/DocsSidebar/DocsSidebar';
 
 import LogoSvg from '../../assets/logo.svg';
@@ -12,12 +14,11 @@ import S from './DocsShell.styl';
 export function DocsShell() {
   return (
     <PageScroll className={S.root}>
-      <div className={S.shell}>
+      <AppShell>
         <DocsSidebar />
 
-        <PageMainContent
-          className={S.areaMain}
-          header={<AppHeader />}
+        <AppShellMainContent
+          header={<AppHeaderHost />}
           footer={
             <PageFooter
               logo={<LogoSvg />}
@@ -26,9 +27,13 @@ export function DocsShell() {
             />
           }
         >
+          <AppHeaderPortal>
+            <Gap />
+            <ThemeToggle />
+          </AppHeaderPortal>
           <Outlet />
-        </PageMainContent>
-      </div>
+        </AppShellMainContent>
+      </AppShell>
     </PageScroll>
   );
 }

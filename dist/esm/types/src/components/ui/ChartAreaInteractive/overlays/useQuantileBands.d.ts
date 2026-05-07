@@ -1,5 +1,5 @@
+import type { QuantileBandConfig } from '#uilib/components/ui/Chart/chartForecastVisualization.types';
 import { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
-import { QuantileBandConfig } from '#uilib/components/ui/ChartForecastProbabilistic/ChartForecastProbabilistic.types';
 import type { ForecastData } from '#uilib/types/forecast-data';
 interface UseQuantileBandOptions {
     color?: string;

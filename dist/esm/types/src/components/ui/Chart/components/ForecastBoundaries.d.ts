@@ -1,7 +1,7 @@
-import type { ChangePointDetection, ChartDataPoint } from '../../ChartForecast/ChartForecast.types';
+import type { ChangePointDetection, ForecastVisualizationRow } from '../chartForecastVisualization.types';
 interface ForecastBoundariesProps {
     changePoints: ChangePointDetection;
-    chartData: ChartDataPoint[];
+    chartData: ForecastVisualizationRow[];
     isDarkTheme: boolean;
 }
 export declare function ForecastBoundaries({ changePoints, chartData, isDarkTheme, }: ForecastBoundariesProps): import("react/jsx-runtime").JSX.Element;

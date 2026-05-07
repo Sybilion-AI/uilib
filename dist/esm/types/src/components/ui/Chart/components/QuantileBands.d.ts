@@ -1,4 +1,4 @@
-import type { QuantileBandConfig } from '../../ChartForecastProbabilistic/ChartForecastProbabilistic.types';
+import type { QuantileBandConfig } from '../chartForecastVisualization.types';
 export declare const DEFAULT_QUANTILE_BAND_COLOR: string;
 interface QuantileBandsProps {
     color?: string;

@@ -16,7 +16,7 @@ function extractIdFromDataKey(dataKey) {
  * Custom chart legend using AnalysesSelector (inline mode)
  * Supports forecast icon indicator, failed badge, toggle visibility
  */
-function CustomChartLegend({ payload, onClick, hiddenSeries, className, onAnalysisSelect, onFailedAnalysisClick, maxVisibleItems, preventDeselection = false, }) {
+function CustomChartLegend({ payload, onClick, hiddenSeries, className, onAnalysisSelect, onFailedAnalysisClick, maxVisibleItems, preventDeselection = true, }) {
     const items = useMemo(() => (payload ?? []).map(p => ({
         id: extractIdFromDataKey(p.dataKey),
         label: p.value,

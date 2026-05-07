@@ -1,8 +1,8 @@
 import { ComponentProps, ReactNode } from 'react';
 import { ChartConfig, ChartContainer } from '#uilib/components/ui/Chart/Chart';
+import type { QuantileBandConfig } from '#uilib/components/ui/Chart/chartForecastVisualization.types';
 import { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
 import { ForecastItemData } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
-import { QuantileBandConfig } from '#uilib/components/ui/ChartForecastProbabilistic/ChartForecastProbabilistic.types';
 import { LegendPayload } from 'recharts/types/component/DefaultLegendContent';
 export interface BaseChartWrapperProps {
     renderId?: string;

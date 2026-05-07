@@ -1,28 +1,37 @@
 import cn from 'classnames';
+import { ReactNode, useLayoutEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import S from './AppHeader.styl';
-import { PAGE_HEADER_ACTIONS_ID } from './appChromeAnchors';
+import { PAGE_HEADER_ID } from './appChromeAnchors';
 
 export type AppHeaderProps = {
   className?: string;
   /** Override default anchor id when multiple headers exist (e.g. docs demos). */
-  pageHeaderActionsAnchorId?: string;
+  anchorId?: string;
 };
 
-export function AppHeader({
+export function AppHeaderHost({
   className,
-  pageHeaderActionsAnchorId = PAGE_HEADER_ACTIONS_ID,
+  anchorId = PAGE_HEADER_ID,
 }: AppHeaderProps) {
-  return (
-    <header className={cn(S.root, className)}>
-      <div className={S.content}>
-        <div className={S.actions}>
-          <div
-            id={pageHeaderActionsAnchorId}
-            className={S.pageHeaderActionsAnchor}
-          />
-        </div>
-      </div>
-    </header>
-  );
+  return <header className={cn(S.root, className)} id={anchorId} />;
+}
+
+export type AppHeaderPortalProps = {
+  children: ReactNode;
+};
+
+export function AppHeaderPortal({ children }: AppHeaderPortalProps) {
+  const [container, setContainer] = useState<HTMLElement | null>(null);
+
+  useLayoutEffect(() => {
+    setContainer(document.getElementById(PAGE_HEADER_ID));
+  }, []);
+
+  if (!container) {
+    return null;
+  }
+
+  return createPortal(children, container);
 }

@@ -1,9 +1,10 @@
 import { jsxs, jsx } from 'react/jsx-runtime';
 import cn from 'classnames';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import { BaseChartWrapper } from '../Chart/components/BaseChartWrapper.js';
 import { InteractionOverlay } from '../InteractionOverlay/InteractionOverlay.js';
 import { TimeRangeControls } from '../TimeRangeControls/TimeRangeControls.js';
+import { ensureChartForecastBridge } from '../../../utils/chartConnectionPoint.js';
 import { shortDateFormatter, longDateFormatter } from './ChartAreaInteractive.helpers.js';
 import S from './ChartAreaInteractive.styl.js';
 import { PinOverlay } from './overlays/PinOverlay/PinOverlay.js';
@@ -13,7 +14,7 @@ import { ThresholdsOverlay } from './overlays/ThresholdsOverlay/ThresholdsOverla
 const chartConfig = {
 // Chart now supports light/dark themes with dynamic colors
 };
-function ChartAreaInteractive({ className, chartContainerClassName, legendClassName, xAxisClassName, yAxisClassName, timeRange, onTimeRangeChange, pinMonth, onPinMonthChange, onPreviewMonthChange, chartData, forecastData, error, loading = false, isDarkTheme = false, footerActions, mode, selectedForecast, upperQuantiles, lowerQuantiles, selectedLowerQuantile, selectedUpperQuantile, onLowerQuantileChange, onUpperQuantileChange, lowerThreshold, upperThreshold, onLowerThresholdChange, onUpperThresholdChange, discreteThresholdValues, headerActions, excludeLegendIds, loadingAnalyses, onLegendClick, onAnalysisSelect, disableTimeRangeSelector, forecastLineStyle = 'dashed', selectedAnalysisId, chartRenderId, toggleLegendSeries, ensureAnalysisSeriesVisible, overlayForecastData = {}, hiddenSeries, ...restProps }) {
+function ChartAreaInteractive({ className, chartContainerClassName, legendClassName, xAxisClassName, yAxisClassName, timeRange, onTimeRangeChange, pinMonth, onPinMonthChange, onPreviewMonthChange, chartData, forecastData, error, loading = false, isDarkTheme = false, footerActions, mode, selectedForecast, upperQuantiles, lowerQuantiles, selectedLowerQuantile, selectedUpperQuantile, onLowerQuantileChange, onUpperQuantileChange, lowerThreshold, upperThreshold, onLowerThresholdChange, onUpperThresholdChange, discreteThresholdValues, headerActions, excludeLegendIds, loadingAnalyses, onLegendClick, onAnalysisSelect, disableTimeRangeSelector, forecastLineStyle = 'dashed', selectedAnalysisId, chartRenderId, toggleLegendSeries, ensureAnalysisSeriesVisible, overlayForecastData = {}, hiddenSeries, disableForecastHistoricalBridge, ...restProps }) {
     const seriesHidden = hiddenSeries ?? new Set();
     const hiddenSeriesRef = useRef(seriesHidden);
     const prevSelectedAnalysisIdRef = useRef(selectedAnalysisId);
@@ -36,6 +37,11 @@ function ChartAreaInteractive({ className, chartContainerClassName, legendClassN
             ensureAnalysisSeriesVisible(selectedAnalysisId);
         }
     }, [selectedAnalysisId, ensureAnalysisSeriesVisible]);
+    const bridgedChartData = useMemo(() => disableForecastHistoricalBridge
+        ? chartData
+        : ensureChartForecastBridge(chartData, {
+            forecastSeriesIds: forecastData?.map(f => f.id),
+        }), [chartData, disableForecastHistoricalBridge, forecastData]);
     // Extract quantileBands from restProps
     // const quantileBands = (restProps as any).quantileBands;
     const getLoadingMessage = () => {
@@ -54,7 +60,7 @@ function ChartAreaInteractive({ className, chartContainerClassName, legendClassN
         renderId: chartRenderId?.toString(),
         xAxisClassName,
         yAxisClassName,
-        chartData,
+        chartData: bridgedChartData,
         chartClassName: S.chartContainer,
         // chartClassName: cn(S.chartContainer, chartContainerClassName),
         legendClassName,

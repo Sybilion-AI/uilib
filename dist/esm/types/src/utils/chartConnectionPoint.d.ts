@@ -2,8 +2,19 @@
  * Utility functions for ensuring consistent connection points between historical and forecast data
  * across all chart components.
  */
+import type { SeriesForecastData, TimeSeriesPoint } from '#uilib/components/ui/Chart/chartForecastVisualization.types';
 import type { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
-import type { ForecastData as ChartForecastData, TimeSeriesPoint } from '#uilib/components/ui/ChartForecast/ChartForecast.types';
+export type EnsureChartForecastBridgeOptions = {
+    forecastSeriesIds?: number[];
+    /** When true, returns `chartData` unchanged */
+    disabled?: boolean;
+};
+/**
+ * Injects `forecast_{id}` on the row before each series’ first forecast month (historical value)
+ * so dashed forecast lines meet the historical line. Matches sybilion-client bridge behavior.
+ * Never overwrites an existing forecast value on that row.
+ */
+export declare function ensureChartForecastBridge(chartData: ChartDataPoint[], options?: EnsureChartForecastBridgeOptions): ChartDataPoint[];
 /**
  * Find the last valid historical data point (filtering out null/undefined values)
  */
@@ -47,4 +58,4 @@ export declare function getNextMonth(date: string): string;
  * 2. Get the previous month (connection point date)
  * 3. Add connection point at that date with the historical value from that month
  */
-export declare function ensureForecastConnectionPoint(forecast: ChartForecastData, historical: TimeSeriesPoint[]): ChartForecastData;
+export declare function ensureForecastConnectionPoint(forecast: SeriesForecastData, historical: TimeSeriesPoint[]): SeriesForecastData;

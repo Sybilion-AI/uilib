@@ -23,7 +23,7 @@ function SheetContent({ className, children, side = 'right', fullWidth = false, 
     const sideClass = side
         ? S[`side${side.charAt(0).toUpperCase()}${side.slice(1)}`]
         : S.sideRight;
-    return (jsxs(SheetPortal, { children: [jsx(SheetOverlay, {}), jsxs(SheetPrimitive.Content, { "data-slot": "sheet-content", className: cn(S.content, sideClass, fullWidth && S.fullWidth, className), ...props, children: [children, jsxs(SheetPrimitive.Close, { className: cn(S.close), children: [jsx(X, { className: "size-4" }), jsx("span", { className: "sr-only", children: "Close" })] })] })] }));
+    return (jsxs(SheetPortal, { children: [jsx(SheetOverlay, {}), jsxs(SheetPrimitive.Content, { "data-slot": "sheet-content", className: cn(S.content, sideClass, fullWidth && S.fullWidth, className), ...props, children: [children, jsx(SheetPrimitive.Close, { className: cn(S.close), children: jsx(X, { className: "size-4" }) })] })] }));
 }
 function SheetHeader({ className, ...props }) {
     return (jsx("div", { "data-slot": "sheet-header", className: cn(S.header, className), ...props }));

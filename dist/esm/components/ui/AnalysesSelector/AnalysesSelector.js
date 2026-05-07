@@ -168,7 +168,9 @@ function AnalysesSelector({ items, selectedIds, onItemToggle, inlineMode = false
                                 minWidth: 'auto',
                                 height: 'auto',
                                 fontSize: 'var(--text-xs)',
-                                pointerEvents: items.length < 2 ? 'none' : undefined,
+                                pointerEvents: items.length < 2 && unselectedItems.length === 0
+                                    ? 'none'
+                                    : undefined,
                             }, children: jsx(SelectValue, { placeholder: selectPlaceholder }) }), jsx(SelectContent, { children: unselectedItems.map(item => (jsx(SelectItem, { value: String(item.id), children: renderSelectItem(item) }, item.id))) })] }))] }));
     }
     if (items.length === 0)

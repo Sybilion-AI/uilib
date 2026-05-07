@@ -1,6 +1,8 @@
 export { ChatContext, ChatProvider, useChat, useChats, useChatsForDataset, useChatsForScopeId, useCurrentChat } from './contexts/chat-context.js';
 export { AnalysesSelector } from './components/ui/AnalysesSelector/AnalysesSelector.js';
 export { AnalysisLineIcon } from './components/ui/AnalysisLineIcon/AnalysisLineIcon.js';
+export { AppHeaderHost, AppHeaderPortal } from './components/ui/AppHeader/AppHeader.js';
+export { PAGE_HEADER_ID } from './components/ui/AppHeader/appChromeAnchors.js';
 export { Avatar, AvatarFallback, AvatarImage } from './components/ui/Avatar/Avatar.js';
 export { Badge } from './components/ui/Badge/Badge.js';
 export { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from './components/ui/Breadcrumb/Breadcrumb.js';
@@ -9,9 +11,6 @@ export { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader,
 export { ChartLegend, ChartTooltip } from './components/ui/Chart/Chart.js';
 export { THEMES } from './components/ui/Chart/Chart.types.js';
 export { ChartAreaInteractive, chartConfig } from './components/ui/ChartAreaInteractive/ChartAreaInteractive.js';
-export { ChartForecast } from './components/ui/ChartForecast/ChartForecast.js';
-export { ChartForecastProbabilistic } from './components/ui/ChartForecastProbabilistic/ChartForecastProbabilistic.js';
-export { ChartTrend } from './components/ui/ChartTrend/ChartTrend.js';
 export { Chat } from './components/ui/Chat/Chat.js';
 export { usedPresetIdsFromMessages } from './components/ui/Chat/chat-preset-utils.js';
 export { ChatChrome } from './components/ui/Chat/ChatChrome/ChatChrome.js';
@@ -28,6 +27,7 @@ export { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 export { DropZone } from './components/ui/DropZone/DropZone.js';
 export { FlickeringGrid } from './components/ui/FlickeringGrid/FlickeringGrid.js';
 export { Foldable } from './components/ui/Foldable/Foldable.js';
+export { Gap } from './components/ui/Gap/Gap.js';
 export { Image } from './components/ui/Image/Image.js';
 export { ImageWithFallback } from './components/ui/ImageWithFallback/ImageWithFallback.js';
 export { Input } from './components/ui/Input/Input.js';
@@ -40,10 +40,10 @@ export { LegacyPlatformLink } from './components/ui/LegacyPlatformLink/LegacyPla
 export { Logo } from './components/ui/Logo/Logo.js';
 export { MobileAdaptiveSelector } from './components/ui/MobileAdaptiveSelector/MobileAdaptiveSelector.js';
 export { NumberControl } from './components/ui/NumberControl/NumberControl.js';
+export { AppShell, AppShellMainContent } from './components/ui/Page/AppShell/AppShell.js';
 export { PageHeader } from './components/ui/Page/PageHeader/PageHeader.js';
 export { PageEmptyCanvas } from './components/ui/Page/PageEmptyCanvas/PageEmptyCanvas.js';
 export { PageContent, PageContentSection } from './components/ui/Page/PageContent/PageContent.js';
-export { PageMainContent } from './components/ui/Page/PageMainContent/PageMainContent.js';
 export { PageScroll } from './components/ui/Page/PageScroll/PageScroll.js';
 export { PageXScroll } from './components/ui/Page/PageXScroll/PageXScroll.js';
 export { Breadcrumbs } from './components/ui/Page/Breadcrumbs/Breadcrumbs.js';
