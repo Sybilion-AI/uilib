@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.20](https://github.com/Mir-Insight/uilib/compare/v1.0.19...v1.0.20) (2026-05-07)
+
+
+### Bug Fixes
+
+* AppHeader - max-width ([d57acb5](https://github.com/Mir-Insight/uilib/commit/d57acb53efbc8efb6933dc8dd6bb2ccd1a0c13e3))
+
 ### [1.0.19](https://github.com/Mir-Insight/uilib/compare/v1.0.18...v1.0.19) (2026-05-07)
 
 
