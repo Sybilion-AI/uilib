@@ -1,4 +1,5 @@
-export { MINIAPP_CHANNEL, MINIAPP_VERSION, applyThemeToDocument, buildReadyMessage, parseThemeSyncMessage, resolveParentOriginFromReferrer } from './mini-app/miniAppProtocol.js';
+export { MINIAPP_CHANNEL, MINIAPP_VERSION, applyThemeToDocument, buildDataRequestMessage, buildReadyMessage, isTrustedMiniAppParentMessage, parseDataResponseMessage, parseThemeSyncMessage, resolveParentOriginFromReferrer } from './mini-app/miniAppProtocol.js';
+export { createMiniAppDataClient } from './mini-app/miniAppDataClient.js';
 export { getDefaultMiniAppThemeConfig } from './mini-app/miniAppThemeConfig.js';
 export { MiniAppRoot, useMiniAppShellTheme } from './mini-app/MiniAppRoot.js';
 export { ChatContext, ChatProvider, useChat, useChats, useChatsForDataset, useChatsForScopeId, useCurrentChat } from './contexts/chat-context.js';

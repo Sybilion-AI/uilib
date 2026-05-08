@@ -3,7 +3,7 @@ import cn from 'classnames';
 import { createContext, useContext, useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import { Theme, Scroll } from '@homecode/ui';
 import S from './MiniAppRoot.styl.js';
-import { resolveParentOriginFromReferrer, applyThemeToDocument, buildReadyMessage, parseThemeSyncMessage } from './miniAppProtocol.js';
+import { resolveParentOriginFromReferrer, applyThemeToDocument, buildReadyMessage, isTrustedMiniAppParentMessage, parseThemeSyncMessage } from './miniAppProtocol.js';
 import { getDefaultMiniAppThemeConfig } from './miniAppThemeConfig.js';
 
 const defaultTheme = {
@@ -29,22 +29,6 @@ function useMiniAppShellTheme() {
         throw new Error('useMiniAppShellTheme must be used within MiniAppRoot');
     }
     return v;
-}
-/**
- * Accept only messages that appear to come from the real embedding parent:
- * - `source` must be `window.parent` (same as shell’s iframe target).
- * - When `document.referrer` is present, `origin` must match it (Sybilion page that loaded this iframe).
- *   If referrer was stripped (Referrer-Policy), we only rely on `source` matching `parent`.
- */
-function isTrustedParentMessage(event) {
-    // Ignore messages from other windows (e.g. popups, other iframes).
-    if (event.source !== window.parent)
-        return false;
-    const fromReferrer = resolveParentOriginFromReferrer();
-    // Tighten to embedder origin when the browser exposes it.
-    if (fromReferrer && event.origin !== fromReferrer)
-        return false;
-    return true;
 }
 function MiniAppRoot({ children, className, appId, onThemeChange, getThemeConfig, }) {
     const [theme, setTheme] = useState(() => isEmbeddedMiniApp() ? defaultTheme : themeFromDocument());
@@ -73,7 +57,7 @@ function MiniAppRoot({ children, className, appId, onThemeChange, getThemeConfig
     }, [theme.mode]);
     useEffect(() => {
         const onMessage = (event) => {
-            if (!isTrustedParentMessage(event))
+            if (!isTrustedMiniAppParentMessage(event))
                 return;
             const parsed = parseThemeSyncMessage(event.data);
             if (!parsed)

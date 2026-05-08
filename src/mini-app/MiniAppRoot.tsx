@@ -17,6 +17,7 @@ import {
   type ThemeSyncPayload,
   applyThemeToDocument,
   buildReadyMessage,
+  isTrustedMiniAppParentMessage,
   parseThemeSyncMessage,
   resolveParentOriginFromReferrer,
 } from './miniAppProtocol';
@@ -57,21 +58,6 @@ export function useMiniAppShellTheme(): MiniAppShellContextValue {
     throw new Error('useMiniAppShellTheme must be used within MiniAppRoot');
   }
   return v;
-}
-
-/**
- * Accept only messages that appear to come from the real embedding parent:
- * - `source` must be `window.parent` (same as shell’s iframe target).
- * - When `document.referrer` is present, `origin` must match it (Sybilion page that loaded this iframe).
- *   If referrer was stripped (Referrer-Policy), we only rely on `source` matching `parent`.
- */
-function isTrustedParentMessage(event: MessageEvent): boolean {
-  // Ignore messages from other windows (e.g. popups, other iframes).
-  if (event.source !== window.parent) return false;
-  const fromReferrer = resolveParentOriginFromReferrer();
-  // Tighten to embedder origin when the browser exposes it.
-  if (fromReferrer && event.origin !== fromReferrer) return false;
-  return true;
 }
 
 export type MiniAppRootProps = {
@@ -127,7 +113,7 @@ export function MiniAppRoot({
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
-      if (!isTrustedParentMessage(event)) return;
+      if (!isTrustedMiniAppParentMessage(event)) return;
       const parsed = parseThemeSyncMessage(event.data);
       if (!parsed) return;
       setTheme(parsed);

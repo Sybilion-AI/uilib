@@ -53,5 +53,54 @@ function applyThemeToDocument(mode) {
     root.classList.remove('light', 'dark');
     root.classList.add(mode);
 }
+/** Only accept shell messages that appear to come from the real embedding parent. */
+function isTrustedMiniAppParentMessage(event) {
+    if (event.source !== window.parent)
+        return false;
+    const fromReferrer = resolveParentOriginFromReferrer();
+    if (fromReferrer && event.origin !== fromReferrer)
+        return false;
+    return true;
+}
+function buildDataRequestMessage(payload) {
+    return {
+        channel: MINIAPP_CHANNEL,
+        version: MINIAPP_VERSION,
+        type: 'DATA_REQUEST',
+        payload,
+    };
+}
+/** Parse parent → child DATA_RESPONSE. */
+function parseDataResponseMessage(data) {
+    if (!isRecord(data))
+        return null;
+    if (data.channel !== MINIAPP_CHANNEL)
+        return null;
+    if (data.version !== MINIAPP_VERSION)
+        return null;
+    if (data.type !== 'DATA_RESPONSE')
+        return null;
+    const payload = data.payload;
+    if (!isRecord(payload))
+        return null;
+    const requestId = payload.requestId;
+    if (typeof requestId !== 'string' || requestId.length === 0)
+        return null;
+    const ok = payload.ok === true;
+    const errOk = payload.ok === false;
+    if (!ok && !errOk)
+        return null;
+    const base = {
+        requestId,
+        ok,
+    };
+    if ('result' in payload) {
+        base.result = payload.result;
+    }
+    if (typeof payload.error === 'string') {
+        base.error = payload.error;
+    }
+    return base;
+}
 
-export { MINIAPP_CHANNEL, MINIAPP_VERSION, applyThemeToDocument, buildReadyMessage, parseThemeSyncMessage, resolveParentOriginFromReferrer };
+export { MINIAPP_CHANNEL, MINIAPP_VERSION, applyThemeToDocument, buildDataRequestMessage, buildReadyMessage, isTrustedMiniAppParentMessage, parseDataResponseMessage, parseThemeSyncMessage, resolveParentOriginFromReferrer };

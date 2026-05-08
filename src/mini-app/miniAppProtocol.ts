@@ -25,6 +25,42 @@ export type MiniAppMessageThemeSync = {
   payload: ThemeSyncPayload;
 };
 
+export type MiniAppDataOp =
+  | 'getDatasets'
+  | 'getDataset'
+  | 'getForecasts'
+  | 'getForecast'
+  | 'getDrivers'
+  | 'getPerformanceData'
+  | 'getDriversComparisonData';
+
+export type MiniAppDataRequestPayload = {
+  requestId: string;
+  op: MiniAppDataOp;
+  params?: Record<string, number>;
+};
+
+export type MiniAppMessageDataRequest = {
+  channel: typeof MINIAPP_CHANNEL;
+  version: typeof MINIAPP_VERSION;
+  type: 'DATA_REQUEST';
+  payload: MiniAppDataRequestPayload;
+};
+
+export type MiniAppDataResponsePayload = {
+  requestId: string;
+  ok: boolean;
+  result?: unknown;
+  error?: string;
+};
+
+export type MiniAppMessageDataResponse = {
+  channel: typeof MINIAPP_CHANNEL;
+  version: typeof MINIAPP_VERSION;
+  type: 'DATA_RESPONSE';
+  payload: MiniAppDataResponsePayload;
+};
+
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null && !Array.isArray(v);
 }
@@ -76,4 +112,53 @@ export function applyThemeToDocument(mode: 'light' | 'dark'): void {
   const root = document.documentElement;
   root.classList.remove('light', 'dark');
   root.classList.add(mode);
+}
+
+/** Only accept shell messages that appear to come from the real embedding parent. */
+export function isTrustedMiniAppParentMessage(event: MessageEvent): boolean {
+  if (event.source !== window.parent) return false;
+  const fromReferrer = resolveParentOriginFromReferrer();
+  if (fromReferrer && event.origin !== fromReferrer) return false;
+  return true;
+}
+
+export function buildDataRequestMessage(
+  payload: MiniAppDataRequestPayload,
+): MiniAppMessageDataRequest {
+  return {
+    channel: MINIAPP_CHANNEL,
+    version: MINIAPP_VERSION,
+    type: 'DATA_REQUEST',
+    payload,
+  };
+}
+
+/** Parse parent → child DATA_RESPONSE. */
+export function parseDataResponseMessage(
+  data: unknown,
+): MiniAppDataResponsePayload | null {
+  if (!isRecord(data)) return null;
+  if (data.channel !== MINIAPP_CHANNEL) return null;
+  if (data.version !== MINIAPP_VERSION) return null;
+  if (data.type !== 'DATA_RESPONSE') return null;
+  const payload = data.payload;
+  if (!isRecord(payload)) return null;
+  const requestId = payload.requestId;
+  if (typeof requestId !== 'string' || requestId.length === 0) return null;
+  const ok = payload.ok === true;
+  const errOk = payload.ok === false;
+  if (!ok && !errOk) return null;
+
+  const base: MiniAppDataResponsePayload = {
+    requestId,
+    ok,
+  };
+
+  if ('result' in payload) {
+    base.result = payload.result;
+  }
+  if (typeof payload.error === 'string') {
+    base.error = payload.error;
+  }
+  return base;
 }
