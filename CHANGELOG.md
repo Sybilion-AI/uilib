@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.25](https://github.com/Mir-Insight/uilib/compare/v1.0.24...v1.0.25) (2026-05-08)
+
+
+### Features
+
+* MiniAppRoot - Scroll shell for mini-apps ([55651a0](https://github.com/Mir-Insight/uilib/commit/55651a05679ae8e891085e80a8e934dffe0dd1df))
+
 ### [1.0.24](https://github.com/Mir-Insight/uilib/compare/v1.0.23...v1.0.24) (2026-05-08)
 
 ### [1.0.23](https://github.com/Mir-Insight/uilib/compare/v1.0.22...v1.0.23) (2026-05-08)
