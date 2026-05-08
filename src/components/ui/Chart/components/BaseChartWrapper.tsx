@@ -35,6 +35,78 @@ import { ChartAxes } from './ChartAxes';
 import { ChartGrid } from './ChartGrid';
 import { LegendSvg } from './LegendSvg/LegendSvg';
 
+type ChartMargin = { top: number; right: number; bottom: number; left: number };
+
+const DEFAULT_CHART_MARGIN: ChartMargin = {
+  top: 5,
+  right: 5,
+  bottom: 5,
+  left: 5,
+};
+
+function resolveChartMargin(
+  margin: Partial<ChartMargin> | undefined,
+): ChartMargin {
+  return {
+    top: margin?.top ?? DEFAULT_CHART_MARGIN.top,
+    right: margin?.right ?? DEFAULT_CHART_MARGIN.right,
+    bottom: margin?.bottom ?? DEFAULT_CHART_MARGIN.bottom,
+    left: margin?.left ?? DEFAULT_CHART_MARGIN.left,
+  };
+}
+
+/** Plot box inside `.recharts-wrapper`, same convention as Recharts cartesian viewBox. */
+function getPlotViewBox(wrapper: HTMLElement, m: ChartMargin) {
+  const w = wrapper.clientWidth;
+  const h = wrapper.clientHeight;
+  return {
+    x: m.left,
+    y: m.top,
+    width: Math.max(0, w - m.left - m.right),
+    height: Math.max(0, h - m.top - m.bottom),
+  };
+}
+
+function clampTooltipTranslate(args: {
+  coordinate: { x: number; y: number };
+  viewBox: { x: number; y: number; width: number; height: number };
+  tooltipWidth: number;
+  tooltipHeight: number;
+  offset: number;
+  edgeMargin: number;
+}): { x: number; y: number } {
+  const {
+    coordinate,
+    viewBox,
+    tooltipWidth: tw,
+    tooltipHeight: th,
+    offset,
+    edgeMargin,
+  } = args;
+
+  const minX = viewBox.x + edgeMargin;
+  const maxX = viewBox.x + viewBox.width - tw - edgeMargin;
+  const minY = viewBox.y + edgeMargin;
+  const maxY = viewBox.y + viewBox.height - th - edgeMargin;
+
+  const clamp = (v: number, lo: number, hi: number) =>
+    Math.min(Math.max(v, lo), Math.max(lo, hi));
+
+  let tx = coordinate.x + offset;
+  if (tx + tw > viewBox.x + viewBox.width - edgeMargin) {
+    tx = coordinate.x - tw - offset;
+  }
+  tx = clamp(tx, minX, maxX);
+
+  let ty = coordinate.y + offset;
+  if (ty + th > viewBox.y + viewBox.height - edgeMargin) {
+    ty = coordinate.y - th - offset;
+  }
+  ty = clamp(ty, minY, maxY);
+
+  return { x: tx, y: ty };
+}
+
 export interface BaseChartWrapperProps {
   renderId?: string; // unique id for the render, used to identify the render in the render queue
   chartConfig?: ChartConfig;
@@ -200,21 +272,10 @@ const BaseChartWrapperContent = forwardRef<
     legendMarginLeft = 0,
   } = props;
 
-  const activeDataRef = useRef<any>(null);
-  /** Raw cursor position from Recharts (tooltip anchor). */
-  const rawTooltipCoordinateRef = useRef<{ x: number; y: number } | null>(null);
-  /** Last transform actually applied after viewport/boundary adjustment. */
-  const lastAppliedTooltipPositionRef = useRef<{ x: number; y: number } | null>(
-    null,
-  );
-  const isTooltipActiveRef = useRef<boolean>(false);
-
-  // const [activeDotsData, setActiveDotsData] = useState<ActiveDot[]>([]);
   const [shouldAnimate, setShouldAnimate] = useState(false);
 
   const rootRef = useRef<HTMLDivElement>(null);
 
-  // Merge forwarded ref with internal rootRef using callback ref
   const setRefs = (node: HTMLDivElement | null) => {
     rootRef.current = node;
     if (typeof ref === 'function') {
@@ -223,137 +284,105 @@ const BaseChartWrapperContent = forwardRef<
       ref.current = node;
     }
   };
-  // const prevGridHeightRef = useRef<number>(0);
-  const tooltipWrapperRef = useRef<HTMLElement | null>(null);
+
+  const resolvedChartMargin = useMemo(
+    () => resolveChartMargin(margin),
+    [margin?.top, margin?.right, margin?.bottom, margin?.left],
+  );
 
   const TOOLTIP_EDGE_MARGIN = 8;
+  const TOOLTIP_OFFSET = 10;
 
-  const applyTooltipPosition = (opts?: { skipBoundaryAdjust?: boolean }) => {
+  const tooltipWrapperRef = useRef<HTMLElement | null>(null);
+  const rawTooltipCoordinateRef = useRef<{ x: number; y: number } | null>(null);
+  const tooltipSizeRef = useRef<{ width: number; height: number }>({
+    width: 0,
+    height: 0,
+  });
+  const tooltipResizeObserverRef = useRef<ResizeObserver | null>(null);
+  const tooltipResizeObservedTargetRef = useRef<Element | null>(null);
+
+  const applyTooltipPosition = () => {
     const wrapper = tooltipWrapperRef.current;
-    const root = rootRef.current;
-    const raw = rawTooltipCoordinateRef.current;
-    if (!wrapper || !raw) return;
+    const coord = rawTooltipCoordinateRef.current;
+    const chartWrapper = rootRef.current?.querySelector('.recharts-wrapper');
 
-    const setTransform = (el: HTMLElement, x: number, y: number) => {
-      el.style.transform = `translate(${x}px, ${y}px)`;
-      lastAppliedTooltipPositionRef.current = { x, y };
-    };
+    if (!wrapper || !coord || !(chartWrapper instanceof HTMLElement)) return;
 
-    setTransform(wrapper, raw.x, raw.y);
+    const measured = wrapper.getBoundingClientRect();
+    const width = tooltipSizeRef.current.width || measured.width;
+    const height = tooltipSizeRef.current.height || measured.height;
 
-    if (opts?.skipBoundaryAdjust || !root) return;
+    if (width <= 0 || height <= 0) return;
 
-    const runAdjust = () => {
-      const w = tooltipWrapperRef.current;
-      const rEl = rootRef.current;
-      const rCoord = rawTooltipCoordinateRef.current;
-      if (!w || !rEl || !rCoord) return;
+    tooltipSizeRef.current = { width, height };
 
-      const rootRect = rEl.getBoundingClientRect();
-      const rightBound = Math.min(rootRect.right, window.innerWidth);
-      let x = rCoord.x;
-      const y = rCoord.y;
-
-      w.style.transform = `translate(${x}px, ${y}px)`;
-      let tooltipRect = w.getBoundingClientRect();
-
-      if (tooltipRect.right > rightBound - TOOLTIP_EDGE_MARGIN) {
-        x -= tooltipRect.right - rightBound + TOOLTIP_EDGE_MARGIN;
-      }
-
-      const leftBound = Math.max(rootRect.left, 0);
-      w.style.transform = `translate(${x}px, ${y}px)`;
-      tooltipRect = w.getBoundingClientRect();
-
-      if (tooltipRect.left < leftBound + TOOLTIP_EDGE_MARGIN) {
-        x += leftBound + TOOLTIP_EDGE_MARGIN - tooltipRect.left;
-      }
-
-      setTransform(w, x, y);
-    };
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(runAdjust);
+    const next = clampTooltipTranslate({
+      coordinate: coord,
+      viewBox: getPlotViewBox(chartWrapper, resolvedChartMargin),
+      tooltipWidth: width,
+      tooltipHeight: height,
+      offset: TOOLTIP_OFFSET,
+      edgeMargin: TOOLTIP_EDGE_MARGIN,
     });
+
+    wrapper.style.transform = `translate(${next.x}px, ${next.y}px)`;
   };
 
   const applyTooltipPositionRef = useRef(applyTooltipPosition);
   applyTooltipPositionRef.current = applyTooltipPosition;
 
-  // Effect to watch for tooltip wrapper and apply transforms/opacity
+  // Own only the final transform: smooth follow cursor, but clamp in local chart coords first.
   useEffect(() => {
-    const restorePosition = () => {
-      const pos =
-        lastAppliedTooltipPositionRef.current ??
-        rawTooltipCoordinateRef.current;
-      if (tooltipWrapperRef.current && pos) {
-        const currentTransform = tooltipWrapperRef.current.style.transform;
-        const expectedTransform = `translate(${pos.x}px, ${pos.y}px)`;
+    const connectResizeObserver = (wrapperEl: Element) => {
+      if (tooltipResizeObservedTargetRef.current === wrapperEl) {
+        return;
+      }
+      const resizeRo =
+        tooltipResizeObserverRef.current ??
+        new ResizeObserver(entries => {
+          const entry = entries[0];
+          if (!entry) return;
+          const { width, height } = entry.contentRect;
+          tooltipSizeRef.current = { width, height };
+          requestAnimationFrame(() => applyTooltipPositionRef.current());
+        });
+      tooltipResizeObserverRef.current = resizeRo;
 
-        // Always restore position if transform is missing, reset, or doesn't match expected position
-        // This prevents Recharts from resetting the tooltip position
-        if (
-          !currentTransform ||
-          currentTransform === 'none' ||
-          currentTransform === 'translate(0px, 0px)' ||
-          currentTransform !== expectedTransform
-        ) {
-          tooltipWrapperRef.current.style.transform = expectedTransform;
-        }
+      const prevObserved = tooltipResizeObservedTargetRef.current;
+      if (prevObserved && prevObserved !== wrapperEl) {
+        resizeRo.unobserve(prevObserved);
+      }
+      tooltipResizeObservedTargetRef.current = wrapperEl;
+      resizeRo.observe(wrapperEl);
+
+      if (wrapperEl instanceof HTMLElement) {
+        tooltipWrapperRef.current = wrapperEl;
+        wrapperEl.style.transition =
+          'transform 0.2s ease-out, opacity 0.2s ease-out';
+        requestAnimationFrame(() => applyTooltipPositionRef.current());
       }
     };
 
-    const findAndSetupTooltipWrapper = () => {
+    const tryObserveTooltipWrapper = () => {
       const wrapper = rootRef.current?.querySelector(
         '.recharts-tooltip-wrapper',
-      ) as HTMLElement | null;
-
-      if (wrapper && wrapper !== tooltipWrapperRef.current) {
-        tooltipWrapperRef.current = wrapper;
-
-        // Add transition for smooth movement and opacity
-        wrapper.style.transition =
-          'transform 0.2s ease-out, opacity 0.2s ease-out';
-
-        // Override Recharts' visibility: hidden with visibility: visible
-        // We'll control visibility through opacity instead
-        wrapper.style.visibility = 'visible';
-
-        // Set initial opacity based on active state
-        const isActive = activeDataRef.current?.active === true;
-        wrapper.style.opacity = isActive ? '1' : '0';
-        wrapper.style.pointerEvents = isActive ? 'auto' : 'none';
-
-        // Always restore position if we have a last position
-        restorePosition();
-        if (rawTooltipCoordinateRef.current) {
-          applyTooltipPositionRef.current();
-        }
-      }
-
-      // Always ensure visibility is visible (Recharts sets it to hidden)
-      if (tooltipWrapperRef.current) {
-        tooltipWrapperRef.current.style.visibility = 'visible';
-        // Continuously restore position to prevent resets
-        restorePosition();
-      }
+      );
+      if (wrapper) connectResizeObserver(wrapper);
     };
 
-    // Initial check
-    findAndSetupTooltipWrapper();
+    tryObserveTooltipWrapper();
 
-    // Watch for tooltip wrapper changes and style mutations
     const observer = new MutationObserver(mutations => {
-      findAndSetupTooltipWrapper();
+      tryObserveTooltipWrapper();
 
-      // If transform attribute changed, restore position if needed
       mutations.forEach(mutation => {
         if (
           mutation.type === 'attributes' &&
           mutation.attributeName === 'style' &&
           mutation.target === tooltipWrapperRef.current
         ) {
-          restorePosition();
+          requestAnimationFrame(() => applyTooltipPositionRef.current());
         }
       });
     });
@@ -367,28 +396,18 @@ const BaseChartWrapperContent = forwardRef<
       });
     }
 
-    // Use requestAnimationFrame to continuously monitor and restore position
-    // Only run when we have a last position to maintain
-    let rafId: number | null = null;
-    const monitorPosition = () => {
-      if (rawTooltipCoordinateRef.current && tooltipWrapperRef.current) {
-        restorePosition();
-        rafId = requestAnimationFrame(monitorPosition);
-      } else {
-        rafId = null;
-      }
+    const onWinResize = () => {
+      requestAnimationFrame(() => applyTooltipPositionRef.current());
     };
-
-    // Start monitoring if we already have a position
-    if (rawTooltipCoordinateRef.current) {
-      rafId = requestAnimationFrame(monitorPosition);
-    }
+    window.addEventListener('resize', onWinResize);
 
     return () => {
       observer.disconnect();
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-      }
+      tooltipResizeObserverRef.current?.disconnect();
+      tooltipResizeObserverRef.current = null;
+      tooltipResizeObservedTargetRef.current = null;
+      tooltipWrapperRef.current = null;
+      window.removeEventListener('resize', onWinResize);
     };
   }, []);
 
@@ -403,23 +422,6 @@ const BaseChartWrapperContent = forwardRef<
     // If no valid payload items, render ChartTooltipContent with active=false and empty payload
     // This allows ChartTooltipContent to clear its lastTooltipData state
     if (!filteredPayload || filteredPayload.length === 0) {
-      // Update refs to reflect inactive state
-      if (isTooltipActiveRef.current) {
-        isTooltipActiveRef.current = false;
-        // Always maintain last position when tooltip becomes inactive
-        const pos =
-          lastAppliedTooltipPositionRef.current ??
-          rawTooltipCoordinateRef.current;
-        if (pos && tooltipWrapperRef.current) {
-          const wrapper = tooltipWrapperRef.current;
-          wrapper.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
-          wrapper.style.visibility = 'visible';
-          wrapper.style.opacity = '0';
-          wrapper.style.pointerEvents = 'none';
-        }
-      }
-      // Render ChartTooltipContent with active=false and empty payload to trigger cleanup
-      // This ensures lastTooltipData is cleared when there's no valid data
       return (
         <ChartTooltipContent
           active={false}
@@ -431,60 +433,16 @@ const BaseChartWrapperContent = forwardRef<
       );
     }
 
-    // Store tooltip data in ref (not state) to avoid re-render
-    // Use filtered payload instead of original props.payload
-    activeDataRef.current = {
-      ...props,
-      payload: filteredPayload,
-    };
-
-    const wasActive = isTooltipActiveRef.current;
     const isActive = props.active === true;
 
-    // When tooltip becomes active and has coordinate, update last position
     if (isActive && props.coordinate) {
-      const newCoordinate = {
+      rawTooltipCoordinateRef.current = {
         x: props.coordinate.x,
         y: props.coordinate.y,
       };
-
-      rawTooltipCoordinateRef.current = newCoordinate;
-      isTooltipActiveRef.current = true;
-
-      if (tooltipWrapperRef.current) {
-        tooltipWrapperRef.current.style.visibility = 'visible';
-        tooltipWrapperRef.current.style.opacity = '1';
-        tooltipWrapperRef.current.style.pointerEvents = 'auto';
-        applyTooltipPosition();
-      }
-    } else if (!isActive && wasActive) {
-      isTooltipActiveRef.current = false;
-
-      // Always maintain last position when tooltip becomes inactive
-      const pos =
-        lastAppliedTooltipPositionRef.current ??
-        rawTooltipCoordinateRef.current;
-      if (pos && tooltipWrapperRef.current) {
-        const wrapper = tooltipWrapperRef.current;
-        wrapper.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
-        // Keep visibility visible but hide with opacity transition
-        wrapper.style.visibility = 'visible';
-        wrapper.style.opacity = '0';
-        wrapper.style.pointerEvents = 'none';
-      }
-    } else if (!isActive && !wasActive) {
-      // Ensure opacity is 0 when inactive, but keep visibility visible and maintain position
-      if (tooltipWrapperRef.current) {
-        tooltipWrapperRef.current.style.visibility = 'visible';
-        tooltipWrapperRef.current.style.opacity = '0';
-        tooltipWrapperRef.current.style.pointerEvents = 'none';
-        const pos =
-          lastAppliedTooltipPositionRef.current ??
-          rawTooltipCoordinateRef.current;
-        if (pos) {
-          tooltipWrapperRef.current.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
-        }
-      }
+      requestAnimationFrame(() => applyTooltipPositionRef.current());
+    } else {
+      rawTooltipCoordinateRef.current = null;
     }
 
     return (
@@ -753,7 +711,12 @@ const BaseChartWrapperContent = forwardRef<
 
           {showTooltip && (
             <div>
-              <ChartTooltip cursor={false} content={renderTooltipContent} />
+              <ChartTooltip
+                cursor={false}
+                offset={TOOLTIP_OFFSET}
+                allowEscapeViewBox={{ x: false, y: false }}
+                content={renderTooltipContent}
+              />
             </div>
           )}
         </ChartComponent>

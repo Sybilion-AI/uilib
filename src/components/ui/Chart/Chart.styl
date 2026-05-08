@@ -57,10 +57,9 @@
       position relative
       z-index 1
 
-    // Tooltip wrapper is positioned absolutely, can have higher z-index
+    // Tooltip portal positions with absolute + transform; do not override with relative.
     .recharts-tooltip-wrapper
       z-index 3 !important
-      position relative
 
     // Active dots and cursor
     .recharts-active-dot
@@ -75,8 +74,12 @@
 // Tooltip styles
 .tooltipContainer
   display grid
-  width minmax(300px, 100%)
-  min-width 8rem
+  box-sizing border-box
+  width max-content
+  max-width 100%
+  min-width 0
+  overflow-wrap break-word
+  word-break break-word
   align-items start
   gap 0.375rem /* gap-1.5 */
   padding 0.375rem 0.625rem /* py-1.5 px-2.5 */
