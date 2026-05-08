@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.22](https://github.com/Mir-Insight/uilib/compare/v1.0.21...v1.0.22) (2026-05-08)
+
+
+### Features
+
+* MiniAppRoot - Sybilion iframe bridge and mini-app CSS ([e3ee682](https://github.com/Mir-Insight/uilib/commit/e3ee682444a17f95cb62b981613c5667d0a26747))
+
 ### [1.0.21](https://github.com/Mir-Insight/uilib/compare/v1.0.20...v1.0.21) (2026-05-08)
 
 ### [1.0.20](https://github.com/Mir-Insight/uilib/compare/v1.0.19...v1.0.20) (2026-05-07)
