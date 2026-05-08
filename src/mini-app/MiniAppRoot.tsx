@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import type { ReactNode } from 'react';
 import React, {
   createContext,
@@ -24,6 +25,19 @@ const defaultTheme: ThemeSyncPayload = {
   mode: 'light',
   isDarkMode: false,
 };
+
+function isEmbeddedMiniApp(): boolean {
+  return typeof window !== 'undefined' && window.parent !== window;
+}
+
+function themeFromDocument(): ThemeSyncPayload {
+  if (typeof document === 'undefined') return defaultTheme;
+  const isDark = document.documentElement.classList.contains('dark');
+  return {
+    mode: isDark ? 'dark' : 'light',
+    isDarkMode: isDark,
+  };
+}
 
 export type MiniAppShellContextValue = {
   theme: ThemeSyncPayload;
@@ -58,6 +72,7 @@ function isTrustedParentMessage(event: MessageEvent): boolean {
 
 export type MiniAppRootProps = {
   children: ReactNode;
+  className?: string;
   /** Included in READY payload when set. */
   appId?: string;
   onThemeChange?: (theme: ThemeSyncPayload) => void;
@@ -65,10 +80,13 @@ export type MiniAppRootProps = {
 
 export function MiniAppRoot({
   children,
+  className,
   appId,
   onThemeChange,
 }: MiniAppRootProps): React.ReactElement {
-  const [theme, setTheme] = useState<ThemeSyncPayload>(defaultTheme);
+  const [theme, setTheme] = useState<ThemeSyncPayload>(() =>
+    isEmbeddedMiniApp() ? defaultTheme : themeFromDocument(),
+  );
   const onThemeChangeRef = useRef(onThemeChange);
   onThemeChangeRef.current = onThemeChange;
 
@@ -86,6 +104,7 @@ export function MiniAppRoot({
   }, [appId]);
 
   useEffect(() => {
+    if (!isEmbeddedMiniApp()) return;
     applyThemeToDocument(theme.mode);
   }, [theme.mode]);
 
@@ -112,7 +131,14 @@ export function MiniAppRoot({
 
   return (
     <MiniAppShellContext.Provider value={ctx}>
-      <Scroll y fadeSize="l" className={S.root}>
+      <Scroll
+        y
+        fadeSize="l"
+        className={cn(S.root, className)}
+        innerClassName={S.inner}
+        offset={{ y: { before: 50, after: 50 } }}
+        autoHide
+      >
         {children}
       </Scroll>
     </MiniAppShellContext.Provider>

@@ -1,15 +1,24 @@
 @import 'lib/theme.styl'
 
+// Scroll root must stay flex row: [scrollable inner | y-bar]. column stacks inner
+// + scrollbar → inner grows with content → overflow-y never engages (clips via overflow:hidden).
 .root
   overflow hidden
 
   position relative
-  display flex
   width 100%
   height 100vh
-  flex-direction column
+  min-height 0
 
   @media (max-width MOBILE)
     height auto
     flex 1
     min-height 0
+
+// Match PageScroll: constrain inner so homecode Scroll max-height:100% + overflow-y work
+.inner
+  width 100%
+  // min-height 0
+  max-height 100%
+  box-sizing border-box
+  padding var(--page-y-padding) var(--page-x-padding)

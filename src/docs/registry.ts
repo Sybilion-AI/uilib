@@ -157,6 +157,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/InteractiveContentPage'),
   },
   {
+    slug: 'mini-app-root',
+    title: 'MiniAppRoot',
+    section: 'Layout',
+    load: () => import('./pages/MiniAppRootPage'),
+  },
+  {
     slug: 'label',
     title: 'Label',
     section: 'Forms',
