@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.27](https://github.com/Mir-Insight/uilib/compare/v1.0.26...v1.0.27) (2026-05-08)
+
+
+### Features
+
+* MiniAppRoot - Homecode Theme wiring ([c5bce93](https://github.com/Mir-Insight/uilib/commit/c5bce933b8e17ae6b498347449dd6651d0784814))
+
+
+### Bug Fixes
+
+* MiniAppGlobal - Roll back gray page color ([64d3581](https://github.com/Mir-Insight/uilib/commit/64d3581fc03f4d192cdcaf00fdc58137a302f3db))
+
 ### [1.0.26](https://github.com/Mir-Insight/uilib/compare/v1.0.25...v1.0.26) (2026-05-08)
 
 
