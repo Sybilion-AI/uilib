@@ -9,6 +9,9 @@ import React, {
   useState,
 } from 'react';
 
+import { Scroll } from '@homecode/ui';
+
+import S from './MiniAppRoot.styl';
 import {
   type ThemeSyncPayload,
   applyThemeToDocument,
@@ -109,7 +112,9 @@ export function MiniAppRoot({
 
   return (
     <MiniAppShellContext.Provider value={ctx}>
-      {children}
+      <Scroll y fadeSize="l" className={S.root}>
+        {children}
+      </Scroll>
     </MiniAppShellContext.Provider>
   );
 }

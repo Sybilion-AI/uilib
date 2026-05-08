@@ -1,6 +1,8 @@
 import { jsx } from 'react/jsx-runtime';
 import { createContext, useContext, useState, useRef, useCallback, useEffect, useMemo } from 'react';
+import { Scroll } from '@homecode/ui';
 import { resolveParentOriginFromReferrer, applyThemeToDocument, buildReadyMessage, parseThemeSyncMessage } from './miniAppProtocol.js';
+import S from './MiniAppRoot.styl.js';
 
 const defaultTheme = {
     mode: 'light',
@@ -71,7 +73,7 @@ function MiniAppRoot({ children, appId, onThemeChange, }) {
         return () => window.removeEventListener('load', sendReady);
     }, [sendReady]);
     const ctx = useMemo(() => ({ theme }), [theme]);
-    return (jsx(MiniAppShellContext.Provider, { value: ctx, children: children }));
+    return (jsx(MiniAppShellContext.Provider, { value: ctx, children: jsx(Scroll, { y: true, fadeSize: "l", className: S.root, children: children }) }));
 }
 
 export { MiniAppRoot, useMiniAppShellTheme };
