@@ -1,6 +1,6 @@
 {
   "name": "@sybilion/uilib",
-  "version": "1.0.31",
+  "version": "1.0.32",
   "description": "Sybilion Design System — React UI components (Webpack + Stylus)",
   "publishConfig": {
     "access": "public",

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.32](https://github.com/Mir-Insight/uilib/compare/v1.0.30...v1.0.32) (2026-05-08)
+
+
+### Features
+
+* MiniAppChatBridge - Iframe sendChatMessage helper ([83ed3e9](https://github.com/Mir-Insight/uilib/commit/83ed3e96dd0202ef2937e5cb4380845bcc9354f4))
+* MiniAppDataClient - Cached host data getters for iframe apps ([94ca23f](https://github.com/Mir-Insight/uilib/commit/94ca23f67af555a04a6e996eb9ca3359c090bf21))
+
 ### [1.0.30](https://github.com/Mir-Insight/uilib/compare/v1.0.29...v1.0.30) (2026-05-08)
 
 ### [1.0.29](https://github.com/Mir-Insight/uilib/compare/v1.0.28...v1.0.29) (2026-05-08)
