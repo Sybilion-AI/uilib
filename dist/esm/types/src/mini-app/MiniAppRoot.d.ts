@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import React from 'react';
-import { type MiniAppThemeConfig } from './miniAppThemeConfig';
 import { type ThemeSyncPayload } from './miniAppProtocol';
+import { type MiniAppThemeConfig } from './miniAppThemeConfig';
 export type MiniAppShellContextValue = {
     theme: ThemeSyncPayload;
 };

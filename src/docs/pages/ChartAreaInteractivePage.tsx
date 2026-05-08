@@ -9,6 +9,7 @@ import type {
 import { ForecastItemData } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Tabs, TabsList, TabsTrigger } from '#uilib/components/ui/Tabs';
+import { useTheme } from '#uilib/docs/contexts/theme-context';
 import type { ForecastData } from '#uilib/types/forecast-data';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -65,6 +66,7 @@ const DEMO_FORECAST_ITEMS: ForecastItemData[] = [
 type DemoMode = 'none' | OverlayMode;
 
 export default function ChartAreaInteractivePage() {
+  const { isDarkMode } = useTheme();
   const [timeRange, setTimeRange] = useState<TimeRange>('1y');
   const [pinMonth, setPinMonth] = useState<string | undefined>(undefined);
   const [demoMode, setDemoMode] = useState<DemoMode>('none');
@@ -139,7 +141,7 @@ export default function ChartAreaInteractivePage() {
           chartData={chartData}
           forecastData={DEMO_FORECAST_ITEMS}
           loading={false}
-          isDarkTheme={false}
+          isDarkTheme={isDarkMode}
           toggleLegendSeries={toggleLegendSeries}
           ensureAnalysisSeriesVisible={ensureAnalysisSeriesVisible}
           hiddenSeries={hidden}

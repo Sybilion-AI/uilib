@@ -8,9 +8,11 @@ export type ThemeMode = 'light' | 'dark';
 
 const ThemeContext = createContext<{
   theme: ThemeMode;
+  isDarkMode: boolean;
   setTheme: (theme: ThemeMode) => void;
 }>({
   theme: 'light',
+  isDarkMode: false,
   setTheme: () => {},
 });
 
@@ -37,7 +39,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider
+      value={{
+        theme,
+        isDarkMode: theme === 'dark',
+        setTheme,
+      }}
+    >
       <ThemeRoot config={currThemeConfig} />
       {children}
     </ThemeContext.Provider>

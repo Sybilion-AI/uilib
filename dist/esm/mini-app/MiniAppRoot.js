@@ -3,8 +3,8 @@ import cn from 'classnames';
 import { createContext, useContext, useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import { Theme, Scroll } from '@homecode/ui';
 import S from './MiniAppRoot.styl.js';
-import { getDefaultMiniAppThemeConfig } from './miniAppThemeConfig.js';
 import { resolveParentOriginFromReferrer, applyThemeToDocument, buildReadyMessage, parseThemeSyncMessage } from './miniAppProtocol.js';
+import { getDefaultMiniAppThemeConfig } from './miniAppThemeConfig.js';
 
 const defaultTheme = {
     mode: 'light',
