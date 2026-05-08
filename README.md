@@ -22,8 +22,6 @@ Equivalent in `package.json`:
 }
 ```
 
-Smaller public build (**ChartAreaInteractive** only): **`@sybilion/sybilion-ui`** (see [`packages/sybilion-ui`](./packages/sybilion-ui)).
-
 ## Install from GitHub (optional)
 
 Point your package manager at the repository (branch or tag as needed). **Prebuilt ESM** under `dist/esm` is committed to the repo, so consumers **do not** need to run `yarn build` inside `uilib` for this path.
@@ -135,7 +133,6 @@ Runtime dependencies of this package (Recharts, Radix, `motion`, `vaul`, `@vimeo
 
 ```bash
 yarn publish:npm              # @sybilion/uilib
-yarn publish:sybilion-ui      # @sybilion/sybilion-ui
 ```
 
 `publish:npm` runs `yarn build` before `npm publish`.
@@ -161,16 +158,14 @@ These areas expect the **app** to supply behavior or data (not vendored from pro
 
 ## Scripts (this repo)
 
-| Script                     | Description                                              |
-| -------------------------- | -------------------------------------------------------- |
-| `yarn dev`                 | Webpack dev server for the docs app                      |
-| `yarn docs:build`          | Production build of docs to `build/`                     |
-| `yarn build`               | Rollup ESM build to `dist/esm`                           |
-| `yarn build:watch`         | Rollup in watch mode                                     |
-| `yarn build:compress`      | Rollup build with `COMPRESS=true`                        |
-| `yarn build:sybilion-ui`   | Build subset package into `packages/sybilion-ui/dist`    |
-| `yarn publish:npm`         | `yarn build` then publish `@sybilion/uilib`              |
-| `yarn publish:sybilion-ui` | `build:sybilion-ui` then publish `@sybilion/sybilion-ui` |
-| `yarn ts`                  | Typecheck (`tsc --noEmit`)                               |
-| `yarn tests`               | Jest smoke tests                                         |
-| `yarn release`             | `standard-version` (bump changelog + tag)                |
+| Script                | Description                                 |
+| --------------------- | ------------------------------------------- |
+| `yarn dev`            | Webpack dev server for the docs app         |
+| `yarn docs:build`     | Production build of docs to `build/`        |
+| `yarn build`          | Rollup ESM build to `dist/esm`              |
+| `yarn build:watch`    | Rollup in watch mode                        |
+| `yarn build:compress` | Rollup build with `COMPRESS=true`           |
+| `yarn publish:npm`    | `yarn build` then publish `@sybilion/uilib` |
+| `yarn ts`             | Typecheck (`tsc --noEmit`)                  |
+| `yarn tests`          | Jest smoke tests                            |
+| `yarn release`        | `standard-version` (bump changelog + tag)   |
