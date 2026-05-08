@@ -9,7 +9,12 @@ declare const timeRangeToMonths: {
     readonly All: 12;
 };
 export type TimeRange = keyof typeof timeRangeToMonths;
-export declare const filterDataForTimeRange: (data: ChartDataPoint[], currentTimeRange: TimeRange, availableAnalyses: number[]) => ChartDataPoint[];
+export type FilterDataForTimeRangeOptions = {
+    /** When set (e.g. selected forecast on Forecast tab), the window ends at the
+     *  latest point that has shared historical or that analysis — not at another run. */
+    endDateAnchorAnalysisId?: number | null;
+};
+export declare const filterDataForTimeRange: (data: ChartDataPoint[], currentTimeRange: TimeRange, options?: FilterDataForTimeRangeOptions) => ChartDataPoint[];
 export declare const shortDateFormatter: (value: string) => string;
 export declare const longDateFormatter: (value: string) => string;
 /**

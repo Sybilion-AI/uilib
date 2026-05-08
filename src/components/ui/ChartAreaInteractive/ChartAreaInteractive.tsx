@@ -11,6 +11,7 @@ import { TimeRangeControls } from '#uilib/components/ui/TimeRangeControls/TimeRa
 import { ensureChartForecastBridge } from '#uilib/utils/chartConnectionPoint';
 
 import {
+  filterDataForTimeRange,
   longDateFormatter,
   shortDateFormatter,
 } from './ChartAreaInteractive.helpers';
@@ -94,14 +95,25 @@ export function ChartAreaInteractive({
     }
   }, [selectedAnalysisId, ensureAnalysisSeriesVisible]);
 
+  const timeFilteredChartData = useMemo(() => {
+    const raw = selectedAnalysisId ?? selectedForecast?.id ?? null;
+    const anchorId =
+      raw == null ? null : typeof raw === 'number' ? raw : Number(raw);
+    const opts =
+      anchorId != null && Number.isFinite(anchorId)
+        ? { endDateAnchorAnalysisId: anchorId }
+        : undefined;
+    return filterDataForTimeRange(chartData, timeRange, opts);
+  }, [chartData, timeRange, selectedAnalysisId, selectedForecast?.id]);
+
   const bridgedChartData = useMemo(
     () =>
       disableForecastHistoricalBridge
-        ? chartData
-        : ensureChartForecastBridge(chartData, {
+        ? timeFilteredChartData
+        : ensureChartForecastBridge(timeFilteredChartData, {
             forecastSeriesIds: forecastData?.map(f => f.id),
           }),
-    [chartData, disableForecastHistoricalBridge, forecastData],
+    [timeFilteredChartData, disableForecastHistoricalBridge, forecastData],
   );
 
   // Extract quantileBands from restProps

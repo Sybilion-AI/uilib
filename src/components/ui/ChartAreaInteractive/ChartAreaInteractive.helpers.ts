@@ -67,22 +67,99 @@ const timeRangeToMonths = {
 
 export type TimeRange = keyof typeof timeRangeToMonths;
 
+function isPlottableNumber(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
+/** Any row the chart can draw a number for (excludes date-only or empty rows) */
+function hasPlottableChartSeriesValue(item: ChartDataPoint): boolean {
+  for (const [key, v] of Object.entries(item)) {
+    if (key === 'date') continue;
+    if (isPlottableNumber(v)) return true;
+    if (Array.isArray(v) && v.some(x => isPlottableNumber(x))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Row counts toward the "end" of the window when anchoring the time range to a
+ * selected forecast (shared historical + that analysis line / quantiles).
+ */
+function rowContributesToAnchoredTimeRange(
+  item: ChartDataPoint,
+  analysisId: number,
+): boolean {
+  if (isPlottableNumber(item.historical)) {
+    return true;
+  }
+  const forecastKey = `forecast_${analysisId}`;
+  if (isPlottableNumber(item[forecastKey])) {
+    return true;
+  }
+  for (const key of Object.keys(item)) {
+    if (key.startsWith('q') && key.endsWith(`_${analysisId}`)) {
+      if (isPlottableNumber(item[key])) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function computeLatestPlottableDate(
+  data: ChartDataPoint[],
+  options?: { endDateAnchorAnalysisId?: number | null },
+): Date | null {
+  const anchorId = options?.endDateAnchorAnalysisId;
+
+  const pick = (item: ChartDataPoint, useAnchor: boolean): Date | null => {
+    if (!item.date) return null;
+    if (useAnchor && anchorId != null) {
+      if (!rowContributesToAnchoredTimeRange(item, anchorId)) {
+        return null;
+      }
+    } else if (!hasPlottableChartSeriesValue(item)) {
+      return null;
+    }
+    return new Date(item.date);
+  };
+
+  let latest: Date | null = null;
+  for (const item of data) {
+    const d = pick(item, true);
+    if (d && (!latest || d > latest)) {
+      latest = d;
+    }
+  }
+
+  if (latest == null && anchorId != null) {
+    for (const item of data) {
+      const d = pick(item, false);
+      if (d && (!latest || d > latest)) {
+        latest = d;
+      }
+    }
+  }
+
+  return latest;
+}
+
+export type FilterDataForTimeRangeOptions = {
+  /** When set (e.g. selected forecast on Forecast tab), the window ends at the
+   *  latest point that has shared historical or that analysis — not at another run. */
+  endDateAnchorAnalysisId?: number | null;
+};
+
 export const filterDataForTimeRange = (
   data: ChartDataPoint[],
   currentTimeRange: TimeRange,
-  availableAnalyses: number[],
+  options?: FilterDataForTimeRangeOptions,
 ) => {
   if (currentTimeRange === 'All') return data;
 
-  // Find the latest date in the data
-  const latestDate = data.reduce(
-    (latest, item) => {
-      if (!item.date) return latest;
-      const itemDate = new Date(item.date);
-      return !latest || itemDate > latest ? itemDate : latest;
-    },
-    null as Date | null,
-  );
+  const latestDate = computeLatestPlottableDate(data, options);
 
   // Pre-compute start date based on latest date in data
   let startDate: Date | null = null;
@@ -93,41 +170,14 @@ export const filterDataForTimeRange = (
     startDate.setMonth(startDate.getMonth() - monthsToSubtract);
   }
 
-  // Create a Set for faster lookup when there are many analyses
-  const forecastKeyPrefix = 'forecast_';
-  const hasManyAnalyses = availableAnalyses.length > 10;
-  const hasAnalyses = availableAnalyses.length > 0;
-  const forecastKeysSet = hasManyAnalyses
-    ? new Set(availableAnalyses.map(id => `${forecastKeyPrefix}${id}`))
-    : null;
-
+  // Slice by date for every row. Rows with forecast_* keys must not bypass the
+  // window (e.g. spaghetti plots), or the X range stays stuck at full history.
   const filteredData = data.filter(item => {
-    if (hasAnalyses) {
-      // Optimize forecast data check for many analyses
-      let hasForecastData = false;
-      if (hasManyAnalyses && forecastKeysSet) {
-        // Check if any forecast key exists in the item
-        hasForecastData = Object.keys(item).some(key =>
-          forecastKeysSet.has(key),
-        );
-      } else {
-        // Original approach for small number of analyses
-        hasForecastData = availableAnalyses.some(
-          analysisId => item[`forecast_${analysisId}`] !== undefined,
-        );
-      }
-
-      if (hasForecastData) {
-        return true;
-      }
-    }
-
-    // For historical data, apply time range filtering
+    if (!item.date) return false;
     if (startDate) {
       const date = new Date(item.date);
       return date >= startDate;
     }
-
     return true;
   });
   return filteredData;

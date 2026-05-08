@@ -5,7 +5,7 @@ import { BaseChartWrapper } from '../Chart/components/BaseChartWrapper.js';
 import { InteractionOverlay } from '../InteractionOverlay/InteractionOverlay.js';
 import { TimeRangeControls } from '../TimeRangeControls/TimeRangeControls.js';
 import { ensureChartForecastBridge } from '../../../utils/chartConnectionPoint.js';
-import { shortDateFormatter, longDateFormatter } from './ChartAreaInteractive.helpers.js';
+import { filterDataForTimeRange, shortDateFormatter, longDateFormatter } from './ChartAreaInteractive.helpers.js';
 import S from './ChartAreaInteractive.styl.js';
 import { PinOverlay } from './overlays/PinOverlay/PinOverlay.js';
 import { IntervalsOverlay } from './overlays/IntervalsOverlay/IntervalsOverlay.js';
@@ -37,11 +37,24 @@ function ChartAreaInteractive({ className, chartContainerClassName, legendClassN
             ensureAnalysisSeriesVisible(selectedAnalysisId);
         }
     }, [selectedAnalysisId, ensureAnalysisSeriesVisible]);
+    const timeFilteredChartData = useMemo(() => {
+        const raw = selectedAnalysisId ?? selectedForecast?.id ?? null;
+        const anchorId = raw == null ? null : typeof raw === 'number' ? raw : Number(raw);
+        const opts = anchorId != null && Number.isFinite(anchorId)
+            ? { endDateAnchorAnalysisId: anchorId }
+            : undefined;
+        return filterDataForTimeRange(chartData, timeRange, opts);
+    }, [
+        chartData,
+        timeRange,
+        selectedAnalysisId,
+        selectedForecast?.id,
+    ]);
     const bridgedChartData = useMemo(() => disableForecastHistoricalBridge
-        ? chartData
-        : ensureChartForecastBridge(chartData, {
+        ? timeFilteredChartData
+        : ensureChartForecastBridge(timeFilteredChartData, {
             forecastSeriesIds: forecastData?.map(f => f.id),
-        }), [chartData, disableForecastHistoricalBridge, forecastData]);
+        }), [timeFilteredChartData, disableForecastHistoricalBridge, forecastData]);
     // Extract quantileBands from restProps
     // const quantileBands = (restProps as any).quantileBands;
     const getLoadingMessage = () => {
