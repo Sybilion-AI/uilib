@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.28](https://github.com/Mir-Insight/uilib/compare/v1.0.27...v1.0.28) (2026-05-08)
+
+
+### Features
+
+* ChartAreaInteractive - Time range slicing in component ([50ccd41](https://github.com/Mir-Insight/uilib/commit/50ccd41925992293774e321c33cf123efdb954fd))
+
+
+### Bug Fixes
+
+* BaseChartWrapper - Clamp chart tooltip ([97ef744](https://github.com/Mir-Insight/uilib/commit/97ef7440689d8286480dd1fa866c22f54c8bf3cc))
+* ChartAreaInteractivePage - Sync chart with docs theme ([84becb6](https://github.com/Mir-Insight/uilib/commit/84becb6fe69536be09b2f12a03e10e3dd1bc8cdd))
+
 ### [1.0.27](https://github.com/Mir-Insight/uilib/compare/v1.0.26...v1.0.27) (2026-05-08)
 
 
