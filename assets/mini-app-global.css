@@ -139,12 +139,12 @@
   --header-height: 94px;
   --page-x-padding: var(--p-16);
   --page-y-padding: var(--p-12);
-  --page-color: var(--sb-slate-100);
-  --page-color-alpha-800: var(--sb-slate-100);
-  --background: oklch(1 0 0);
-  --background-alpha-800: oklch(0.99 0 0 / 0.8);
-  --background-alpha-700: oklch(0.99 0 0 / 0.7);
-  --background-alpha-500: oklch(0.99 0 0 / 0.5);
+  --page-color: oklch(1 0 0);
+  --page-color-alpha-800: oklch(0.99 0 0 / 0.8);
+  --background: var(--sb-slate-100);
+  --background-alpha-800: var(--sb-slate-100);
+  --background-alpha-700: oklch(0.9622 0.0035 219.53 / 0.7);
+  --background-alpha-500: oklch(0.9622 0.0035 219.53 / 0.5);
   --foreground: oklch(0.15 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.15 0 0);
@@ -196,12 +196,12 @@
 }
 
 .dark {
-  --page-color: oklch(0.22 0 0);
-  --page-color-alpha-800: oklch(0.2242 0 0 / 0.8);
-  --background: oklch(0.14 0 0);
-  --background-alpha-800: oklch(0.14 0 0 / 0.95);
-  --background-alpha-700: oklch(0.14 0 0 / 0.7);
-  --background-alpha-500: oklch(0.14 0 0 / 0.5);
+  --page-color: oklch(0.14 0 0);
+  --page-color-alpha-800: oklch(0.14 0 0 / 0.95);
+  --background: oklch(0.22 0 0);
+  --background-alpha-800: oklch(0.2242 0 0 / 0.8);
+  --background-alpha-700: oklch(0.22 0 0 / 0.7);
+  --background-alpha-500: oklch(0.22 0 0 / 0.5);
   --foreground: oklch(0.95 0 0);
   --card: oklch(0.1 0 0);
   --card-foreground: oklch(0.95 0 0);
