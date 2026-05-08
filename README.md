@@ -4,9 +4,29 @@ React UI components (Stylus modules, Radix primitives, Recharts).
 
 > This package does **not** embed app-specific contexts or API clients; the host app passes data and callbacks via props.
 
-## Install from GitHub
+## Install from npm (recommended)
 
-Point your package manager at the repository (branch or tag as needed). **Prebuilt ESM** under `dist/esm` is committed to the repo, so consumers **do not** need to run `yarn build` inside `uilib` for the default install path.
+Published as **`@sybilion/uilib`** on the public registry. No scope-specific `.npmrc` required.
+
+```bash
+yarn add @sybilion/uilib
+```
+
+Equivalent in `package.json`:
+
+```json
+{
+  "dependencies": {
+    "@sybilion/uilib": "^1.0.20"
+  }
+}
+```
+
+Smaller public build (**ChartAreaInteractive** only): **`@sybilion/sybilion-ui`** (see [`packages/sybilion-ui`](./packages/sybilion-ui)).
+
+## Install from GitHub (optional)
+
+Point your package manager at the repository (branch or tag as needed). **Prebuilt ESM** under `dist/esm` is committed to the repo, so consumers **do not** need to run `yarn build` inside `uilib` for this path.
 
 ```bash
 yarn add uilib@github:Mir-Insight/uilib#main
@@ -22,18 +42,16 @@ Equivalent in `package.json`:
 }
 ```
 
-### GitHub Packages + bare `uilib` imports
+### Bare `uilib` imports + scoped install
 
-When consuming the published GitHub Packages build (`@Mir-Insight/uilib`) but
-keeping existing imports as `from 'uilib'`, add a bundler alias and matching
-TypeScript paths in the host app:
+When the package is installed as **`@sybilion/uilib`** but you keep imports as `from 'uilib'`, add a bundler alias and matching TypeScript paths:
 
 ```json
 {
   "compilerOptions": {
     "paths": {
-      "uilib": ["node_modules/@Mir-Insight/uilib"],
-      "uilib/*": ["node_modules/@Mir-Insight/uilib/*"]
+      "uilib": ["../node_modules/@sybilion/uilib"],
+      "uilib/*": ["../node_modules/@sybilion/uilib/*"]
     }
   }
 }
@@ -44,12 +62,14 @@ Webpack example:
 ```js
 resolve: {
   alias: {
-    uilib: path.join(paths.modules, '@Mir-Insight/uilib'),
+    uilib: path.join(paths.modules, '@sybilion/uilib'),
   },
 }
 ```
 
-CI installs from GitHub Packages also need npm auth:
+### Legacy: GitHub Packages (`@Mir-Insight/uilib`)
+
+Older installs used GitHub Packages. CI needed:
 
 ```text
 @Mir-Insight:registry=https://npm.pkg.github.com/
@@ -57,41 +77,45 @@ CI installs from GitHub Packages also need npm auth:
 always-auth=true
 ```
 
+Prefer **`@sybilion/uilib`** from **npmjs** for new work.
+
 ### Default: prebuilt (`dist/esm`)
 
 The package [`exports`](./package.json) entry `.` resolves to Rollup output and generated declarations:
 
 ```ts
-import { Button } from 'uilib';
+import { Button } from '@sybilion/uilib';
+
+// or, with alias: import { Button } from 'uilib';
 ```
 
-Use this when you want **compiled** ESM (CSS modules processed; no Stylus loader required for `uilib`). Ensure your bundler still handles standard JS/CSS imports from `node_modules` as usual.
+Use this when you want **compiled** ESM (CSS modules processed; no Stylus loader required for the library). Ensure your bundler still handles standard JS/CSS imports from `node_modules` as usual.
 
-### Optional: source (`src`)
+### Optional: source (`./src` subpath)
 
-To compile `uilib` from **TypeScript + Stylus** in your app (same as older workflows), import from the `./src` subpath:
+To compile from **TypeScript + Stylus** in your app, use the `./src` export:
 
 ```ts
-import { Button } from 'uilib/src';
+import { Button } from '@sybilion/uilib/src';
 ```
 
-Deep imports are supported via `uilib/src/...` (maps to files under [`src/`](./src)). Internal `#uilib/...` imports resolve through this package’s [`imports`](./package.json) field when bundling source.
+Deep imports use `@sybilion/uilib/src/...` (maps to files under [`src/`](./src)). Internal `#uilib/...` imports resolve through this package’s [`imports`](./package.json) field when bundling source.
 
-## Bundling from source (`uilib` / `uilib/src`)
+## Bundling from source (`uilib/src`)
 
 If you use **`uilib/src`** (or deep imports under `uilib/src/`), the host app must **compile** those files like application code:
 
-1. **Include `uilib` in the TypeScript/JSX pipeline** — e.g. extend `babel-loader` / `ts-loader` `include` so it matches `node_modules/uilib` (and not only your app `src`):
+1. **Include the library in the TypeScript/JSX pipeline** — e.g. extend `babel-loader` / `ts-loader` `include` so it matches the installed package (and not only your app `src`):
 
    ```js
-   include: [paths.src, /node_modules\/uilib/],
+   include: [paths.src, /node_modules\/@sybilion\/uilib/],
    ```
 
-2. **Apply the same Stylus/CSS-module rules** to files under `node_modules/uilib` as you use for your own `.styl` imports.
+2. **Apply the same Stylus/CSS-module rules** to `.styl` under `node_modules/@sybilion/uilib` as you use for your own imports.
 
-3. **Do not remap `#uilib`** — internal imports use the subpath pattern `#uilib/...`, resolved via this package’s `package.json` [`imports`](./package.json) field. Keep your app’s own alias (for example `@` → app `src`) as usual; it does not conflict with `#uilib`.
+3. **Do not remap `#uilib`** — internal imports use `#uilib/...`, resolved via this package’s `package.json` [`imports`](./package.json). Keep your app’s own alias (for example `@` → app `src`) as usual; it does not conflict with `#uilib`.
 
-If you only use the **default** entry (`import from 'uilib'`), you typically **do not** need Stylus/TS compilation for `uilib` in the consumer Webpack config.
+If you only use the **default** entry (`import from '@sybilion/uilib'` or aliased `uilib`), you typically **do not** need Stylus/TS compilation for the library in the consumer Webpack config.
 
 ## Peer dependencies
 
@@ -105,9 +129,18 @@ Install these in the consuming app:
 
 Runtime dependencies of this package (Recharts, Radix, `motion`, `vaul`, `@vimeo/player`, etc.) are declared in `package.json` and should be satisfied by the consumer’s install tree.
 
-## Maintainers: keeping `dist/` in sync
+## Maintainers
 
-After changing library **source**, regenerate and commit the prebuilt output:
+**npm:** log in (`npm login`), then from repo root:
+
+```bash
+yarn publish:npm              # @sybilion/uilib
+yarn publish:sybilion-ui      # @sybilion/sybilion-ui
+```
+
+`publish:npm` runs `yarn build` before `npm publish`.
+
+**GitHub `github:` consumers:** after changing library **source**, regenerate and commit the prebuilt output:
 
 ```bash
 yarn build
@@ -128,11 +161,16 @@ These areas expect the **app** to supply behavior or data (not vendored from pro
 
 ## Scripts (this repo)
 
-| Script            | Description                                         |
-| ----------------- | --------------------------------------------------- |
-| `yarn dev`        | Webpack dev server for the docs app                 |
-| `yarn docs:build` | Production build of docs to `build/`                |
-| `yarn build`      | Rollup ESM build to `dist/esm`                      |
-| `yarn build:ship` | Same as `yarn build` (refresh `dist` before commit) |
-| `yarn ts`         | Typecheck (`tsc --noEmit`)                          |
-| `yarn tests`      | Jest smoke tests                                    |
+| Script                     | Description                                              |
+| -------------------------- | -------------------------------------------------------- |
+| `yarn dev`                 | Webpack dev server for the docs app                      |
+| `yarn docs:build`          | Production build of docs to `build/`                     |
+| `yarn build`               | Rollup ESM build to `dist/esm`                           |
+| `yarn build:watch`         | Rollup in watch mode                                     |
+| `yarn build:compress`      | Rollup build with `COMPRESS=true`                        |
+| `yarn build:sybilion-ui`   | Build subset package into `packages/sybilion-ui/dist`    |
+| `yarn publish:npm`         | `yarn build` then publish `@sybilion/uilib`              |
+| `yarn publish:sybilion-ui` | `build:sybilion-ui` then publish `@sybilion/sybilion-ui` |
+| `yarn ts`                  | Typecheck (`tsc --noEmit`)                               |
+| `yarn tests`               | Jest smoke tests                                         |
+| `yarn release`             | `standard-version` (bump changelog + tag)                |

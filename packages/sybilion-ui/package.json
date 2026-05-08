@@ -1,7 +1,7 @@
 {
-  "name": "@Mir-Insight/sybilion-ui",
+  "name": "@sybilion/sybilion-ui",
   "version": "0.1.0",
-  "description": "Sybilion ChartAreaInteractive — public subset of @Mir-Insight/uilib",
+  "description": "Sybilion ChartAreaInteractive — public subset of @sybilion/uilib",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
