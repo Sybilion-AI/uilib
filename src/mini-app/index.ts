@@ -1,9 +1,11 @@
 export {
   applyThemeToDocument,
+  buildChatSendMessage,
   buildDataRequestMessage,
   buildReadyMessage,
   MINIAPP_CHANNEL,
   MINIAPP_VERSION,
+  parseChatSendResultMessage,
   parseDataResponseMessage,
   parseThemeSyncMessage,
   isTrustedMiniAppParentMessage,
@@ -14,8 +16,12 @@ export type {
   MiniAppMessageThemeSync,
   MiniAppMessageDataRequest,
   MiniAppMessageDataResponse,
+  MiniAppMessageChatSend,
+  MiniAppMessageChatSendResult,
   MiniAppDataRequestPayload,
   MiniAppDataResponsePayload,
+  MiniAppChatSendPayload,
+  MiniAppChatSendResultPayload,
   MiniAppDataOp,
   ThemeSyncPayload,
 } from './miniAppProtocol';
@@ -32,5 +38,6 @@ export type {
 } from './miniAppDataTypes';
 export { getDefaultMiniAppThemeConfig } from './miniAppThemeConfig';
 export type { MiniAppThemeConfig } from './miniAppThemeConfig';
+export { sendChatMessage } from './miniAppChatBridge';
 export { MiniAppRoot, useMiniAppShellTheme } from './MiniAppRoot';
 export type { MiniAppRootProps, MiniAppShellContextValue } from './MiniAppRoot';

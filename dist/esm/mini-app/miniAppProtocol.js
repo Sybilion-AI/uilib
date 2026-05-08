@@ -1,7 +1,3 @@
-/**
- * postMessage protocol for Sybilion workspace mini-apps (iframe child).
- * Keep in sync with sybilion-client `src/workspace/miniAppBridge.ts` (channel, version, payloads).
- */
 const MINIAPP_CHANNEL = 'sybilion.miniapp';
 const MINIAPP_VERSION = 1;
 function isRecord(v) {
@@ -70,6 +66,14 @@ function buildDataRequestMessage(payload) {
         payload,
     };
 }
+function buildChatSendMessage(payload) {
+    return {
+        channel: MINIAPP_CHANNEL,
+        version: MINIAPP_VERSION,
+        type: 'CHAT_SEND',
+        payload,
+    };
+}
 /** Parse parent → child DATA_RESPONSE. */
 function parseDataResponseMessage(data) {
     if (!isRecord(data))
@@ -102,5 +106,48 @@ function parseDataResponseMessage(data) {
     }
     return base;
 }
+/** Parse parent → child CHAT_SEND_RESULT (shell uses `buildChatSendResultMessage`). */
+function parseChatSendResultMessage(data) {
+    if (!isRecord(data))
+        return null;
+    if (data.channel !== MINIAPP_CHANNEL)
+        return null;
+    if (data.version !== MINIAPP_VERSION)
+        return null;
+    if (data.type !== 'CHAT_SEND_RESULT')
+        return null;
+    const payload = data.payload;
+    if (!isRecord(payload))
+        return null;
+    const requestId = payload.requestId;
+    if (typeof requestId !== 'string' || requestId.length === 0)
+        return null;
+    if (payload.ok === true) {
+        const result = payload.result;
+        if (!isRecord(result))
+            return null;
+        const responseText = result.response;
+        if (typeof responseText !== 'string')
+            return null;
+        const sidRaw = result.session_id;
+        if (sidRaw !== undefined && sidRaw !== null && typeof sidRaw !== 'string')
+            return null;
+        const session_id = typeof sidRaw === 'string' ? sidRaw : null;
+        return {
+            requestId,
+            ok: true,
+            result: {
+                response: responseText,
+                session_id,
+            },
+        };
+    }
+    if (payload.ok === false) {
+        if (typeof payload.error !== 'string')
+            return null;
+        return { requestId, ok: false, error: payload.error };
+    }
+    return null;
+}
 
-export { MINIAPP_CHANNEL, MINIAPP_VERSION, applyThemeToDocument, buildDataRequestMessage, buildReadyMessage, isTrustedMiniAppParentMessage, parseDataResponseMessage, parseThemeSyncMessage, resolveParentOriginFromReferrer };
+export { MINIAPP_CHANNEL, MINIAPP_VERSION, applyThemeToDocument, buildChatSendMessage, buildDataRequestMessage, buildReadyMessage, isTrustedMiniAppParentMessage, parseChatSendResultMessage, parseDataResponseMessage, parseThemeSyncMessage, resolveParentOriginFromReferrer };
