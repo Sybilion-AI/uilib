@@ -1,6 +1,6 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
 import cn from 'classnames';
-import { forwardRef, useRef, useState, useEffect, useMemo } from 'react';
+import { forwardRef, useState, useRef, useMemo, useEffect } from 'react';
 import { ChartTooltip } from '../Chart.js';
 import { QuantileBands } from './QuantileBands.js';
 import { getForecastColor, ChartLines } from '../../ChartAreaInteractive/ChartLines.js';
@@ -16,6 +16,50 @@ import { ChartContainer } from './ChartContainer.js';
 import { CustomChartLegend } from './CustomChartLegend/CustomChartLegend.js';
 import { ChartTooltipContent } from './ChartTooltipContent.js';
 
+const DEFAULT_CHART_MARGIN = {
+    top: 5,
+    right: 5,
+    bottom: 5,
+    left: 5,
+};
+function resolveChartMargin(margin) {
+    return {
+        top: margin?.top ?? DEFAULT_CHART_MARGIN.top,
+        right: margin?.right ?? DEFAULT_CHART_MARGIN.right,
+        bottom: margin?.bottom ?? DEFAULT_CHART_MARGIN.bottom,
+        left: margin?.left ?? DEFAULT_CHART_MARGIN.left,
+    };
+}
+/** Plot box inside `.recharts-wrapper`, same convention as Recharts cartesian viewBox. */
+function getPlotViewBox(wrapper, m) {
+    const w = wrapper.clientWidth;
+    const h = wrapper.clientHeight;
+    return {
+        x: m.left,
+        y: m.top,
+        width: Math.max(0, w - m.left - m.right),
+        height: Math.max(0, h - m.top - m.bottom),
+    };
+}
+function clampTooltipTranslate(args) {
+    const { coordinate, viewBox, tooltipWidth: tw, tooltipHeight: th, offset, edgeMargin, } = args;
+    const minX = viewBox.x + edgeMargin;
+    const maxX = viewBox.x + viewBox.width - tw - edgeMargin;
+    const minY = viewBox.y + edgeMargin;
+    const maxY = viewBox.y + viewBox.height - th - edgeMargin;
+    const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), Math.max(lo, hi));
+    let tx = coordinate.x + offset;
+    if (tx + tw > viewBox.x + viewBox.width - edgeMargin) {
+        tx = coordinate.x - tw - offset;
+    }
+    tx = clamp(tx, minX, maxX);
+    let ty = coordinate.y + offset;
+    if (ty + th > viewBox.y + viewBox.height - edgeMargin) {
+        ty = coordinate.y - th - offset;
+    }
+    ty = clamp(ty, minY, maxY);
+    return { x: tx, y: ty };
+}
 /**
  * Simple loading component without hooks for better performance
  * Rendered when chart is waiting in render queue
@@ -30,16 +74,8 @@ BaseChartWrapperLoading.displayName = 'BaseChartWrapperLoading';
  */
 const BaseChartWrapperContent = forwardRef((props, ref) => {
     const { chartConfig = {}, chartData, historicalLineColor, forecastData = [], loading, hasCombinedData, renderId, isDarkTheme, height, className, loadingComponentClassName, footerClassName, chartClassName, xAxisClassName, yAxisClassName, legendClassName, footerActions, quantileBands, quantileBandKey, xMin, xMax, yMin, yMax, autoScaleYAxis = true, formatNumber, formatDate: formatDateFn = formatDate, labelFormatter, onLegendClick, margin, chartType = 'composed', disableAnimation = false, showGrid = true, showAxes = true, showTooltip = true, showLegend = true, showChartAxesLegend = true, xAxisLabel, yAxisLabel, showActiveDots = true, overlayElements, hiddenSeries, excludeLegendIds, onAnalysisSelect, onFailedAnalysisClick, containerProps, error, loadingMessage, noDataMessage = 'No data available', onGridHeightChange, forecastLineStyle = 'dashed', disableHistoricalAnimation = false, onShowAll: _onShowAll, onShowOnly: _onShowOnly, maxVisibleItems, preventDeselection, legendVariant = 'default', legendWidth = 1000, legendMarginLeft = 0, } = props;
-    const activeDataRef = useRef(null);
-    /** Raw cursor position from Recharts (tooltip anchor). */
-    const rawTooltipCoordinateRef = useRef(null);
-    /** Last transform actually applied after viewport/boundary adjustment. */
-    const lastAppliedTooltipPositionRef = useRef(null);
-    const isTooltipActiveRef = useRef(false);
-    // const [activeDotsData, setActiveDotsData] = useState<ActiveDot[]>([]);
     const [shouldAnimate, setShouldAnimate] = useState(false);
     const rootRef = useRef(null);
-    // Merge forwarded ref with internal rootRef using callback ref
     const setRefs = (node) => {
         rootRef.current = node;
         if (typeof ref === 'function') {
@@ -49,107 +85,83 @@ const BaseChartWrapperContent = forwardRef((props, ref) => {
             ref.current = node;
         }
     };
-    // const prevGridHeightRef = useRef<number>(0);
-    const tooltipWrapperRef = useRef(null);
+    const resolvedChartMargin = useMemo(() => resolveChartMargin(margin), [margin?.top, margin?.right, margin?.bottom, margin?.left]);
     const TOOLTIP_EDGE_MARGIN = 8;
-    const applyTooltipPosition = (opts) => {
+    const TOOLTIP_OFFSET = 10;
+    const tooltipWrapperRef = useRef(null);
+    const rawTooltipCoordinateRef = useRef(null);
+    const tooltipSizeRef = useRef({
+        width: 0,
+        height: 0,
+    });
+    const tooltipResizeObserverRef = useRef(null);
+    const tooltipResizeObservedTargetRef = useRef(null);
+    const applyTooltipPosition = () => {
         const wrapper = tooltipWrapperRef.current;
-        const root = rootRef.current;
-        const raw = rawTooltipCoordinateRef.current;
-        if (!wrapper || !raw)
+        const coord = rawTooltipCoordinateRef.current;
+        const chartWrapper = rootRef.current?.querySelector('.recharts-wrapper');
+        if (!wrapper || !coord || !(chartWrapper instanceof HTMLElement))
             return;
-        const setTransform = (el, x, y) => {
-            el.style.transform = `translate(${x}px, ${y}px)`;
-            lastAppliedTooltipPositionRef.current = { x, y };
-        };
-        setTransform(wrapper, raw.x, raw.y);
-        if (opts?.skipBoundaryAdjust || !root)
+        const measured = wrapper.getBoundingClientRect();
+        const width = tooltipSizeRef.current.width || measured.width;
+        const height = tooltipSizeRef.current.height || measured.height;
+        if (width <= 0 || height <= 0)
             return;
-        const runAdjust = () => {
-            const w = tooltipWrapperRef.current;
-            const rEl = rootRef.current;
-            const rCoord = rawTooltipCoordinateRef.current;
-            if (!w || !rEl || !rCoord)
-                return;
-            const rootRect = rEl.getBoundingClientRect();
-            const rightBound = Math.min(rootRect.right, window.innerWidth);
-            let x = rCoord.x;
-            const y = rCoord.y;
-            w.style.transform = `translate(${x}px, ${y}px)`;
-            let tooltipRect = w.getBoundingClientRect();
-            if (tooltipRect.right > rightBound - TOOLTIP_EDGE_MARGIN) {
-                x -= tooltipRect.right - rightBound + TOOLTIP_EDGE_MARGIN;
-            }
-            const leftBound = Math.max(rootRect.left, 0);
-            w.style.transform = `translate(${x}px, ${y}px)`;
-            tooltipRect = w.getBoundingClientRect();
-            if (tooltipRect.left < leftBound + TOOLTIP_EDGE_MARGIN) {
-                x += leftBound + TOOLTIP_EDGE_MARGIN - tooltipRect.left;
-            }
-            setTransform(w, x, y);
-        };
-        requestAnimationFrame(() => {
-            requestAnimationFrame(runAdjust);
+        tooltipSizeRef.current = { width, height };
+        const next = clampTooltipTranslate({
+            coordinate: coord,
+            viewBox: getPlotViewBox(chartWrapper, resolvedChartMargin),
+            tooltipWidth: width,
+            tooltipHeight: height,
+            offset: TOOLTIP_OFFSET,
+            edgeMargin: TOOLTIP_EDGE_MARGIN,
         });
+        wrapper.style.transform = `translate(${next.x}px, ${next.y}px)`;
     };
     const applyTooltipPositionRef = useRef(applyTooltipPosition);
     applyTooltipPositionRef.current = applyTooltipPosition;
-    // Effect to watch for tooltip wrapper and apply transforms/opacity
+    // Own only the final transform: smooth follow cursor, but clamp in local chart coords first.
     useEffect(() => {
-        const restorePosition = () => {
-            const pos = lastAppliedTooltipPositionRef.current ??
-                rawTooltipCoordinateRef.current;
-            if (tooltipWrapperRef.current && pos) {
-                const currentTransform = tooltipWrapperRef.current.style.transform;
-                const expectedTransform = `translate(${pos.x}px, ${pos.y}px)`;
-                // Always restore position if transform is missing, reset, or doesn't match expected position
-                // This prevents Recharts from resetting the tooltip position
-                if (!currentTransform ||
-                    currentTransform === 'none' ||
-                    currentTransform === 'translate(0px, 0px)' ||
-                    currentTransform !== expectedTransform) {
-                    tooltipWrapperRef.current.style.transform = expectedTransform;
-                }
+        const connectResizeObserver = (wrapperEl) => {
+            if (tooltipResizeObservedTargetRef.current === wrapperEl) {
+                return;
             }
-        };
-        const findAndSetupTooltipWrapper = () => {
-            const wrapper = rootRef.current?.querySelector('.recharts-tooltip-wrapper');
-            if (wrapper && wrapper !== tooltipWrapperRef.current) {
-                tooltipWrapperRef.current = wrapper;
-                // Add transition for smooth movement and opacity
-                wrapper.style.transition =
+            const resizeRo = tooltipResizeObserverRef.current ??
+                new ResizeObserver(entries => {
+                    const entry = entries[0];
+                    if (!entry)
+                        return;
+                    const { width, height } = entry.contentRect;
+                    tooltipSizeRef.current = { width, height };
+                    requestAnimationFrame(() => applyTooltipPositionRef.current());
+                });
+            tooltipResizeObserverRef.current = resizeRo;
+            const prevObserved = tooltipResizeObservedTargetRef.current;
+            if (prevObserved && prevObserved !== wrapperEl) {
+                resizeRo.unobserve(prevObserved);
+            }
+            tooltipResizeObservedTargetRef.current = wrapperEl;
+            resizeRo.observe(wrapperEl);
+            if (wrapperEl instanceof HTMLElement) {
+                tooltipWrapperRef.current = wrapperEl;
+                wrapperEl.style.transition =
                     'transform 0.2s ease-out, opacity 0.2s ease-out';
-                // Override Recharts' visibility: hidden with visibility: visible
-                // We'll control visibility through opacity instead
-                wrapper.style.visibility = 'visible';
-                // Set initial opacity based on active state
-                const isActive = activeDataRef.current?.active === true;
-                wrapper.style.opacity = isActive ? '1' : '0';
-                wrapper.style.pointerEvents = isActive ? 'auto' : 'none';
-                // Always restore position if we have a last position
-                restorePosition();
-                if (rawTooltipCoordinateRef.current) {
-                    applyTooltipPositionRef.current();
-                }
-            }
-            // Always ensure visibility is visible (Recharts sets it to hidden)
-            if (tooltipWrapperRef.current) {
-                tooltipWrapperRef.current.style.visibility = 'visible';
-                // Continuously restore position to prevent resets
-                restorePosition();
+                requestAnimationFrame(() => applyTooltipPositionRef.current());
             }
         };
-        // Initial check
-        findAndSetupTooltipWrapper();
-        // Watch for tooltip wrapper changes and style mutations
+        const tryObserveTooltipWrapper = () => {
+            const wrapper = rootRef.current?.querySelector('.recharts-tooltip-wrapper');
+            if (wrapper)
+                connectResizeObserver(wrapper);
+        };
+        tryObserveTooltipWrapper();
         const observer = new MutationObserver(mutations => {
-            findAndSetupTooltipWrapper();
-            // If transform attribute changed, restore position if needed
+            tryObserveTooltipWrapper();
             mutations.forEach(mutation => {
                 if (mutation.type === 'attributes' &&
                     mutation.attributeName === 'style' &&
                     mutation.target === tooltipWrapperRef.current) {
-                    restorePosition();
+                    requestAnimationFrame(() => applyTooltipPositionRef.current());
                 }
             });
         });
@@ -161,27 +173,17 @@ const BaseChartWrapperContent = forwardRef((props, ref) => {
                 attributeFilter: ['style'],
             });
         }
-        // Use requestAnimationFrame to continuously monitor and restore position
-        // Only run when we have a last position to maintain
-        let rafId = null;
-        const monitorPosition = () => {
-            if (rawTooltipCoordinateRef.current && tooltipWrapperRef.current) {
-                restorePosition();
-                rafId = requestAnimationFrame(monitorPosition);
-            }
-            else {
-                rafId = null;
-            }
+        const onWinResize = () => {
+            requestAnimationFrame(() => applyTooltipPositionRef.current());
         };
-        // Start monitoring if we already have a position
-        if (rawTooltipCoordinateRef.current) {
-            rafId = requestAnimationFrame(monitorPosition);
-        }
+        window.addEventListener('resize', onWinResize);
         return () => {
             observer.disconnect();
-            if (rafId !== null) {
-                cancelAnimationFrame(rafId);
-            }
+            tooltipResizeObserverRef.current?.disconnect();
+            tooltipResizeObserverRef.current = null;
+            tooltipResizeObservedTargetRef.current = null;
+            tooltipWrapperRef.current = null;
+            window.removeEventListener('resize', onWinResize);
         };
     }, []);
     const renderTooltipContent = (props) => {
@@ -191,73 +193,18 @@ const BaseChartWrapperContent = forwardRef((props, ref) => {
         // If no valid payload items, render ChartTooltipContent with active=false and empty payload
         // This allows ChartTooltipContent to clear its lastTooltipData state
         if (!filteredPayload || filteredPayload.length === 0) {
-            // Update refs to reflect inactive state
-            if (isTooltipActiveRef.current) {
-                isTooltipActiveRef.current = false;
-                // Always maintain last position when tooltip becomes inactive
-                const pos = lastAppliedTooltipPositionRef.current ??
-                    rawTooltipCoordinateRef.current;
-                if (pos && tooltipWrapperRef.current) {
-                    const wrapper = tooltipWrapperRef.current;
-                    wrapper.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
-                    wrapper.style.visibility = 'visible';
-                    wrapper.style.opacity = '0';
-                    wrapper.style.pointerEvents = 'none';
-                }
-            }
-            // Render ChartTooltipContent with active=false and empty payload to trigger cleanup
-            // This ensures lastTooltipData is cleared when there's no valid data
             return (jsx(ChartTooltipContent, { active: false, payload: [], label: props.label, labelFormatter: labelFormatter || defaultLabelFormatter, indicator: "dot" }));
         }
-        // Store tooltip data in ref (not state) to avoid re-render
-        // Use filtered payload instead of original props.payload
-        activeDataRef.current = {
-            ...props,
-            payload: filteredPayload,
-        };
-        const wasActive = isTooltipActiveRef.current;
         const isActive = props.active === true;
-        // When tooltip becomes active and has coordinate, update last position
         if (isActive && props.coordinate) {
-            const newCoordinate = {
+            rawTooltipCoordinateRef.current = {
                 x: props.coordinate.x,
                 y: props.coordinate.y,
             };
-            rawTooltipCoordinateRef.current = newCoordinate;
-            isTooltipActiveRef.current = true;
-            if (tooltipWrapperRef.current) {
-                tooltipWrapperRef.current.style.visibility = 'visible';
-                tooltipWrapperRef.current.style.opacity = '1';
-                tooltipWrapperRef.current.style.pointerEvents = 'auto';
-                applyTooltipPosition();
-            }
+            requestAnimationFrame(() => applyTooltipPositionRef.current());
         }
-        else if (!isActive && wasActive) {
-            isTooltipActiveRef.current = false;
-            // Always maintain last position when tooltip becomes inactive
-            const pos = lastAppliedTooltipPositionRef.current ??
-                rawTooltipCoordinateRef.current;
-            if (pos && tooltipWrapperRef.current) {
-                const wrapper = tooltipWrapperRef.current;
-                wrapper.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
-                // Keep visibility visible but hide with opacity transition
-                wrapper.style.visibility = 'visible';
-                wrapper.style.opacity = '0';
-                wrapper.style.pointerEvents = 'none';
-            }
-        }
-        else if (!isActive && !wasActive) {
-            // Ensure opacity is 0 when inactive, but keep visibility visible and maintain position
-            if (tooltipWrapperRef.current) {
-                tooltipWrapperRef.current.style.visibility = 'visible';
-                tooltipWrapperRef.current.style.opacity = '0';
-                tooltipWrapperRef.current.style.pointerEvents = 'none';
-                const pos = lastAppliedTooltipPositionRef.current ??
-                    rawTooltipCoordinateRef.current;
-                if (pos) {
-                    tooltipWrapperRef.current.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
-                }
-            }
+        else {
+            rawTooltipCoordinateRef.current = null;
         }
         return (jsx(ChartTooltipContent, { active: props.active, payload: filteredPayload, label: props.label, labelFormatter: labelFormatter || defaultLabelFormatter, indicator: "dot" }));
     };
@@ -385,7 +332,7 @@ const BaseChartWrapperContent = forwardRef((props, ref) => {
     }
     const ChartComponent = chartType === 'line' ? LineChart : ComposedChart;
     const defaultLabelFormatter = (v) => formatDateFn(v, true);
-    return (jsxs("div", { className: cn(S.root, !showLegend && S.noLegend, !showChartAxesLegend && S.hideChartAxesLegend, isLoaded && S.loaded, className), ref: setRefs, children: [loading && (jsx("div", { className: S.loadingOverlay, children: jsx(Skeleton, {}) })), showGrid && (jsx(ChartContainer, { config: chartConfig, className: cn(S.gridLayer, chartClassName), style: height ? { height: `${height}px` } : undefined, children: jsxs(ChartComponent, { data: chartData, margin: margin, children: [jsx(ChartGrid, {}), showAxes && (jsx(ChartAxes, { formatDate: formatDateFn, formatNumber: formatNumber, xAxisClassName: xAxisClassName, yAxisClassName: yAxisClassName, xAxisLabel: xAxisLabel, yAxisLabel: yAxisLabel, xMin: xMin, xMax: xMax, yMin: yMin, yMax: yMax, autoScaleYAxis: effectiveAutoScale }))] }) })), jsx(ChartContainer, { config: chartConfig, className: cn(S.chartLayer, chartClassName), style: height ? { height: `${height}px` } : undefined, ...containerProps, children: jsxs(ChartComponent, { data: chartData, margin: margin, children: [showAxes && (jsx(ChartAxes, { formatDate: formatDateFn, formatNumber: formatNumber, xAxisClassName: cn(xAxisClassName), yAxisClassName: cn(yAxisClassName), xAxisLabel: xAxisLabel, yAxisLabel: yAxisLabel, xMin: xMin, xMax: xMax, yMin: yMin, yMax: yMax, autoScaleYAxis: effectiveAutoScale })), quantileBands?.[0] && (jsx(QuantileBands, { hiddenBands: hiddenSeries, quantileBandKey: quantileBandKey, animate: true, animationDuration: 150, animationBegin: 0, customBands: quantileBands, showLegend: showLegend })), jsx(ChartLines, { historicalLineColor: historicalLineColor, chartData: chartData, forecastData: forecastData, hiddenSeries: hiddenSeries, isDarkTheme: isDarkTheme, shouldAnimate: shouldAnimate, showLegend: showLegend, forecastLineStyle: forecastLineStyle }), showTooltip && (jsx("div", { children: jsx(ChartTooltip, { cursor: false, content: renderTooltipContent }) }))] }) }), overlayElements, jsxs("div", { className: cn(S.footer, footerClassName), children: [showLegend &&
+    return (jsxs("div", { className: cn(S.root, !showLegend && S.noLegend, !showChartAxesLegend && S.hideChartAxesLegend, isLoaded && S.loaded, className), ref: setRefs, children: [loading && (jsx("div", { className: S.loadingOverlay, children: jsx(Skeleton, {}) })), showGrid && (jsx(ChartContainer, { config: chartConfig, className: cn(S.gridLayer, chartClassName), style: height ? { height: `${height}px` } : undefined, children: jsxs(ChartComponent, { data: chartData, margin: margin, children: [jsx(ChartGrid, {}), showAxes && (jsx(ChartAxes, { formatDate: formatDateFn, formatNumber: formatNumber, xAxisClassName: xAxisClassName, yAxisClassName: yAxisClassName, xAxisLabel: xAxisLabel, yAxisLabel: yAxisLabel, xMin: xMin, xMax: xMax, yMin: yMin, yMax: yMax, autoScaleYAxis: effectiveAutoScale }))] }) })), jsx(ChartContainer, { config: chartConfig, className: cn(S.chartLayer, chartClassName), style: height ? { height: `${height}px` } : undefined, ...containerProps, children: jsxs(ChartComponent, { data: chartData, margin: margin, children: [showAxes && (jsx(ChartAxes, { formatDate: formatDateFn, formatNumber: formatNumber, xAxisClassName: cn(xAxisClassName), yAxisClassName: cn(yAxisClassName), xAxisLabel: xAxisLabel, yAxisLabel: yAxisLabel, xMin: xMin, xMax: xMax, yMin: yMin, yMax: yMax, autoScaleYAxis: effectiveAutoScale })), quantileBands?.[0] && (jsx(QuantileBands, { hiddenBands: hiddenSeries, quantileBandKey: quantileBandKey, animate: true, animationDuration: 150, animationBegin: 0, customBands: quantileBands, showLegend: showLegend })), jsx(ChartLines, { historicalLineColor: historicalLineColor, chartData: chartData, forecastData: forecastData, hiddenSeries: hiddenSeries, isDarkTheme: isDarkTheme, shouldAnimate: shouldAnimate, showLegend: showLegend, forecastLineStyle: forecastLineStyle }), showTooltip && (jsx("div", { children: jsx(ChartTooltip, { cursor: false, offset: TOOLTIP_OFFSET, allowEscapeViewBox: { x: false, y: false }, content: renderTooltipContent }) }))] }) }), overlayElements, jsxs("div", { className: cn(S.footer, footerClassName), children: [showLegend &&
                         (legendVariant === 'svg' ? (jsx(LegendSvg, { payload: legendPayload.map(p => ({
                                 value: p.value,
                                 color: p.color,

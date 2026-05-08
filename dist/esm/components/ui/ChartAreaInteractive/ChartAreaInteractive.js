@@ -44,12 +44,7 @@ function ChartAreaInteractive({ className, chartContainerClassName, legendClassN
             ? { endDateAnchorAnalysisId: anchorId }
             : undefined;
         return filterDataForTimeRange(chartData, timeRange, opts);
-    }, [
-        chartData,
-        timeRange,
-        selectedAnalysisId,
-        selectedForecast?.id,
-    ]);
+    }, [chartData, timeRange, selectedAnalysisId, selectedForecast?.id]);
     const bridgedChartData = useMemo(() => disableForecastHistoricalBridge
         ? timeFilteredChartData
         : ensureChartForecastBridge(timeFilteredChartData, {
