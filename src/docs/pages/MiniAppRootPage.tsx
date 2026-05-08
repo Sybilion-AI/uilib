@@ -1,4 +1,5 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
+import { getThemeConfig } from '#uilib/docs/lib/theme';
 import { MiniAppRoot, useMiniAppShellTheme } from '#uilib/mini-app';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -44,7 +45,11 @@ export default function MiniAppRootPage() {
         }
       `}</style>
       <PageContentSection style={{ maxHeight: '500px' }}>
-        <MiniAppRoot appId="uilib-docs" className="mini-app-root-page">
+        <MiniAppRoot
+          appId="uilib-docs"
+          className="mini-app-root-page"
+          getThemeConfig={isDarkMode => getThemeConfig(isDarkMode)}
+        >
           <MiniAppThemeDemo />
         </MiniAppRoot>
       </PageContentSection>

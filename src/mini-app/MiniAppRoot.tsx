@@ -10,7 +10,7 @@ import React, {
   useState,
 } from 'react';
 
-import { Scroll } from '@homecode/ui';
+import { Scroll, Theme } from '@homecode/ui';
 
 import S from './MiniAppRoot.styl';
 import {
@@ -20,6 +20,10 @@ import {
   parseThemeSyncMessage,
   resolveParentOriginFromReferrer,
 } from './miniAppProtocol';
+import {
+  type MiniAppThemeConfig,
+  getDefaultMiniAppThemeConfig,
+} from './miniAppThemeConfig';
 
 const defaultTheme: ThemeSyncPayload = {
   mode: 'light',
@@ -76,6 +80,8 @@ export type MiniAppRootProps = {
   /** Included in READY payload when set. */
   appId?: string;
   onThemeChange?: (theme: ThemeSyncPayload) => void;
+  /** Overrides `@homecode/ui` `<Theme config>` builder (defaults to generic mini-app palette). */
+  getThemeConfig?: (isDarkMode: boolean) => MiniAppThemeConfig;
 };
 
 export function MiniAppRoot({
@@ -83,12 +89,23 @@ export function MiniAppRoot({
   className,
   appId,
   onThemeChange,
+  getThemeConfig,
 }: MiniAppRootProps): React.ReactElement {
   const [theme, setTheme] = useState<ThemeSyncPayload>(() =>
     isEmbeddedMiniApp() ? defaultTheme : themeFromDocument(),
   );
   const onThemeChangeRef = useRef(onThemeChange);
   onThemeChangeRef.current = onThemeChange;
+
+  const getThemeConfigRef = useRef(
+    getThemeConfig ?? getDefaultMiniAppThemeConfig,
+  );
+  getThemeConfigRef.current = getThemeConfig ?? getDefaultMiniAppThemeConfig;
+
+  const currThemeConfig = useMemo(
+    () => getThemeConfigRef.current(theme.isDarkMode),
+    [theme.isDarkMode],
+  );
 
   const sendReady = useCallback(() => {
     if (!window.parent || window.parent === window) return;
@@ -131,6 +148,7 @@ export function MiniAppRoot({
 
   return (
     <MiniAppShellContext.Provider value={ctx}>
+      <Theme config={currThemeConfig} />
       <Scroll
         y
         fadeSize="l"

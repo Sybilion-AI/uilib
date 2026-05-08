@@ -11,11 +11,7 @@ export type {
   MiniAppMessageThemeSync,
   ThemeSyncPayload,
 } from './miniAppProtocol';
-export {
-  MiniAppRoot,
-  useMiniAppShellTheme,
-} from './MiniAppRoot';
-export type {
-  MiniAppRootProps,
-  MiniAppShellContextValue,
-} from './MiniAppRoot';
+export { getDefaultMiniAppThemeConfig } from './miniAppThemeConfig';
+export type { MiniAppThemeConfig } from './miniAppThemeConfig';
+export { MiniAppRoot, useMiniAppShellTheme } from './MiniAppRoot';
+export type { MiniAppRootProps, MiniAppShellContextValue } from './MiniAppRoot';
