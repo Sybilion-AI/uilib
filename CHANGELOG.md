@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.23](https://github.com/Mir-Insight/uilib/compare/v1.0.22...v1.0.23) (2026-05-08)
+
+
+### Bug Fixes
+
+* MiniAppGlobals - Swap page and background tokens ([d4ddc96](https://github.com/Mir-Insight/uilib/commit/d4ddc9660488eddec9f06e88f75afb26a55d20a8))
+
 ### [1.0.22](https://github.com/Mir-Insight/uilib/compare/v1.0.21...v1.0.22) (2026-05-08)
 
 
