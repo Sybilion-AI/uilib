@@ -29,9 +29,12 @@
       "import": "./src/index.ts",
       "default": "./src/index.ts"
     },
-    "./src/*": "./src/*"
+    "./src/*": "./src/*",
+    "./mini-app-global.css": "./assets/mini-app-global.css"
   },
   "files": [
+    "assets",
+    "docs",
     "src",
     "dist",
     "package.json"

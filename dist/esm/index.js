@@ -1,3 +1,5 @@
+export { MINIAPP_CHANNEL, MINIAPP_VERSION, applyThemeToDocument, buildReadyMessage, parseThemeSyncMessage, resolveParentOriginFromReferrer } from './mini-app/miniAppProtocol.js';
+export { MiniAppRoot, useMiniAppShellTheme } from './mini-app/MiniAppRoot.js';
 export { ChatContext, ChatProvider, useChat, useChats, useChatsForDataset, useChatsForScopeId, useCurrentChat } from './contexts/chat-context.js';
 export { AnalysesSelector } from './components/ui/AnalysesSelector/AnalysesSelector.js';
 export { AnalysisLineIcon } from './components/ui/AnalysisLineIcon/AnalysisLineIcon.js';
