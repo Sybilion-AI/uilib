@@ -10,6 +10,7 @@ import { InteractionOverlay } from '#uilib/components/ui/InteractionOverlay/Inte
 import { TimeRangeControls } from '#uilib/components/ui/TimeRangeControls/TimeRangeControls';
 import { ensureChartForecastBridge } from '#uilib/utils/chartConnectionPoint';
 
+import { CHART_MARGINS } from './ChartAreaInteractive.constants';
 import {
   filterDataForTimeRange,
   longDateFormatter,
@@ -151,7 +152,7 @@ export function ChartAreaInteractive({
     formatDate: shortDateFormatter,
     labelFormatter: (v: unknown) => longDateFormatter(v as string),
     chartType: 'composed' as const,
-    margin: { left: -10, right: 30, top: 20, bottom: 20 },
+    margin: { ...CHART_MARGINS },
     hiddenSeries: seriesHidden,
     onLegendClick: handleLegendClick,
     onAnalysisSelect: onAnalysisSelect,

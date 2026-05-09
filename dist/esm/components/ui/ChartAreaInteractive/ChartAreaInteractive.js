@@ -5,6 +5,7 @@ import { BaseChartWrapper } from '../Chart/components/BaseChartWrapper.js';
 import { InteractionOverlay } from '../InteractionOverlay/InteractionOverlay.js';
 import { TimeRangeControls } from '../TimeRangeControls/TimeRangeControls.js';
 import { ensureChartForecastBridge } from '../../../utils/chartConnectionPoint.js';
+import { CHART_MARGINS } from './ChartAreaInteractive.constants.js';
 import { filterDataForTimeRange, shortDateFormatter, longDateFormatter } from './ChartAreaInteractive.helpers.js';
 import S from './ChartAreaInteractive.styl.js';
 import { PinOverlay } from './overlays/PinOverlay/PinOverlay.js';
@@ -80,7 +81,7 @@ function ChartAreaInteractive({ className, chartContainerClassName, legendClassN
         formatDate: shortDateFormatter,
         labelFormatter: (v) => longDateFormatter(v),
         chartType: 'composed',
-        margin: { left: -10, right: 30, top: 20, bottom: 20 },
+        margin: { ...CHART_MARGINS },
         hiddenSeries: seriesHidden,
         onLegendClick: handleLegendClick,
         onAnalysisSelect: onAnalysisSelect,

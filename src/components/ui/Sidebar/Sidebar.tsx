@@ -738,23 +738,6 @@ function SidebarGroup({ className, ...props }: ComponentProps<'div'>) {
   );
 }
 
-function SidebarGroupLabel({
-  className,
-  asChild = false,
-  ...props
-}: ComponentProps<'div'> & { asChild?: boolean }) {
-  const Comp = asChild ? Slot : 'div';
-
-  return (
-    <Comp
-      data-slot="sidebar-group-label"
-      data-sidebar="group-label"
-      className={cn(S.sidebarGroupLabel, className)}
-      {...props}
-    />
-  );
-}
-
 function SidebarGroupAction({
   className,
   asChild = false,
@@ -767,17 +750,6 @@ function SidebarGroupAction({
       data-slot="sidebar-group-action"
       data-sidebar="group-action"
       className={cn(S.sidebarGroupAction, className)}
-      {...props}
-    />
-  );
-}
-
-function SidebarGroupContent({ className, ...props }: ComponentProps<'div'>) {
-  return (
-    <div
-      data-slot="sidebar-group-content"
-      data-sidebar="group-content"
-      className={cn(S.sidebarGroupContent, className)}
       {...props}
     />
   );
@@ -952,8 +924,6 @@ export {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupAction,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuAction,
   SidebarMenuBadge,

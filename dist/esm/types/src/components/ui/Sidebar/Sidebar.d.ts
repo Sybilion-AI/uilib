@@ -65,13 +65,9 @@ declare function SidebarFooter({ className, ...props }: ComponentProps<'div'>): 
 declare function SidebarSeparator({ className, ...props }: ComponentProps<typeof Separator>): import("react/jsx-runtime").JSX.Element;
 declare function SidebarContent({ className, innerClassName, children, }: ComponentProps<typeof Scroll>): import("react/jsx-runtime").JSX.Element;
 declare function SidebarGroup({ className, ...props }: ComponentProps<'div'>): import("react/jsx-runtime").JSX.Element;
-declare function SidebarGroupLabel({ className, asChild, ...props }: ComponentProps<'div'> & {
-    asChild?: boolean;
-}): import("react/jsx-runtime").JSX.Element;
 declare function SidebarGroupAction({ className, asChild, ...props }: ComponentProps<'button'> & {
     asChild?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
-declare function SidebarGroupContent({ className, ...props }: ComponentProps<'div'>): import("react/jsx-runtime").JSX.Element;
 declare function SidebarMenu({ className, ...props }: ComponentProps<'ul'>): import("react/jsx-runtime").JSX.Element;
 declare function SidebarMenuItem({ className, ...props }: ComponentProps<'li'>): import("react/jsx-runtime").JSX.Element;
 declare function SidebarMenuButton({ asChild, isActive, variant, size, className, ...props }: ButtonProps & {
@@ -90,4 +86,4 @@ declare function SidebarMenuSubButton({ asChild, size, isActive, tooltip, classN
     isActive?: boolean;
     tooltip?: string | ComponentProps<typeof TooltipContent>;
 }): import("react/jsx-runtime").JSX.Element;
-export { PanelResizeHandle, Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuAction, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarResizeHandle, SidebarSeparator, SidebarTrigger, useSidebar, };
+export { PanelResizeHandle, Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarMenu, SidebarMenuAction, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarResizeHandle, SidebarSeparator, SidebarTrigger, useSidebar, };

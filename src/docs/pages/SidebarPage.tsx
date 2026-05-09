@@ -1,8 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import {
   SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -20,32 +18,27 @@ export default function SidebarPage() {
         subheader="Sidebar menu primitives (isolated preview)."
         actions={<DocsHeaderActions />}
       />
-      <PageContentSection
-        style={{
-          border: '1px solid var(--border)',
-          borderRadius: 8,
-          padding: 12,
-          maxWidth: 280,
-          background: 'var(--sidebar)',
-          color: 'var(--sidebar-foreground)',
-        }}
-      >
-        <SidebarGroup>
-          <SidebarGroupLabel>Demo</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton type="button" isActive>
-                  Active item
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton type="button">
-                  Another item
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
+      <PageContentSection>
+        <SidebarGroup
+          style={{
+            maxWidth: 320,
+            padding: 12,
+            background: 'var(--sidebar)',
+            color: 'var(--sidebar-foreground)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--p-4)',
+          }}
+        >
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton type="button" isActive>
+                Active item
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton type="button">Another item</SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
         </SidebarGroup>
       </PageContentSection>
     </>

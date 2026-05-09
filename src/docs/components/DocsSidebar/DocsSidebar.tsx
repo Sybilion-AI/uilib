@@ -6,7 +6,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -106,58 +105,56 @@ export function DocsSidebar() {
           />
         </SidebarMenu>
         <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {DOC_SECTION_ORDER.map(section => {
-                const entries = bySection.get(section);
-                if (!entries?.length) return null;
+          <SidebarMenu>
+            {DOC_SECTION_ORDER.map(section => {
+              const entries = bySection.get(section);
+              if (!entries?.length) return null;
 
-                const filteredEntries = isFiltering
-                  ? entries.filter(e => entryMatchesQuery(e, q))
-                  : entries;
-                if (!filteredEntries.length) return null;
+              const filteredEntries = isFiltering
+                ? entries.filter(e => entryMatchesQuery(e, q))
+                : entries;
+              if (!filteredEntries.length) return null;
 
-                const isExpanded = isFiltering || expandedSections.has(section);
-                const sectionHasActive = entries.some(
-                  e => location.pathname === `/docs/${e.slug}`,
-                );
+              const isExpanded = isFiltering || expandedSections.has(section);
+              const sectionHasActive = entries.some(
+                e => location.pathname === `/docs/${e.slug}`,
+              );
 
-                return (
-                  <SidebarMenuItem key={section}>
-                    <SidebarMenuButton
-                      type="button"
-                      onClick={() => {
-                        if (!isFiltering) toggleSection(section);
-                      }}
-                      isActive={sectionHasActive}
-                    >
-                      <span>{section}</span>
-                      {isFiltering ? null : renderSectionChevron(isExpanded)}
-                    </SidebarMenuButton>
-                    {isExpanded ? (
-                      <SidebarMenuSub>
-                        {filteredEntries.map(e => {
-                          const to = `/docs/${e.slug}`;
-                          const isActive = location.pathname === to;
-                          return (
-                            <SidebarMenuSubItem key={e.slug}>
-                              <SidebarMenuSubButton
-                                asChild
-                                isActive={isActive}
-                                size="md"
-                              >
-                                <Link to={to}>{e.title}</Link>
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          );
-                        })}
-                      </SidebarMenuSub>
-                    ) : null}
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
+              return (
+                <SidebarMenuItem key={section}>
+                  <SidebarMenuButton
+                    type="button"
+                    onClick={() => {
+                      if (!isFiltering) toggleSection(section);
+                    }}
+                    isActive={sectionHasActive}
+                  >
+                    <span>{section}</span>
+                    {isFiltering ? null : renderSectionChevron(isExpanded)}
+                  </SidebarMenuButton>
+                  {isExpanded ? (
+                    <SidebarMenuSub>
+                      {filteredEntries.map(e => {
+                        const to = `/docs/${e.slug}`;
+                        const isActive = location.pathname === to;
+                        return (
+                          <SidebarMenuSubItem key={e.slug}>
+                            <SidebarMenuSubButton
+                              asChild
+                              isActive={isActive}
+                              size="md"
+                            >
+                              <Link to={to}>{e.title}</Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        );
+                      })}
+                    </SidebarMenuSub>
+                  ) : null}
+                </SidebarMenuItem>
+              );
+            })}
+          </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>

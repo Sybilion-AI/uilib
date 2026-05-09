@@ -392,16 +392,9 @@ function SidebarContent({ className, innerClassName, children, }) {
 function SidebarGroup({ className, ...props }) {
     return (jsx("div", { "data-slot": "sidebar-group", "data-sidebar": "group", className: cn(SidebarStem.sidebarGroup, className), ...props }));
 }
-function SidebarGroupLabel({ className, asChild = false, ...props }) {
-    const Comp = asChild ? Slot : 'div';
-    return (jsx(Comp, { "data-slot": "sidebar-group-label", "data-sidebar": "group-label", className: cn(SidebarStem.sidebarGroupLabel, className), ...props }));
-}
 function SidebarGroupAction({ className, asChild = false, ...props }) {
     const Comp = asChild ? Slot : 'button';
     return (jsx(Comp, { "data-slot": "sidebar-group-action", "data-sidebar": "group-action", className: cn(SidebarStem.sidebarGroupAction, className), ...props }));
-}
-function SidebarGroupContent({ className, ...props }) {
-    return (jsx("div", { "data-slot": "sidebar-group-content", "data-sidebar": "group-content", className: cn(SidebarStem.sidebarGroupContent, className), ...props }));
 }
 function SidebarMenu({ className, ...props }) {
     return (jsx("ul", { "data-slot": "sidebar-menu", "data-sidebar": "menu", className: cn(SidebarStem.sidebarMenu, className), ...props }));
@@ -445,4 +438,4 @@ function SidebarMenuSubButton({ asChild = false, size = 'md', isActive = false, 
     return (jsxs(Tooltip, { children: [jsx(TooltipTrigger, { asChild: true, children: button }), jsx(TooltipContent, { side: "right", align: "center", hidden: !isOpen || isMobile, ...tooltip })] }));
 }
 
-export { PanelResizeHandle, Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuAction, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarResizeHandle, SidebarSeparator, SidebarTrigger, useSidebar };
+export { PanelResizeHandle, Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarMenu, SidebarMenuAction, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarResizeHandle, SidebarSeparator, SidebarTrigger, useSidebar };

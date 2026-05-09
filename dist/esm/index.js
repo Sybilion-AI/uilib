@@ -62,7 +62,7 @@ export { Renamer } from './components/ui/Renamer/Renamer.js';
 export { Select, SelectContent, SelectGroup, SelectItem, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue } from './components/ui/Select/Select.js';
 export { Separator } from './components/ui/Separator/Separator.js';
 export { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './components/ui/Sheet/Sheet.js';
-export { PanelResizeHandle, Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuAction, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarResizeHandle, SidebarSeparator, SidebarTrigger, useSidebar } from './components/ui/Sidebar/Sidebar.js';
+export { PanelResizeHandle, Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarMenu, SidebarMenuAction, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarResizeHandle, SidebarSeparator, SidebarTrigger, useSidebar } from './components/ui/Sidebar/Sidebar.js';
 export { Skeleton } from './components/ui/Skeleton/Skeleton.js';
 export { Slider } from './components/ui/Slider/Slider.js';
 export { SmartTextTruncate } from './components/ui/SmartTextTruncate/SmartTextTruncate.js';
