@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/Mir-Insight/uilib/compare/v1.0.32...v1.1.0) (2026-05-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* for consumers importing removed sidebar subcomponents.
+
+* Sidebar - Remove group label and content primitives ([f69ed06](https://github.com/Mir-Insight/uilib/commit/f69ed0634295075004d8e130a51f9199f94ab5fd))
+
 ### [1.0.32](https://github.com/Mir-Insight/uilib/compare/v1.0.30...v1.0.32) (2026-05-08)
 
 
