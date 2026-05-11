@@ -1,6 +1,6 @@
-import type { MiniAppDataset } from '#uilib/mini-app/miniAppDataTypes';
+import type { SybilionDatasetSnapshot } from '#uilib/types/sybilionDatasetSnapshots';
 
-export type SidebarDatasetsItemsGroupedDataset = MiniAppDataset;
+export type SidebarDatasetsItemsGroupedDataset = SybilionDatasetSnapshot;
 
 export type SidebarDatasetsItemsGroupBy =
   | 'target_type'

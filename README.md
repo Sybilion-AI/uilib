@@ -69,9 +69,9 @@ import { Button } from '@sybilion/uilib/src';
 
 Deep imports use `@sybilion/uilib/src/...` (maps to files under `[src/](./src)`). Internal `#uilib/...` imports resolve through this package’s `[imports](./package.json)` field when bundling source.
 
-### Workspace mini-apps (Sybilion iframe)
+### Standalone Sybilion apps
 
-See `[docs/workspace-mini-apps.md](./docs/workspace-mini-apps.md)`.
+See [`docs/standalone-apps.md`](./docs/standalone-apps.md) — greenfield `yarn add` lists `react`, `react-dom`, `react-router-dom`, `@auth0/auth0-react`, `@sybilion/uilib`. **`@homecode/ui` is a dependency of `@sybilion/uilib`** and installs with it; declare React/router in your app so deduplication keeps one React instance (see peers below).
 
 ## Bundling from source (`uilib/src`)
 
@@ -90,15 +90,15 @@ If you only use the **default** entry (`import from '@sybilion/uilib'` or aliase
 
 ## Peer dependencies
 
-Install these in the consuming app:
+Declare these in **your** app (`package.json`):
 
-- `react` and `react-dom` (>= 18)
-- `react-router-dom` (>= 6) — required for components that use `Link` or routing-aware layout (for example `PageFooter`, `Breadcrumbs`)
-- `@homecode/ui` (>= 4.17) — still required for Scroll/LS-related pieces until those are replaced
+- `react` and `react-dom` (>= 18) — required so the app and `@homecode/ui` resolve the **same** React (avoid invalid hook call / duplicate trees).
+- `react-router-dom` (>= 6) — layout components that use routing-aware UI.
+- `@auth0/auth0-react` (^2.3, **optional peer**) — install when you import `SybilionAuthProvider` / Sybilion auth hooks (see `peerDependenciesMeta`). Standalone docs include it in the `yarn add` line.
 
-`@homecode/ui` is a **peer** dependency only (it is not listed under `dependencies`). The app must provide a single installed copy. Bundling `@homecode/ui` as a nested dependency of `uilib` previously pulled a second `react` and caused **invalid hook call** errors in components such as `DropZone`.
+**Included with `@sybilion/uilib`** (normal `dependencies`): `@homecode/ui` (^4.17), Radix, Recharts, `@vimeo/player`, `motion`, etc. You import `Theme` / primitives from `@homecode/ui` without adding it separately unless you want an explicit top-level version pin.
 
-Runtime dependencies of this package (Recharts, Radix, `motion`, `vaul`, `@vimeo/player`, etc.) are declared in `package.json` and should be satisfied by the consumer’s install tree.
+Runtime dependencies are listed in [`package.json`](./package.json).
 
 ## Maintainers
 

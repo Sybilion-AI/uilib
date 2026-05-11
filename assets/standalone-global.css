@@ -1,5 +1,5 @@
 /**
- * Mini-app token sheet — keep in sync with assets/globals.css (:root, breakpoints, .dark).
+ * Standalone Sybilion app token sheet token sheet — keep in sync with assets/globals.css (:root, breakpoints, .dark).
  * Omits @theme inline and @layer base (Tailwind/@apply). For full parity use globals.css from this repo.
  */
 @import './fonts/fonts.css';

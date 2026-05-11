@@ -157,10 +157,10 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/InteractiveContentPage'),
   },
   {
-    slug: 'mini-app-root',
-    title: 'MiniAppRoot',
+    slug: 'sybilion-auth-provider',
+    title: 'SybilionAuthProvider',
     section: 'Layout',
-    load: () => import('./pages/MiniAppRootPage'),
+    load: () => import('./pages/SybilionAuthProviderPage'),
   },
   {
     slug: 'label',

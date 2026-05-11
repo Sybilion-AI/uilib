@@ -3,7 +3,7 @@ declare const Input: React.ForwardRefExoticComponent<(Omit<Omit<React.DetailedHT
     type?: React.ComponentProps<"input">["type"];
     size?: "sm" | "md" | "lg";
     variant?: "default" | "clean";
-}, "ref"> | Omit<Omit<React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>, "type" | "size"> & {
+}, "ref"> | Omit<Omit<React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>, "size" | "type"> & {
     type: "textarea";
     size?: "sm" | "md" | "lg";
     variant?: "default" | "clean";

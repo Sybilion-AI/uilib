@@ -1,8 +1,6 @@
-export { MINIAPP_CHANNEL, MINIAPP_VERSION, applyThemeToDocument, buildChatSendMessage, buildDataRequestMessage, buildReadyMessage, isTrustedMiniAppParentMessage, parseChatSendResultMessage, parseDataResponseMessage, parseThemeSyncMessage, resolveParentOriginFromReferrer } from './mini-app/miniAppProtocol.js';
-export { createMiniAppDataClient } from './mini-app/miniAppDataClient.js';
-export { getDefaultMiniAppThemeConfig } from './mini-app/miniAppThemeConfig.js';
-export { sendChatMessage } from './mini-app/miniAppChatBridge.js';
-export { MiniAppRoot, useMiniAppShellTheme } from './mini-app/MiniAppRoot.js';
+export { SybilionAuthProvider, createSybilionApiFetch, sybilionApiFetch, useSybilionApiFetch, useSybilionAuth } from './sybilion-auth/SybilionAuthProvider.js';
+export { SYBILION_AUTH_LOGIN_PATH, normalizeApiBaseUrl } from './sybilion-auth/authPaths.js';
+export { exchangeAuth0AccessTokenForSybilionJwt } from './sybilion-auth/exchangeSybilionToken.js';
 export { ChatContext, ChatProvider, useChat, useChats, useChatsForDataset, useChatsForScopeId, useCurrentChat } from './contexts/chat-context.js';
 export { AnalysesSelector } from './components/ui/AnalysesSelector/AnalysesSelector.js';
 export { AnalysisLineIcon } from './components/ui/AnalysisLineIcon/AnalysisLineIcon.js';
