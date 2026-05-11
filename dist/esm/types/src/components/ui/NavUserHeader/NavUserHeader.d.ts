@@ -1,0 +1,2 @@
+import type { NavUserHeaderProps } from './NavUserHeader.types';
+export declare function NavUserHeader({ variant, isLoading, isAuthenticated, user, menuItems, theme, onThemeToggle, onLogout, signInSlot, onSignInClick, }: NavUserHeaderProps): string | number | bigint | true | Iterable<import("react").ReactNode> | Promise<string | number | bigint | boolean | import("react").ReactPortal | import("react").ReactElement<unknown, string | import("react").JSXElementConstructor<any>> | Iterable<import("react").ReactNode>> | import("react/jsx-runtime").JSX.Element;

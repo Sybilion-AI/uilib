@@ -42,6 +42,7 @@ export { LabelWithId } from './components/ui/LabelWithId/LabelWithId.js';
 export { LegacyPlatformLink } from './components/ui/LegacyPlatformLink/LegacyPlatformLink.js';
 export { Logo } from './components/ui/Logo/Logo.js';
 export { MobileAdaptiveSelector } from './components/ui/MobileAdaptiveSelector/MobileAdaptiveSelector.js';
+export { NavUserHeader } from './components/ui/NavUserHeader/NavUserHeader.js';
 export { NumberControl } from './components/ui/NumberControl/NumberControl.js';
 export { AppShell, AppShellMainContent } from './components/ui/Page/AppShell/AppShell.js';
 export { PageHeader } from './components/ui/Page/PageHeader/PageHeader.js';

@@ -67,6 +67,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/BreadcrumbPage'),
   },
   {
+    slug: 'nav-user-header',
+    title: 'NavUserHeader',
+    section: 'Navigation',
+    load: () => import('./pages/NavUserHeaderPage'),
+  },
+  {
     slug: 'card',
     title: 'Card',
     section: 'Layout',

@@ -1,0 +1,25 @@
+import type { ReactNode } from 'react';
+export type NavUserHeaderUser = {
+    name: string;
+    email: string;
+    /** Passed to avatar `Image` as `src`. */
+    avatar?: string;
+};
+export type NavUserHeaderProps = {
+    variant?: 'default' | 'compact';
+    isLoading?: boolean;
+    /** When false, signed-out branch is shown. Defaults to true when omitted. */
+    isAuthenticated?: boolean;
+    /** Present when authenticated: shown in trigger and dropdown label. */
+    user?: NavUserHeaderUser | null;
+    /** Rows inside the menu above theme toggle and logout. Use `DropdownMenuItem` nodes. */
+    menuItems?: ReactNode;
+    /** Current theme drives the toggle row label/icons. */
+    theme: 'light' | 'dark';
+    /** When set, renders the light/dark theme menu row. */
+    onThemeToggle?: () => void;
+    onLogout: () => void;
+    /** Replaces default “Log in” control when signed out. */
+    signInSlot?: ReactNode;
+    onSignInClick?: () => void;
+};
