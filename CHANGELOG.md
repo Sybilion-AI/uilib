@@ -2,19 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## Unreleased — standalone apps (breaking)
+## [1.2.0](https://github.com/Mir-Insight/uilib/compare/v1.1.0...v1.2.0) (2026-05-11)
 
-### ⚠ BREAKING CHANGES
-
-- Removed iframe mini-app APIs: `MiniAppRoot`, `createMiniAppDataClient`, `mini-app-global.css`, and all `postMessage` protocol exports under `src/mini-app`.
-- Renamed packaged global CSS export to `./standalone-global.css` (replacing `./mini-app-global.css`).
-- Dataset snapshot types renamed: `MiniAppDataset` → `SybilionDatasetSnapshot` (and related type names).
-- `@auth0/auth0-react` moved to **optional peerDependency** (apps add it when using `SybilionAuthProvider`; not nested under `@sybilion/uilib`).
 
 ### Features
 
-- `SybilionAuthProvider`, `useSybilionAuth`, `useSybilionApiFetch`, and helpers for Auth0 → `POST /v1/auth/login` → Sybilion JWT.
-- `@homecode/ui` is a **normal dependency** of `@sybilion/uilib` (installs with the package); no separate `yarn add @homecode/ui` required unless you pin a specific version at the app root.
+* SidebarDatasetsItemsGroupped - Grouped datasets sidebar ([36e17d9](https://github.com/Mir-Insight/uilib/commit/36e17d9c09d1bfc7a29fa842511e438fe2281c24))
+* Uilib - Standalone apps, remove iframe mini-app layer ([2200a8d](https://github.com/Mir-Insight/uilib/commit/2200a8d8aef5ddd3634f912c1f1700ea4b6f5318))
 
 ## [1.1.0](https://github.com/Mir-Insight/uilib/compare/v1.0.32...v1.1.0) (2026-05-09)
 
