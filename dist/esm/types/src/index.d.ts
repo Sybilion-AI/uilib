@@ -53,3 +53,4 @@ export * from './components/ui/Toggle';
 export * from './components/ui/ToggleGroup';
 export * from './components/ui/Tooltip';
 export * from './components/ui/VimeoEmbed';
+export * from './components/widgets/SidebarDatasetsItemsGrouped';

@@ -253,6 +253,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/SidebarPage'),
   },
   {
+    slug: 'sidebar-datasets-items-grouped',
+    title: 'SidebarDatasetsItemsGrouped',
+    section: 'Navigation',
+    load: () => import('./pages/SidebarDatasetsItemsGroupedPage'),
+  },
+  {
     slug: 'skeleton',
     title: 'Skeleton',
     section: 'Feedback',

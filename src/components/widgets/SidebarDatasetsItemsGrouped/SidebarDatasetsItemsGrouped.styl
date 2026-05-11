@@ -1,0 +1,29 @@
+.chevronContainer
+  margin-left auto
+
+.subMenuContainer
+  position relative
+
+.subMenuBorder
+  position absolute
+  left var(--p-5)
+  top 0
+  bottom 26px
+  width 1px
+  background var(--sidebar-border)
+
+.subMenuItem
+  position relative
+  margin-left var(--p-6)
+
+  &::before
+    content ''
+    position absolute
+    left calc(var(--p-1) * -1)
+    top var(--p-2)
+    bottom 0
+    width var(--p-3)
+    height var(--p-3)
+    border-left 1px solid var(--sidebar-border)
+    border-bottom 1px solid var(--sidebar-border)
+    border-bottom-left-radius var(--p-2)

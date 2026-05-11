@@ -1,6 +1,6 @@
 # Workspace mini-apps (Sybilion iframe)
 
-The Sybilion client embeds mini-apps in an **iframe** and syncs theme with `postMessage`. Use **`MiniAppRoot`** so this document’s `<html>` gets **`light` / `dark`** (uilib uses `.dark { … }` for tokens), and so **`@homecode/ui`’s `<Theme />`** runs with vars matching that mode (`getDefaultMiniAppThemeConfig`; override via props if needed).
+The Sybilion client embeds mini-apps in an **iframe** and syncs theme with `postMessage`. Use `**MiniAppRoot`** so this document’s `<html>` gets `**light` / `dark**` (uilib uses `.dark { … }` for tokens), and so `**@homecode/ui`’s `<Theme />**` runs with vars matching that mode (`getDefaultMiniAppThemeConfig`; override via props if needed).
 
 ## Design system (`@sybilion/uilib`)
 
@@ -10,7 +10,7 @@ The Sybilion client embeds mini-apps in an **iframe** and syncs theme with `post
 
 **Page inset:** Do **not** add your own **left/right** padding or margin on the root page or a full-viewport wrapper (no random `px-*` / `mx-*` / `container` max-width hacks for “page margins”). Use uilib layout primitives and spacing tokens—or patterns documented for mini-apps—so horizontal gutters and max width stay consistent with the shell.
 
-1. Import **`@sybilion/uilib/mini-app-global.css`** (slim tokens + font imports; ships in this package).
+1. Import `**@sybilion/uilib/mini-app-global.css`** (slim tokens + font imports; ships in this package).
 2. Wrap the React root:
 
 ```tsx
@@ -24,9 +24,8 @@ createRoot(document.getElementById('root')!).render(
 );
 ```
 
-3. Optional: **`useMiniAppShellTheme()`** for **`{ theme: { mode, isDarkMode } }`** under the provider (object leaves room for more shell fields later).
-
-4. Optional: **`getThemeConfig`** on **`MiniAppRoot`** — passed **`(isDarkMode) => config`** like the Sybilion app’s **`getThemeConfig`** from **`src/lib/theme.ts`**, so iframe UI matches host accent/danger tokens.
+1. Optional: `**useMiniAppShellTheme()**` for `**{ theme: { mode, isDarkMode } }**` under the provider (object leaves room for more shell fields later).
+2. Optional: `**getThemeConfig**` on `**MiniAppRoot**` — passed `**(isDarkMode) => config**` like the Sybilion app’s `**getThemeConfig**` from `**src/lib/theme.ts**`, so iframe UI matches host accent/danger tokens.
 
 **Bridge:** `MiniAppRoot` handles `THEME_SYNC`, sends `READY` on mount/load, and checks `event.source === window.parent` plus `document.referrer` origin when present. If the referrer is missing (strict `Referrer-Policy`), `READY` may use `targetOrigin` `*` — document that for your host.
 
@@ -36,7 +35,7 @@ The Sybilion shell can answer read-only **data getters** over the same `postMess
 
 - **Cache-only:** The shell returns whatever is **already in memory** (dataset context) or in the **same localStorage cache** the main app uses for Performance (e.g. `performance-<analysisId>`). It does **not** trigger network fetches. If the user never opened a dataset tab or the blob was never loaded, you get **empty objects, `null`, or `[]`** — handle that in UI.
 - **Performance bundle:** `getPerformanceData` returns `{ table, spaghetti }`. `table` is the cached Performance-tab payload (often `null` until the user has opened Performance for that analysis). `spaghetti` is in-memory backtest lines from the host when present.
-- **Usage:** Create one client (e.g. module singleton) with **`createMiniAppDataClient()`** from `@sybilion/uilib`. It only works **inside the iframe** (throws if `window.parent === window`). Methods: **`getDatasets()`**, **`getDataset(id)`**, **`getForecasts(datasetId)`**, **`getForecast(datasetId, analysisId)`**, **`getDrivers(datasetId, analysisId)`**, **`getPerformanceData(datasetId, analysisId)`**, **`getDriversComparisonData(datasetId, analysisId)`**. Types **`MiniAppDataset`**, **`MiniAppForecastMap`**, **`MiniAppPerformanceBundle`**, **`MiniAppDriversComparisonSnapshot`** describe the returned JSON loosely.
+- **Usage:** Create one client (e.g. module singleton) with `**createMiniAppDataClient()`** from `@sybilion/uilib`. It only works **inside the iframe** (throws if `window.parent === window`). Methods: `**getDatasets()`**, `**getDataset(id)**`, `**getForecasts(datasetId)**`, `**getForecast(datasetId, analysisId)**`, `**getDrivers(datasetId, analysisId)**`, `**getPerformanceData(datasetId, analysisId)**`, `**getDriversComparisonData(datasetId, analysisId)**`. Types `**MiniAppDataset**`, `**MiniAppForecastMap**`, `**MiniAppPerformanceBundle**`, `**MiniAppDriversComparisonSnapshot**` describe the returned JSON loosely.
 
 **For coding agents:** Prefer these getters when the task is “show the user’s current Sybilion data in the mini-app” so the iframe stays aligned with the host session and avoids inventing parallel data loading.
 
@@ -49,3 +48,4 @@ const data = createMiniAppDataClient();
 const datasets = await data.getDatasets();
 const forecasts = await data.getForecasts(datasetId);
 ```
+

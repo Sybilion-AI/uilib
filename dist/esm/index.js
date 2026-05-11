@@ -78,6 +78,8 @@ export { Toggle } from './components/ui/Toggle/Toggle.js';
 export { ToggleGroup, ToggleGroupItem } from './components/ui/ToggleGroup/ToggleGroup.js';
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './components/ui/Tooltip/Tooltip.js';
 export { VimeoEmbed } from './components/ui/VimeoEmbed/VimeoEmbed.js';
+export { SidebarDatasetsItemsGrouped } from './components/widgets/SidebarDatasetsItemsGrouped/SidebarDatasetsItemsGrouped.js';
+export { groupSidebarDatasets } from './components/widgets/SidebarDatasetsItemsGrouped/groupSidebarDatasets.js';
 export { ChartTooltipItem } from './components/ui/Chart/components/ChartTooltipItem.js';
 export { ChartLegendItem } from './components/ui/Chart/components/ChartLegendItem.js';
 export { CustomChartLegend } from './components/ui/Chart/components/CustomChartLegend/CustomChartLegend.js';

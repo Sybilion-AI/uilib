@@ -11,7 +11,6 @@ interface CssExports {
   'sidebarFooter': string;
   'sidebarGroup': string;
   'sidebarGroupAction': string;
-  'sidebarGroupLabel': string;
   'sidebarHeader': string;
   'sidebarInput': string;
   'sidebarMainShell': string;
