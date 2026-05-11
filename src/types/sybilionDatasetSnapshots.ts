@@ -1,9 +1,8 @@
 /**
- * Serializable shapes returned by the shell for mini-app data getters.
- * Subset of Sybilion `Dataset` / API types — use `unknown` where payloads are large or evolving.
+ * Loose JSON shapes aligned with Sybilion dataset payloads (standalone apps / widgets).
  */
 
-export type MiniAppDataset = {
+export type SybilionDatasetSnapshot = {
   id: number;
   user_id?: number;
   name: string;
@@ -24,16 +23,14 @@ export type MiniAppDataset = {
 };
 
 /** `forecastData` slice: analysis id (string) → forecast series blob. */
-export type MiniAppForecastMap = Record<string, unknown>;
+export type SybilionForecastMap = Record<string, unknown>;
 
-export type MiniAppPerformanceBundle = {
-  /** Cached Performance-tab API payload, or null if user never opened Performance / cache empty. */
+export type SybilionPerformanceSnapshot = {
   table: unknown;
-  /** In-memory spaghetti lines from shell context, or null. */
   spaghetti: unknown;
 };
 
-export type MiniAppDriversComparisonSnapshot = {
+export type SybilionDriversComparisonSnapshot = {
   byRegion: unknown;
   byCountry: unknown;
   byCategory: unknown;

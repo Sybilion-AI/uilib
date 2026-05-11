@@ -1,4 +1,5 @@
-export * from './mini-app';
+export * from './sybilion-auth';
+export * from './types/sybilionDatasetSnapshots';
 export * from './contexts/chat-context';
 export * from './types/chat-api.types';
 export * from './components/ui/AnalysesSelector';

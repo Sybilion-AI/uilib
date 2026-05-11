@@ -47,6 +47,7 @@ export default [
       'react-router',
       'react-router-dom',
       '@homecode/ui',
+      '@auth0/auth0-react',
     ],
     plugins: [
       del({ targets: './dist/*' }),
