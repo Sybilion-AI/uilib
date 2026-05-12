@@ -1,9 +1,10 @@
 import cn from 'classnames';
-import type { ReactNode } from 'react';
 
 import { AppHeaderPortal } from '#uilib/components/ui/AppHeader/AppHeader';
 import { PAGE_HEADER_ACTIONS_ID } from '#uilib/components/ui/AppHeader/appChromeAnchors';
 import { Gap } from '#uilib/components/ui/Gap/Gap';
+import { NavUserHeader } from '#uilib/components/ui/NavUserHeader';
+import type { NavUserHeaderProps } from '#uilib/components/ui/NavUserHeader';
 import {
   WorkspaceAppSwitcher,
   type WorkspaceAppSwitcherProps,
@@ -11,29 +12,39 @@ import {
 
 import S from './SybilionAppHeader.styl';
 
-export type SybilionAppHeaderProps = WorkspaceAppSwitcherProps & {
-  pageHeaderId?: string;
-  actions?: ReactNode;
-  actionsAnchorId?: string;
-  actionsAnchorClassName?: string;
-};
+export type SybilionAppHeaderProps = WorkspaceAppSwitcherProps &
+  NavUserHeaderProps & {
+    pageHeaderId?: string;
+    actionsAnchorId?: string;
+    actionsAnchorClassName?: string;
+  };
 
 export function SybilionAppHeader({
   pageHeaderId,
-  actions,
   actionsAnchorId = PAGE_HEADER_ACTIONS_ID,
   actionsAnchorClassName,
-  ...workspaceSwitcherProps
+  pathname,
+  onNavigate,
+  authenticated,
+  defaultApps,
+  appsStorageKey,
+  ...navUserHeaderProps
 }: SybilionAppHeaderProps) {
   return (
     <AppHeaderPortal pageHeaderId={pageHeaderId}>
-      <WorkspaceAppSwitcher {...workspaceSwitcherProps} />
+      <WorkspaceAppSwitcher
+        pathname={pathname}
+        onNavigate={onNavigate}
+        authenticated={authenticated}
+        defaultApps={defaultApps}
+        appsStorageKey={appsStorageKey}
+      />
       <Gap />
       <div
         id={actionsAnchorId}
         className={cn(S.actionsAnchor, actionsAnchorClassName)}
       >
-        {actions}
+        <NavUserHeader {...navUserHeaderProps} />
       </div>
     </AppHeaderPortal>
   );

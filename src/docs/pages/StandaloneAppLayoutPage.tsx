@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
 import { AppHeaderHost } from '#uilib/components/ui/AppHeader';
-import { NavUserHeader } from '#uilib/components/ui/NavUserHeader/NavUserHeader';
+import { DropdownMenuItem } from '#uilib/components/ui/DropdownMenu';
 import {
   AppShell,
   AppShellMainContent,
@@ -25,6 +25,7 @@ import {
   type SidebarDatasetsItemsGroupedDataset,
 } from '#uilib/components/widgets/SidebarDatasetsItemsGrouped';
 import { SybilionAppHeader } from '#uilib/components/widgets/SybilionAppHeader';
+import { GearSixIcon, UserCircleIcon } from '@phosphor-icons/react';
 import { House } from 'lucide-react';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -251,17 +252,25 @@ function StandaloneLayoutPreview() {
               authenticated
               appsStorageKey={DOCS_WORKSPACE_APPS_LS_KEY}
               defaultApps={DOCS_PREVIEW_APPS}
-              actions={
-                <NavUserHeader
-                  user={{
-                    name: 'Preview User',
-                    email: 'preview@example.com',
-                    avatar: '',
-                  }}
-                  theme={theme}
-                  onThemeToggle={onThemeToggle}
-                  onLogout={() => undefined}
-                />
+              user={{
+                name: 'Preview User',
+                email: 'preview@example.com',
+                avatar: '',
+              }}
+              theme={theme}
+              onThemeToggle={onThemeToggle}
+              onLogout={() => undefined}
+              menuItems={
+                <>
+                  <DropdownMenuItem>
+                    <UserCircleIcon />
+                    Account (preview)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <GearSixIcon />
+                    Settings (preview)
+                  </DropdownMenuItem>
+                </>
               }
             />
             <DemoMainBody panel={panel} />
