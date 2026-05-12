@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.4](https://github.com/Mir-Insight/uilib/compare/v1.2.3...v1.2.4) (2026-05-12)
+
+
+### Features
+
+* ViteStandaloneDev - Local API proxy for SPAs ([b0e7405](https://github.com/Mir-Insight/uilib/commit/b0e74054726ec618e84143507bb75d790b40d3a8))
+
 ### [1.2.3](https://github.com/Mir-Insight/uilib/compare/v1.2.2...v1.2.3) (2026-05-12)
 
 
