@@ -1,0 +1,91 @@
+@import '../../../lib/theme.styl'
+
+.trigger
+  display flex
+  align-items center
+  gap var(--p-2)
+  max-width 320px
+  height auto
+  padding var(--p-1) !important
+  padding-right var(--p-3) !important
+  margin-left var(--p-3) !important
+
+  border-radius 12px
+  border none
+  background transparent
+  cursor pointer
+  color inherit
+  font inherit
+  text-align left
+
+  &:hover
+    background-color var(--muted)
+
+.iconTile
+  position relative
+  display flex
+  align-items center
+  justify-content center
+  flex-shrink 0
+  width 40px
+  height 40px
+  border-radius 10px
+  color var(--fg-color)
+
+  &::before
+  &::after
+    position absolute
+    content ''
+    display block
+    width 100%
+    height 100%
+    border-radius inherit
+  &::before
+    background-color var(--background)
+  &::after
+    background-color var(--bg-color)
+
+.icon
+  z-index 1
+  width 22px !important
+  height 22px !important
+  color var(--fg-color) !important
+
+.textCol
+  display flex
+  flex-direction column
+  min-width 0
+  flex 1
+  gap 2px
+
+.name
+  font-weight 600
+  font-size var(--text-sm)
+  line-height 1.2
+  color var(--foreground)
+  white-space nowrap
+  overflow hidden
+  text-overflow ellipsis
+
+.sub
+  font-size var(--text-xs)
+  line-height 1.2
+  color var(--muted-foreground)
+  white-space nowrap
+  overflow hidden
+  text-overflow ellipsis
+
+.menuContent
+  min-width 280px
+  max-width 360px
+
+.item
+  display flex
+  align-items center
+  gap var(--p-3)
+  padding var(--p-3)
+  cursor pointer
+  outline none
+
+.itemActive
+  background-color var(--muted)

@@ -41,12 +41,12 @@ Add a **`dev`** script so the app is runnable immediately after clone. Typical V
 
 Commit **`.env.example`** at the app root (no secrets). Minimum variables:
 
-| Variable | Purpose |
-| -------- | ------- |
-| `PORT` | Vite **dev** and **preview** server port. **`PORT=3000`** matches the current **Auth0 test tenant** (`http://localhost:3000` callback / web origins). Override if your tenant uses another port. |
-| `VITE_SYBILION_API_BASE_URL` | Real Sybilion API origin (no trailing slash). Used as **proxy target** in dev and as SDK `baseUrl` in production builds. |
-| `VITE_AUTH0_DOMAIN` | Auth0 domain (§3). |
-| `VITE_AUTH0_CLIENT_ID` | Auth0 SPA client id (§3). |
+| Variable                     | Purpose                                                                                                                                                                                          |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `PORT`                       | Vite **dev** and **preview** server port. **`PORT=3000`** matches the current **Auth0 test tenant** (`http://localhost:3000` callback / web origins). Override if your tenant uses another port. |
+| `VITE_SYBILION_API_BASE_URL` | Real Sybilion API origin (no trailing slash). Used as **proxy target** in dev and as SDK `baseUrl` in production builds.                                                                         |
+| `VITE_AUTH0_DOMAIN`          | Auth0 domain (§3).                                                                                                                                                                               |
+| `VITE_AUTH0_CLIENT_ID`       | Auth0 SPA client id (§3).                                                                                                                                                                        |
 
 Example **`.env.example`** content for the app root:
 
@@ -102,9 +102,9 @@ Package README: [`@sybilion/sdk`](https://www.npmjs.com/package/@sybilion/sdk) �
 Avoid browser CORS in development by serving the SPA from Vite and proxying **`/api`** to the real API. Use **`sybilionStandaloneViteDev`** from `@sybilion/uilib/vite-standalone-dev` in **`vite.config.ts`**: it reads **`PORT`** (defaults to **3000** if unset or invalid) for **`server`** / **`preview`**, and sets **`proxy['/api']`** → **`VITE_SYBILION_API_BASE_URL`** with `changeOrigin` and `secure: true`.
 
 ```ts
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 import { sybilionStandaloneViteDev } from '@sybilion/uilib/vite-standalone-dev';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
 export default defineConfig(({ mode }) => ({
   ...sybilionStandaloneViteDev({ mode }),
@@ -236,7 +236,6 @@ export function AppLayout({ children }: { children: ReactNode }) {
           footer={<PageFooter versionLink="/releases" versionLabel="0.0.1" />}
         >
           <AppHeaderPortal>
-            <SidebarTrigger />
             <Gap />
             <NavUserHeader
               theme="light"
@@ -332,15 +331,15 @@ Composition: `PageScroll` → `AppShell` → `AppSidebar` → `AppShellMainConte
 
 ### Greenfield checklist (agents)
 
-| Step | Deliverable |
-| ---- | ----------- |
-| Env files | **`.env.example`** (committed) + **`.env`** locally; **`PORT=3000`** recommended for Auth0 test tenant; **`VITE_*`** as in §1 table. |
-| Scripts | **`package.json`** includes mandatory **`dev`** (e.g. `"vite"`); optional **`build`**, **`preview`**. |
-| Vite proxy | **`vite.config.ts`** spreads **`sybilionStandaloneViteDev({ mode })`**; SDK **`baseUrl`** empty in dev (§2). |
-| Files | `src/libs/sybilion-sdk.ts`, `AppProviders.tsx`, `AppLayout.tsx`, `AppSidebar.tsx`, `App.tsx`, `main.tsx`, route pages under e.g. `src/pages/`. |
-| Auth0 | SPA callback / logout URLs + allowed web origins → **`http://localhost:<PORT>`** for local dev and deploy URLs (and previews). |
-| API | **Dev:** proxy handles API traffic (no browser CORS to API). **Prod:** Sybilion backend **CORS** → your deploy `Origin`, unless API is same-origin. |
-| Go (if applicable) | Server proxies **`/api`** to Sybilion; SPA dev **`baseUrl`** stays `''` when same-origin. |
+| Step               | Deliverable                                                                                                                                         |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Env files          | **`.env.example`** (committed) + **`.env`** locally; **`PORT=3000`** recommended for Auth0 test tenant; **`VITE_*`** as in §1 table.                |
+| Scripts            | **`package.json`** includes mandatory **`dev`** (e.g. `"vite"`); optional **`build`**, **`preview`**.                                               |
+| Vite proxy         | **`vite.config.ts`** spreads **`sybilionStandaloneViteDev({ mode })`**; SDK **`baseUrl`** empty in dev (§2).                                        |
+| Files              | `src/libs/sybilion-sdk.ts`, `AppProviders.tsx`, `AppLayout.tsx`, `AppSidebar.tsx`, `App.tsx`, `main.tsx`, route pages under e.g. `src/pages/`.      |
+| Auth0              | SPA callback / logout URLs + allowed web origins → **`http://localhost:<PORT>`** for local dev and deploy URLs (and previews).                      |
+| API                | **Dev:** proxy handles API traffic (no browser CORS to API). **Prod:** Sybilion backend **CORS** → your deploy `Origin`, unless API is same-origin. |
+| Go (if applicable) | Server proxies **`/api`** to Sybilion; SPA dev **`baseUrl`** stays `''` when same-origin.                                                           |
 
 ### Glossary (high-use pieces)
 

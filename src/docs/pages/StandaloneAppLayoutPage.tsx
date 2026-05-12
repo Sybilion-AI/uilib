@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { AppHeaderHost, AppHeaderPortal } from '#uilib/components/ui/AppHeader';
-import { Gap } from '#uilib/components/ui/Gap/Gap';
+import { AppHeaderHost } from '#uilib/components/ui/AppHeader';
 import { NavUserHeader } from '#uilib/components/ui/NavUserHeader/NavUserHeader';
 import {
   AppShell,
@@ -13,17 +12,17 @@ import { PageScroll } from '#uilib/components/ui/Page/PageScroll/PageScroll';
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarTrigger,
 } from '#uilib/components/ui/Sidebar/Sidebar';
+import type { WorkspaceAppEntry } from '#uilib/components/ui/WorkspaceAppSwitcher';
 import {
   SidebarDatasetsItemsGrouped,
   type SidebarDatasetsItemsGroupedDataset,
 } from '#uilib/components/widgets/SidebarDatasetsItemsGrouped';
+import { SybilionAppHeader } from '#uilib/components/widgets/SybilionAppHeader';
 import { House } from 'lucide-react';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -90,6 +89,40 @@ const MOCK_DATASETS: SidebarDatasetsItemsGroupedDataset[] = [
 type PreviewPanel = 'home' | 'datasets';
 
 const TEST_HEADER_ID = 'test-header-id';
+
+const DOCS_WORKSPACE_APPS_LS_KEY = 'uilib.docs.workspaceApps';
+
+const DOCS_PREVIEW_APPS: WorkspaceAppEntry[] = [
+  {
+    id: 'docs-home',
+    displayName: 'Datasets Dashboard',
+    subtitle: 'Data analysis tools',
+    iconKey: 'grid-four',
+    accent: '#0d9488',
+    accentMuted: 'rgba(13, 148, 136, 0.12)',
+    href: '/docs-preview/home',
+    matchPathPrefixes: ['/docs-preview/home'],
+  },
+  {
+    id: 'docs-datasets',
+    displayName: 'Datasets',
+    subtitle: 'Dataset library',
+    iconKey: 'package',
+    accent: '#6366f1',
+    accentMuted: 'rgba(99, 102, 241, 0.12)',
+    href: '/docs-preview/datasets',
+    matchPathPrefixes: ['/docs-preview/datasets'],
+  },
+  {
+    id: 'my-custom-app',
+    displayName: 'Custom app',
+    subtitle: 'Slug-only app (sybilion.io/apps/…)',
+    iconKey: 'boat',
+    accent: '#0ea5e9',
+    accentMuted: 'rgba(14, 165, 233, 0.12)',
+    href: '/apps/my-custom-app',
+  },
+];
 
 function DemoAppSidebar({
   panel,
@@ -163,6 +196,7 @@ function DemoMainBody({ panel }: { panel: PreviewPanel }) {
 function StandaloneLayoutPreview() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [panel, setPanel] = useState<PreviewPanel>('home');
+  const [previewPath, setPreviewPath] = useState('/docs-preview/home');
   const [selectedDatasetId, setSelectedDatasetId] = useState<
     number | undefined
   >();
@@ -191,20 +225,26 @@ function StandaloneLayoutPreview() {
               />
             }
           >
-            <AppHeaderPortal pageHeaderId={TEST_HEADER_ID}>
-              <SidebarTrigger />
-              <Gap />
-              <NavUserHeader
-                user={{
-                  name: 'Preview User',
-                  email: 'preview@example.com',
-                  avatar: '',
-                }}
-                theme={theme}
-                onThemeToggle={onThemeToggle}
-                onLogout={() => undefined}
-              />
-            </AppHeaderPortal>
+            <SybilionAppHeader
+              pageHeaderId={TEST_HEADER_ID}
+              pathname={previewPath}
+              onNavigate={setPreviewPath}
+              authenticated
+              appsStorageKey={DOCS_WORKSPACE_APPS_LS_KEY}
+              defaultApps={DOCS_PREVIEW_APPS}
+              actions={
+                <NavUserHeader
+                  user={{
+                    name: 'Preview User',
+                    email: 'preview@example.com',
+                    avatar: '',
+                  }}
+                  theme={theme}
+                  onThemeToggle={onThemeToggle}
+                  onLogout={() => undefined}
+                />
+              }
+            />
             <DemoMainBody panel={panel} />
           </AppShellMainContent>
         </AppShell>
