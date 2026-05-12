@@ -3,6 +3,7 @@ import {
   type RedirectLoginOptions,
   useAuth0,
 } from '@auth0/auth0-react';
+import type { LoginTokenResponse, SybilionSDK } from '@sybilion/sdk';
 import type { JSX, ReactNode } from 'react';
 import {
   createContext,
@@ -15,13 +16,34 @@ import {
 } from 'react';
 
 import { normalizeApiBaseUrl } from '#uilib/sybilion-auth/authPaths';
-import { exchangeAuth0AccessTokenForSybilionJwt } from '#uilib/sybilion-auth/exchangeSybilionToken';
 
 const DEFAULT_TOKEN_KEY = 'sybilion.standalone.jwt';
 
+function sybilionJwtFromLoginResponse(body: LoginTokenResponse): string {
+  const t = body.data?.token ?? body.token;
+  if (!t) throw new Error('Sybilion auth: missing token in login response');
+  return t;
+}
+
+/** Origin (`scheme://host:port`) for paths like `/api/v1/...`; derived from SDK URL layout. */
+export function getSybilionApiOriginFromSdk(sdk: SybilionSDK): string {
+  const loginUrl = sdk.http.buildUrl('/v1/auth/login');
+  try {
+    const baseHref =
+      typeof window !== 'undefined' && window.location?.href
+        ? window.location.href
+        : 'http://localhost/';
+    const u = new URL(loginUrl, baseHref);
+    if (!u.pathname.endsWith('/v1/auth/login')) return '';
+    return u.origin;
+  } catch {
+    return '';
+  }
+}
+
 export type SybilionAuthProviderProps = {
   children: ReactNode;
-  apiBaseUrl: string;
+  sdk: SybilionSDK;
   auth0Domain: string;
   auth0ClientId: string;
   redirectUri: string;
@@ -119,12 +141,12 @@ function writeLs(key: string, value: string | null): void {
 
 function InnerSybilionSession({
   children,
-  apiBaseUrl,
+  sdk,
   storageKey,
   logoutReturnTo,
 }: {
   children: ReactNode;
-  apiBaseUrl: string;
+  sdk: SybilionSDK;
   storageKey: string;
   logoutReturnTo?: string;
 }): JSX.Element {
@@ -155,6 +177,8 @@ function InnerSybilionSession({
     });
   }, [persistToken, logoutReturnTo]);
 
+  const apiBaseUrl = useMemo(() => getSybilionApiOriginFromSdk(sdk), [sdk]);
+
   useEffect(() => {
     if (!auth0.isAuthenticated || !auth0.user?.sub) {
       persistToken(null);
@@ -174,10 +198,8 @@ function InnerSybilionSession({
       setExchangeError(null);
       try {
         const access = await auth0Ref.current.getAccessTokenSilently();
-        const jwt = await exchangeAuth0AccessTokenForSybilionJwt(
-          apiBaseUrl,
-          access,
-        );
+        const loginBody = await sdk.auth.loginWithAuth0Identity(access);
+        const jwt = sybilionJwtFromLoginResponse(loginBody);
         if (cancelled) return;
         persistToken(jwt);
       } catch (e) {
@@ -198,7 +220,7 @@ function InnerSybilionSession({
       cancelled = true;
     };
   }, [
-    apiBaseUrl,
+    sdk,
     auth0.isAuthenticated,
     auth0.user?.sub,
     persistToken,
@@ -270,7 +292,7 @@ function InnerSybilionSession({
 
 export function SybilionAuthProvider({
   children,
-  apiBaseUrl,
+  sdk,
   auth0Domain,
   auth0ClientId,
   redirectUri,
@@ -311,7 +333,7 @@ export function SybilionAuthProvider({
       {...cookieOpts}
     >
       <InnerSybilionSession
-        apiBaseUrl={apiBaseUrl}
+        sdk={sdk}
         storageKey={sybilionTokenStorageKey}
         logoutReturnTo={logoutReturnTo}
       >

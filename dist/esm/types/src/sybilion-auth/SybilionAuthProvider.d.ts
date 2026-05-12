@@ -1,8 +1,11 @@
 import { type RedirectLoginOptions } from '@auth0/auth0-react';
+import type { SybilionSDK } from '@sybilion/sdk';
 import type { JSX, ReactNode } from 'react';
+/** Origin (`scheme://host:port`) for paths like `/api/v1/...`; derived from SDK URL layout. */
+export declare function getSybilionApiOriginFromSdk(sdk: SybilionSDK): string;
 export type SybilionAuthProviderProps = {
     children: ReactNode;
-    apiBaseUrl: string;
+    sdk: SybilionSDK;
     auth0Domain: string;
     auth0ClientId: string;
     redirectUri: string;
@@ -36,4 +39,4 @@ export declare function sybilionApiFetch(apiBaseUrl: string, bearerToken: string
 export declare function createSybilionApiFetch(apiBaseUrl: string, getSybilionAccessToken: () => Promise<string | null>): (path: string, init?: RequestInit) => Promise<Response>;
 /** Authenticated fetch using {@link useSybilionAuth} context. */
 export declare function useSybilionApiFetch(): (path: string, init?: RequestInit) => Promise<Response>;
-export declare function SybilionAuthProvider({ children, apiBaseUrl, auth0Domain, auth0ClientId, redirectUri, authorizationParams, sybilionTokenStorageKey, logoutReturnTo, }: SybilionAuthProviderProps): JSX.Element;
+export declare function SybilionAuthProvider({ children, sdk, auth0Domain, auth0ClientId, redirectUri, authorizationParams, sybilionTokenStorageKey, logoutReturnTo, }: SybilionAuthProviderProps): JSX.Element;

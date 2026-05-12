@@ -4,6 +4,7 @@ export type {
 } from '#uilib/sybilion-auth/SybilionAuthProvider';
 export {
   SybilionAuthProvider,
+  getSybilionApiOriginFromSdk,
   useSybilionAuth,
   sybilionApiFetch,
   createSybilionApiFetch,

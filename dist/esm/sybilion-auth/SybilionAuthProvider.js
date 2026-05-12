@@ -2,9 +2,30 @@ import { jsx } from 'react/jsx-runtime';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 import { createContext, useContext, useMemo, useRef, useState, useCallback, useEffect } from 'react';
 import { normalizeApiBaseUrl } from './authPaths.js';
-import { exchangeAuth0AccessTokenForSybilionJwt } from './exchangeSybilionToken.js';
 
 const DEFAULT_TOKEN_KEY = 'sybilion.standalone.jwt';
+function sybilionJwtFromLoginResponse(body) {
+    const t = body.data?.token ?? body.token;
+    if (!t)
+        throw new Error('Sybilion auth: missing token in login response');
+    return t;
+}
+/** Origin (`scheme://host:port`) for paths like `/api/v1/...`; derived from SDK URL layout. */
+function getSybilionApiOriginFromSdk(sdk) {
+    const loginUrl = sdk.http.buildUrl('/v1/auth/login');
+    try {
+        const baseHref = typeof window !== 'undefined' && window.location?.href
+            ? window.location.href
+            : 'http://localhost/';
+        const u = new URL(loginUrl, baseHref);
+        if (!u.pathname.endsWith('/v1/auth/login'))
+            return '';
+        return u.origin;
+    }
+    catch {
+        return '';
+    }
+}
 const SybilionAuthContext = createContext(null);
 function useSybilionAuth() {
     const v = useContext(SybilionAuthContext);
@@ -51,7 +72,7 @@ function writeLs(key, value) {
         /* quota / blocked */
     }
 }
-function InnerSybilionSession({ children, apiBaseUrl, storageKey, logoutReturnTo, }) {
+function InnerSybilionSession({ children, sdk, storageKey, logoutReturnTo, }) {
     const auth0 = useAuth0();
     const auth0Ref = useRef(auth0);
     auth0Ref.current = auth0;
@@ -71,6 +92,7 @@ function InnerSybilionSession({ children, apiBaseUrl, storageKey, logoutReturnTo
             logoutParams: returnTo ? { returnTo } : undefined,
         });
     }, [persistToken, logoutReturnTo]);
+    const apiBaseUrl = useMemo(() => getSybilionApiOriginFromSdk(sdk), [sdk]);
     useEffect(() => {
         if (!auth0.isAuthenticated || !auth0.user?.sub) {
             persistToken(null);
@@ -88,7 +110,8 @@ function InnerSybilionSession({ children, apiBaseUrl, storageKey, logoutReturnTo
             setExchangeError(null);
             try {
                 const access = await auth0Ref.current.getAccessTokenSilently();
-                const jwt = await exchangeAuth0AccessTokenForSybilionJwt(apiBaseUrl, access);
+                const loginBody = await sdk.auth.loginWithAuth0Identity(access);
+                const jwt = sybilionJwtFromLoginResponse(loginBody);
                 if (cancelled)
                     return;
                 persistToken(jwt);
@@ -111,7 +134,7 @@ function InnerSybilionSession({ children, apiBaseUrl, storageKey, logoutReturnTo
             cancelled = true;
         };
     }, [
-        apiBaseUrl,
+        sdk,
         auth0.isAuthenticated,
         auth0.user?.sub,
         persistToken,
@@ -163,7 +186,7 @@ function InnerSybilionSession({ children, apiBaseUrl, storageKey, logoutReturnTo
     ]);
     return (jsx(SybilionAuthContext.Provider, { value: value, children: children }));
 }
-function SybilionAuthProvider({ children, apiBaseUrl, auth0Domain, auth0ClientId, redirectUri, authorizationParams, sybilionTokenStorageKey = DEFAULT_TOKEN_KEY, logoutReturnTo, }) {
+function SybilionAuthProvider({ children, sdk, auth0Domain, auth0ClientId, redirectUri, authorizationParams, sybilionTokenStorageKey = DEFAULT_TOKEN_KEY, logoutReturnTo, }) {
     const mergedAuthParams = useMemo(() => ({
         redirect_uri: authorizationParams?.redirect_uri ?? redirectUri,
         audience: authorizationParams?.audience ?? `https://${auth0Domain}/api/v2/`,
@@ -179,7 +202,7 @@ function SybilionAuthProvider({ children, apiBaseUrl, auth0Domain, auth0ClientId
     const cookieOpts = typeof window !== 'undefined'
         ? { cookieDomain: window.location.hostname }
         : {};
-    return (jsx(Auth0Provider, { domain: auth0Domain, clientId: auth0ClientId, authorizationParams: mergedAuthParams, cacheLocation: "localstorage", useRefreshTokens: true, ...cookieOpts, children: jsx(InnerSybilionSession, { apiBaseUrl: apiBaseUrl, storageKey: sybilionTokenStorageKey, logoutReturnTo: logoutReturnTo, children: children }) }));
+    return (jsx(Auth0Provider, { domain: auth0Domain, clientId: auth0ClientId, authorizationParams: mergedAuthParams, cacheLocation: "localstorage", useRefreshTokens: true, ...cookieOpts, children: jsx(InnerSybilionSession, { sdk: sdk, storageKey: sybilionTokenStorageKey, logoutReturnTo: logoutReturnTo, children: children }) }));
 }
 
-export { SybilionAuthProvider, createSybilionApiFetch, sybilionApiFetch, useSybilionApiFetch, useSybilionAuth };
+export { SybilionAuthProvider, createSybilionApiFetch, getSybilionApiOriginFromSdk, sybilionApiFetch, useSybilionApiFetch, useSybilionAuth };

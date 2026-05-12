@@ -9,7 +9,7 @@ export default function SybilionAuthProviderPage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'SybilionAuthProvider' }]}
         title="SybilionAuthProvider"
-        subheader="Auth0 SPA → POST /v1/auth/login → Sybilion JWT. Greenfield installs: docs/standalone-apps.md (yarn add line includes @auth0/auth0-react)."
+        subheader="Auth0 SPA → sdk.auth.loginWithAuth0Identity → Sybilion JWT. Pass createSybilionSDK instance via sdk prop; greenfield: docs/standalone-apps.md (yarn add includes @sybilion/sdk, @auth0/auth0-react)."
         actions={<DocsHeaderActions />}
       />
       <PageContentSection title="Exports">
@@ -18,7 +18,10 @@ export default function SybilionAuthProviderPage() {
         </p>
         <ul>
           <li>
-            <code>SybilionAuthProvider</code>
+            <code>SybilionAuthProvider</code> (<code>sdk</code> prop)
+          </li>
+          <li>
+            <code>getSybilionApiOriginFromSdk</code>
           </li>
           <li>
             <code>useSybilionAuth</code>

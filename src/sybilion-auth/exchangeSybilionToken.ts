@@ -3,13 +3,17 @@ import {
   normalizeApiBaseUrl,
 } from '#uilib/sybilion-auth/authPaths';
 
+/** Default API segment before `/v1/...`; matches {@link createSybilionSDK} default `apiPrefix`. */
+const SYBILION_AUTH_API_PREFIX = '/api';
+
 /** POST `{ identity: auth0AccessToken, type: 'auth0' }` → Sybilion API JWT string. */
 export async function exchangeAuth0AccessTokenForSybilionJwt(
+  /** API origin only (no trailing slash), same as SDK `baseUrl`. */
   apiBaseUrl: string,
   auth0AccessToken: string,
 ): Promise<string> {
   const base = normalizeApiBaseUrl(apiBaseUrl);
-  const res = await fetch(`${base}${SYBILION_AUTH_LOGIN_PATH}`, {
+  const res = await fetch(`${base}${SYBILION_AUTH_API_PREFIX}${SYBILION_AUTH_LOGIN_PATH}`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',

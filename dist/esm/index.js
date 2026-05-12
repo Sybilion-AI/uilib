@@ -1,4 +1,4 @@
-export { SybilionAuthProvider, createSybilionApiFetch, sybilionApiFetch, useSybilionApiFetch, useSybilionAuth } from './sybilion-auth/SybilionAuthProvider.js';
+export { SybilionAuthProvider, createSybilionApiFetch, getSybilionApiOriginFromSdk, sybilionApiFetch, useSybilionApiFetch, useSybilionAuth } from './sybilion-auth/SybilionAuthProvider.js';
 export { SYBILION_AUTH_LOGIN_PATH, normalizeApiBaseUrl } from './sybilion-auth/authPaths.js';
 export { exchangeAuth0AccessTokenForSybilionJwt } from './sybilion-auth/exchangeSybilionToken.js';
 export { ChatContext, ChatProvider, useChat, useChats, useChatsForDataset, useChatsForScopeId, useCurrentChat } from './contexts/chat-context.js';
