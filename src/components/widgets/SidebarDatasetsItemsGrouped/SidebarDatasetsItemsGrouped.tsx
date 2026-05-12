@@ -22,6 +22,8 @@ import {
 export type SidebarDatasetsItemsGroupedProps = {
   groupBy: SidebarDatasetsItemsGroupBy;
   datasets: SidebarDatasetsItemsGroupedDataset[];
+  preItems?: React.ReactNode;
+  postItems?: React.ReactNode;
   selectedDatasetId?: number;
   onDatasetClick?: (datasetId: number) => void;
   /** When omitted, all groups start expanded. */
@@ -32,6 +34,8 @@ export type SidebarDatasetsItemsGroupedProps = {
 export function SidebarDatasetsItemsGrouped({
   groupBy,
   datasets,
+  preItems,
+  postItems,
   selectedDatasetId,
   onDatasetClick,
   defaultExpandedGroupNames,
@@ -74,6 +78,8 @@ export function SidebarDatasetsItemsGrouped({
   return (
     <SidebarGroup className={className}>
       <SidebarMenu>
+        {preItems}
+
         {grouped.map(([groupName, groupDatasets]) => {
           const isExpanded = expanded.has(groupName);
           const parentActive = groupDatasets.some(
@@ -97,6 +103,7 @@ export function SidebarDatasetsItemsGrouped({
                   )}
                 </div>
               </SidebarMenuButton>
+
               {isExpanded && (
                 <SidebarMenuSub className={S.subMenuContainer}>
                   <div className={S.subMenuBorder} />
@@ -122,6 +129,8 @@ export function SidebarDatasetsItemsGrouped({
             </SidebarMenuItem>
           );
         })}
+
+        {postItems}
       </SidebarMenu>
     </SidebarGroup>
   );

@@ -9,9 +9,12 @@ import S from './PageScroll.styl';
 
 function PageScrollInner({
   className,
+  rootClassName,
   children,
 }: {
   className?: string;
+  /** Merged onto the outer Scroll root (e.g. embed previews that must not use `100vh`). */
+  rootClassName?: string;
   children: React.ReactNode;
 }) {
   // const { setIsScrolled } = useContext(PageContext);
@@ -38,7 +41,7 @@ function PageScrollInner({
       y
       // fadeSize="l"
       offset={{ y: { before: 120, after: 130 } }}
-      className={S.root}
+      className={cn(S.root, rootClassName)}
       autoHide
       innerClassName={cn(S.inner, className)}
       yScrollbarClassName={S.scrollbar}
@@ -55,15 +58,19 @@ function PageScrollInner({
 export const PageScroll = ({
   children,
   className,
+  rootClassName,
 }: {
   children: React.ReactNode;
   className?: string;
+  rootClassName?: string;
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   return (
     <PageContext.Provider value={{ isScrolled, setIsScrolled }}>
-      <PageScrollInner className={className}>{children}</PageScrollInner>
+      <PageScrollInner className={className} rootClassName={rootClassName}>
+        {children}
+      </PageScrollInner>
     </PageContext.Provider>
   );
 };

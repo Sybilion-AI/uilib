@@ -7,5 +7,6 @@ export type AppHeaderProps = {
 export declare function AppHeaderHost({ className, anchorId, }: AppHeaderProps): import("react/jsx-runtime").JSX.Element;
 export type AppHeaderPortalProps = {
     children: ReactNode;
+    pageHeaderId?: string;
 };
-export declare function AppHeaderPortal({ children }: AppHeaderPortalProps): import("react").ReactPortal;
+export declare function AppHeaderPortal({ children, pageHeaderId, }: AppHeaderPortalProps): import("react").ReactPortal;

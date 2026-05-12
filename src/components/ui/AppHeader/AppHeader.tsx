@@ -20,14 +20,18 @@ export function AppHeaderHost({
 
 export type AppHeaderPortalProps = {
   children: ReactNode;
+  pageHeaderId?: string;
 };
 
-export function AppHeaderPortal({ children }: AppHeaderPortalProps) {
+export function AppHeaderPortal({
+  children,
+  pageHeaderId = PAGE_HEADER_ID,
+}: AppHeaderPortalProps) {
   const [container, setContainer] = useState<HTMLElement | null>(null);
 
   useLayoutEffect(() => {
-    setContainer(document.getElementById(PAGE_HEADER_ID));
-  }, []);
+    setContainer(document.getElementById(pageHeaderId));
+  }, [pageHeaderId]);
 
   if (!container) {
     return null;

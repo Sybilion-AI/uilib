@@ -6,7 +6,7 @@ import { PageContext } from '../pageContext.js';
 import { Scroll } from '@homecode/ui';
 import S from './PageScroll.styl.js';
 
-function PageScrollInner({ className, children, }) {
+function PageScrollInner({ className, rootClassName, children, }) {
     // const { setIsScrolled } = useContext(PageContext);
     // const prevScrollTop = useRef(0);
     const location = useLocation();
@@ -25,13 +25,13 @@ function PageScrollInner({ className, children, }) {
     // };
     return (jsx(Scroll, { y: true, 
         // fadeSize="l"
-        offset: { y: { before: 120, after: 130 } }, className: S.root, autoHide: true, innerClassName: cn(S.inner, className), yScrollbarClassName: S.scrollbar, onInnerRef: el => {
+        offset: { y: { before: 120, after: 130 } }, className: cn(S.root, rootClassName), autoHide: true, innerClassName: cn(S.inner, className), yScrollbarClassName: S.scrollbar, onInnerRef: el => {
             scrollInnerRef.current = el;
         }, children: children }));
 }
-const PageScroll = ({ children, className, }) => {
+const PageScroll = ({ children, className, rootClassName, }) => {
     const [isScrolled, setIsScrolled] = useState(false);
-    return (jsx(PageContext.Provider, { value: { isScrolled, setIsScrolled }, children: jsx(PageScrollInner, { className: className, children: children }) }));
+    return (jsx(PageContext.Provider, { value: { isScrolled, setIsScrolled }, children: jsx(PageScrollInner, { className: className, rootClassName: rootClassName, children: children }) }));
 };
 
 export { PageScroll };

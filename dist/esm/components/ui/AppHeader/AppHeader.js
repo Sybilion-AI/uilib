@@ -8,10 +8,10 @@ import { PAGE_HEADER_ID } from './appChromeAnchors.js';
 function AppHeaderHost({ className, anchorId = PAGE_HEADER_ID, }) {
     return jsx("header", { className: cn(S.root, className), id: anchorId });
 }
-function AppHeaderPortal({ children }) {
+function AppHeaderPortal({ children, pageHeaderId = PAGE_HEADER_ID, }) {
     const [container, setContainer] = useState(null);
     useLayoutEffect(() => {
-        setContainer(document.getElementById(PAGE_HEADER_ID));
+        setContainer(document.getElementById(pageHeaderId));
     }, []);
     if (!container) {
         return null;

@@ -6,7 +6,7 @@ import { PackageOpen, ChevronDown, ChevronRight } from 'lucide-react';
 import S from './SidebarDatasetsItemsGrouped.styl.js';
 import { groupSidebarDatasets } from './groupSidebarDatasets.js';
 
-function SidebarDatasetsItemsGrouped({ groupBy, datasets, selectedDatasetId, onDatasetClick, defaultExpandedGroupNames, className, }) {
+function SidebarDatasetsItemsGrouped({ groupBy, datasets, preItems, postItems, selectedDatasetId, onDatasetClick, defaultExpandedGroupNames, className, }) {
     const grouped = useMemo(() => groupSidebarDatasets(datasets, groupBy), [datasets, groupBy]);
     const [expanded, setExpanded] = useState(new Set());
     useEffect(() => {
@@ -35,14 +35,14 @@ function SidebarDatasetsItemsGrouped({ groupBy, datasets, selectedDatasetId, onD
             return next;
         });
     };
-    return (jsx(SidebarGroup, { className: className, children: jsx(SidebarMenu, { children: grouped.map(([groupName, groupDatasets]) => {
-                const isExpanded = expanded.has(groupName);
-                const parentActive = groupDatasets.some(d => d.id === selectedDatasetId);
-                return (jsxs(SidebarMenuItem, { children: [jsxs(SidebarMenuButton, { type: "button", isActive: parentActive, onClick: () => toggleGroup(groupName), children: [jsx(PackageOpen, { strokeWidth: 1.5, size: 16 }), jsx(SmartTextTruncate, { children: groupName }), jsx("div", { className: S.chevronContainer, children: isExpanded ? (jsx(ChevronDown, { size: 12 })) : (jsx(ChevronRight, { size: 12 })) })] }), isExpanded && (jsxs(SidebarMenuSub, { className: S.subMenuContainer, children: [jsx("div", { className: S.subMenuBorder }), groupDatasets.map(dataset => (jsx(SidebarMenuSubItem, { className: S.subMenuItem, children: jsx(SidebarMenuSubButton, { href: `#dataset-${dataset.id}`, isActive: dataset.id === selectedDatasetId, onClick: e => {
-                                            e.preventDefault();
-                                            onDatasetClick?.(dataset.id);
-                                        }, children: jsx(SmartTextTruncate, { children: dataset.name }) }) }, dataset.id)))] }))] }, groupName));
-            }) }) }));
+    return (jsx(SidebarGroup, { className: className, children: jsxs(SidebarMenu, { children: [preItems, grouped.map(([groupName, groupDatasets]) => {
+                    const isExpanded = expanded.has(groupName);
+                    const parentActive = groupDatasets.some(d => d.id === selectedDatasetId);
+                    return (jsxs(SidebarMenuItem, { children: [jsxs(SidebarMenuButton, { type: "button", isActive: parentActive, onClick: () => toggleGroup(groupName), children: [jsx(PackageOpen, { strokeWidth: 1.5, size: 16 }), jsx(SmartTextTruncate, { children: groupName }), jsx("div", { className: S.chevronContainer, children: isExpanded ? (jsx(ChevronDown, { size: 12 })) : (jsx(ChevronRight, { size: 12 })) })] }), isExpanded && (jsxs(SidebarMenuSub, { className: S.subMenuContainer, children: [jsx("div", { className: S.subMenuBorder }), groupDatasets.map(dataset => (jsx(SidebarMenuSubItem, { className: S.subMenuItem, children: jsx(SidebarMenuSubButton, { href: `#dataset-${dataset.id}`, isActive: dataset.id === selectedDatasetId, onClick: e => {
+                                                e.preventDefault();
+                                                onDatasetClick?.(dataset.id);
+                                            }, children: jsx(SmartTextTruncate, { children: dataset.name }) }) }, dataset.id)))] }))] }, groupName));
+                }), postItems] }) }));
 }
 
 export { SidebarDatasetsItemsGrouped };
