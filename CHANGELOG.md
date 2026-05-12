@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.5](https://github.com/Mir-Insight/uilib/compare/v1.2.4...v1.2.5) (2026-05-12)
+
+
+### Features
+
+* SybilionAppHeader - Workspace shell and app switcher ([e801f74](https://github.com/Mir-Insight/uilib/commit/e801f747fd01da5ba8f3b69855380be4b3dd87d3))
+
 ### [1.2.4](https://github.com/Mir-Insight/uilib/compare/v1.2.3...v1.2.4) (2026-05-12)
 
 
