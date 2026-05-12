@@ -5,7 +5,9 @@ import { NavUserHeader } from '#uilib/components/ui/NavUserHeader/NavUserHeader'
 import {
   AppShell,
   AppShellMainContent,
+  PageContent,
   PageContentSection,
+  PageHeader,
 } from '#uilib/components/ui/Page';
 import { PageFooter } from '#uilib/components/ui/Page/PageFooter/PageFooter';
 import { PageScroll } from '#uilib/components/ui/Page/PageScroll/PageScroll';
@@ -171,25 +173,42 @@ function DemoAppSidebar({
 function DemoMainBody({ panel }: { panel: PreviewPanel }) {
   if (panel === 'home') {
     return (
-      <div style={{ padding: 'var(--p-6)' }}>
-        <h2 style={{ margin: '0 0 0.5rem', fontSize: '1.125rem' }}>Home</h2>
-        <p style={{ margin: 0, color: 'var(--muted-foreground)' }}>
-          Preview: greenfield shell layout only (no SDK or auth). Real SPA uses
-          one top-level Router; this embed cannot nest MemoryRouter under docs
-          BrowserRouter — sidebar uses local state instead of{' '}
-          <code>NavLink</code> / <code>Routes</code>.
-        </p>
-      </div>
+      <>
+        <PageHeader
+          breadcrumbs={[{ label: 'Home' }]}
+          title="Home"
+          subheader="Greenfield shell preview (no SDK or auth in this embed)."
+        />
+        <PageContent>
+          <PageContentSection>
+            <p style={{ margin: 0, color: 'var(--muted-foreground)' }}>
+              Preview: greenfield shell layout only (no SDK or auth). Real SPA
+              uses one top-level Router; this embed cannot nest MemoryRouter
+              under docs BrowserRouter — sidebar uses local state instead of{' '}
+              <code>NavLink</code> / <code>Routes</code>.
+            </p>
+          </PageContentSection>
+        </PageContent>
+      </>
     );
   }
 
   return (
-    <div style={{ padding: 'var(--p-6)' }}>
-      <h2 style={{ margin: '0 0 0.5rem', fontSize: '1.125rem' }}>Datasets</h2>
-      <p style={{ margin: 0, color: 'var(--muted-foreground)' }}>
-        Use sidebar links and dataset rows; panel state stays inside this box.
-      </p>
-    </div>
+    <>
+      <PageHeader
+        breadcrumbs={[{ label: 'Datasets' }]}
+        title="Datasets"
+        subheader="Sidebar + dataset list use local state (not Router)."
+      />
+      <PageContent>
+        <PageContentSection>
+          <p style={{ margin: 0, color: 'var(--muted-foreground)' }}>
+            Use sidebar links and dataset rows; panel state stays inside this
+            box.
+          </p>
+        </PageContentSection>
+      </PageContent>
+    </>
   );
 }
 

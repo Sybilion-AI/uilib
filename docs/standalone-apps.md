@@ -2,7 +2,7 @@
 
 Greenfield SPA on **your own origin**: `@sybilion/uilib` for layout/UI, `SybilionAuthProvider` + Sybilion API for data—no iframe in the main client.
 
-**Agents / humans:** use `AppShell` + `AppShellMainContent`; stick to uilib spacing primitives (e.g. `Gap`) instead of ad hoc root horizontal gutters.
+**Agents / humans:** `AppShell` + `AppShellMainContent`; spacing via uilib primitives (e.g. `Gap`), not ad hoc gutters. **Each `<Route>` page:** follow **§4 Route page body** (one canonical pattern below); **Discovering** explains how to find other `@sybilion/uilib` exports.
 
 **Local-first:** After scaffolding, the user should run **`yarn dev`** (or `npm run dev`) on **localhost** with **no deploy** (e.g. Vercel) required. Commit **`.env.example`**; the user copies it to **`.env`**. In development, the Sybilion API is reached via a **same-origin `/api` proxy** so the browser avoids CORS; production builds still use `VITE_SYBILION_API_BASE_URL` on the client, and the real API must allow **CORS** for your deployed `Origin` unless you terminate API calls on the same host.
 
@@ -113,6 +113,14 @@ export default defineConfig(({ mode }) => ({
 ```
 
 Combine with an **empty `baseUrl` in dev** in the SDK module (§2). In **`preview`** builds, keep **`.env`** with **`VITE_SYBILION_API_BASE_URL`** so `vite preview` can still proxy API calls locally.
+
+## Discovering `@sybilion/uilib` components (agents)
+
+Prefer **`@sybilion/uilib`** over bespoke layout/controls.
+
+1. **Barrel:** uilib repo `src/index.ts`, or **`node_modules/@sybilion/uilib/dist/esm/types/index.d.ts`** after install — scan `export * from './components/ui/...'`.
+2. **Page cluster:** `PageScroll`, `AppShell`, `PageHeader`, `PageFooter`, tabs/columns, etc. come from the same package; **what to compose and when** lives only in **§4 Route page body** (not repeated here).
+3. **Examples:** `src/docs/pages/*Page.tsx`; **`PagePage`** (`slug page`) — minimal **`PageContent` + `PageContentSection`**.
 
 ## Local dev: apps with a Go server
 
@@ -325,9 +333,46 @@ export function AppSidebar() {
 
 Data loading uses §2 `sybilionSdk` directly — for production swap the inline `useEffect` for your data layer (React Query, SWR, context, etc.). `groupBy` accepts `'regions' | 'target_type' | 'categories'`; the widget owns its expand state and notifies on selection via `onDatasetClick`.
 
+### Route page body (`PageHeader`, `PageContent`, `PageContentSection`)
+
+**Canonical rule for this doc:** the shell (`AppLayout`) owns **global** chrome only. Every **route** (component under `<Routes>`) builds the main column with **`PageHeader` → `PageContent` → `PageContentSection`** (and other uilib primitives inside sections)—not a padded root `<div>`/`<main>` unless nothing fits.
+
+Pieces:
+
+| Piece                    | Role                                                                                                                                                                                                                                                                       |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`PageHeader`**         | Route title (`h1`), optional **breadcrumbs**, **subheader**, **actions** (toolbar). Renders the shared header chrome (collapsing title on scroll uses `PageContext` from `PageScroll`).                                                                                    |
+| **`PageContent`**        | Outer wrapper for the scrollable main column body. Use **`variant="clean"`** when you need the alternate spacing preset.                                                                                                                                                   |
+| **`PageContentSection`** | Vertical **section** blocks inside the page (group related UI; stack multiple sections). Accepts normal `div` props (e.g. `className`, `style`; HTML **`title`** is the native tooltip attribute, not a section heading—pass a real heading element as a child if needed). |
+
+**Example — `HomePage.tsx` (fragment inside `AppShellMainContent` / `<Routes>`):**
+
+```tsx
+import { PageContent, PageContentSection, PageHeader } from '@sybilion/uilib';
+
+export function HomePage() {
+  return (
+    <>
+      <PageHeader
+        breadcrumbs={[{ label: 'Home', href: '/' }]}
+        title="Home"
+        subheader="Short route description."
+      />
+      <PageContent>
+        <PageContentSection>
+          {/* tables, cards, charts — use uilib components where they exist */}
+        </PageContentSection>
+      </PageContent>
+    </>
+  );
+}
+```
+
+Set **`breadcrumbSidebarTrigger={false}`** on `PageHeader` only when **no** `SidebarProvider` wraps the tree (rare for standalone apps; default is fine when the sidebar exists).
+
 ### Full pattern
 
-Composition: `PageScroll` → `AppShell` → `AppSidebar` → `AppShellMainContent` with `AppHeaderHost`, `PageFooter`, and the active route as `children`. `SidebarProvider` wraps `AppLayout`. Add `Theme` from `@homecode/ui` only when your product uses those primitives alongside uilib.
+Composition: `PageScroll` → `AppShell` → `AppSidebar` → `AppShellMainContent` with `AppHeaderHost`, `PageFooter`, and the active route as `children`. **`SidebarProvider`** wraps `AppLayout`. **Route main column:** subsection **Route page body** above. Add `Theme` from `@homecode/ui` only when your product uses those primitives alongside uilib.
 
 ### Greenfield checklist (agents)
 
@@ -337,29 +382,31 @@ Composition: `PageScroll` → `AppShell` → `AppSidebar` → `AppShellMainConte
 | Scripts            | **`package.json`** includes mandatory **`dev`** (e.g. `"vite"`); optional **`build`**, **`preview`**.                                               |
 | Vite proxy         | **`vite.config.ts`** spreads **`sybilionStandaloneViteDev({ mode })`**; SDK **`baseUrl`** empty in dev (§2).                                        |
 | Files              | `src/libs/sybilion-sdk.ts`, `AppProviders.tsx`, `AppLayout.tsx`, `AppSidebar.tsx`, `App.tsx`, `main.tsx`, route pages under e.g. `src/pages/`.      |
+| Pages + UI         | **§4 Route page body** (mandatory stack) + **Discovering** (barrel-first; bespoke markup only when no export fits).                                 |
 | Auth0              | SPA callback / logout URLs + allowed web origins → **`http://localhost:<PORT>`** for local dev and deploy URLs (and previews).                      |
 | API                | **Dev:** proxy handles API traffic (no browser CORS to API). **Prod:** Sybilion backend **CORS** → your deploy `Origin`, unless API is same-origin. |
 | Go (if applicable) | Server proxies **`/api`** to Sybilion; SPA dev **`baseUrl`** stays `''` when same-origin.                                                           |
 
 ### Glossary (high-use pieces)
 
-| Component / API               | What it is for                                                                                                                                           |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `PageScroll`                  | Page-level vertical scroll wrapper; usual outer shell for the app body.                                                                                  |
-| `AppShell`                    | Layout grid container; `Sidebar` + `AppShellMainContent` as siblings inside it.                                                                          |
-| `AppShellMainContent`         | Main column: `header`, scrollable body (`children`), `footer`.                                                                                           |
-| `AppHeaderHost`               | Top header anchor (DOM id `page-header`); stays empty until `AppHeaderPortal` portals into it.                                                           |
-| `AppHeaderPortal`             | Portals into `AppHeaderHost` — `SidebarTrigger`, `NavUserHeader`, theme toggle.                                                                          |
-| `NavUserHeader`               | Header user menu (avatar, account, theme, logout).                                                                                                       |
-| `Sidebar`, `SidebarProvider`  | Collapsible rail + context (`@sybilion/uilib`). Wrap `SidebarProvider` above `AppLayout`; render `Sidebar` inside `AppShell` (usually via `AppSidebar`). |
-| `AppSidebar`                  | App-specific component (`src/AppSidebar.tsx`) composing `Sidebar` + nav links + product widgets. Keeps `AppLayout` generic.                              |
-| `SidebarDatasetsItemsGrouped` | Dataset list widget for the sidebar: collapsible groups (`regions` / `target_type` / `categories`) with nested rows + selection callback.                |
-| `SidebarTrigger`              | Toggle sidebar visibility (especially mobile / `offcanvas`).                                                                                             |
-| `PageFooter`                  | Standard footer; requires `versionLink` + `versionLabel`.                                                                                                |
-| `Gap`                         | Spacing primitive between flex children.                                                                                                                 |
-| `SybilionAuthProvider`        | Auth0 + Sybilion JWT (§3).                                                                                                                               |
-| `useSybilionAuth`             | User session + login/logout under provider.                                                                                                              |
-| `useSybilionApiFetch`         | Authenticated `fetch` using stored JWT.                                                                                                                  |
+| Component / API                                      | What it is for                                                                                                                                             |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PageScroll`                                         | Page-level vertical scroll wrapper; usual outer shell for the app body.                                                                                    |
+| `AppShell`                                           | Layout grid container; `Sidebar` + `AppShellMainContent` as siblings inside it.                                                                            |
+| `AppShellMainContent`                                | Main column: `header`, scrollable body (`children`), `footer`.                                                                                             |
+| `AppHeaderHost`                                      | Top header anchor (DOM id `page-header`); stays empty until `AppHeaderPortal` portals into it.                                                             |
+| `AppHeaderPortal`                                    | Portals into `AppHeaderHost` — `SidebarTrigger`, `NavUserHeader`, theme toggle.                                                                            |
+| `NavUserHeader`                                      | Header user menu (avatar, account, theme, logout).                                                                                                         |
+| `Sidebar`, `SidebarProvider`                         | Collapsible rail + context (`@sybilion/uilib`). Wrap `SidebarProvider` above `AppLayout`; render `Sidebar` inside `AppShell` (usually via `AppSidebar`).   |
+| `AppSidebar`                                         | App-specific component (`src/AppSidebar.tsx`) composing `Sidebar` + nav links + product widgets. Keeps `AppLayout` generic.                                |
+| `SidebarDatasetsItemsGrouped`                        | Dataset list widget for the sidebar: collapsible groups (`regions` / `target_type` / `categories`) with nested rows + selection callback.                  |
+| `SidebarTrigger`                                     | Toggle sidebar visibility (especially mobile / `offcanvas`).                                                                                               |
+| `PageFooter`                                         | Standard footer; requires `versionLink` + `versionLabel`.                                                                                                  |
+| `Gap`                                                | Spacing primitive between flex children.                                                                                                                   |
+| `PageHeader`, `PageContent`, `PageContentSection`, … | **§4 Route page body** (roles, `breadcrumbSidebarTrigger`, example). Same barrel also has `PageTabs`, `PageColumns`, `SectionHeader`, `PageEmptyCanvas`, … |
+| `SybilionAuthProvider`                               | Auth0 + Sybilion JWT (§3).                                                                                                                                 |
+| `useSybilionAuth`                                    | User session + login/logout under provider.                                                                                                                |
+| `useSybilionApiFetch`                                | Authenticated `fetch` using stored JWT.                                                                                                                    |
 
 ## 5. Data
 
