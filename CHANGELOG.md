@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/Mir-Insight/uilib/compare/v1.2.0...v1.2.1) (2026-05-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* `SybilionAuthProvider` drops `apiBaseUrl`; pass `sdk` from `createSybilionSDK` and align `sybilionTokenStorageKey` with `getToken`.
+
+### Features
+
+* NavUserHeader - Add dropdown user menu control ([ae3011d](https://github.com/Mir-Insight/uilib/commit/ae3011d9e01229789f8ffe1126dd7dd63c80c25f))
+* SybilionAuthProvider - Require sdk prop for Auth0 exchange ([ebedb5c](https://github.com/Mir-Insight/uilib/commit/ebedb5cb54f0646fcbaa4421973e3f7cd4ff875a))
+
 ## [1.2.0](https://github.com/Mir-Insight/uilib/compare/v1.1.0...v1.2.0) (2026-05-11)
 
 
