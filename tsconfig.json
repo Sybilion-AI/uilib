@@ -27,6 +27,6 @@
     "types": ["jest", "node"]
   },
   "include": ["index.ts", "src", "tests"],
-  "exclude": ["node_modules", "dist", "build", "src/docs/examples"],
+  "exclude": ["node_modules", "dist", "build", "src/docs/examples", "src/standalone"],
   "files": ["src/declarations.d.ts"]
 }

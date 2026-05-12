@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src/standalone",
+    "outDir": "./dist/standalone",
+    "declarationDir": "./dist/standalone",
+    "declaration": true,
+    "noEmit": false
+  },
+  "include": ["./src/standalone/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -12,7 +12,7 @@ function AppHeaderPortal({ children, pageHeaderId = PAGE_HEADER_ID, }) {
     const [container, setContainer] = useState(null);
     useLayoutEffect(() => {
         setContainer(document.getElementById(pageHeaderId));
-    }, []);
+    }, [pageHeaderId]);
     if (!container) {
         return null;
     }
