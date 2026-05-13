@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.6](https://github.com/Mir-Insight/uilib/compare/v1.2.5...v1.2.6) (2026-05-13)
+
+
+### Features
+
+* SybilionAppHeader - Brand logo + layout tweaks ([faf87d0](https://github.com/Mir-Insight/uilib/commit/faf87d044058260ee1e676fd91c9fa7a9ea96421))
+
 ### [1.2.5](https://github.com/Mir-Insight/uilib/compare/v1.2.4...v1.2.5) (2026-05-12)
 
 
