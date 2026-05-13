@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.10](https://github.com/Mir-Insight/uilib/compare/v1.2.8...v1.2.10) (2026-05-13)
+
+
+### Features
+
+* SybilionAuthLayout - Auth shell and sign-in widgets ([2973391](https://github.com/Mir-Insight/uilib/commit/29733914d80fdf231ca4b1a27b52ac24117dd55f))
+
+
+### Bug Fixes
+
+* SybilionSignInPanel - version layout position ([bbd884a](https://github.com/Mir-Insight/uilib/commit/bbd884a79aa2d492f78befb8cc437a71cb3735e8))
+
 ### [1.2.8](https://github.com/Mir-Insight/uilib/compare/v1.2.7...v1.2.8) (2026-05-13)
 
 ### [1.2.7](https://github.com/Mir-Insight/uilib/compare/v1.2.6...v1.2.7) (2026-05-13)
