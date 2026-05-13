@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import { useMemo } from 'react';
 
 import { useTheme } from '#uilib/contexts/theme-context';
 import {
@@ -9,7 +10,7 @@ import {
 } from '@phosphor-icons/react';
 import { ChevronDownIcon } from 'lucide-react';
 
-import { Avatar } from '../Avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '../Avatar';
 import { Button } from '../Button';
 import {
   DropdownMenu,
@@ -20,7 +21,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../DropdownMenu';
-import { Image } from '../Image';
 import S from './NavUserHeader.styl';
 import type { NavUserHeaderProps } from './NavUserHeader.types';
 
@@ -48,6 +48,20 @@ export function NavUserHeader({
   const avatarUrl = user?.avatar ?? '';
   const userName = user?.name ?? '';
   const userEmail = user?.email ?? '';
+
+  const avatar = useMemo(() => {
+    const initials = userName
+      .split(' ')
+      .map(name => name.charAt(0))
+      .join('');
+
+    return (
+      <Avatar className={S.avatar}>
+        <AvatarImage src={avatarUrl || undefined} alt={userName} />
+        <AvatarFallback>{initials}</AvatarFallback>
+      </Avatar>
+    );
+  }, [avatarUrl, userName]);
 
   if (isLoading) {
     return (
@@ -84,13 +98,7 @@ export function NavUserHeader({
           size="sm"
           className={cn(S.userButton, variant === 'compact' && S.compact)}
         >
-          <Avatar className={S.avatar}>
-            <Image
-              url={avatarUrl}
-              alt={userName}
-              fallback={<div className={S.avatarFallback} />}
-            />
-          </Avatar>
+          {avatar}
           {variant === 'default' && (
             <>
               <div className={S.userInfo}>
@@ -111,13 +119,7 @@ export function NavUserHeader({
       >
         <DropdownMenuLabel className={S.userLabel}>
           <div className={S.userLabelContent}>
-            <Avatar className={S.avatar}>
-              <Image
-                url={avatarUrl}
-                alt={userName}
-                fallback={<div className={S.avatarFallback} />}
-              />
-            </Avatar>
+            {avatar}
             <div className={S.userDetails}>
               <span className={`${S.userDetailName} ph-no-capture`}>
                 {userName}
