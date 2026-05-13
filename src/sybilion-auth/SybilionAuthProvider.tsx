@@ -57,7 +57,16 @@ export type SybilionAuthProviderProps = {
     redirect_uri?: string;
   };
   sybilionTokenStorageKey?: string;
+  /**
+   * When set, passed to Auth0 `logout({ logoutParams: { returnTo } })` if
+   * {@link SybilionAuthProviderProps.useFederatedLogout} is true.
+   */
   logoutReturnTo?: string;
+  /**
+   * If true, redirect to Auth0 `/v2/logout` (clears IdP session). Default false matches
+   * sybilion-client: local session clear only, no redirect (`openUrl: false`).
+   */
+  useFederatedLogout?: boolean;
 };
 
 export type SybilionAuthContextValue = {
@@ -144,11 +153,13 @@ function InnerSybilionSession({
   sdk,
   storageKey,
   logoutReturnTo,
+  useFederatedLogout = false,
 }: {
   children: ReactNode;
   sdk: SybilionSDK;
   storageKey: string;
   logoutReturnTo?: string;
+  useFederatedLogout?: boolean;
 }): JSX.Element {
   const auth0 = useAuth0();
   const auth0Ref = useRef(auth0);
@@ -157,6 +168,7 @@ function InnerSybilionSession({
   const [sybilionToken, setSybilionToken] = useState<string | null>(null);
   const [exchangeLoading, setExchangeLoading] = useState(false);
   const [exchangeError, setExchangeError] = useState<string | null>(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const persistToken = useCallback(
     (t: string | null) => {
@@ -167,15 +179,26 @@ function InnerSybilionSession({
   );
 
   const doLogout = useCallback(() => {
+    setIsLoggingOut(true);
     persistToken(null);
     setExchangeError(null);
-    const returnTo =
-      logoutReturnTo ??
-      (typeof window !== 'undefined' ? window.location.origin : undefined);
-    auth0Ref.current.logout({
-      logoutParams: returnTo ? { returnTo } : undefined,
-    });
-  }, [persistToken, logoutReturnTo]);
+    if (useFederatedLogout) {
+      const returnTo =
+        logoutReturnTo ??
+        (typeof window !== 'undefined' ? window.location.origin : undefined);
+      void auth0Ref.current.logout({
+        logoutParams: returnTo ? { returnTo } : undefined,
+      });
+    } else {
+      void auth0Ref.current.logout({ openUrl: false });
+    }
+  }, [persistToken, logoutReturnTo, useFederatedLogout]);
+
+  useEffect(() => {
+    if (!auth0.isAuthenticated) {
+      setIsLoggingOut(false);
+    }
+  }, [auth0.isAuthenticated]);
 
   const apiBaseUrl = useMemo(() => getSybilionApiOriginFromSdk(sdk), [sdk]);
 
@@ -255,7 +278,8 @@ function InnerSybilionSession({
     exchangeLoading ||
     (Boolean(auth0.isAuthenticated && auth0.user) &&
       sybilionToken === null &&
-      exchangeError === null);
+      exchangeError === null &&
+      !isLoggingOut);
 
   const value = useMemo(
     (): SybilionAuthContextValue => ({
@@ -299,6 +323,7 @@ export function SybilionAuthProvider({
   authorizationParams,
   sybilionTokenStorageKey = DEFAULT_TOKEN_KEY,
   logoutReturnTo,
+  useFederatedLogout = false,
 }: SybilionAuthProviderProps): JSX.Element {
   const mergedAuthParams = useMemo(
     () => ({
@@ -336,6 +361,7 @@ export function SybilionAuthProvider({
         sdk={sdk}
         storageKey={sybilionTokenStorageKey}
         logoutReturnTo={logoutReturnTo}
+        useFederatedLogout={useFederatedLogout}
       >
         {children}
       </InnerSybilionSession>
