@@ -15,9 +15,6 @@ interface CssExports {
   'pulse': string;
   'textSkeleton': string;
   'userButton': string;
-  'userDetailEmail': string;
-  'userDetailName': string;
-  'userDetails': string;
   'userEmail': string;
   'userInfo': string;
   'userLabel': string;

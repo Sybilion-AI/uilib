@@ -63,6 +63,16 @@ export function NavUserHeader({
     );
   }, [avatarUrl, userName]);
 
+  const userIdentity = useMemo(
+    () => (
+      <div className={S.userInfo}>
+        <span className={`${S.userName} ph-no-capture`}>{userName}</span>
+        <span className={S.userEmail}>{userEmail}</span>
+      </div>
+    ),
+    [userEmail, userName],
+  );
+
   if (isLoading) {
     return (
       <Button variant="ghost" size="sm" disabled className={S.loadingButton}>
@@ -101,12 +111,7 @@ export function NavUserHeader({
           {avatar}
           {variant === 'default' && (
             <>
-              <div className={S.userInfo}>
-                <span className={`${S.userName} ph-no-capture`}>
-                  {userName}
-                </span>
-                <span className={S.userEmail}>{userEmail}</span>
-              </div>
+              {userIdentity}
               <ChevronDownIcon className={S.iconSm} />
             </>
           )}
@@ -120,12 +125,7 @@ export function NavUserHeader({
         <DropdownMenuLabel className={S.userLabel}>
           <div className={S.userLabelContent}>
             {avatar}
-            <div className={S.userDetails}>
-              <span className={`${S.userDetailName} ph-no-capture`}>
-                {userName}
-              </span>
-              <span className={S.userDetailEmail}>{userEmail}</span>
-            </div>
+            {userIdentity}
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
