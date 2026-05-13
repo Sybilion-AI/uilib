@@ -6,7 +6,7 @@ React UI components (Stylus modules, Radix primitives, Recharts).
 
 ## Install from npm (recommended)
 
-Published as `**@sybilion/uilib`\*\* on the public registry. No scope-specific `.npmrc` required.
+Published as `@sybilion/uilib` on the public registry. No scope-specific `.npmrc` required.
 
 ```bash
 yarn add @sybilion/uilib
@@ -24,7 +24,7 @@ Equivalent in `package.json`:
 
 ### Bare `uilib` imports + scoped install
 
-When the package is installed as `**@sybilion/uilib**` but you keep imports as `from 'uilib'`, add a bundler alias and matching TypeScript paths:
+When the package is installed as `@sybilion/uilib` but you keep imports as `from 'uilib'`, add a bundler alias and matching TypeScript paths:
 
 ```json
 {
@@ -71,11 +71,11 @@ Deep imports use `@sybilion/uilib/src/...` (maps to files under `[src/](./src)`)
 
 ### Standalone Sybilion apps
 
-See [`docs/standalone-apps.md`](./docs/standalone-apps.md) — greenfield `yarn add` lists `react`, `react-dom`, `react-router-dom`, `@auth0/auth0-react`, `@sybilion/uilib`. **`@homecode/ui` is a dependency of `@sybilion/uilib`** and installs with it; declare React/router in your app so deduplication keeps one React instance (see peers below).
+Starter: **[sybilion-template-app](https://github.com/Mir-Insight/sybilion-template-app)** (Vite: Auth0, shell, router, SDK). Same layout as `mini/sybilion-app-template/` in the Sybilion monorepo. `@homecode/ui` is a dependency of `@sybilion/uilib` and installs with it; declare React/router in your app so deduplication keeps one React instance (see peers below).
 
 ## Bundling from source (`uilib/src`)
 
-If you use `**uilib/src**` (or deep imports under `uilib/src/`), the host app must **compile** those files like application code:
+If you use `uilib/src` (or deep imports under `uilib/src/`), the host app must **compile** those files like application code:
 
 1. **Include the library in the TypeScript/JSX pipeline** — e.g. extend `babel-loader` / `ts-loader` `include` so it matches the installed package (and not only your app `src`):
 
@@ -83,8 +83,8 @@ If you use `**uilib/src**` (or deep imports under `uilib/src/`), the host app mu
  include: [paths.src, /node_modules\/@sybilion\/uilib/],
 ```
 
-2. **Apply the same Stylus/CSS-module rules** to `.styl` under `node_modules/@sybilion/uilib` as you use for your own imports.
-3. **Do not remap `#uilib`** — internal imports use `#uilib/...`, resolved via this package’s `package.json` `[imports](./package.json)`. Keep your app’s own alias (for example `@` → app `src`) as usual; it does not conflict with `#uilib`.
+1. **Apply the same Stylus/CSS-module rules** to `.styl` under `node_modules/@sybilion/uilib` as you use for your own imports.
+2. **Do not remap `#uilib`** — internal imports use `#uilib/...`, resolved via this package’s `package.json` `[imports](./package.json)`. Keep your app’s own alias (for example `@` → app `src`) as usual; it does not conflict with `#uilib`.
 
 If you only use the **default** entry (`import from '@sybilion/uilib'` or aliased `uilib`), you typically **do not** need Stylus/TS compilation for the library in the consumer Webpack config.
 
@@ -98,7 +98,7 @@ Declare these in **your** app (`package.json`):
 
 **Included with `@sybilion/uilib`** (normal `dependencies`): `@homecode/ui` (^4.17), Radix, Recharts, `@vimeo/player`, `motion`, etc. You import `Theme` / primitives from `@homecode/ui` without adding it separately unless you want an explicit top-level version pin.
 
-Runtime dependencies are listed in [`package.json`](./package.json).
+Runtime dependencies are listed in `[package.json](./package.json)`.
 
 ## Maintainers
 
@@ -131,6 +131,7 @@ These areas expect the **app** to supply behavior or data (not vendored from pro
 
 ## Scripts (this repo)
 
+
 | Script                | Description                                 |
 | --------------------- | ------------------------------------------- |
 | `yarn dev`            | Webpack dev server for the docs app         |
@@ -142,3 +143,5 @@ These areas expect the **app** to supply behavior or data (not vendored from pro
 | `yarn ts`             | Typecheck (`tsc --noEmit`)                  |
 | `yarn tests`          | Jest smoke tests                            |
 | `yarn release`        | `standard-version` (bump changelog + tag)   |
+
+

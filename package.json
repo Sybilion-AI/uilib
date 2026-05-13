@@ -30,7 +30,6 @@
       "default": "./src/index.ts"
     },
     "./src/*": "./src/*",
-    "./standalone-global.css": "./assets/standalone-global.css",
     "./vite-standalone-dev": {
       "types": "./dist/standalone/vite-sybilion-standalone-dev.d.ts",
       "import": "./dist/standalone/vite-sybilion-standalone-dev.js",
