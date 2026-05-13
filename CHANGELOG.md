@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.7](https://github.com/Mir-Insight/uilib/compare/v1.2.6...v1.2.7) (2026-05-13)
+
+
+### Features
+
+* Logo - Standalone cyan brand and packaged logo ([b6f52f7](https://github.com/Mir-Insight/uilib/commit/b6f52f78bfd18fdd37b645fa56125addc9216c15))
+
 ### [1.2.6](https://github.com/Mir-Insight/uilib/compare/v1.2.5...v1.2.6) (2026-05-13)
 
 
