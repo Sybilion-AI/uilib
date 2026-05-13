@@ -20,6 +20,7 @@ const FaviconWebpackPlugin = require('favicons-webpack-plugin');
 const pkg = require('../../../package.json');
 
 const themeStyl = pathResolve(paths.src, 'theme.styl');
+const logoSvgPath = pathResolve(paths.assets, 'logo.svg');
 
 export default (env, argv) => {
   const isDev = argv.mode === 'development';
@@ -148,7 +149,7 @@ export default (env, argv) => {
             noErrorOnMissing: true,
           },
           {
-            from: `${paths.assets}/logo.svg`,
+            from: logoSvgPath,
             to: paths.build,
             noErrorOnMissing: true,
           },
@@ -175,9 +176,9 @@ export default (env, argv) => {
               minifyURLs: true,
             },
       }),
-      existsSync(`${paths.assets}/logo.svg`) &&
+      existsSync(logoSvgPath) &&
         new FaviconWebpackPlugin({
-          logo: `${paths.assets}/logo.svg`,
+          logo: logoSvgPath,
           mode: 'webapp',
           devMode: 'webapp',
           favicons: {

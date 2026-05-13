@@ -40,6 +40,23 @@ Import tokens/fonts once (typically `src/main.tsx`):
 import '@sybilion/uilib/standalone-global.css';
 ```
 
+### Branding (header logo + optional tab icon)
+
+**Header:** **`SybilionAppHeader`** includes **`Logo`** from **`@sybilion/uilib`**. **`Logo`** uses **`SYBILION_STANDALONE_LOGO_PUBLIC_URL`** (**`'/logo.svg'`**). Vite serves that from **`public/logo.svg`**. Copy the published file once:
+
+```bash
+mkdir -p public && cp node_modules/@sybilion/uilib/logo.svg public/logo.svg
+```
+
+That asset is **`src/assets/logo.svg`** in the package (**cyan** glyph). The **uilib docs** repo uses **`assets/logo.svg`** (**purple**) for its own site only—not what **`./logo.svg`** publishes.
+
+**Browser tab (optional):** The favicon (tiny icon next to the tab title) and the document title come from **`index.html`**, not from React. **`Logo`** does not set them. To replace Vite’s default tab icon with the package logo, add **`href="/logo.svg"`** — same as **`SYBILION_STANDALONE_LOGO_PUBLIC_URL`** from **`@sybilion/uilib`** — plus **`<title>`** in **`index.html`** `<head>`:
+
+```html
+<link rel="icon" href="/logo.svg" type="image/svg+xml" />
+<title>Your app name</title>
+```
+
 Mount the tree with `ReactDOM.createRoot` → `App` (wrap with `StrictMode` if you want).
 
 ### `package.json` scripts (required)
@@ -471,17 +488,18 @@ Composition: `PageScroll` → `AppShell` → `AppSidebar` → `AppShellMainConte
 
 ### Greenfield checklist (agents)
 
-| Step               | Deliverable                                                                                                                                                                                          |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| React / router     | **`react`**, **`react-dom`**, **`react-router-dom`**, **`@auth0/auth0-react`** (and **`vite`** if applicable) aligned with **`@sybilion/uilib`** **`package.json`** — §1 _React ecosystem versions_. |
-| Env files          | **`.env.example`** (committed) + **`.env`** locally; **`PORT=3000`** recommended for Auth0 test tenant; **`VITE_*`** as in §1 table.                                                                 |
-| Scripts            | **`package.json`** includes mandatory **`dev`** (e.g. `"vite"`); optional **`build`**, **`preview`**.                                                                                                |
-| Vite proxy         | **`vite.config.ts`** spreads **`sybilionStandaloneViteDev({ mode })`**; SDK **`baseUrl`** empty in dev (§2).                                                                                         |
-| Files              | `src/libs/sybilion-sdk.ts`, `AppProviders.tsx`, `AppLayout.tsx`, `AppSidebar.tsx`, `App.tsx`, `main.tsx`, route pages under e.g. `src/pages/`.                                                       |
-| Pages + UI         | **§4 Route page body** (mandatory stack) + **Discovering** (barrel-first; bespoke markup only when no export fits).                                                                                  |
-| Auth0              | SPA callback / logout URLs + allowed web origins → **`http://localhost:<PORT>`** for local dev and deploy URLs (and previews).                                                                       |
-| API                | **Dev:** proxy handles API traffic (no browser CORS to API). **Prod:** Sybilion backend **CORS** → your deploy `Origin`, unless API is same-origin.                                                  |
-| Go (if applicable) | Server proxies **`/api`** to Sybilion; SPA dev **`baseUrl`** stays `''` when same-origin.                                                                                                            |
+| Step               | Deliverable                                                                                                                                                                                                             |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| React / router     | **`react`**, **`react-dom`**, **`react-router-dom`**, **`@auth0/auth0-react`** (and **`vite`** if applicable) aligned with **`@sybilion/uilib`** **`package.json`** — §1 _React ecosystem versions_.                    |
+| Env files          | **`.env.example`** (committed) + **`.env`** locally; **`PORT=3000`** recommended for Auth0 test tenant; **`VITE_*`** as in §1 table.                                                                                    |
+| Scripts            | **`package.json`** includes mandatory **`dev`** (e.g. `"vite"`); optional **`build`**, **`preview`**.                                                                                                                   |
+| Vite proxy         | **`vite.config.ts`** spreads **`sybilionStandaloneViteDev({ mode })`**; SDK **`baseUrl`** empty in dev (§2).                                                                                                            |
+| Files              | `src/libs/sybilion-sdk.ts`, `AppProviders.tsx`, `AppLayout.tsx`, `AppSidebar.tsx`, `App.tsx`, `main.tsx`, route pages under e.g. `src/pages/`.                                                                          |
+| Branding           | **`public/logo.svg`** for **`Logo`** / **`SybilionAppHeader`**: `cp node_modules/@sybilion/uilib/logo.svg public/logo.svg`. **`index.html`**: `<title>`; optional **`<link rel="icon">`** for tab icon (§1 _Branding_). |
+| Pages + UI         | **§4 Route page body** (mandatory stack) + **Discovering** (barrel-first; bespoke markup only when no export fits).                                                                                                     |
+| Auth0              | SPA callback / logout URLs + allowed web origins → **`http://localhost:<PORT>`** for local dev and deploy URLs (and previews).                                                                                          |
+| API                | **Dev:** proxy handles API traffic (no browser CORS to API). **Prod:** Sybilion backend **CORS** → your deploy `Origin`, unless API is same-origin.                                                                     |
+| Go (if applicable) | Server proxies **`/api`** to Sybilion; SPA dev **`baseUrl`** stays `''` when same-origin.                                                                                                                               |
 
 ### Glossary (high-use pieces)
 
