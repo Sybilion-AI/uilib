@@ -19,7 +19,16 @@ export type SybilionAuthProviderProps = {
         redirect_uri?: string;
     };
     sybilionTokenStorageKey?: string;
+    /**
+     * When set, passed to Auth0 `logout({ logoutParams: { returnTo } })` if
+     * {@link SybilionAuthProviderProps.useFederatedLogout} is true.
+     */
     logoutReturnTo?: string;
+    /**
+     * If true, redirect to Auth0 `/v2/logout` (clears IdP session). Default false matches
+     * sybilion-client: local session clear only, no redirect (`openUrl: false`).
+     */
+    useFederatedLogout?: boolean;
 };
 export type SybilionAuthContextValue = {
     apiBaseUrl: string;
@@ -39,4 +48,4 @@ export declare function sybilionApiFetch(apiBaseUrl: string, bearerToken: string
 export declare function createSybilionApiFetch(apiBaseUrl: string, getSybilionAccessToken: () => Promise<string | null>): (path: string, init?: RequestInit) => Promise<Response>;
 /** Authenticated fetch using {@link useSybilionAuth} context. */
 export declare function useSybilionApiFetch(): (path: string, init?: RequestInit) => Promise<Response>;
-export declare function SybilionAuthProvider({ children, sdk, auth0Domain, auth0ClientId, redirectUri, authorizationParams, sybilionTokenStorageKey, logoutReturnTo, }: SybilionAuthProviderProps): JSX.Element;
+export declare function SybilionAuthProvider({ children, sdk, auth0Domain, auth0ClientId, redirectUri, authorizationParams, sybilionTokenStorageKey, logoutReturnTo, useFederatedLogout, }: SybilionAuthProviderProps): JSX.Element;

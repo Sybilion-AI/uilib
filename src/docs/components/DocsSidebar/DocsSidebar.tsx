@@ -79,6 +79,7 @@ export function DocsSidebar() {
   useEffect(() => {
     if (activeSection) {
       setExpandedSections(prev => new Set(prev).add(activeSection));
+      setSidebarSearch('');
     }
   }, [activeSection]);
 

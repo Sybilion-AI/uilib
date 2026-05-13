@@ -72,26 +72,38 @@ function writeLs(key, value) {
         /* quota / blocked */
     }
 }
-function InnerSybilionSession({ children, sdk, storageKey, logoutReturnTo, }) {
+function InnerSybilionSession({ children, sdk, storageKey, logoutReturnTo, useFederatedLogout = false, }) {
     const auth0 = useAuth0();
     const auth0Ref = useRef(auth0);
     auth0Ref.current = auth0;
     const [sybilionToken, setSybilionToken] = useState(null);
     const [exchangeLoading, setExchangeLoading] = useState(false);
     const [exchangeError, setExchangeError] = useState(null);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
     const persistToken = useCallback((t) => {
         setSybilionToken(t);
         writeLs(storageKey, t);
     }, [storageKey]);
     const doLogout = useCallback(() => {
+        setIsLoggingOut(true);
         persistToken(null);
         setExchangeError(null);
-        const returnTo = logoutReturnTo ??
-            (typeof window !== 'undefined' ? window.location.origin : undefined);
-        auth0Ref.current.logout({
-            logoutParams: returnTo ? { returnTo } : undefined,
-        });
-    }, [persistToken, logoutReturnTo]);
+        if (useFederatedLogout) {
+            const returnTo = logoutReturnTo ??
+                (typeof window !== 'undefined' ? window.location.origin : undefined);
+            void auth0Ref.current.logout({
+                logoutParams: returnTo ? { returnTo } : undefined,
+            });
+        }
+        else {
+            void auth0Ref.current.logout({ openUrl: false });
+        }
+    }, [persistToken, logoutReturnTo, useFederatedLogout]);
+    useEffect(() => {
+        if (!auth0.isAuthenticated) {
+            setIsLoggingOut(false);
+        }
+    }, [auth0.isAuthenticated]);
     const apiBaseUrl = useMemo(() => getSybilionApiOriginFromSdk(sdk), [sdk]);
     useEffect(() => {
         if (!auth0.isAuthenticated || !auth0.user?.sub) {
@@ -161,7 +173,8 @@ function InnerSybilionSession({ children, sdk, storageKey, logoutReturnTo, }) {
         exchangeLoading ||
         (Boolean(auth0.isAuthenticated && auth0.user) &&
             sybilionToken === null &&
-            exchangeError === null);
+            exchangeError === null &&
+            !isLoggingOut);
     const value = useMemo(() => ({
         apiBaseUrl,
         isLoading,
@@ -186,7 +199,7 @@ function InnerSybilionSession({ children, sdk, storageKey, logoutReturnTo, }) {
     ]);
     return (jsx(SybilionAuthContext.Provider, { value: value, children: children }));
 }
-function SybilionAuthProvider({ children, sdk, auth0Domain, auth0ClientId, redirectUri, authorizationParams, sybilionTokenStorageKey = DEFAULT_TOKEN_KEY, logoutReturnTo, }) {
+function SybilionAuthProvider({ children, sdk, auth0Domain, auth0ClientId, redirectUri, authorizationParams, sybilionTokenStorageKey = DEFAULT_TOKEN_KEY, logoutReturnTo, useFederatedLogout = false, }) {
     const mergedAuthParams = useMemo(() => ({
         redirect_uri: authorizationParams?.redirect_uri ?? redirectUri,
         audience: authorizationParams?.audience ?? `https://${auth0Domain}/api/v2/`,
@@ -202,7 +215,7 @@ function SybilionAuthProvider({ children, sdk, auth0Domain, auth0ClientId, redir
     const cookieOpts = typeof window !== 'undefined'
         ? { cookieDomain: window.location.hostname }
         : {};
-    return (jsx(Auth0Provider, { domain: auth0Domain, clientId: auth0ClientId, authorizationParams: mergedAuthParams, cacheLocation: "localstorage", useRefreshTokens: true, ...cookieOpts, children: jsx(InnerSybilionSession, { sdk: sdk, storageKey: sybilionTokenStorageKey, logoutReturnTo: logoutReturnTo, children: children }) }));
+    return (jsx(Auth0Provider, { domain: auth0Domain, clientId: auth0ClientId, authorizationParams: mergedAuthParams, cacheLocation: "localstorage", useRefreshTokens: true, ...cookieOpts, children: jsx(InnerSybilionSession, { sdk: sdk, storageKey: sybilionTokenStorageKey, logoutReturnTo: logoutReturnTo, useFederatedLogout: useFederatedLogout, children: children }) }));
 }
 
 export { SybilionAuthProvider, createSybilionApiFetch, getSybilionApiOriginFromSdk, sybilionApiFetch, useSybilionApiFetch, useSybilionAuth };

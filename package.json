@@ -35,8 +35,7 @@
       "import": "./dist/standalone/vite-sybilion-standalone-dev.js",
       "default": "./dist/standalone/vite-sybilion-standalone-dev.js"
     },
-    "./logo.svg": "./src/assets/logo.svg",
-    "./sybilion-bg.svg": "./src/assets/sybilion_bg.svg"
+    "./logo.svg": "./src/assets/logo.svg"
   },
   "files": [
     "assets",

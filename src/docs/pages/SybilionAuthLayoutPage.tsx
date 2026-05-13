@@ -23,7 +23,7 @@ export default function SybilionAuthLayoutPage() {
         <div
           style={{
             overflow: 'hidden',
-            borderRadius: 16,
+            borderRadius: 34,
             border: '2px dashed var(--border)',
             height: 'min(720px, 85vh)',
           }}
@@ -37,7 +37,7 @@ export default function SybilionAuthLayoutPage() {
               onSignIn={() => undefined}
               forgotPasswordTo="/forgot-password"
               releasesTo="/releases"
-              versionLabel="v0-demo"
+              versionLabel="0.0.1"
             />
           </SybilionAuthLayout>
         </div>

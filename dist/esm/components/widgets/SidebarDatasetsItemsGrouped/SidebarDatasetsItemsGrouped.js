@@ -8,15 +8,21 @@ import { groupSidebarDatasets } from './groupSidebarDatasets.js';
 
 function SidebarDatasetsItemsGrouped({ groupBy, datasets, preItems, postItems, selectedDatasetId, onDatasetClick, defaultExpandedGroupNames, className, }) {
     const grouped = useMemo(() => groupSidebarDatasets(datasets, groupBy), [datasets, groupBy]);
+    /** Content key — inline `[]` must not retrigger reset every render (new array ref). */
+    const defaultExpandedKey = defaultExpandedGroupNames === undefined
+        ? '__smart__'
+        : defaultExpandedGroupNames.join('\0');
     const [expanded, setExpanded] = useState(new Set());
     useEffect(() => {
         if (defaultExpandedGroupNames !== undefined) {
             setExpanded(new Set(defaultExpandedGroupNames));
         }
         else {
-            setExpanded(new Set(grouped.map(([name]) => name)));
+            setExpanded(new Set());
         }
-    }, [grouped, defaultExpandedGroupNames]);
+        // Intentionally `defaultExpandedKey` not `defaultExpandedGroupNames` (reference stability).
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- key encodes array contents
+    }, [grouped, defaultExpandedKey]);
     useEffect(() => {
         if (selectedDatasetId == null)
             return;

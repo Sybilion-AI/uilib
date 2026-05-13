@@ -6,7 +6,10 @@ export type SidebarDatasetsItemsGroupedProps = {
     postItems?: React.ReactNode;
     selectedDatasetId?: number;
     onDatasetClick?: (datasetId: number) => void;
-    /** When omitted, all groups start expanded. */
+    /**
+     * When set, expanded state resets to this list whenever `grouped` changes.
+     * Omit: start collapsed; any group containing `selectedDatasetId` opens (toggle still adds more).
+     */
     defaultExpandedGroupNames?: string[];
     className?: string;
 };

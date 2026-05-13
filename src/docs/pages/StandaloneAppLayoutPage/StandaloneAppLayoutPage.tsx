@@ -191,10 +191,11 @@ export default function StandaloneAppLayoutPage() {
         title="Standalone app layout"
         subheader={
           <>
-            Live preview of AppShell + Sidebar + main column from
-            docs/standalone-apps.md §4. <br />
-            Full greenfield setup (deps, global CSS, SybilionAuthProvider, SDK)
-            lives in that doc — this page is layout only.
+            Live preview of AppShell + Sidebar + main column.{' '}
+            <br />
+            Greenfield wiring: copy{' '}
+            <code>mini/sybilion-app-template/</code> and follow its README — this
+            page is layout only.
           </>
         }
         actions={<DocsHeaderActions />}
