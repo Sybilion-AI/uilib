@@ -59,6 +59,16 @@ function useSybilionApiFetch() {
     const { apiBaseUrl, getSybilionAccessToken } = useSybilionAuth();
     return useMemo(() => createSybilionApiFetch(apiBaseUrl, getSybilionAccessToken), [apiBaseUrl, getSybilionAccessToken]);
 }
+function readTokenFromLs(key) {
+    if (typeof localStorage === 'undefined')
+        return null;
+    try {
+        return localStorage.getItem(key);
+    }
+    catch {
+        return null;
+    }
+}
 function writeLs(key, value) {
     if (typeof localStorage === 'undefined')
         return;
@@ -76,7 +86,7 @@ function InnerSybilionSession({ children, sdk, storageKey, logoutReturnTo, useFe
     const auth0 = useAuth0();
     const auth0Ref = useRef(auth0);
     auth0Ref.current = auth0;
-    const [sybilionToken, setSybilionToken] = useState(null);
+    const [sybilionToken, setSybilionToken] = useState(() => typeof window === 'undefined' ? null : readTokenFromLs(storageKey));
     const [exchangeLoading, setExchangeLoading] = useState(false);
     const [exchangeError, setExchangeError] = useState(null);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -106,10 +116,15 @@ function InnerSybilionSession({ children, sdk, storageKey, logoutReturnTo, useFe
     }, [auth0.isAuthenticated]);
     const apiBaseUrl = useMemo(() => getSybilionApiOriginFromSdk(sdk), [sdk]);
     useEffect(() => {
+        // While Auth0 restores from localStorage, `isAuthenticated` is false — do not
+        // wipe the Sybilion JWT (would break reload: sign-in flash / lost session).
+        if (auth0.isLoading) {
+            return;
+        }
         if (!auth0.isAuthenticated || !auth0.user?.sub) {
             persistToken(null);
         }
-    }, [auth0.isAuthenticated, auth0.user?.sub, persistToken]);
+    }, [auth0.isLoading, auth0.isAuthenticated, auth0.user?.sub, persistToken]);
     useEffect(() => {
         if (!auth0.isAuthenticated || !auth0.user?.sub) {
             setExchangeLoading(false);
@@ -145,13 +160,7 @@ function InnerSybilionSession({ children, sdk, storageKey, logoutReturnTo, useFe
         return () => {
             cancelled = true;
         };
-    }, [
-        sdk,
-        auth0.isAuthenticated,
-        auth0.user?.sub,
-        persistToken,
-        doLogout,
-    ]);
+    }, [sdk, auth0.isAuthenticated, auth0.user?.sub, persistToken, doLogout]);
     const getAuth0AccessToken = useCallback(async () => {
         if (!auth0.isAuthenticated)
             return undefined;
@@ -168,13 +177,21 @@ function InnerSybilionSession({ children, sdk, storageKey, logoutReturnTo, useFe
     const logout = useCallback(() => {
         doLogout();
     }, [doLogout]);
-    const isAuthenticated = Boolean(auth0.isAuthenticated && sybilionToken && !exchangeError);
-    const isLoading = auth0.isLoading ||
-        exchangeLoading ||
-        (Boolean(auth0.isAuthenticated && auth0.user) &&
-            sybilionToken === null &&
-            exchangeError === null &&
-            !isLoggingOut);
+    const hasAuth0User = Boolean(auth0.isAuthenticated && auth0.user?.sub);
+    /** Auth0 session is enough for app routes; Sybilion JWT is filled by exchange. */
+    const isAuthenticated = Boolean(!exchangeError &&
+        !isLoggingOut &&
+        (hasAuth0User ||
+            (Boolean(sybilionToken) && (auth0.isAuthenticated || auth0.isLoading))));
+    const needsFirstSybilionToken = Boolean(auth0.isAuthenticated &&
+        auth0.user &&
+        sybilionToken === null &&
+        exchangeError === null &&
+        !isLoggingOut);
+    /** Omit Auth0/exchange "busy" once we already have a Sybilion JWT — avoids header skeleton flicker on refresh. */
+    const isLoading = (auth0.isLoading && sybilionToken === null) ||
+        (exchangeLoading && sybilionToken === null) ||
+        needsFirstSybilionToken;
     const value = useMemo(() => ({
         apiBaseUrl,
         isLoading,

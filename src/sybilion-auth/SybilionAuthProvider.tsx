@@ -3,7 +3,6 @@ import {
   type RedirectLoginOptions,
   useAuth0,
 } from '@auth0/auth0-react';
-import type { LoginTokenResponse, SybilionSDK } from '@sybilion/sdk';
 import type { JSX, ReactNode } from 'react';
 import {
   createContext,
@@ -16,6 +15,7 @@ import {
 } from 'react';
 
 import { normalizeApiBaseUrl } from '#uilib/sybilion-auth/authPaths';
+import type { LoginTokenResponse, SybilionSDK } from '@sybilion/sdk';
 
 const DEFAULT_TOKEN_KEY = 'sybilion.standalone.jwt';
 
@@ -138,6 +138,15 @@ export function useSybilionApiFetch(): (
   );
 }
 
+function readTokenFromLs(key: string): string | null {
+  if (typeof localStorage === 'undefined') return null;
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
 function writeLs(key: string, value: string | null): void {
   if (typeof localStorage === 'undefined') return;
   try {
@@ -165,7 +174,9 @@ function InnerSybilionSession({
   const auth0Ref = useRef(auth0);
   auth0Ref.current = auth0;
 
-  const [sybilionToken, setSybilionToken] = useState<string | null>(null);
+  const [sybilionToken, setSybilionToken] = useState<string | null>(() =>
+    typeof window === 'undefined' ? null : readTokenFromLs(storageKey),
+  );
   const [exchangeLoading, setExchangeLoading] = useState(false);
   const [exchangeError, setExchangeError] = useState<string | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -203,10 +214,15 @@ function InnerSybilionSession({
   const apiBaseUrl = useMemo(() => getSybilionApiOriginFromSdk(sdk), [sdk]);
 
   useEffect(() => {
+    // While Auth0 restores from localStorage, `isAuthenticated` is false — do not
+    // wipe the Sybilion JWT (would break reload: sign-in flash / lost session).
+    if (auth0.isLoading) {
+      return;
+    }
     if (!auth0.isAuthenticated || !auth0.user?.sub) {
       persistToken(null);
     }
-  }, [auth0.isAuthenticated, auth0.user?.sub, persistToken]);
+  }, [auth0.isLoading, auth0.isAuthenticated, auth0.user?.sub, persistToken]);
 
   useEffect(() => {
     if (!auth0.isAuthenticated || !auth0.user?.sub) {
@@ -242,13 +258,7 @@ function InnerSybilionSession({
     return () => {
       cancelled = true;
     };
-  }, [
-    sdk,
-    auth0.isAuthenticated,
-    auth0.user?.sub,
-    persistToken,
-    doLogout,
-  ]);
+  }, [sdk, auth0.isAuthenticated, auth0.user?.sub, persistToken, doLogout]);
 
   const getAuth0AccessToken = useCallback(async () => {
     if (!auth0.isAuthenticated) return undefined;
@@ -269,17 +279,29 @@ function InnerSybilionSession({
     doLogout();
   }, [doLogout]);
 
+  const hasAuth0User = Boolean(auth0.isAuthenticated && auth0.user?.sub);
+
+  /** Auth0 session is enough for app routes; Sybilion JWT is filled by exchange. */
   const isAuthenticated = Boolean(
-    auth0.isAuthenticated && sybilionToken && !exchangeError,
+    !exchangeError &&
+    !isLoggingOut &&
+    (hasAuth0User ||
+      (Boolean(sybilionToken) && (auth0.isAuthenticated || auth0.isLoading))),
   );
 
+  const needsFirstSybilionToken = Boolean(
+    auth0.isAuthenticated &&
+    auth0.user &&
+    sybilionToken === null &&
+    exchangeError === null &&
+    !isLoggingOut,
+  );
+
+  /** Omit Auth0/exchange "busy" once we already have a Sybilion JWT — avoids header skeleton flicker on refresh. */
   const isLoading =
-    auth0.isLoading ||
-    exchangeLoading ||
-    (Boolean(auth0.isAuthenticated && auth0.user) &&
-      sybilionToken === null &&
-      exchangeError === null &&
-      !isLoggingOut);
+    (auth0.isLoading && sybilionToken === null) ||
+    (exchangeLoading && sybilionToken === null) ||
+    needsFirstSybilionToken;
 
   const value = useMemo(
     (): SybilionAuthContextValue => ({

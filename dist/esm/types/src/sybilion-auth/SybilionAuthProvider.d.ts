@@ -1,6 +1,6 @@
 import { type RedirectLoginOptions } from '@auth0/auth0-react';
-import type { SybilionSDK } from '@sybilion/sdk';
 import type { JSX, ReactNode } from 'react';
+import type { SybilionSDK } from '@sybilion/sdk';
 /** Origin (`scheme://host:port`) for paths like `/api/v1/...`; derived from SDK URL layout. */
 export declare function getSybilionApiOriginFromSdk(sdk: SybilionSDK): string;
 export type SybilionAuthProviderProps = {

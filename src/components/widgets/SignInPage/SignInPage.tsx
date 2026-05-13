@@ -45,7 +45,8 @@ export function SignInPage({
   logoSize,
   containerClassName,
 }: SignInPageProps) {
-  const { error, loginWithRedirect, isLoading } = useSybilionAuth();
+  const { error, loginWithRedirect, isLoading, isAuthenticated } =
+    useSybilionAuth();
 
   const handleSignIn = () =>
     loginWithRedirect({
@@ -69,7 +70,7 @@ export function SignInPage({
     >
       <SybilionSignInPanel
         onSignIn={handleSignIn}
-        isSigningIn={isLoading}
+        isSigningIn={isLoading && !isAuthenticated}
         error={error}
         forgotPasswordTo={forgotPasswordTo}
         releasesTo={releasesTo}
