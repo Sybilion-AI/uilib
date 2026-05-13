@@ -1,4 +1,4 @@
-@import '../../lib/theme.styl'
+@import '../../../lib/theme.styl'
 
 // Embed preview: Sidebar uses position:fixed + viewport top/height; PageScroll uses 100vh.
 // Transform creates a containing block for `fixed` children; overrides stop bleed into docs chrome.
@@ -24,23 +24,13 @@
     height auto !important
     flex 1
 
-.preview aside[data-side="left"]
-  top 0 !important
-  left 0 !important
-  height 100% !important
-  min-height 0 !important
-
-  @media (min-width MOBILE)
-    height 100% !important
-
-.preview aside[data-side="left"] > div:first-child
-  height 100% !important
-  max-height 100% !important
-
-  @media (min-width MOBILE)
-    height 100% !important
-
-.preview [data-slot="sidebar-resize-handle"]
-  top 0 !important
-  height 100% !important
-  max-height 100%
+// Datasets panel: tall block for scroll testing inside PageScroll.
+.scrollTestBlock
+  min-height 100vh
+  margin-top var(--p-4)
+  padding var(--p-4)
+  border-radius var(--p-2)
+  border 2px dashed var(--border)
+  background-color var(--background)
+  color var(--muted-foreground)
+  font-size var(--text-sm)

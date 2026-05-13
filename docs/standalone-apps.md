@@ -355,7 +355,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
 }
 ```
 
-Wire **`authenticated`**, **`user`** / **`isAuthenticated`**, **`theme`** / **`onLogout`**, **`menuItems`**, and **`defaultApps`** / **`appsStorageKey`** to real auth and workspace config (`useSybilionAuth`, §3). **`NavUserHeader`** behavior reference: `src/docs/pages/NavUserHeaderPage.tsx` (slug `nav-user-header`). Full shell preview: `src/docs/pages/StandaloneAppLayoutPage.tsx` (slug **`standalone-app-layout`**).
+Wire **`authenticated`**, **`user`** / **`isAuthenticated`**, **`theme`** / **`onLogout`**, **`menuItems`**, and **`defaultApps`** / **`appsStorageKey`** to real auth and workspace config (`useSybilionAuth`, §3). **`NavUserHeader`** behavior reference: `src/docs/pages/NavUserHeaderPage.tsx` (slug `nav-user-header`). Full shell preview: `src/docs/pages/StandaloneAppLayoutPage` (slug **`standalone-app-layout`**).
 
 #### Sidebar (`AppSidebar.tsx`)
 

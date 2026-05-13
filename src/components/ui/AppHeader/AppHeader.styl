@@ -9,6 +9,11 @@
   min-height var(--header-height)
   background-color var(--color-background)
 
+  @media (min-width MOBILE)
+    :global([data-slot='sidebar-wrapper'][data-state='collapsed']) &
+      padding-left 200px
+      max-width 100%
+
 .content
   display flex
   align-items center

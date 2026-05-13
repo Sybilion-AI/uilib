@@ -220,7 +220,8 @@ export const DOC_REGISTRY: DocEntry[] = [
     slug: 'standalone-app-layout',
     title: 'Standalone app layout',
     section: 'Layout',
-    load: () => import('./pages/StandaloneAppLayoutPage'),
+    load: () =>
+      import('./pages/StandaloneAppLayoutPage/StandaloneAppLayoutPage'),
   },
   {
     slug: 'progress',

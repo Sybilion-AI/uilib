@@ -3,6 +3,7 @@
 interface CssExports {
   'preview': string;
   'previewScrollRoot': string;
+  'scrollTestBlock': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
