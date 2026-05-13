@@ -58,3 +58,6 @@ export * from './components/ui/VimeoEmbed';
 export * from './components/ui/WorkspaceAppSwitcher';
 export * from './components/widgets/SidebarDatasetsItemsGrouped';
 export * from './components/widgets/SybilionAppHeader';
+export * from './components/widgets/SybilionAuthLayout';
+export * from './components/widgets/SybilionSignInPanel';
+export * from './components/widgets/SignInPage';

@@ -1,6 +1,6 @@
 {
   "name": "@sybilion/uilib",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "Sybilion Design System — React UI components (Webpack + Stylus)",
   "publishConfig": {
     "access": "public",
@@ -36,7 +36,8 @@
       "import": "./dist/standalone/vite-sybilion-standalone-dev.js",
       "default": "./dist/standalone/vite-sybilion-standalone-dev.js"
     },
-    "./logo.svg": "./src/assets/logo.svg"
+    "./logo.svg": "./src/assets/logo.svg",
+    "./sybilion-bg.svg": "./src/assets/sybilion_bg.svg"
   },
   "files": [
     "assets",
