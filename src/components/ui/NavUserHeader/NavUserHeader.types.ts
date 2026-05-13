@@ -20,4 +20,7 @@ export type NavUserHeaderProps = {
   /** Replaces default “Log in” control when signed out. */
   signInSlot?: ReactNode;
   onSignInClick?: () => void;
+  /** When both are set, theme row uses these instead of uilib `ThemeProvider` context. */
+  theme?: 'light' | 'dark';
+  onThemeToggle?: () => void;
 };

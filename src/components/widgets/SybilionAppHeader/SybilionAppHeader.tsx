@@ -20,6 +20,10 @@ export type SybilionAppHeaderProps = WorkspaceAppSwitcherProps &
     pageHeaderId?: string;
     actionsAnchorId?: string;
     actionsAnchorClassName?: string;
+    /** Renders before `NavUserHeader` inside the page actions anchor (e.g. impersonation). */
+    actionsStart?: ReactNode;
+    /** Renders after `NavUserHeader` inside the page actions anchor (e.g. notifications). */
+    actionsEnd?: ReactNode;
     /** Branded markup; omit for default lucide tile + «Sybilion». */
     logo?: ReactNode;
     logoAreaClassName?: string;
@@ -31,6 +35,8 @@ export function SybilionAppHeader({
   pageHeaderId,
   actionsAnchorId = PAGE_HEADER_ACTIONS_ID,
   actionsAnchorClassName,
+  actionsStart,
+  actionsEnd,
   pathname,
   onNavigate,
   authenticated,
@@ -67,7 +73,9 @@ export function SybilionAppHeader({
         id={actionsAnchorId}
         className={cn(S.actionsAnchor, actionsAnchorClassName)}
       >
+        {actionsStart}
         <NavUserHeader {...navUserHeaderProps} />
+        {actionsEnd}
       </div>
     </AppHeaderPortal>
   );

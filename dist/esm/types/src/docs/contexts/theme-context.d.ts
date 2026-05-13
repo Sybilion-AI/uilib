@@ -1,10 +1,1 @@
-export type ThemeMode = 'light' | 'dark';
-export declare function ThemeProvider({ children }: {
-    children: React.ReactNode;
-}): import("react/jsx-runtime").JSX.Element;
-export declare const useTheme: () => {
-    theme: ThemeMode;
-    isDarkMode: boolean;
-    setTheme: (theme: ThemeMode) => void;
-    toggleTheme: () => void;
-};
+export { ThemeProvider, useTheme, type GetThemeConfigFn, type GetThemeConfigOptions, type ThemeMode, type ThemeProviderProps, } from '#uilib/contexts/theme-context';

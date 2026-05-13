@@ -11,8 +11,8 @@ import '@phosphor-icons/react';
 import 'lucide-react';
 import S from './SybilionAppHeader.styl.js';
 
-function SybilionAppHeader({ pageHeaderId, actionsAnchorId = PAGE_HEADER_ACTIONS_ID, actionsAnchorClassName, pathname, onNavigate, authenticated, defaultApps, appsStorageKey, logo, logoAreaClassName, welcomeBannerOffset, ...navUserHeaderProps }) {
-    return (jsxs(AppHeaderPortal, { pageHeaderId: pageHeaderId, children: [jsx("div", { className: cn(S.logoArea, welcomeBannerOffset && S.logoAreaWithBanner, logoAreaClassName), children: jsx(Link, { to: "/", className: S.logoLink, children: logo ?? jsx(Logo, { size: "md", "aria-hidden": true }) }) }), jsx(WorkspaceAppSwitcher, { pathname: pathname, onNavigate: onNavigate, authenticated: authenticated, defaultApps: defaultApps, appsStorageKey: appsStorageKey }), jsx(Gap, {}), jsx("div", { id: actionsAnchorId, className: cn(S.actionsAnchor, actionsAnchorClassName), children: jsx(NavUserHeader, { ...navUserHeaderProps }) })] }));
+function SybilionAppHeader({ pageHeaderId, actionsAnchorId = PAGE_HEADER_ACTIONS_ID, actionsAnchorClassName, actionsStart, actionsEnd, pathname, onNavigate, authenticated, defaultApps, appsStorageKey, logo, logoAreaClassName, welcomeBannerOffset, ...navUserHeaderProps }) {
+    return (jsxs(AppHeaderPortal, { pageHeaderId: pageHeaderId, children: [jsx("div", { className: cn(S.logoArea, welcomeBannerOffset && S.logoAreaWithBanner, logoAreaClassName), children: jsx(Link, { to: "/", className: S.logoLink, children: logo ?? jsx(Logo, { size: "md", "aria-hidden": true }) }) }), jsx(WorkspaceAppSwitcher, { pathname: pathname, onNavigate: onNavigate, authenticated: authenticated, defaultApps: defaultApps, appsStorageKey: appsStorageKey }), jsx(Gap, {}), jsxs("div", { id: actionsAnchorId, className: cn(S.actionsAnchor, actionsAnchorClassName), children: [actionsStart, jsx(NavUserHeader, { ...navUserHeaderProps }), actionsEnd] })] }));
 }
 
 export { SybilionAppHeader };

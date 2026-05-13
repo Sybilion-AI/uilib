@@ -1,6 +1,6 @@
 import { jsxs, jsx, Fragment } from 'react/jsx-runtime';
 import cn from 'classnames';
-import { useTheme } from '../../../docs/contexts/theme-context.js';
+import { useTheme } from '../../../contexts/theme-context.js';
 import { UserCircleIcon, SunIcon, MoonIcon, SignOutIcon } from '@phosphor-icons/react';
 import { ChevronDownIcon } from 'lucide-react';
 import { Avatar } from '../Avatar/Avatar.js';
@@ -9,8 +9,13 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import { Image } from '../Image/Image.js';
 import S from './NavUserHeader.styl.js';
 
-function NavUserHeader({ variant = 'default', isLoading = false, isAuthenticated, user = null, menuItems, onLogout, signInSlot, onSignInClick, }) {
-    const { toggleTheme, theme } = useTheme();
+function NavUserHeader({ variant = 'default', isLoading = false, isAuthenticated, user = null, menuItems, onLogout, signInSlot, onSignInClick, theme: themeFromHost, onThemeToggle: onThemeToggleFromHost, }) {
+    const docsTheme = useTheme();
+    const hostControlsTheme = themeFromHost !== undefined && onThemeToggleFromHost !== undefined;
+    const theme = hostControlsTheme ? themeFromHost : docsTheme.theme;
+    const toggleTheme = hostControlsTheme
+        ? onThemeToggleFromHost
+        : docsTheme.toggleTheme;
     const authenticated = isAuthenticated ?? true;
     const avatarUrl = user?.avatar ?? '';
     const userName = user?.name ?? '';

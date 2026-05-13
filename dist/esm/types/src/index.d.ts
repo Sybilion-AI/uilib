@@ -1,3 +1,5 @@
+export * from './contexts/theme-context';
+export { DEFAULT_THEME_ACTIVE_COLOR } from './docs/lib/theme';
 export * from './sybilion-auth';
 export * from './types/sybilionDatasetSnapshots';
 export * from './contexts/chat-context';

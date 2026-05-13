@@ -1,3 +1,5 @@
+export { ThemeProvider, useTheme } from './contexts/theme-context.js';
+export { DEFAULT_THEME_ACTIVE_COLOR } from './docs/lib/theme.js';
 export { SybilionAuthProvider, createSybilionApiFetch, getSybilionApiOriginFromSdk, sybilionApiFetch, useSybilionApiFetch, useSybilionAuth } from './sybilion-auth/SybilionAuthProvider.js';
 export { SYBILION_AUTH_LOGIN_PATH, normalizeApiBaseUrl } from './sybilion-auth/authPaths.js';
 export { exchangeAuth0AccessTokenForSybilionJwt } from './sybilion-auth/exchangeSybilionToken.js';

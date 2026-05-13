@@ -392,7 +392,11 @@ Wire **`authenticated`**, **`user`** / **`isAuthenticated`**, **`theme`** / **`o
 
 #### Sidebar (`AppSidebar.tsx`)
 
-App-specific sidebar component — keeps the navigation surface out of `AppLayout` so the shell stays generic. Compose your nav from `@sybilion/uilib` primitives (`Sidebar` + `SidebarContent` + `SidebarGroup` + `SidebarMenu*`) and product widgets like `SidebarDatasetsItemsGrouped` (collapsible groups + nested rows for datasets — see demo `src/docs/pages/SidebarDatasetsItemsGroupedPage.tsx`, slug `sidebar-datasets-items-grouped`).
+App-specific sidebar component — keeps the navigation surface out of `AppLayout` so the shell stays generic.
+
+**One sidebar group (default):** Standalone apps use **a single `SidebarGroup`** for the whole sidebar menu unless the **product owner explicitly asks** for another section separated into its own group. **`SidebarDatasetsItemsGrouped`** ([`src/components/widgets/SidebarDatasetsItemsGrouped/SidebarDatasetsItemsGrouped.tsx`](../../src/components/widgets/SidebarDatasetsItemsGrouped/SidebarDatasetsItemsGrouped.tsx)) already renders **one** outer `SidebarGroup` — put primary routes (Home, Datasets, …) in **`preItems`** or **`postItems`** so nav and dataset rows share that group instead of wrapping routes in a separate **`SidebarGroup`** above/below the widget. Apps without datasets: one **`SidebarGroup`** + **`SidebarMenu`** / **`SidebarMenuItem`** only.
+
+Collapsible dataset clusters + nested rows: demo **`src/docs/pages/SidebarDatasetsItemsGroupedPage.tsx`** (slug **`sidebar-datasets-items-grouped`**). Other primitives: **`Sidebar`** + **`SidebarContent`** + **`SidebarMenu*`**.
 
 ```tsx
 import { useEffect, useState } from 'react';
@@ -403,8 +407,6 @@ import {
   SidebarContent,
   SidebarDatasetsItemsGrouped,
   type SidebarDatasetsItemsGroupedDataset,
-  SidebarGroup,
-  SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@sybilion/uilib';
@@ -427,27 +429,26 @@ export function AppSidebar() {
   return (
     <Sidebar variant="inset" collapsible="offcanvas">
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <NavLink to="/" end>
-                  Home
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <NavLink to="/datasets">Datasets</NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
-
         <SidebarDatasetsItemsGrouped
           groupBy="regions"
           datasets={datasets}
           selectedDatasetId={selectedDatasetId}
+          preItems={
+            <>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/" end>
+                    Home
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/datasets">Datasets</NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </>
+          }
           onDatasetClick={id => {
             setSelectedDatasetId(id);
             navigate(`/datasets/${id}`);
@@ -530,7 +531,7 @@ Composition: `PageScroll` → `AppShell` → `AppSidebar` → `AppShellMainConte
 | `NavUserHeader`                                      | Header user menu (avatar, account, theme, logout).                                                                                                                                                                                                                                |
 | `Sidebar`, `SidebarProvider`                         | Collapsible rail + context (`@sybilion/uilib`). Wrap `SidebarProvider` above `AppLayout`; render `Sidebar` inside `AppShell` (usually via `AppSidebar`).                                                                                                                          |
 | `AppSidebar`                                         | App-specific component (`src/AppSidebar.tsx`) composing `Sidebar` + nav links + product widgets. Keeps `AppLayout` generic.                                                                                                                                                       |
-| `SidebarDatasetsItemsGrouped`                        | Dataset list widget for the sidebar: collapsible groups (`regions` / `target_type` / `categories`) with nested rows + selection callback.                                                                                                                                         |
+| `SidebarDatasetsItemsGrouped`                        | Single-sidebar-group widget: **`preItems`** / **`postItems`** for main nav + collapsible dataset groups (`regions` / `target_type` / `categories`) + **`onDatasetClick`**. Prefer this over stacking multiple **`SidebarGroup`** blocks unless explicitly requested. Source: **`src/components/widgets/SidebarDatasetsItemsGrouped/SidebarDatasetsItemsGrouped.tsx`**.                                                                                                                                         |
 | `SidebarTrigger`                                     | Toggle sidebar visibility (especially mobile / `offcanvas`).                                                                                                                                                                                                                      |
 | `PageFooter`                                         | Standard footer; requires `versionLink` + `versionLabel`.                                                                                                                                                                                                                         |
 | `Gap`                                                | Spacing primitive between flex children.                                                                                                                                                                                                                                          |

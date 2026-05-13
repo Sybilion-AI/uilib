@@ -1,5 +1,5 @@
 import { Button } from '#uilib/components/ui/Button';
-import { useTheme } from '#uilib/docs/contexts/theme-context';
+import { useTheme } from '#uilib/contexts/theme-context';
 import { MoonIcon, SunIcon } from '@phosphor-icons/react';
 
 export function ThemeToggle() {

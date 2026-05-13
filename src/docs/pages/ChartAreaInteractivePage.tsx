@@ -9,7 +9,7 @@ import type {
 import { ForecastItemData } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Tabs, TabsList, TabsTrigger } from '#uilib/components/ui/Tabs';
-import { useTheme } from '#uilib/docs/contexts/theme-context';
+import { useTheme } from '#uilib/contexts/theme-context';
 import type { ForecastData } from '#uilib/types/forecast-data';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';

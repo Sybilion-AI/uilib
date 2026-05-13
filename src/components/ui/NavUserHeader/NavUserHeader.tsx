@@ -1,6 +1,6 @@
 import cn from 'classnames';
 
-import { useTheme } from '#uilib/docs/contexts/theme-context';
+import { useTheme } from '#uilib/contexts/theme-context';
 import {
   MoonIcon,
   SignOutIcon,
@@ -33,8 +33,16 @@ export function NavUserHeader({
   onLogout,
   signInSlot,
   onSignInClick,
+  theme: themeFromHost,
+  onThemeToggle: onThemeToggleFromHost,
 }: NavUserHeaderProps) {
-  const { toggleTheme, theme } = useTheme();
+  const docsTheme = useTheme();
+  const hostControlsTheme =
+    themeFromHost !== undefined && onThemeToggleFromHost !== undefined;
+  const theme = hostControlsTheme ? themeFromHost : docsTheme.theme;
+  const toggleTheme = hostControlsTheme
+    ? onThemeToggleFromHost
+    : docsTheme.toggleTheme;
   const authenticated = isAuthenticated ?? true;
 
   const avatarUrl = user?.avatar ?? '';

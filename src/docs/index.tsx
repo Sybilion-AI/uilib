@@ -9,7 +9,7 @@ const root = createRoot(elem);
 
 root.render(
   <BrowserRouter>
-    <ThemeProvider>
+    <ThemeProvider activeColor="#">
       <App />
     </ThemeProvider>
   </BrowserRouter>,

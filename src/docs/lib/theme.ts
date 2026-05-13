@@ -7,6 +7,12 @@ const defaultConfig = getConfig();
 
 const alphaMods = [0, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 
+export const DEFAULT_THEME_ACTIVE_COLOR = '#9c59ff';
+
+export type GetThemeConfigOptions = {
+  activeColor?: string;
+};
+
 export const colorsConfig = {
   light: {
     ...ThemeHelpers.colorsConfigToVars({
@@ -26,13 +32,18 @@ export const colorsConfig = {
   },
 };
 
-export function getThemeConfig(isDarkTheme: boolean) {
+export function getThemeConfig(
+  isDarkTheme: boolean,
+  options?: GetThemeConfigOptions,
+) {
+  const activeColor = options?.activeColor ?? DEFAULT_THEME_ACTIVE_COLOR;
+
   return {
     ...defaultConfig,
     ...colorsConfig[isDarkTheme ? 'dark' : 'light'],
     ...ThemeHelpers.colorsConfigToVars({
       active: {
-        color: '#9c59ff',
+        color: activeColor,
         mods: {
           // @ts-ignore
           alpha: alphaMods,
