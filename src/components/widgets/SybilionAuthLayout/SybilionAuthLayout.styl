@@ -2,6 +2,7 @@
   height 100vh
   display flex
   width 100%
+  background-color var(--background)
 
 .leftPanel
   display none
@@ -9,6 +10,8 @@
   @media (min-width: 768px)
     display flex
     width 50%
+    height calc(100% - var(--p-6))
+    margin var(--p-3) 0 var(--p-3) var(--p-3)
     position relative
     overflow hidden
     background-color var(--secondary)
@@ -55,7 +58,6 @@
 .rightPanel
   position relative
   flex 1
-  background-color var(--background)
   display flex
   flex-direction column
   justify-content center
