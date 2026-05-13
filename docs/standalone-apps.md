@@ -118,29 +118,35 @@ Package README: [`@sybilion/sdk`](https://www.npmjs.com/package/@sybilion/sdk) �
 
 ## Local dev: Vite API proxy
 
-Avoid browser CORS in development by serving the SPA from Vite and proxying **`/api`** to the real API. Use **`sybilionStandaloneViteDev`** from `@sybilion/uilib/vite-standalone-dev` in **`vite.config.ts`**: it reads **`PORT`** (defaults to **3000** if unset or invalid) for **`server`** / **`preview`**, and sets **`proxy['/api']`** → **`VITE_SYBILION_API_BASE_URL`** with `changeOrigin` and `secure: true`.
+Avoid browser CORS in development by serving the SPA from Vite and proxying **`/api`** to the real API.
+
+**Reference `vite.config.ts` (minimal standalone Sybilion SPA):** merge your own `plugins` / options into this shape; keep `resolve.dedupe` and the `@radix-ui/` alias unless you know the dependency tree dedupes React and Radix correctly on its own.
+
+- **`sybilionStandaloneViteDev`** (`@sybilion/uilib/vite-standalone-dev`) — reads **`PORT`** (defaults **3000** if unset or invalid) for **`server`** and **`preview`** bind; sets **`proxy['/api']`** → **`VITE_SYBILION_API_BASE_URL`** with `changeOrigin` and `secure: true`. Pass Vite’s **`mode`** so env (including `VITE_*`) and proxy target resolve the same way as `vite` / `vite build`.
+- **`defineConfig(({ mode }) => …)`** — callback form gives `mode` per command (`development` / `production` / …); forward it into `sybilionStandaloneViteDev`.
+- **`plugins: [react()]`** — add other plugins (e.g. SVGR) in the same array.
+- **`resolve.dedupe`** — force one physical copy of `react`, `react-dom`, `react-router`, and `react-router-dom`. If the app and `@sybilion/uilib` resolve different copies, React context and router state break (`Invalid hook call`, blank subtree, Radix menus that never open). `react-router` is listed because it is a shared transitive dependency of the router packages and can duplicate independently.
+- **`resolve.alias` for `@radix-ui/*`** — uilib’s published bundle uses bare `@radix-ui/react-*` imports. Yarn/npm can still place those packages under `node_modules/@sybilion/uilib/node_modules/@radix-ui/…`, so Vite may bundle two Radix trees and split React context across them. The regex alias rewrites every `@radix-ui/…` import to **`./node_modules/@radix-ui/`** (project root). **`path.resolve(… ) + '/'`** is required so subpaths like `@radix-ui/react-dialog` resolve under that folder.
+- **`path`** — Node built-in `node:path`; only used at config evaluation time.
 
 ```ts
+// vite.config.ts — reference config for a standalone app using @sybilion/uilib + proxy.
 import { sybilionStandaloneViteDev } from '@sybilion/uilib/vite-standalone-dev';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { defineConfig } from 'vite';
 
+// Pass `mode` into sybilionStandaloneViteDev so proxy + VITE_* match the active Vite command.
 export default defineConfig(({ mode }) => ({
   ...sybilionStandaloneViteDev({ mode }),
   plugins: [react()],
   resolve: {
-    // Force a single copy of packages shared between app and uilib.
-    // Without this, Vite may load two instances (uilib's nested + top-level),
-    // breaking React context (invalid hook calls, Radix dropdowns never open, etc.).
+    // One copy of React + Router across app and uilib (avoids invalid hook call / dead Radix UI).
     dedupe: ['react', 'react-dom', 'react-router', 'react-router-dom'],
     alias: [
-      // @radix-ui packages are external bare imports in uilib's dist but may
-      // also end up nested in uilib/node_modules. The alias forces every
-      // @radix-ui/* to the top-level copy so Radix context is shared and
-      // interactive widgets (DropdownMenu, Dialog, Tooltip, …) work correctly.
       {
         find: /^@radix-ui\//,
+        // Pin all Radix imports to the app’s root node_modules; trailing slash keeps subpaths working.
         replacement: path.resolve('./node_modules/@radix-ui/') + '/',
       },
     ],
@@ -211,12 +217,16 @@ export function AppProviders({ children }: { children: ReactNode }) {
 
 ```ts
 // GET /api/v1/users/me → { data: { user: BackendUser }, message, status }
-// BackendUser fields include: id, name, email, picture (Google avatar URL), role, …
+// BackendUser includes `picture` (profile image URL from the API). Do not read deprecated `avatar` on the wire.
 ```
 
-`NavUserHeader` (used inside `SybilionAppHeader`) accepts `user: { name, email, avatar? }`. The API returns `picture`, not `avatar`, so map the field:
+**Agents:** import **`MeResponse`** (and rely on **`BackendUser`** inside it) from `@sybilion/sdk`. Profile image on the API is **`picture` only**; `NavUserHeader` / `SybilionAppHeader` still expect the prop key **`avatar`**—map with `avatar: u.picture ?? ''`. No `UserProfile` intersections, no `u.avatar` fallback, no manual `res as { data?: … }` once `getMe()` is typed.
+
+`NavUserHeader` (used inside `SybilionAppHeader`) accepts `user: { name, email, avatar? }`.
 
 ```ts
+import type { MeResponse } from '@sybilion/sdk';
+
 useEffect(() => {
   if (!isAuthenticated) {
     setUser(null);
@@ -224,24 +234,13 @@ useEffect(() => {
   }
   sybilionSdk.auth
     .getMe()
-    .then(res => {
-      const u = (
-        res as {
-          data?: {
-            user?: {
-              name: string;
-              email: string;
-              picture?: string;
-              avatar?: string;
-            };
-          };
-        } | null
-      )?.data?.user;
+    .then((res: MeResponse) => {
+      const u = res.data?.user;
       if (u)
         setUser({
           name: u.name,
           email: u.email,
-          avatar: u.avatar ?? u.picture,
+          avatar: u.picture ?? '',
         });
     })
     .catch(() => undefined);
