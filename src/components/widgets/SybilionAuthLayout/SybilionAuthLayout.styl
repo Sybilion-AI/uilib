@@ -20,15 +20,23 @@
     :global(.dark) &
       background-color var(--page-color-alpha-800)
 
-.bgImage
+// ~500px graphic, -200px offset → ~300px (~60%) visible inside panel (clipped by .leftPanel overflow)
+.heroWatermark
   position absolute
-  bottom 0
-  left 0
-  width 300px
-  height 300px
-  background-size contain
-  background-repeat no-repeat
-  background-position left bottom
+  bottom -180px
+  left -180px
+  width 500px
+  height 500px
+  align-items flex-end
+  justify-content flex-start
+  gap 0
+  pointer-events none
+
+  img
+    width 100% !important
+    height 100% !important
+    object-fit contain
+    object-position left bottom
 
 .logoContainer
   z-index 10
@@ -45,6 +53,7 @@
   height 24px
 
 .rightPanel
+  position relative
   flex 1
   background-color var(--background)
   display flex

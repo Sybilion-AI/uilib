@@ -6,7 +6,7 @@ import { SybilionSignInPanel } from '../SybilionSignInPanel/SybilionSignInPanel.
 
 const DEFAULT_TITLE = 'Sign In';
 const DEFAULT_SUBTITLE = 'To get access authenticate through google or your email.';
-function SignInPage({ title = DEFAULT_TITLE, subtitle = DEFAULT_SUBTITLE, forgotPasswordTo = '/forgot-password', releasesTo = '/releases', versionLabel, primaryButtonLabel, connectingLabel, loginRedirectOptions, heroBackgroundUrl, logoSize, containerClassName, }) {
+function SignInPage({ title = DEFAULT_TITLE, subtitle = DEFAULT_SUBTITLE, forgotPasswordTo = '/forgot-password', releasesTo = '/releases', versionLabel, primaryButtonLabel, connectingLabel, loginRedirectOptions, logoSize, containerClassName, }) {
     const { error, loginWithRedirect, isLoading } = useSybilionAuth();
     const handleSignIn = () => loginWithRedirect({
         ...loginRedirectOptions,
@@ -19,7 +19,7 @@ function SignInPage({ title = DEFAULT_TITLE, subtitle = DEFAULT_SUBTITLE, forgot
             ...loginRedirectOptions?.authorizationParams,
         },
     });
-    return (jsx(SybilionAuthLayout, { title: title, subtitle: subtitle, heroBackgroundUrl: heroBackgroundUrl, logoSize: logoSize, containerClassName: containerClassName, children: jsx(SybilionSignInPanel, { onSignIn: handleSignIn, isSigningIn: isLoading, error: error, forgotPasswordTo: forgotPasswordTo, releasesTo: releasesTo, versionLabel: versionLabel, primaryButtonLabel: primaryButtonLabel, connectingLabel: connectingLabel }) }));
+    return (jsx(SybilionAuthLayout, { title: title, subtitle: subtitle, logoSize: logoSize, containerClassName: containerClassName, children: jsx(SybilionSignInPanel, { onSignIn: handleSignIn, isSigningIn: isLoading, error: error, forgotPasswordTo: forgotPasswordTo, releasesTo: releasesTo, versionLabel: versionLabel, primaryButtonLabel: primaryButtonLabel, connectingLabel: connectingLabel }) }));
 }
 
 export { SignInPage };

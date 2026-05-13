@@ -13,7 +13,7 @@ import {
 
 export type SignInPageProps = Pick<
   SybilionAuthLayoutProps,
-  'heroBackgroundUrl' | 'logoSize' | 'containerClassName'
+  'logoSize' | 'containerClassName'
 > &
   Pick<
     SybilionSignInPanelProps,
@@ -42,7 +42,6 @@ export function SignInPage({
   primaryButtonLabel,
   connectingLabel,
   loginRedirectOptions,
-  heroBackgroundUrl,
   logoSize,
   containerClassName,
 }: SignInPageProps) {
@@ -65,7 +64,6 @@ export function SignInPage({
     <SybilionAuthLayout
       title={title}
       subtitle={subtitle}
-      heroBackgroundUrl={heroBackgroundUrl}
       logoSize={logoSize}
       containerClassName={containerClassName}
     >

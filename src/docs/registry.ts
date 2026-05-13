@@ -169,6 +169,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/SybilionAuthProviderPage'),
   },
   {
+    slug: 'sybilion-auth-layout',
+    title: 'SybilionAuthLayout',
+    section: 'Layout',
+    load: () => import('./pages/SybilionAuthLayoutPage'),
+  },
+  {
     slug: 'label',
     title: 'Label',
     section: 'Forms',

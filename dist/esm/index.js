@@ -88,7 +88,7 @@ export { findWorkspaceAppByPathname, workspaceAppSlugPath } from './components/u
 export { SidebarDatasetsItemsGrouped } from './components/widgets/SidebarDatasetsItemsGrouped/SidebarDatasetsItemsGrouped.js';
 export { groupSidebarDatasets } from './components/widgets/SidebarDatasetsItemsGrouped/groupSidebarDatasets.js';
 export { SybilionAppHeader } from './components/widgets/SybilionAppHeader/SybilionAppHeader.js';
-export { SYBILION_STANDALONE_AUTH_HERO_BG_PUBLIC_URL, SybilionAuthLayout } from './components/widgets/SybilionAuthLayout/SybilionAuthLayout.js';
+export { SybilionAuthLayout } from './components/widgets/SybilionAuthLayout/SybilionAuthLayout.js';
 export { SybilionAuthHeadline } from './components/widgets/SybilionAuthLayout/SybilionAuthHeadline.js';
 export { SybilionSignInPanel } from './components/widgets/SybilionSignInPanel/SybilionSignInPanel.js';
 export { SignInPage } from './components/widgets/SignInPage/SignInPage.js';

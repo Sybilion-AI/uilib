@@ -84,7 +84,7 @@ const INITIAL_CHART: ChartDataPoint[] = [
 ];
 
 const DEMO_FORECAST_ITEMS: ForecastItemData[] = [
-  { id: DEMO_FORECAST_ID, name: 'Forecast' },
+  { id: DEMO_FORECAST_ID, name: 'My custom forecast' },
 ];
 
 type DemoMode = 'none' | OverlayMode;
