@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.11](https://github.com/Mir-Insight/uilib/compare/v1.2.10...v1.2.11) (2026-05-13)
+
+
+### Features
+
+* SybilionAuthLayout preview and sidebar defaults ([ed92498](https://github.com/Mir-Insight/uilib/commit/ed9249836287fbea4afea0508e91b5f7127c1e91))
+* SybilionAuthProvider - Optional federated logout ([be0be8b](https://github.com/Mir-Insight/uilib/commit/be0be8b539289f2f691d018c99b48953f80d1bbb))
+
+
+### Bug Fixes
+
+* AppHeader - padding-right ([19d6ec3](https://github.com/Mir-Insight/uilib/commit/19d6ec388a6b1f8e383624cc5b1e9071bcc0f3c0))
+* SybilionAuthLayout - Panel and headline styling ([e861864](https://github.com/Mir-Insight/uilib/commit/e86186423d87a5a7a7aa5d46914f98a0cb871563))
+
 ### [1.2.10](https://github.com/Mir-Insight/uilib/compare/v1.2.8...v1.2.10) (2026-05-13)
 
 
