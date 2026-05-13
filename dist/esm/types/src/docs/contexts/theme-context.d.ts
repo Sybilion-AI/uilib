@@ -6,4 +6,5 @@ export declare const useTheme: () => {
     theme: ThemeMode;
     isDarkMode: boolean;
     setTheme: (theme: ThemeMode) => void;
+    toggleTheme: () => void;
 };

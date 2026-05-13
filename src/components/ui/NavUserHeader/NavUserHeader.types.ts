@@ -16,10 +16,6 @@ export type NavUserHeaderProps = {
   user?: NavUserHeaderUser | null;
   /** Rows inside the menu above theme toggle and logout. Use `DropdownMenuItem` nodes. */
   menuItems?: ReactNode;
-  /** Current theme drives the toggle row label/icons. */
-  theme: 'light' | 'dark';
-  /** When set, renders the light/dark theme menu row. */
-  onThemeToggle?: () => void;
   onLogout: () => void;
   /** Replaces default “Log in” control when signed out. */
   signInSlot?: ReactNode;

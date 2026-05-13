@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 import { Theme as ThemeRoot } from '@homecode/ui';
 
@@ -10,10 +16,12 @@ const ThemeContext = createContext<{
   theme: ThemeMode;
   isDarkMode: boolean;
   setTheme: (theme: ThemeMode) => void;
+  toggleTheme: () => void;
 }>({
   theme: 'light',
   isDarkMode: false,
   setTheme: () => {},
+  toggleTheme: () => {},
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
@@ -24,6 +32,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [currThemeConfig, setCurrThemeConfig] = useState(() =>
     getThemeConfig(theme === 'dark'),
   );
+
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [theme, setTheme]);
 
   useEffect(() => {
     setCurrThemeConfig(getThemeConfig(theme === 'dark'));
@@ -44,6 +56,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         theme,
         isDarkMode: theme === 'dark',
         setTheme,
+        toggleTheme,
       }}
     >
       <ThemeRoot config={currThemeConfig} />

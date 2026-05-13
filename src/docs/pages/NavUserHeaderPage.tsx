@@ -1,5 +1,3 @@
-import { useCallback, useEffect, useState } from 'react';
-
 import { DropdownMenuItem } from '#uilib/components/ui/DropdownMenu';
 import { NavUserHeader } from '#uilib/components/ui/NavUserHeader';
 import { PageContentSection } from '#uilib/components/ui/Page';
@@ -9,19 +7,6 @@ import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
 export default function NavUserHeaderPage() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    return () => {
-      delete document.documentElement.dataset.theme;
-    };
-  }, [theme]);
-
-  const onThemeToggle = useCallback(() => {
-    setTheme(t => (t === 'dark' ? 'light' : 'dark'));
-  }, []);
-
   const customMenuItems = (
     <>
       <DropdownMenuItem>
@@ -40,7 +25,7 @@ export default function NavUserHeaderPage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'NavUserHeader' }]}
         title="NavUserHeader"
-        subheader="User menu with label, custom rows, theme toggle, and logout."
+        subheader="User menu with label, custom rows, theme toggle (docs ThemeProvider), and logout."
         actions={<DocsHeaderActions />}
       />
       <PageContentSection
@@ -56,8 +41,6 @@ export default function NavUserHeaderPage() {
               email: 'demo@sybilion.io',
               avatar: '',
             }}
-            theme={theme}
-            onThemeToggle={onThemeToggle}
             onLogout={() => {
               console.info('[docs] logout');
             }}
@@ -75,8 +58,6 @@ export default function NavUserHeaderPage() {
               email: 'compact@sybilion.io',
               avatar: '',
             }}
-            theme={theme}
-            onThemeToggle={onThemeToggle}
             onLogout={() => {
               console.info('[docs] logout compact');
             }}

@@ -1,5 +1,6 @@
 import cn from 'classnames';
 
+import { useTheme } from '#uilib/docs/contexts/theme-context';
 import {
   MoonIcon,
   SignOutIcon,
@@ -29,12 +30,11 @@ export function NavUserHeader({
   isAuthenticated,
   user = null,
   menuItems,
-  theme,
-  onThemeToggle,
   onLogout,
   signInSlot,
   onSignInClick,
 }: NavUserHeaderProps) {
+  const { toggleTheme, theme } = useTheme();
   const authenticated = isAuthenticated ?? true;
 
   const avatarUrl = user?.avatar ?? '';
@@ -121,21 +121,19 @@ export function NavUserHeader({
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           {menuItems}
-          {onThemeToggle ? (
-            <DropdownMenuItem onSelect={() => onThemeToggle()}>
-              {theme === 'dark' ? (
-                <>
-                  <SunIcon />
-                  Light theme
-                </>
-              ) : (
-                <>
-                  <MoonIcon />
-                  Dark theme
-                </>
-              )}
-            </DropdownMenuItem>
-          ) : null}
+          <DropdownMenuItem onSelect={toggleTheme}>
+            {theme === 'dark' ? (
+              <>
+                <SunIcon />
+                Light theme
+              </>
+            ) : (
+              <>
+                <MoonIcon />
+                Dark theme
+              </>
+            )}
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" onSelect={() => onLogout()}>
