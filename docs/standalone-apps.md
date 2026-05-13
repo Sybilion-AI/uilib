@@ -15,6 +15,25 @@ yarn add react react-dom react-router-dom @auth0/auth0-react @sybilion/uilib @sy
 yarn add -D vite @vitejs/plugin-react
 ```
 
+**React ecosystem versions (avoid collisions):** declare **`react`**, **`react-dom`**, **`react-router-dom`**, and **`@auth0/auth0-react`** as **direct** dependencies and align them with **`@sybilion/uilib`**, not arbitrary latest majors.
+
+1. After installing uilib, open **`node_modules/@sybilion/uilib/package.json`** (or this repo’s root **`package.json`** at the release you pin).
+2. **`peerDependencies`** — satisfy these ranges in your app (`react` / `react-dom`, `react-router-dom`, `@auth0/auth0-react`, and **`vite`** when you use the Vite helpers).
+3. **`devDependencies`** — for **`react`**, **`react-dom`**, and **`react-router-dom`**, prefer **the same versions uilib lists there** (what its docs build and tests run against). Re-read this file whenever you bump **`@sybilion/uilib`** so your app does not drift to another React major while uilib does not.
+
+Mismatched or duplicated React (two copies in the bundle) causes **invalid hook call** / subtle runtime bugs — and specifically causes **Radix UI interactive widgets** (dropdowns, dialogs, tooltips) to **silently fail** (context broken across the module boundary). If Yarn/npm hoists a second React, fix upstream ranges or use **`resolutions`** (Yarn) / **`overrides`** (npm) so the tree resolves to **one** `react` / `react-dom` pair matching (3). Also add `dedupe` + `@radix-ui/` alias in `vite.config.ts` (see **Local dev: Vite API proxy**).
+
+**Current required versions (as of uilib 1.2.x):** `react` / `react-dom` **`^19`**, `@types/react` / `@types/react-dom` **`^19`**. Add resolutions so nested copies stay aligned:
+
+```json
+{
+  "resolutions": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19"
+  }
+}
+```
+
 Import tokens/fonts once (typically `src/main.tsx`):
 
 ```ts
@@ -104,11 +123,28 @@ Avoid browser CORS in development by serving the SPA from Vite and proxying **`/
 ```ts
 import { sybilionStandaloneViteDev } from '@sybilion/uilib/vite-standalone-dev';
 import react from '@vitejs/plugin-react';
+import path from 'node:path';
 import { defineConfig } from 'vite';
 
 export default defineConfig(({ mode }) => ({
   ...sybilionStandaloneViteDev({ mode }),
   plugins: [react()],
+  resolve: {
+    // Force a single copy of packages shared between app and uilib.
+    // Without this, Vite may load two instances (uilib's nested + top-level),
+    // breaking React context (invalid hook calls, Radix dropdowns never open, etc.).
+    dedupe: ['react', 'react-dom', 'react-router', 'react-router-dom'],
+    alias: [
+      // @radix-ui packages are external bare imports in uilib's dist but may
+      // also end up nested in uilib/node_modules. The alias forces every
+      // @radix-ui/* to the top-level copy so Radix context is shared and
+      // interactive widgets (DropdownMenu, Dialog, Tooltip, …) work correctly.
+      {
+        find: /^@radix-ui\//,
+        replacement: path.resolve('./node_modules/@radix-ui/') + '/',
+      },
+    ],
+  },
 }));
 ```
 
@@ -168,6 +204,51 @@ export function AppProviders({ children }: { children: ReactNode }) {
 | **App**          | §2 SDK module (`baseUrl`, `apiPrefix`, `getToken`); pass `sdk` + matching `sybilionTokenStorageKey`; Auth0 `domain` / `clientId`; redirect usually `window.location.origin`. |
 
 **Hooks:** `useSybilionAuth()`, `useSybilionApiFetch()` (or `createSybilionApiFetch` / `sybilionApiFetch` helpers).
+
+### Loading the user profile for `SybilionAppHeader`
+
+`useSybilionAuth()` gives you `isAuthenticated` / `logout` but **not** a user object. Fetch it once with `sybilionSdk.auth.getMe()` after authentication. The response shape is:
+
+```ts
+// GET /api/v1/users/me → { data: { user: BackendUser }, message, status }
+// BackendUser fields include: id, name, email, picture (Google avatar URL), role, …
+```
+
+`NavUserHeader` (used inside `SybilionAppHeader`) accepts `user: { name, email, avatar? }`. The API returns `picture`, not `avatar`, so map the field:
+
+```ts
+useEffect(() => {
+  if (!isAuthenticated) {
+    setUser(null);
+    return;
+  }
+  sybilionSdk.auth
+    .getMe()
+    .then(res => {
+      const u = (
+        res as {
+          data?: {
+            user?: {
+              name: string;
+              email: string;
+              picture?: string;
+              avatar?: string;
+            };
+          };
+        } | null
+      )?.data?.user;
+      if (u)
+        setUser({
+          name: u.name,
+          email: u.email,
+          avatar: u.avatar ?? u.picture,
+        });
+    })
+    .catch(() => undefined);
+}, [isAuthenticated]);
+```
+
+Pass `user` (or `null` while loading with `isLoading` on `NavUserHeader`) and `isAuthenticated` to `SybilionAppHeader`.
 
 ## 4. Layout (AppShell)
 
@@ -391,16 +472,17 @@ Composition: `PageScroll` → `AppShell` → `AppSidebar` → `AppShellMainConte
 
 ### Greenfield checklist (agents)
 
-| Step               | Deliverable                                                                                                                                         |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Env files          | **`.env.example`** (committed) + **`.env`** locally; **`PORT=3000`** recommended for Auth0 test tenant; **`VITE_*`** as in §1 table.                |
-| Scripts            | **`package.json`** includes mandatory **`dev`** (e.g. `"vite"`); optional **`build`**, **`preview`**.                                               |
-| Vite proxy         | **`vite.config.ts`** spreads **`sybilionStandaloneViteDev({ mode })`**; SDK **`baseUrl`** empty in dev (§2).                                        |
-| Files              | `src/libs/sybilion-sdk.ts`, `AppProviders.tsx`, `AppLayout.tsx`, `AppSidebar.tsx`, `App.tsx`, `main.tsx`, route pages under e.g. `src/pages/`.      |
-| Pages + UI         | **§4 Route page body** (mandatory stack) + **Discovering** (barrel-first; bespoke markup only when no export fits).                                 |
-| Auth0              | SPA callback / logout URLs + allowed web origins → **`http://localhost:<PORT>`** for local dev and deploy URLs (and previews).                      |
-| API                | **Dev:** proxy handles API traffic (no browser CORS to API). **Prod:** Sybilion backend **CORS** → your deploy `Origin`, unless API is same-origin. |
-| Go (if applicable) | Server proxies **`/api`** to Sybilion; SPA dev **`baseUrl`** stays `''` when same-origin.                                                           |
+| Step               | Deliverable                                                                                                                                                                                          |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| React / router     | **`react`**, **`react-dom`**, **`react-router-dom`**, **`@auth0/auth0-react`** (and **`vite`** if applicable) aligned with **`@sybilion/uilib`** **`package.json`** — §1 _React ecosystem versions_. |
+| Env files          | **`.env.example`** (committed) + **`.env`** locally; **`PORT=3000`** recommended for Auth0 test tenant; **`VITE_*`** as in §1 table.                                                                 |
+| Scripts            | **`package.json`** includes mandatory **`dev`** (e.g. `"vite"`); optional **`build`**, **`preview`**.                                                                                                |
+| Vite proxy         | **`vite.config.ts`** spreads **`sybilionStandaloneViteDev({ mode })`**; SDK **`baseUrl`** empty in dev (§2).                                                                                         |
+| Files              | `src/libs/sybilion-sdk.ts`, `AppProviders.tsx`, `AppLayout.tsx`, `AppSidebar.tsx`, `App.tsx`, `main.tsx`, route pages under e.g. `src/pages/`.                                                       |
+| Pages + UI         | **§4 Route page body** (mandatory stack) + **Discovering** (barrel-first; bespoke markup only when no export fits).                                                                                  |
+| Auth0              | SPA callback / logout URLs + allowed web origins → **`http://localhost:<PORT>`** for local dev and deploy URLs (and previews).                                                                       |
+| API                | **Dev:** proxy handles API traffic (no browser CORS to API). **Prod:** Sybilion backend **CORS** → your deploy `Origin`, unless API is same-origin.                                                  |
+| Go (if applicable) | Server proxies **`/api`** to Sybilion; SPA dev **`baseUrl`** stays `''` when same-origin.                                                                                                            |
 
 ### Glossary (high-use pieces)
 
