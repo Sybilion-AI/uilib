@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.17](https://github.com/Mir-Insight/uilib/compare/v1.2.16...v1.2.17) (2026-05-14)
+
+
+### Features
+
+* ChatEmptyState - additionalContent & ChatSheet emptyState ([1328794](https://github.com/Mir-Insight/uilib/commit/1328794ee2e290c19c6c029d8987c9a0f40f8711))
+
+
+### Bug Fixes
+
+* PageContent - Remove root padding-bottom ([8520c9e](https://github.com/Mir-Insight/uilib/commit/8520c9e5ca25fab60531b476eea406353dbaf7ad))
+
 ### [1.2.16](https://github.com/Mir-Insight/uilib/compare/v1.2.15...v1.2.16) (2026-05-14)
 
 
