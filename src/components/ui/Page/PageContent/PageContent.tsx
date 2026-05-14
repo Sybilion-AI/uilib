@@ -21,13 +21,15 @@ export function PageContent({
 export function PageContentSection({
   className,
   children,
+  grow = true,
   ...rest
 }: {
   className?: string;
   children: React.ReactNode;
+  grow?: boolean;
 } & Omit<React.ComponentProps<'div'>, 'className' | 'children'>) {
   return (
-    <div className={cn(S.section, className)} {...rest}>
+    <div className={cn(S.section, className, grow && S.grow)} {...rest}>
       {children}
     </div>
   );

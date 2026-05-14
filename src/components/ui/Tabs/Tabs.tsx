@@ -13,15 +13,22 @@ import {
 function Tabs({
   className,
   variant = 'button',
+  size = 'md',
   darker = false,
   ...props
-}: TabsProps & { variant?: 'button' | 'link'; darker?: boolean }) {
+}: TabsProps & {
+  variant?: 'button' | 'link';
+  size?: 'sm' | 'md' | 'lg';
+  darker?: boolean;
+}) {
   return (
     <TabsPrimitive.Root
       data-slot="tabs"
       className={cn(
         S.root,
         S[`variant-${variant}`],
+        size === 'sm' && S.sizeSm,
+        size === 'lg' && S.sizeLg,
         darker && S.darker,
         className,
       )}

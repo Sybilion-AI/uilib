@@ -1,6 +1,7 @@
 import { TabsContentProps, TabsListProps, TabsProps, TabsTriggerProps } from './Tabs.types';
-declare function Tabs({ className, variant, darker, ...props }: TabsProps & {
+declare function Tabs({ className, variant, size, darker, ...props }: TabsProps & {
     variant?: 'button' | 'link';
+    size?: 'sm' | 'md' | 'lg';
     darker?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
 declare function TabsList({ className, fullWidth, darker, ...props }: TabsListProps & {

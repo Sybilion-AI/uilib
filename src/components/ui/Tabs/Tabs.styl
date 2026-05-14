@@ -115,3 +115,41 @@
   flex 1
   outline none
 
+// Sizes (md = default styles above)
+.root
+  &.variant-button
+    &.sizeSm
+      .list .trigger
+        padding var(--p-1) var(--p-2)
+        font-size var(--text-xs)
+
+        &[data-state="active"]
+          border-radius var(--p-4)
+
+    &.sizeLg
+      .list .trigger
+        padding var(--p-2) var(--p-4)
+        font-size var(--text-base)
+
+        &[data-state="active"]
+          border-radius var(--p-8)
+
+  &.variant-link
+    &.sizeSm
+      > .list
+        height auto
+        min-height 36px
+
+      > .list .trigger
+        padding 8px 12px
+        font-size 14px
+
+    &.sizeLg
+      > .list
+        height auto
+        min-height 56px
+
+      > .list .trigger
+        padding 16px 24px
+        font-size 18px
+

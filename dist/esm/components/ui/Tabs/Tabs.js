@@ -3,8 +3,8 @@ import cn from 'classnames';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 import S from './Tabs.styl.js';
 
-function Tabs({ className, variant = 'button', darker = false, ...props }) {
-    return (jsx(TabsPrimitive.Root, { "data-slot": "tabs", className: cn(S.root, S[`variant-${variant}`], darker && S.darker, className), ...props }));
+function Tabs({ className, variant = 'button', size = 'md', darker = false, ...props }) {
+    return (jsx(TabsPrimitive.Root, { "data-slot": "tabs", className: cn(S.root, S[`variant-${variant}`], size === 'sm' && S.sizeSm, size === 'lg' && S.sizeLg, darker && S.darker, className), ...props }));
 }
 function TabsList({ className, fullWidth, darker, ...props }) {
     return (jsx(TabsPrimitive.List, { "data-slot": "tabs-list", className: cn(S.list, fullWidth && S.fullWidth, darker && S.darker, className), ...props }));
