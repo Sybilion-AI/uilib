@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.18](https://github.com/Mir-Insight/uilib/compare/v1.2.17...v1.2.18) (2026-05-14)
+
+
+### Features
+
+* ChatEmptyState - text wrap balance ([31b6918](https://github.com/Mir-Insight/uilib/commit/31b6918c4de3b450083a6d67679586026a7dff73))
+
 ### [1.2.17](https://github.com/Mir-Insight/uilib/compare/v1.2.16...v1.2.17) (2026-05-14)
 
 
