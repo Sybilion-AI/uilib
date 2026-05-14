@@ -1,3 +1,4 @@
+export { useIsMobile } from './hooks/useIsMobile';
 export * from './contexts/theme-context';
 export { DEFAULT_THEME_ACTIVE_COLOR } from './docs/lib/theme';
 export * from './sybilion-auth';

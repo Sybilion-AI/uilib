@@ -29,6 +29,11 @@
       "import": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./hooks": {
+      "types": "./dist/esm/types/src/hooks/index.d.ts",
+      "import": "./dist/esm/hooks/index.js",
+      "default": "./dist/esm/hooks/index.js"
+    },
     "./src/*": "./src/*",
     "./vite-standalone-dev": {
       "types": "./dist/standalone/vite-sybilion-standalone-dev.d.ts",

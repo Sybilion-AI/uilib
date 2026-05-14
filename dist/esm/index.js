@@ -1,3 +1,4 @@
+export { useIsMobile } from './hooks/useIsMobile.js';
 export { ThemeProvider, useTheme } from './contexts/theme-context.js';
 export { DEFAULT_THEME_ACTIVE_COLOR } from './docs/lib/theme.js';
 export { SybilionAuthProvider, createSybilionApiFetch, getSybilionApiOriginFromSdk, sybilionApiFetch, useSybilionApiFetch, useSybilionAuth } from './sybilion-auth/SybilionAuthProvider.js';

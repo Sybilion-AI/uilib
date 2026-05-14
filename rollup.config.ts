@@ -31,7 +31,7 @@ const { COMPRESS } = process.env;
 
 export default [
   {
-    input: 'src/index.ts',
+    input: ['src/index.ts', 'src/hooks/index.ts'],
     output: [
       {
         dir: 'dist/esm',
