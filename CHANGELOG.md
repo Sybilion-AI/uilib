@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.16](https://github.com/Mir-Insight/uilib/compare/v1.2.15...v1.2.16) (2026-05-14)
+
+
+### Features
+
+* Chat - Header chat selector and chrome layout ([53fc8a5](https://github.com/Mir-Insight/uilib/commit/53fc8a582609fdf5b33bdf7fad328a25428647e9))
+
 ### [1.2.15](https://github.com/Mir-Insight/uilib/compare/v1.2.14...v1.2.15) (2026-05-14)
 
 
