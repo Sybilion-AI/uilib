@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.13](https://github.com/Mir-Insight/uilib/compare/v1.2.12...v1.2.13) (2026-05-14)
+
+
+### Bug Fixes
+
+* UILibPackage - Export useIsMobile from main and hooks subpath ([acb3703](https://github.com/Mir-Insight/uilib/commit/acb37039a98c356f027a40506b4772ba45160560))
+
 ### [1.2.12](https://github.com/Mir-Insight/uilib/compare/v1.2.11...v1.2.12) (2026-05-13)
 
 
