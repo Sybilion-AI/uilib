@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.15](https://github.com/Mir-Insight/uilib/compare/v1.2.14...v1.2.15) (2026-05-14)
+
+
+### Bug Fixes
+
+* Page components - paddings/gaps ([737cbb2](https://github.com/Mir-Insight/uilib/commit/737cbb2e27210db4ff0bf34f1a2335b88366a4cc))
+
 ### [1.2.14](https://github.com/Mir-Insight/uilib/compare/v1.2.13...v1.2.14) (2026-05-14)
 
 
