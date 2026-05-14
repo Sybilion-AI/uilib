@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.20](https://github.com/Mir-Insight/uilib/compare/v1.2.19...v1.2.20) (2026-05-14)
+
+
+### Features
+
+* Chat - User CSV attachment messages ([b239f9f](https://github.com/Mir-Insight/uilib/commit/b239f9f8d9b1b77c6bd2765439437717aa06d2be))
+
 ### [1.2.19](https://github.com/Mir-Insight/uilib/compare/v1.2.18...v1.2.19) (2026-05-14)
 
 ### [1.2.18](https://github.com/Mir-Insight/uilib/compare/v1.2.17...v1.2.18) (2026-05-14)
