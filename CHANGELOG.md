@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.14](https://github.com/Mir-Insight/uilib/compare/v1.2.13...v1.2.14) (2026-05-14)
+
+
+### Features
+
+* PageFooter - Configurable links and docs preview ([b57d193](https://github.com/Mir-Insight/uilib/commit/b57d193e868e9e3133b9f2e1a9200579c4991b80))
+* Tabs, PageContent - Sizes and flexible section grow ([317ae0e](https://github.com/Mir-Insight/uilib/commit/317ae0e75676de16fef88583baf2939b5c1e8d6d))
+
 ### [1.2.13](https://github.com/Mir-Insight/uilib/compare/v1.2.12...v1.2.13) (2026-05-14)
 
 
