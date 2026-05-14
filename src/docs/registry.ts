@@ -217,6 +217,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/PagePage'),
   },
   {
+    slug: 'page-footer',
+    title: 'PageFooter',
+    section: 'Layout',
+    load: () => import('./pages/PageFooterPage'),
+  },
+  {
     slug: 'standalone-app-layout',
     title: 'Standalone app layout',
     section: 'Layout',
