@@ -9,5 +9,5 @@ export type { UseChatPanelChromeModelInput, UseChatPanelChromeModelResult, } fro
 export { ChatMessage } from './ChatMessage';
 export { ChatPrompt } from './ChatPrompt';
 export { ChatPresets } from './ChatPresets';
-export type { Chat as ChatType, Message, ChatProps, ChatPreset as ChatPresetType, } from './Chat.types';
+export type { Chat as ChatType, ChatSendMessagePayload, ChatProps, ChatPreset as ChatPresetType, Message, UserCsvAttachment, } from './Chat.types';
 export { MessageRole } from './Chat.types';

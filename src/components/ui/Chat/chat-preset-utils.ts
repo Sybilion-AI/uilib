@@ -11,17 +11,23 @@ export function normalizePresetMatchText(s: string): string {
   return s.trim().normalize('NFC');
 }
 
+function presetMatchesUserText(presetText: string, userTextNorm: string): boolean {
+  const presetNorm = normalizePresetMatchText(presetText);
+  if (!presetNorm) return false;
+  if (userTextNorm === presetNorm) return true;
+  const prefix = `${presetNorm} `;
+  return userTextNorm.startsWith(prefix);
+}
+
 export function usedPresetIdsFromMessages(
   messages: Message[] | undefined,
   presets: ChatPreset[] | undefined,
 ): string[] {
   if (!messages?.length || !presets?.length) return [];
-  const userTexts = new Set(
-    messages
-      .filter(m => m.role === MessageRole.USER)
-      .map(m => normalizePresetMatchText(m.text)),
-  );
+  const userTexts = messages
+    .filter(m => m.role === MessageRole.USER)
+    .map(m => normalizePresetMatchText(m.text));
   return presets
-    .filter(p => userTexts.has(normalizePresetMatchText(p.text)))
+    .filter(p => userTexts.some(ut => presetMatchesUserText(p.text, ut)))
     .map(p => p.id);
 }

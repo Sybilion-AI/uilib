@@ -152,16 +152,18 @@ function ChatProvider({ children, userSwitchKey, sendChatMessage: sendChatMessag
             return { ...prev, [scopeId]: updatedChats };
         });
     }, []);
-    const addMessage = useCallback((scopeId, chatId, role, text) => {
+    const addMessage = useCallback((scopeId, chatId, role, text, options) => {
         if (userSwitchKey === null)
             return undefined;
         addScopeIdToRegistry(scopeId);
         const storedText = stripJsonDashboardFences(text);
+        const attachment = role === MessageRole.USER ? options?.userCsvAttachment : undefined;
         const newMessage = {
             id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             role,
             text: storedText,
             timestamp: Date.now(),
+            ...(attachment ? { userCsvAttachment: attachment } : {}),
         };
         setChats(prev => {
             const scopeChats = prev[scopeId] ?? [];
@@ -200,9 +202,17 @@ function ChatProvider({ children, userSwitchKey, sendChatMessage: sendChatMessag
         if (targetChatId === null || targetChatId === '') {
             throw new Error('No chat selected');
         }
-        addMessage(scopeId, targetChatId, MessageRole.USER, message);
+        const apiPayload = typeof message === 'string' ? message : message.apiMessage;
+        if (typeof message === 'string') {
+            addMessage(scopeId, targetChatId, MessageRole.USER, message);
+        }
+        else {
+            addMessage(scopeId, targetChatId, MessageRole.USER, message.displayText, {
+                userCsvAttachment: message.userCsvAttachment,
+            });
+        }
         try {
-            const data = await sendChatMessageFn(message, targetChatId);
+            const data = await sendChatMessageFn(apiPayload, targetChatId);
             if (data.session_id && data.session_id !== targetChatId) {
                 setChats(prev => {
                     const scopeChats = prev[scopeId] ?? [];
@@ -283,7 +293,7 @@ function useChatsForScopeId(scopeId) {
         currentChatId,
         setCurrentChatId: (targetId) => setCurrentChatId(scopeId, targetId),
         newChat: () => newChat(scopeId),
-        addMessage: (chatId, role, text) => addMessage(scopeId, chatId, role, text),
+        addMessage: (chatId, role, text, options) => addMessage(scopeId, chatId, role, text, options),
         removeMessageById: (chatId, messageId) => removeMessageById(scopeId, chatId, messageId),
         sendMessage: (message, chatId) => sendMessage(scopeId, message, chatId),
         deleteChat: (sessionId) => deleteChat(scopeId, sessionId),

@@ -10,7 +10,9 @@ import {
 
 import {
   type Chat,
+  type ChatSendMessagePayload,
   type Message,
+  type UserCsvAttachment,
   MessageRole,
 } from '#uilib/components/ui/Chat/Chat.types';
 import { stripJsonDashboardFences } from '#uilib/lib/dashboard-spec/stripJsonDashboardFences';
@@ -22,8 +24,14 @@ export type SendChatMessageFn = (
   targetChatId: string,
 ) => Promise<ChatResponse>;
 
+export type { ChatSendMessagePayload, UserCsvAttachment } from '#uilib/components/ui/Chat/Chat.types';
+
 const CHATS_PREFIX = 'chats-';
 const CHAT_SCOPE_IDS_REGISTRY_KEY = 'chat-scope-ids';
+
+export type AddChatMessageOptions = {
+  userCsvAttachment?: UserCsvAttachment;
+};
 
 export interface ChatContextType {
   /** Returns the new session id, or undefined if no user / not created. */
@@ -34,6 +42,7 @@ export interface ChatContextType {
     chatId: string,
     role: MessageRole,
     text: string,
+    options?: AddChatMessageOptions,
   ) => string | undefined;
   removeMessageById: (
     scopeId: string,
@@ -42,7 +51,7 @@ export interface ChatContextType {
   ) => void;
   sendMessage: (
     scopeId: string,
-    message: string,
+    message: string | ChatSendMessagePayload,
     chatId?: string,
   ) => Promise<string>;
   getChatsForScopeId: (scopeId: string) => Chat[];
@@ -239,15 +248,24 @@ export function ChatProvider({
   }, []);
 
   const addMessage = useCallback(
-    (scopeId: string, chatId: string, role: MessageRole, text: string) => {
+    (
+      scopeId: string,
+      chatId: string,
+      role: MessageRole,
+      text: string,
+      options?: AddChatMessageOptions,
+    ) => {
       if (userSwitchKey === null) return undefined;
       addScopeIdToRegistry(scopeId);
       const storedText = stripJsonDashboardFences(text);
+      const attachment =
+        role === MessageRole.USER ? options?.userCsvAttachment : undefined;
       const newMessage: Message = {
         id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         role,
         text: storedText,
         timestamp: Date.now(),
+        ...(attachment ? { userCsvAttachment: attachment } : {}),
       };
 
       setChats(prev => {
@@ -292,7 +310,7 @@ export function ChatProvider({
   const sendMessage = useCallback(
     async (
       scopeId: string,
-      message: string,
+      message: string | ChatSendMessagePayload,
       chatId?: string,
     ): Promise<string> => {
       const targetChatId = chatId ?? getCurrentChatId(scopeId);
@@ -300,10 +318,19 @@ export function ChatProvider({
         throw new Error('No chat selected');
       }
 
-      addMessage(scopeId, targetChatId, MessageRole.USER, message);
+      const apiPayload =
+        typeof message === 'string' ? message : message.apiMessage;
+
+      if (typeof message === 'string') {
+        addMessage(scopeId, targetChatId, MessageRole.USER, message);
+      } else {
+        addMessage(scopeId, targetChatId, MessageRole.USER, message.displayText, {
+          userCsvAttachment: message.userCsvAttachment,
+        });
+      }
 
       try {
-        const data = await sendChatMessageFn(message, targetChatId);
+        const data = await sendChatMessageFn(apiPayload, targetChatId);
 
         if (data.session_id && data.session_id !== targetChatId) {
           setChats(prev => {
@@ -430,11 +457,15 @@ export function useChatsForScopeId(scopeId: string) {
     currentChatId,
     setCurrentChatId: (targetId: string) => setCurrentChatId(scopeId, targetId),
     newChat: () => newChat(scopeId),
-    addMessage: (chatId: string, role: MessageRole, text: string) =>
-      addMessage(scopeId, chatId, role, text),
+    addMessage: (
+      chatId: string,
+      role: MessageRole,
+      text: string,
+      options?: AddChatMessageOptions,
+    ) => addMessage(scopeId, chatId, role, text, options),
     removeMessageById: (chatId: string, messageId: string) =>
       removeMessageById(scopeId, chatId, messageId),
-    sendMessage: (message: string, chatId?: string) =>
+    sendMessage: (message: string | ChatSendMessagePayload, chatId?: string) =>
       sendMessage(scopeId, message, chatId),
     deleteChat: (sessionId: string) => deleteChat(scopeId, sessionId),
   };

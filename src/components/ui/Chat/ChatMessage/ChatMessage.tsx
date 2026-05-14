@@ -8,10 +8,12 @@ import {
 } from '../Chat.types';
 import { AgentMessageContent } from './AgentMessageContent';
 import S from './ChatMessage.styl';
+import { UserCsvAttachmentBubble } from './UserCsvAttachmentBubble';
 
 export function ChatMessage({
   role,
   text,
+  userCsvAttachment,
   onQuickReply,
   suppressedQuickReplyKeys,
   quickReplyDisabled,
@@ -45,7 +47,12 @@ export function ChatMessage({
           renderMessageChart={renderMessageChart}
         />
       ) : (
-        <div className={S.text}>{text}</div>
+        <div className={S.userColumn}>
+          <div className={S.text}>{text}</div>
+          {userCsvAttachment ? (
+            <UserCsvAttachmentBubble attachment={userCsvAttachment} />
+          ) : null}
+        </div>
       )}
     </div>
   );

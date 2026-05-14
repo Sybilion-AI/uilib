@@ -120,6 +120,7 @@ export function ChatChrome({
                       key={msg.id}
                       role={msg.role}
                       text={msg.text}
+                      userCsvAttachment={msg.userCsvAttachment}
                       onQuickReply={onQuickReply}
                       suppressedQuickReplyKeys={suppressedQuickReplyKeys}
                       quickReplyDisabled={isLoading}

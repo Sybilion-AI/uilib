@@ -1,14 +1,18 @@
 import { ReactNode } from 'react';
-import { type Chat, MessageRole } from '#uilib/components/ui/Chat/Chat.types';
+import { type Chat, type ChatSendMessagePayload, type UserCsvAttachment, MessageRole } from '#uilib/components/ui/Chat/Chat.types';
 import type { ChatResponse } from '#uilib/types/chat-api.types';
 export type SendChatMessageFn = (message: string, targetChatId: string) => Promise<ChatResponse>;
+export type { ChatSendMessagePayload, UserCsvAttachment } from '#uilib/components/ui/Chat/Chat.types';
+export type AddChatMessageOptions = {
+    userCsvAttachment?: UserCsvAttachment;
+};
 export interface ChatContextType {
     /** Returns the new session id, or undefined if no user / not created. */
     newChat: (scopeId: string) => string | undefined;
     setCurrentChatId: (currScopeId: string, sessionId: string) => void;
-    addMessage: (scopeId: string, chatId: string, role: MessageRole, text: string) => string | undefined;
+    addMessage: (scopeId: string, chatId: string, role: MessageRole, text: string, options?: AddChatMessageOptions) => string | undefined;
     removeMessageById: (scopeId: string, chatId: string, messageId: string) => void;
-    sendMessage: (scopeId: string, message: string, chatId?: string) => Promise<string>;
+    sendMessage: (scopeId: string, message: string | ChatSendMessagePayload, chatId?: string) => Promise<string>;
     getChatsForScopeId: (scopeId: string) => Chat[];
     getCurrentChatId: (scopeId: string) => string | null;
     deleteChat: (scopeId: string, sessionId: string) => void;
@@ -30,9 +34,9 @@ export declare function useChatsForScopeId(scopeId: string): {
     currentChatId: string;
     setCurrentChatId: (targetId: string) => void;
     newChat: () => string;
-    addMessage: (chatId: string, role: MessageRole, text: string) => string;
+    addMessage: (chatId: string, role: MessageRole, text: string, options?: AddChatMessageOptions) => string;
     removeMessageById: (chatId: string, messageId: string) => void;
-    sendMessage: (message: string, chatId?: string) => Promise<string>;
+    sendMessage: (message: string | ChatSendMessagePayload, chatId?: string) => Promise<string>;
     deleteChat: (sessionId: string) => void;
 };
 /** @deprecated Use useChatsForScopeId */
@@ -42,9 +46,9 @@ export declare function useChatsForDataset(scopeId: string): {
     currentChatId: string;
     setCurrentChatId: (targetId: string) => void;
     newChat: () => string;
-    addMessage: (chatId: string, role: MessageRole, text: string) => string;
+    addMessage: (chatId: string, role: MessageRole, text: string, options?: AddChatMessageOptions) => string;
     removeMessageById: (chatId: string, messageId: string) => void;
-    sendMessage: (message: string, chatId?: string) => Promise<string>;
+    sendMessage: (message: string | ChatSendMessagePayload, chatId?: string) => Promise<string>;
     deleteChat: (sessionId: string) => void;
 };
 export declare function useCurrentChat(scopeId: string): Chat;
