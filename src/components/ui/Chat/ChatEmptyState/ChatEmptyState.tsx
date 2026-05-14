@@ -8,6 +8,7 @@ export function ChatEmptyState({
   icon = <SparklesIcon />,
   title = 'Start a conversation',
   description,
+  additionalContent,
   children,
 }: PropsWithChildren<ChatEmptyStateProps>) {
   return (
@@ -15,6 +16,7 @@ export function ChatEmptyState({
       {icon && <div className={S.icon}>{icon}</div>}
       {title && <h2>{title}</h2>}
       {description && <p>{description}</p>}
+      {additionalContent}
       {children}
     </div>
   );

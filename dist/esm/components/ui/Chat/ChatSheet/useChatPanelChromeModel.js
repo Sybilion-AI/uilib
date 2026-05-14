@@ -21,7 +21,7 @@ const CHAT_NAV_COLLAPSE_BREAKPOINT_PX = 1400;
 const CHAT_QUERY_PARAM = 'chat';
 const CHAT_OPEN_VALUE = 'open';
 const PROMPT_QUERY_PARAM = 'prompt';
-function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, }) {
+function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, emptyState, }) {
     const effectiveScopeId = scopeId ?? NO_SCOPE_FALLBACK;
     const isMobile = useIsMobile();
     const { chatPanelContainer, isOpen: sidebarNavOpen, setOpen: setSidebarNavOpen, chatWidthPx, setChatWidthPx, getShellWidth, setChatPanelOpen, } = useSidebar();
@@ -771,6 +771,7 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
         onPromptSubmit: handlePromptSubmit,
         onChatDeleted: endLocalDemoFlow,
         promptPrefill: promptLinkPrefill,
+        emptyState,
     };
     const toggleOpen = () => onOpenChange(!isOpen);
     return {

@@ -13,6 +13,14 @@ export function DocsHeaderActions() {
         </>
       }
       scopeId={DOCS_CHAT_SCOPE_ID}
+      emptyState={{
+        title: 'Start a conversation',
+        description:
+          'Send a message below. This demo appends a canned reply after a short delay.',
+        additionalContent: (
+          <p>Optional empty-state slot via additionalContent.</p>
+        ),
+      }}
     />
   );
 }

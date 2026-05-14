@@ -34,6 +34,7 @@ import { ScrollRef } from '@homecode/ui';
 import { useSidebar } from '../../Sidebar/Sidebar';
 import { Chat } from '../Chat';
 import type { ChatChromeProps } from '../ChatChrome';
+import type { ChatEmptyStateProps } from '../ChatEmptyState/ChatEmptyState.types';
 
 export type UseChatPanelChromeModelInput = {
   /** When true, skip sidebar chat slot, URL `?chat=`, and portal behavior (e.g. page main content). */
@@ -48,6 +49,8 @@ export type UseChatPanelChromeModelInput = {
   onGenerateDashboard?: (transcript: string) => void | Promise<void>;
   /** Renders `[CHART]` tokens in assistant messages. */
   renderMessageChart?: () => React.ReactNode;
+  /** Forwarded to `ChatChrome` when the thread is empty. */
+  emptyState?: ChatEmptyStateProps;
 };
 
 export type UseChatPanelChromeModelResult = {
@@ -92,6 +95,7 @@ export function useChatPanelChromeModel({
   onScriptComplete,
   onGenerateDashboard,
   renderMessageChart,
+  emptyState,
 }: UseChatPanelChromeModelInput): UseChatPanelChromeModelResult {
   const effectiveScopeId = scopeId ?? NO_SCOPE_FALLBACK;
   const isMobile = useIsMobile();
@@ -993,6 +997,7 @@ export function useChatPanelChromeModel({
     onPromptSubmit: handlePromptSubmit,
     onChatDeleted: endLocalDemoFlow,
     promptPrefill: promptLinkPrefill,
+    emptyState,
   };
 
   const toggleOpen = () => onOpenChange(!isOpen);

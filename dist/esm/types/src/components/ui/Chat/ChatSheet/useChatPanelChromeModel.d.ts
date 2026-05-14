@@ -1,5 +1,6 @@
 import { ChatPreset, type ScriptCompletePayload } from '#uilib/components/ui/Chat/Chat.types';
 import type { ChatChromeProps } from '../ChatChrome';
+import type { ChatEmptyStateProps } from '../ChatEmptyState/ChatEmptyState.types';
 export type UseChatPanelChromeModelInput = {
     /** When true, skip sidebar chat slot, URL `?chat=`, and portal behavior (e.g. page main content). */
     embedAsPage: boolean;
@@ -13,6 +14,8 @@ export type UseChatPanelChromeModelInput = {
     onGenerateDashboard?: (transcript: string) => void | Promise<void>;
     /** Renders `[CHART]` tokens in assistant messages. */
     renderMessageChart?: () => React.ReactNode;
+    /** Forwarded to `ChatChrome` when the thread is empty. */
+    emptyState?: ChatEmptyStateProps;
 };
 export type UseChatPanelChromeModelResult = {
     chromeProps: ChatChromeProps;
@@ -22,4 +25,4 @@ export type UseChatPanelChromeModelResult = {
     newChat: () => void;
     chatPanelContainer: HTMLElement | null;
 };
-export declare function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, }: UseChatPanelChromeModelInput): UseChatPanelChromeModelResult;
+export declare function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, emptyState, }: UseChatPanelChromeModelInput): UseChatPanelChromeModelResult;

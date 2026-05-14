@@ -43,6 +43,7 @@ export function ChatSheet({
   onScriptComplete,
   onGenerateDashboard,
   renderMessageChart,
+  emptyState,
   inline = false,
 }: ChatSheetProps) {
   const model = useChatPanelChromeModel({
@@ -53,6 +54,7 @@ export function ChatSheet({
     onScriptComplete,
     onGenerateDashboard,
     renderMessageChart,
+    emptyState,
   });
 
   if (actionsRef) {

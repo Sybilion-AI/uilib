@@ -101,6 +101,9 @@ export default function ChatPage() {
             title: 'Start a conversation',
             description:
               'Send a message below. This demo appends a canned reply after a short delay.',
+            additionalContent: (
+              <p>Optional empty-state slot via additionalContent.</p>
+            ),
           }}
         />
       </PageContentSection>

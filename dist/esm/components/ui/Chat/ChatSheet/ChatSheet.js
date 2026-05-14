@@ -4,7 +4,7 @@ import { Button } from '../../Button/Button.js';
 import { ChatChrome } from '../ChatChrome/ChatChrome.js';
 import { useChatPanelChromeModel } from './useChatPanelChromeModel.js';
 
-function ChatSheet({ triggerLabel = 'Open Chat', triggerAriaLabel, actionsRef, renderTrigger, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, inline = false, }) {
+function ChatSheet({ triggerLabel = 'Open Chat', triggerAriaLabel, actionsRef, renderTrigger, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, emptyState, inline = false, }) {
     const model = useChatPanelChromeModel({
         embedAsPage: inline,
         presets,
@@ -13,6 +13,7 @@ function ChatSheet({ triggerLabel = 'Open Chat', triggerAriaLabel, actionsRef, r
         onScriptComplete,
         onGenerateDashboard,
         renderMessageChart,
+        emptyState,
     });
     if (actionsRef) {
         actionsRef.current = {
