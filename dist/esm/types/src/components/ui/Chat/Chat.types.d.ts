@@ -46,13 +46,11 @@ export type ScriptCompletePayload = {
 };
 export interface ChatPromptProps {
     className?: string;
-    id: string;
     onSubmit: (message: string) => void;
     placeholder?: string;
     presets?: ChatPreset[];
     disabled?: boolean;
     footer?: ReactNode;
-    onChatDeleted?: (sessionId: string) => void;
     /** Deep link `?prompt=` — one-shot composer pre-fill (see useChatPanelChromeModel). */
     prefillMessage?: string | null;
 }
@@ -77,4 +75,7 @@ export interface ChatProps extends HTMLAttributes<HTMLDivElement> {
     children: ReactNode;
     className?: string;
     isEmpty?: boolean;
+    /** Chat context scope; when set, header shows chat selector + delete. */
+    scopeId?: string;
+    onChatDeleted?: (sessionId: string) => void;
 }

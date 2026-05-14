@@ -1,0 +1,24 @@
+@import 'lib/theme.styl';
+
+.wrapper
+  display flex
+  align-items center
+  gap var(--p-2)
+  min-width 200px
+  z-index 1000
+
+.selectGrow
+  flex 1
+  min-width 0
+
+.selectTrigger
+  // box-shadow 0 0 0 1px var(--border) !important
+  width 100%
+
+.deleteBtn
+  flex-shrink 0
+  border-radius 50px
+  opacity 0.3
+
+.wrapper:hover .deleteBtn
+  opacity 1

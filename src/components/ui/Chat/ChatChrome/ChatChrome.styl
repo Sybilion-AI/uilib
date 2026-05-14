@@ -1,23 +1,13 @@
 @import 'lib/theme.styl'
 
-.panelRoot
+.root
   position relative
   display flex
   flex-direction column
   height 100%
   min-height 0
   overflow hidden
-
-  &.variant-sidebar
-    .footer
-      backdrop-filter blur(30px)
-      background-color var(--background-alpha-800)
-      box-shadow 0 0 20px 16px var(--background)
-      border-top 1px solid var(--border)
-
-  &.variant-default
-    .footer
-      --chat-chrome-footer-variant default
+  border-radius var(--p-4)
 
 .chatResizeHandle
   position: absolute;
@@ -44,7 +34,10 @@
 
 .panelHeader
   position absolute
+  display flex
+  align-items center
   width 100%
+  min-height 70px
   z-index 100
 
   flex-shrink 0
@@ -84,6 +77,7 @@
 
 .scrollInner
   padding-top var(--p-10)
+  min-height 100%
   // padding-bottom 320px // goes under prompt
 
   &::after
@@ -103,6 +97,10 @@
   bottom 0
   width 100%;
 
+  backdrop-filter blur(30px)
+  background-color var(--background-alpha-800)
+  border-top 1px solid var(--border)
+  box-shadow 0 0 20px 16px var(--background)
 
 .loader
   // z-index 1

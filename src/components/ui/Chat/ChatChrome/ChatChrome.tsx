@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import { useEffect } from 'react';
 
 import {
   displayLabelForBranchKeyFromMessages,
@@ -42,12 +43,28 @@ export function ChatChrome({
   onPromptSubmit,
   onChatDeleted,
   promptPrefill,
-  variant = 'sidebar',
   footerClassName,
   emptyState,
 }: ChatChromeProps) {
+  useEffect(() => {
+    if (isEmpty) return;
+
+    const scrollToBottom = () => {
+      const inner = scrollRef.current?.innerElem as HTMLDivElement | undefined;
+      if (inner) {
+        inner.scrollTo({
+          top: inner.scrollHeight + 1000,
+          behavior: 'smooth',
+        });
+      }
+    };
+
+    const inner = scrollRef.current?.innerElem as HTMLDivElement | undefined;
+    if (inner) setTimeout(scrollToBottom, 100);
+  }, [isEmpty, messages.length]);
+
   return (
-    <div className={cn(S.panelRoot, S[`variant-${variant}`])}>
+    <div className={S.root}>
       {showResizeHandle && resizeHandle ? (
         <PanelResizeHandle
           edge="leading"
@@ -74,7 +91,11 @@ export function ChatChrome({
         ) : null}
       </div>
       <div className={S.content}>
-        <Chat isEmpty={isEmpty}>
+        <Chat
+          isEmpty={isEmpty}
+          scopeId={effectiveScopeId}
+          onChatDeleted={onChatDeleted}
+        >
           {isEmpty ? (
             <>
               <Chat.EmptyState {...emptyState} />
@@ -174,10 +195,8 @@ export function ChatChrome({
 
           <div className={cn(S.footer, footerClassName)}>
             <Chat.Prompt
-              id={effectiveScopeId}
               onSubmit={onPromptSubmit}
               disabled={isLoading}
-              onChatDeleted={onChatDeleted}
               prefillMessage={promptPrefill ?? undefined}
             />
           </div>

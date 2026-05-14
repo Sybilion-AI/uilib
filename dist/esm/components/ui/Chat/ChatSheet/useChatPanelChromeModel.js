@@ -117,20 +117,6 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
         clearUsedScriptBranchKeysForChat,
         clearIntakeForChat,
     ]);
-    const scrollToBottom = () => {
-        const inner = scrollRef.current?.innerElem;
-        if (inner) {
-            inner.scrollTo({
-                top: inner.scrollHeight + 1000,
-                behavior: 'smooth',
-            });
-        }
-    };
-    useEffect(() => {
-        const inner = scrollRef.current?.innerElem;
-        if (inner)
-            setTimeout(scrollToBottom, 100);
-    }, [chat?.messages.length]);
     const onOpenChange = (open) => {
         if (embedAsPage) {
             return;

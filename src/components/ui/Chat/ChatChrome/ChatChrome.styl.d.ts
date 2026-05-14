@@ -9,13 +9,11 @@ interface CssExports {
   'loader': string;
   'panelClose': string;
   'panelHeader': string;
-  'panelRoot': string;
+  'root': string;
   'scroll': string;
   'scrollInner': string;
   'scrollWrapper': string;
   'scrollbar': string;
-  'variant-default': string;
-  'variant-sidebar': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

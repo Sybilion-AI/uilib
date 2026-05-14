@@ -7,10 +7,23 @@ import type { ChatProps } from './Chat.types';
 import { ChatEmptyState } from './ChatEmptyState/ChatEmptyState';
 import { ChatMessage } from './ChatMessage';
 import { ChatPrompt } from './ChatPrompt';
+import { ChatSelector } from './ChatSheet/ChatSelector';
 
-export function Chat({ children, className, isEmpty, ...props }: ChatProps) {
+export function Chat({
+  children,
+  className,
+  isEmpty,
+  scopeId,
+  onChatDeleted,
+  ...props
+}: ChatProps) {
   return (
     <div className={cn(S.root, className, isEmpty && S.isEmpty)} {...props}>
+      {scopeId ? (
+        <div className={S.header}>
+          <ChatSelector id={scopeId} onChatDeleted={onChatDeleted} />
+        </div>
+      ) : null}
       {children}
     </div>
   );

@@ -234,22 +234,6 @@ export function useChatPanelChromeModel({
     ],
   );
 
-  const scrollToBottom = () => {
-    const inner = scrollRef.current?.innerElem as HTMLDivElement;
-    if (inner) {
-      inner.scrollTo({
-        top: inner.scrollHeight + 1000,
-        behavior: 'smooth',
-      });
-    }
-  };
-
-  useEffect(() => {
-    const inner = scrollRef.current?.innerElem as HTMLDivElement;
-
-    if (inner) setTimeout(scrollToBottom, 100);
-  }, [chat?.messages.length]);
-
   const onOpenChange = (open: boolean) => {
     if (embedAsPage) {
       return;

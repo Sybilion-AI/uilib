@@ -1,10 +1,8 @@
 import cn from 'classnames';
 import { FormEvent, useEffect, useState } from 'react';
 
-import { ChatSelector } from '#uilib/components/ui/Chat/ChatSheet/ChatSelector';
-import { useChatsForScopeId } from '#uilib/contexts/chat-context';
 import useEvent from '#uilib/hooks/useEvent';
-import { SendHorizontalIcon, Trash2Icon } from 'lucide-react';
+import { SendHorizontalIcon } from 'lucide-react';
 
 import { Button } from '../../Button';
 import { Input } from '../../Input';
@@ -16,25 +14,15 @@ export function ChatPrompt({
   placeholder,
   className,
   footer,
-  id,
-  onChatDeleted,
   prefillMessage,
 }: ChatPromptProps) {
   const [message, setMessage] = useState('');
-  const { currentChatId, deleteChat, chats } = useChatsForScopeId(id);
 
   useEffect(() => {
     if (prefillMessage != null && prefillMessage !== '') {
       setMessage(prefillMessage);
     }
   }, [prefillMessage]);
-
-  const handleDeleteChat = () => {
-    if (!currentChatId) return;
-    const sid = currentChatId;
-    deleteChat(sid);
-    onChatDeleted?.(sid);
-  };
 
   const handleSubmit = (e: FormEvent | KeyboardEvent) => {
     const trimmedMessage = message.trim();
@@ -82,19 +70,6 @@ export function ChatPrompt({
           >
           <PaperclipIcon size={16} />
           </Button> */}
-        <div className={S.selectorWrapper}>
-          <ChatSelector id={id} className={S.selector} />
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            aria-label="Delete chat"
-            disabled={!currentChatId || chats.length === 0}
-            onClick={handleDeleteChat}
-          >
-            <Trash2Icon size={16} />
-          </Button>
-        </div>
       </div>
 
       {footer}

@@ -110,19 +110,4 @@ export default [
       COMPRESS && uglify(),
     ].filter(Boolean),
   },
-  {
-    input: 'src/standalone/vite-sybilion-standalone-dev.ts',
-    output: {
-      file: 'dist/standalone/vite-sybilion-standalone-dev.js',
-      format: 'esm',
-      sourcemap: Boolean(COMPRESS),
-    },
-    external: ['vite'],
-    plugins: [
-      resolve({ extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'] }),
-      typescript({
-        tsconfig: './tsconfig.standalone.json',
-      }),
-    ],
-  },
 ];

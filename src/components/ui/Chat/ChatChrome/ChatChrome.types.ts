@@ -44,7 +44,6 @@ export interface ChatChromeProps {
   onChatDeleted: (sessionId: string) => void;
   /** `?prompt=` deep link text for one-shot composer pre-fill. */
   promptPrefill?: string | null;
-  variant?: 'default' | 'sidebar';
   footerClassName?: string;
   emptyState?: ChatEmptyStateProps;
 }

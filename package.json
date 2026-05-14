@@ -35,11 +35,6 @@
       "default": "./dist/esm/hooks/index.js"
     },
     "./src/*": "./src/*",
-    "./vite-standalone-dev": {
-      "types": "./dist/standalone/vite-sybilion-standalone-dev.d.ts",
-      "import": "./dist/standalone/vite-sybilion-standalone-dev.js",
-      "default": "./dist/standalone/vite-sybilion-standalone-dev.js"
-    },
     "./logo.svg": "./src/assets/logo.svg"
   },
   "files": [

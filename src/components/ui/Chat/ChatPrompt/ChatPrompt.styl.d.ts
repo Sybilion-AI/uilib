@@ -6,8 +6,6 @@ interface CssExports {
   'input': string;
   'notice': string;
   'root': string;
-  'selector': string;
-  'selectorWrapper': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
