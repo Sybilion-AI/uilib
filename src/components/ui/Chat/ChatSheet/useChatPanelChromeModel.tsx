@@ -23,7 +23,11 @@ import {
   formatChatTranscript,
   usedPresetIdsFromMessages,
 } from '#uilib/components/ui/Chat/chat-preset-utils';
-import { useChat, useChatsForScopeId } from '#uilib/contexts/chat-context';
+import {
+  isChatEmpty,
+  useChat,
+  useChatsForScopeId,
+} from '#uilib/contexts/chat-context';
 import useEvent from '#uilib/hooks/useEvent';
 import { useIsMobile } from '#uilib/hooks/useIsMobile';
 import { useQueryParams } from '#uilib/hooks/useQueryParams';
@@ -268,6 +272,8 @@ export function useChatPanelChromeModel({
     }
   };
 
+  const isEmpty = isChatEmpty(chat) && !isLoading;
+
   /**
    * App link: `?prompt=…` — open panel, pre-fill composer, strip param (read once on mount
    * from `location.search`). If the selected session already has messages, `newChat()` first.
@@ -294,13 +300,9 @@ export function useChatPanelChromeModel({
     }
     promptParamHandledInEffectRef.current = true;
 
-    const selected = currentChatId
-      ? chats.find(c => c.session_id === currentChatId)
-      : undefined;
-    const selectedHasMessages = (selected?.messages?.length ?? 0) > 0;
     const needsFirstSession = chats.length === 0;
 
-    if (selectedHasMessages || needsFirstSession) {
+    if (!isEmpty || needsFirstSession) {
       const sessionId = newChat();
       if (sessionId == null) {
         logger.warn('Chat prompt link: sign in to use the assistant.');
@@ -819,8 +821,6 @@ export function useChatPanelChromeModel({
   const isLastMessageFromUser =
     chat?.messages.length > 0 &&
     chat.messages[chat.messages.length - 1]?.role === MessageRole.USER;
-
-  const isEmpty = !chat?.messages?.length && !isLoading;
 
   const linearScriptActive = Boolean(
     currentChatId && scriptByChatId[currentChatId],

@@ -21,10 +21,12 @@ export interface ChatProviderProps {
     sendChatMessage: SendChatMessageFn;
 }
 export declare function ChatProvider({ children, userSwitchKey, sendChatMessage: sendChatMessageFn, }: ChatProviderProps): import("react/jsx-runtime").JSX.Element;
+export declare const isChatEmpty: (chat: Chat | null) => boolean;
 export declare function useChats(): ChatContextType;
 export declare function useChat(scopeId: string | undefined, chatId: string | undefined): Chat | null;
 export declare function useChatsForScopeId(scopeId: string): {
     chats: Chat[];
+    currentChat: Chat;
     currentChatId: string;
     setCurrentChatId: (targetId: string) => void;
     newChat: () => string;
@@ -36,6 +38,7 @@ export declare function useChatsForScopeId(scopeId: string): {
 /** @deprecated Use useChatsForScopeId */
 export declare function useChatsForDataset(scopeId: string): {
     chats: Chat[];
+    currentChat: Chat;
     currentChatId: string;
     setCurrentChatId: (targetId: string) => void;
     newChat: () => string;

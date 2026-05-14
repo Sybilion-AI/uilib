@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { MessageRole, GENERATING_DASHBOARD_SYSTEM_TEXT } from '../Chat.types.js';
 import { isGraphIntakeAssistantStepComplete, matchUserTextToQuickReply, parseScriptLine, textHasQuickReplyMarkers, branchKeysUsedFromChatHistory, branchKeysUsedByUserMessages, extractQuickReplyLabelKeyPairsFromText, entryBranchKeyBeforeLastAssistant, isPresetScriptGraph, branchesFromPresetScriptGraph } from '../ChatMessage/presetScript.js';
 import { usedPresetIdsFromMessages, formatChatTranscript } from '../chat-preset-utils.js';
-import { useChatsForScopeId, useChat } from '../../../../contexts/chat-context.js';
+import { useChatsForScopeId, useChat, isChatEmpty } from '../../../../contexts/chat-context.js';
 import useEvent from '../../../../hooks/useEvent.js';
 import { useIsMobile } from '../../../../hooks/useIsMobile.js';
 import { useQueryParams } from '../../../../hooks/useQueryParams.js';
@@ -145,6 +145,7 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
             removeSearchParams(CHAT_QUERY_PARAM);
         }
     };
+    const isEmpty = isChatEmpty(chat) && !isLoading;
     /**
      * App link: `?prompt=…` — open panel, pre-fill composer, strip param (read once on mount
      * from `location.search`). If the selected session already has messages, `newChat()` first.
@@ -168,12 +169,8 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
             return;
         }
         promptParamHandledInEffectRef.current = true;
-        const selected = currentChatId
-            ? chats.find(c => c.session_id === currentChatId)
-            : undefined;
-        const selectedHasMessages = (selected?.messages?.length ?? 0) > 0;
         const needsFirstSession = chats.length === 0;
-        if (selectedHasMessages || needsFirstSession) {
+        if (!isEmpty || needsFirstSession) {
             const sessionId = newChat();
             if (sessionId == null) {
                 logger.warn('Chat prompt link: sign in to use the assistant.');
@@ -641,7 +638,6 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
     };
     const isLastMessageFromUser = chat?.messages.length > 0 &&
         chat.messages[chat.messages.length - 1]?.role === MessageRole.USER;
-    const isEmpty = !chat?.messages?.length && !isLoading;
     const linearScriptActive = Boolean(currentChatId && scriptByChatId[currentChatId]);
     const quickBranches = currentChatId
         ? quickReplyBranchesByChat[currentChatId]

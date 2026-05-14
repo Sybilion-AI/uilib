@@ -22,7 +22,7 @@ export default function CardPage() {
         actions={<DocsHeaderActions />}
       />
       <PageContentSection>
-        <Card style={{ maxWidth: 360 }}>
+        <Card paddingSize="s" style={{ maxWidth: 360 }}>
           <CardHeader>
             <CardTitle>Card title</CardTitle>
             <CardDescription>Supporting description text.</CardDescription>

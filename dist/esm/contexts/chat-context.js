@@ -1,5 +1,5 @@
 import { jsx } from 'react/jsx-runtime';
-import { createContext, useState, useCallback, useEffect, useContext } from 'react';
+import { createContext, useState, useCallback, useEffect, useContext, useMemo } from 'react';
 import { MessageRole } from '../components/ui/Chat/Chat.types.js';
 import { stripJsonDashboardFences } from '../lib/dashboard-spec/stripJsonDashboardFences.js';
 import { LS } from '@homecode/ui';
@@ -255,6 +255,7 @@ function ChatProvider({ children, userSwitchKey, sendChatMessage: sendChatMessag
             deleteChat,
         }, children: children }));
 }
+const isChatEmpty = (chat) => chat?.messages.length === 0;
 function useChats() {
     const context = useContext(ChatContext);
     if (context === undefined) {
@@ -264,17 +265,21 @@ function useChats() {
 }
 function useChat(scopeId, chatId) {
     const { getChatsForScopeId } = useChats();
-    if (!scopeId || !chatId)
-        return null;
-    const list = getChatsForScopeId(scopeId);
-    return list.find(chat => chat.session_id === chatId) ?? null;
+    return useMemo(() => {
+        if (!scopeId || !chatId)
+            return null;
+        return (getChatsForScopeId(scopeId)?.find(chat => chat.session_id === chatId) ??
+            null);
+    }, [scopeId, chatId, getChatsForScopeId]);
 }
 function useChatsForScopeId(scopeId) {
     const { getChatsForScopeId, getCurrentChatId, setCurrentChatId, newChat, addMessage, removeMessageById, sendMessage, deleteChat, } = useChats();
     const chats = getChatsForScopeId(scopeId);
     const currentChatId = getCurrentChatId(scopeId);
+    const currentChat = useChat(scopeId, currentChatId ?? undefined);
     return {
         chats,
+        currentChat,
         currentChatId,
         setCurrentChatId: (targetId) => setCurrentChatId(scopeId, targetId),
         newChat: () => newChat(scopeId),
@@ -294,4 +299,4 @@ function useCurrentChat(scopeId) {
     return useChat(scopeId, chatId ?? undefined);
 }
 
-export { ChatContext, ChatProvider, useChat, useChats, useChatsForDataset, useChatsForScopeId, useCurrentChat };
+export { ChatContext, ChatProvider, isChatEmpty, useChat, useChats, useChatsForDataset, useChatsForScopeId, useCurrentChat };

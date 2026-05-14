@@ -4,6 +4,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 
@@ -383,6 +384,9 @@ export function ChatProvider({
   );
 }
 
+export const isChatEmpty = (chat: Chat | null): boolean =>
+  chat?.messages.length === 0;
+
 export function useChats() {
   const context = useContext(ChatContext);
   if (context === undefined) {
@@ -396,9 +400,13 @@ export function useChat(
   chatId: string | undefined,
 ): Chat | null {
   const { getChatsForScopeId } = useChats();
-  if (!scopeId || !chatId) return null;
-  const list = getChatsForScopeId(scopeId);
-  return list.find(chat => chat.session_id === chatId) ?? null;
+  return useMemo(() => {
+    if (!scopeId || !chatId) return null;
+    return (
+      getChatsForScopeId(scopeId)?.find(chat => chat.session_id === chatId) ??
+      null
+    );
+  }, [scopeId, chatId, getChatsForScopeId]);
 }
 
 export function useChatsForScopeId(scopeId: string) {
@@ -414,9 +422,11 @@ export function useChatsForScopeId(scopeId: string) {
   } = useChats();
   const chats = getChatsForScopeId(scopeId);
   const currentChatId = getCurrentChatId(scopeId);
+  const currentChat = useChat(scopeId, currentChatId ?? undefined);
 
   return {
     chats,
+    currentChat,
     currentChatId,
     setCurrentChatId: (targetId: string) => setCurrentChatId(scopeId, targetId),
     newChat: () => newChat(scopeId),
