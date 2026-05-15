@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/Mir-Insight/uilib/compare/v1.2.26...v1.3.0) (2026-05-15)
+
+
+### Features
+
+* ChartAreaInteractive - Brush overlays, pin click, Y range ([a72d267](https://github.com/Mir-Insight/uilib/commit/a72d2675569e8d51bfa3b6be1eff44805b5c1f68))
+* ChartAreaInteractive - Time-range brush + plot geometry ([e6c413c](https://github.com/Mir-Insight/uilib/commit/e6c413cea4637d453447f14b2c7b73dd66c7a4d5))
+* WorldMap - DriverCard, shared map, chart empty ([1878a14](https://github.com/Mir-Insight/uilib/commit/1878a1485a5c187875944a769761d81b6f7b1324))
+
 ### [1.2.26](https://github.com/Mir-Insight/uilib/compare/v1.2.24...v1.2.26) (2026-05-15)
 
 
