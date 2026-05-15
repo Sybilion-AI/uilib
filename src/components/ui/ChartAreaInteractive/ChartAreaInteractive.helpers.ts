@@ -65,7 +65,37 @@ const timeRangeToMonths = {
   All: 12,
 } as const;
 
-export type TimeRange = keyof typeof timeRangeToMonths;
+export type TimeRangePreset = keyof typeof timeRangeToMonths;
+
+/** @deprecated Use `TimeRangePreset` or `string` for brush-encoded ranges. */
+export type TimeRange = TimeRangePreset;
+
+export const DRAG_TIME_RANGE_PREFIX = '__drag:' as const;
+
+export function encodeDragTimeRange(a: Date, b: Date): string {
+  const t0 = Math.min(a.getTime(), b.getTime());
+  const t1 = Math.max(a.getTime(), b.getTime());
+  return `${DRAG_TIME_RANGE_PREFIX}${t0},${t1}`;
+}
+
+export function parseDragTimeRange(
+  s: string,
+): { start: Date; end: Date } | null {
+  if (!s.startsWith(DRAG_TIME_RANGE_PREFIX)) return null;
+  const body = s.slice(DRAG_TIME_RANGE_PREFIX.length);
+  const comma = body.indexOf(',');
+  if (comma === -1) return null;
+  const a = Number(body.slice(0, comma));
+  const b = Number(body.slice(comma + 1));
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+  const t0 = Math.min(a, b);
+  const t1 = Math.max(a, b);
+  return { start: new Date(t0), end: new Date(t1) };
+}
+
+export function isTimeRangePreset(s: string): s is TimeRangePreset {
+  return Object.prototype.hasOwnProperty.call(timeRangeToMonths, s);
+}
 
 function isPlottableNumber(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
@@ -154,10 +184,22 @@ export type FilterDataForTimeRangeOptions = {
 
 export const filterDataForTimeRange = (
   data: ChartDataPoint[],
-  currentTimeRange: TimeRange,
+  currentTimeRange: string,
   options?: FilterDataForTimeRangeOptions,
 ) => {
+  const dragRange = parseDragTimeRange(currentTimeRange);
+  if (dragRange) {
+    const { start, end } = dragRange;
+    return data.filter(item => {
+      if (!item.date) return false;
+      const d = new Date(item.date);
+      return d >= start && d <= end;
+    });
+  }
+
   if (currentTimeRange === 'All') return data;
+
+  if (!isTimeRangePreset(currentTimeRange)) return data;
 
   const latestDate = computeLatestPlottableDate(data, options);
 

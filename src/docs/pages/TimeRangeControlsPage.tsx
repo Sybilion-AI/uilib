@@ -2,13 +2,12 @@ import { useState } from 'react';
 
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { TimeRangeControls } from '#uilib/components/ui/TimeRangeControls';
-import type { TimeRange } from '#uilib/components/ui/TimeRangeControls/TimeRangeControls.types';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
 export default function TimeRangeControlsPage() {
-  const [range, setRange] = useState<TimeRange>('1y');
+  const [range, setRange] = useState<string>('1y');
 
   return (
     <>
@@ -21,7 +20,7 @@ export default function TimeRangeControlsPage() {
       <PageContentSection>
         <TimeRangeControls
           timeRange={range}
-          onTimeRangeChange={v => setRange(v as TimeRange)}
+          onTimeRangeChange={setRange}
           loading={false}
         />
       </PageContentSection>

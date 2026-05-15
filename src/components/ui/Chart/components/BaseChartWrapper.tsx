@@ -29,43 +29,12 @@ import { chartRenderQueue } from '#uilib/utils/chartRenderQueue';
 import { ComposedChart, LineChart } from 'recharts';
 import { LegendPayload } from 'recharts/types/component/DefaultLegendContent';
 
+import { getPlotViewBox, resolveChartMargin } from '../tools/chartPlotGeometry';
 import { formatDate } from '../tools/formatters';
 import S from './BaseChartWrapper.styl';
 import { ChartAxes } from './ChartAxes';
 import { ChartGrid } from './ChartGrid';
 import { LegendSvg } from './LegendSvg/LegendSvg';
-
-type ChartMargin = { top: number; right: number; bottom: number; left: number };
-
-const DEFAULT_CHART_MARGIN: ChartMargin = {
-  top: 5,
-  right: 5,
-  bottom: 5,
-  left: 5,
-};
-
-function resolveChartMargin(
-  margin: Partial<ChartMargin> | undefined,
-): ChartMargin {
-  return {
-    top: margin?.top ?? DEFAULT_CHART_MARGIN.top,
-    right: margin?.right ?? DEFAULT_CHART_MARGIN.right,
-    bottom: margin?.bottom ?? DEFAULT_CHART_MARGIN.bottom,
-    left: margin?.left ?? DEFAULT_CHART_MARGIN.left,
-  };
-}
-
-/** Plot box inside `.recharts-wrapper`, same convention as Recharts cartesian viewBox. */
-function getPlotViewBox(wrapper: HTMLElement, m: ChartMargin) {
-  const w = wrapper.clientWidth;
-  const h = wrapper.clientHeight;
-  return {
-    x: m.left,
-    y: m.top,
-    width: Math.max(0, w - m.left - m.right),
-    height: Math.max(0, h - m.top - m.bottom),
-  };
-}
 
 function clampTooltipTranslate(args: {
   coordinate: { x: number; y: number };

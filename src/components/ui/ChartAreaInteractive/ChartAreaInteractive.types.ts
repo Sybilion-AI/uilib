@@ -2,8 +2,6 @@ import { BaseChartWrapperProps } from '#uilib/components/ui/Chart/components/Bas
 import type { ForecastData } from '#uilib/types/forecast-data';
 import { LegendPayload } from 'recharts';
 
-import { TimeRange } from './ChartAreaInteractive.helpers';
-
 export type OverlayMode = 'pin' | 'intervals' | 'thresholds';
 
 export interface ChartDataPoint {
@@ -28,7 +26,8 @@ export interface Analysis {
 
 export interface ChartAreaInteractiveProps extends BaseChartWrapperProps {
   chartContainerClassName?: string;
-  timeRange: TimeRange;
+  /** Preset (`6m`, `1y`, …, `All`) or `__drag:startMs,endMs` from chart brush. */
+  timeRange: string;
   onTimeRangeChange: (range: string) => void;
   pinMonth: string | undefined;
   onPinMonthChange: (month: string | undefined) => void;

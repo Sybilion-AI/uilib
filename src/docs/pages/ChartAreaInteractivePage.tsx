@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import { ChartAreaInteractive } from '#uilib/components/ui/ChartAreaInteractive';
-import type { TimeRange } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.helpers';
 import type {
   ChartDataPoint,
   OverlayMode,
@@ -91,7 +90,7 @@ type DemoMode = 'none' | OverlayMode;
 
 export default function ChartAreaInteractivePage() {
   const { isDarkMode } = useTheme();
-  const [timeRange, setTimeRange] = useState<TimeRange>('1y');
+  const [timeRange, setTimeRange] = useState<string>('1y');
   const [pinMonth, setPinMonth] = useState<string | undefined>(undefined);
   const [demoMode, setDemoMode] = useState<DemoMode>('none');
   const [chartData] = useState<ChartDataPoint[]>(INITIAL_CHART);
@@ -158,7 +157,7 @@ export default function ChartAreaInteractivePage() {
         </Tabs>
         <ChartAreaInteractive
           timeRange={timeRange}
-          onTimeRangeChange={v => setTimeRange(v as TimeRange)}
+          onTimeRangeChange={setTimeRange}
           pinMonth={pinMonth}
           onPinMonthChange={setPinMonth}
           mode={mode}

@@ -18,6 +18,7 @@ import {
 } from './ChartAreaInteractive.helpers';
 import S from './ChartAreaInteractive.styl';
 import { ChartAreaInteractiveProps } from './ChartAreaInteractive.types';
+import { TimeRangeBrushHost } from './TimeRangeBrushLayer';
 import { IntervalsOverlay, PinOverlay, ThresholdsOverlay } from './overlays';
 
 export const chartConfig = {
@@ -68,6 +69,7 @@ export function ChartAreaInteractive({
   overlayForecastData = {},
   hiddenSeries,
   disableForecastHistoricalBridge,
+  overlayElements: overlayElementsProp,
   ...restProps
 }: ChartAreaInteractiveProps) {
   const seriesHidden = hiddenSeries ?? new Set<string>();
@@ -161,9 +163,16 @@ export function ChartAreaInteractive({
     loadingMessage,
     excludeLegendIds,
     forecastLineStyle,
+    overlayElements: overlayElementsProp,
     // loadingAnalyses,
     ...restProps,
   };
+
+  const brushEnabled =
+    !disableTimeRangeSelector &&
+    !loading &&
+    bridgedChartData.length > 1 &&
+    mode == null;
 
   const renderChart = () => {
     const overlayClassName = cn(chartContainerClassName);
@@ -213,10 +222,17 @@ export function ChartAreaInteractive({
 
       default:
         return (
-          <BaseChartWrapper
-            {...baseChartProps}
-            chartClassName={cn(S.chartContainer, chartContainerClassName)}
-          />
+          <TimeRangeBrushHost
+            chartData={bridgedChartData}
+            onTimeRangeChange={onTimeRangeChange}
+            enabled={brushEnabled}
+            layoutKey={chartRenderId ?? null}
+          >
+            <BaseChartWrapper
+              {...baseChartProps}
+              chartClassName={cn(S.chartContainer, chartContainerClassName)}
+            />
+          </TimeRangeBrushHost>
         );
     }
   };

@@ -14,22 +14,25 @@ import {
 
 import { TIME_RANGES } from './TimeRangeControls.constants';
 import S from './TimeRangeControls.styl';
-import { TimeRange } from './TimeRangeControls.types';
+
+function toggleValueForTimeRange(timeRange: string): string {
+  return (TIME_RANGES as readonly string[]).includes(timeRange)
+    ? timeRange
+    : '';
+}
+
+export type TimeRangeControlsProps = {
+  timeRange: string;
+  onTimeRangeChange: (range: string) => void;
+  loading?: boolean;
+};
 
 export const TimeRangeControls = memo(
-  ({
-    timeRange,
-    onTimeRangeChange,
-    loading,
-  }: {
-    timeRange: TimeRange;
-    onTimeRangeChange: (range: string) => void;
-    loading?: boolean;
-  }) => (
+  ({ timeRange, onTimeRangeChange, loading }: TimeRangeControlsProps) => (
     <div className={S.timeRangeContainer}>
       <ToggleGroup
         type="single"
-        value={timeRange}
+        value={toggleValueForTimeRange(timeRange)}
         onValueChange={onTimeRangeChange}
         variant="outline"
         disabled={loading}
@@ -56,13 +59,9 @@ export const TimeRangeSelect = memo(
     timeRange,
     onTimeRangeChange,
     loading,
-  }: {
-    timeRange: TimeRange;
-    onTimeRangeChange: (range: string) => void;
-    loading: boolean;
-  }) => (
+  }: TimeRangeControlsProps & { loading: boolean }) => (
     <Select
-      value={timeRange}
+      value={toggleValueForTimeRange(timeRange) || undefined}
       onValueChange={onTimeRangeChange}
       disabled={loading}
     >
