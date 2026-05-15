@@ -54,7 +54,7 @@ export function ChatSelector({
         (firstMessage.text.length > 30 ? '...' : '')
       );
     }
-    return `Chat ${chat.session_id}`;
+    return 'New chat';
   };
 
   return (
