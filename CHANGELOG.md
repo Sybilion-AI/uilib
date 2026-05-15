@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.23](https://github.com/Mir-Insight/uilib/compare/v1.2.22...v1.2.23) (2026-05-15)
+
+
+### Features
+
+* Chat - Shared CsvIcon and CSV bubble styling ([8292d7b](https://github.com/Mir-Insight/uilib/commit/8292d7b7e45ab1f0955422add14a87f092317915))
+* ChatPrompt - Composer layout and auto-grow textarea ([c912f96](https://github.com/Mir-Insight/uilib/commit/c912f9681c97dd3392fd0bd2b27b43743dfc6869))
+
 ### [1.2.22](https://github.com/Mir-Insight/uilib/compare/v1.2.21...v1.2.22) (2026-05-15)
 
 
