@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.24](https://github.com/Mir-Insight/uilib/compare/v1.2.23...v1.2.24) (2026-05-15)
+
+
+### Bug Fixes
+
+* AppChrome - Mobile header layout and compact triggers ([4eddb10](https://github.com/Mir-Insight/uilib/commit/4eddb105d59f0c86a4e038069d891d322d730ae5))
+* Card - title fill width ([4dc3c8d](https://github.com/Mir-Insight/uilib/commit/4dc3c8de4bd267138f5634d33b4b7c4b67c9c8fc))
+
 ### [1.2.23](https://github.com/Mir-Insight/uilib/compare/v1.2.22...v1.2.23) (2026-05-15)
 
 
