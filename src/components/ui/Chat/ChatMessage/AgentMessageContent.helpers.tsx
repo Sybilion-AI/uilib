@@ -77,6 +77,23 @@ const injectBold = (content: string) => {
   };
 };
 
+/** `_italic_` (underscore) — avoids clashing with `* ` bullet markers. */
+const injectItalic = (content: string) => {
+  const matches = content.match(/(?<![A-Za-z0-9])_([^_\n]+?)_(?![A-Za-z0-9])/);
+
+  if (!matches || matches.index === undefined) return null;
+
+  if (isInsideHtmlListOrTable(content, matches.index)) {
+    return null;
+  }
+
+  return {
+    elem: <em>{matches[1]}</em>,
+    index: matches.index,
+    length: matches[0].length,
+  };
+};
+
 const injectBullet = (content: string) => {
   // Match bullet points: * or - followed by space
   // Match at start of string/line or after whitespace/colon (for nested bullets)
@@ -281,6 +298,38 @@ const isAllowedHref = (href: string): boolean => {
   return false;
 };
 
+const normalizeWwwToHttps = (raw: string): string => {
+  const t = raw.trim();
+  if (/^www\./i.test(t)) return `https://${t}`;
+  return t;
+};
+
+/** Strip ASCII closing punctuation often pasted after URLs. */
+const stripTrailingUrlPunctuation = (s: string): string => {
+  let u = s;
+  while (u.length > 0 && /[.,;:!?)}\]]$/u.test(u)) {
+    u = u.slice(0, -1);
+  }
+  return u;
+};
+
+function linkTargetRelForHref(
+  href: string,
+  explicitTarget?: string,
+): { target?: string; rel?: string } {
+  if (explicitTarget) {
+    const t = explicitTarget.trim();
+    if (t.toLowerCase() === '_blank') {
+      return { target: '_blank', rel: 'noopener noreferrer' };
+    }
+    return { target: t || undefined, rel: undefined };
+  }
+  if (/^https?:\/\//i.test(href) || /^mailto:/i.test(href)) {
+    return { target: '_blank', rel: 'noopener noreferrer' };
+  }
+  return { target: undefined, rel: undefined };
+}
+
 type Injector = (
   content: string,
 ) => { elem: React.ReactNode; index: number; length: number } | null;
@@ -325,6 +374,100 @@ const runFormattingPipeline = (
   return result;
 };
 
+const linkLabelInjectors: Injector[] = [
+  injectHTMLTags,
+  injectBold,
+  injectItalic,
+  injectNewlines,
+];
+
+const injectMarkdownLink: Injector = (content: string) => {
+  const matches = content.match(/\[([^\]]+)\]\(([^)]+)\)/);
+
+  if (!matches || matches.index === undefined) return null;
+
+  if (isInsideHtmlListOrTable(content, matches.index)) {
+    return null;
+  }
+
+  const href = normalizeWwwToHttps(matches[2].trim());
+  if (!isAllowedHref(href)) return null;
+
+  const { target, rel } = linkTargetRelForHref(href, undefined);
+  const label = matches[1];
+
+  return {
+    elem: (
+      <a href={href} target={target} rel={rel}>
+        {runFormattingPipeline(label, linkLabelInjectors)}
+      </a>
+    ),
+    index: matches.index,
+    length: matches[0].length,
+  };
+};
+
+const injectAutolinkUrl: Injector = (content: string) => {
+  type Cand = { index: number; length: number; href: string; display: string };
+
+  const candidates: Cand[] = [];
+
+  const reHttp = /https?:\/\/[^\s<>"']+/gi;
+  let hm: RegExpExecArray | null;
+  while ((hm = reHttp.exec(content)) !== null) {
+    const href = stripTrailingUrlPunctuation(hm[0]);
+    if (
+      href.length >= (href.startsWith('https://') ? 8 : 7) &&
+      isAllowedHref(href) &&
+      /^https?:\/\//i.test(href)
+    ) {
+      candidates.push({
+        index: hm.index,
+        length: href.length,
+        href,
+        display: href,
+      });
+    }
+  }
+
+  const reWww = /(^|[^A-Za-z0-9/])(www\.[^\s<>"']+)/gi;
+  while ((hm = reWww.exec(content)) !== null) {
+    const prefix = hm[1] ?? '';
+    const rawWww = hm[2];
+    const body = stripTrailingUrlPunctuation(rawWww);
+    const href = `https://${body}`;
+    if (body.length > 4 && isAllowedHref(href)) {
+      candidates.push({
+        index: hm.index + prefix.length,
+        length: body.length,
+        href,
+        display: body,
+      });
+    }
+  }
+
+  if (candidates.length === 0) return null;
+
+  candidates.sort((a, b) => a.index - b.index);
+  const c = candidates[0]!;
+
+  if (isInsideHtmlListOrTable(content, c.index)) {
+    return null;
+  }
+
+  const { target, rel } = linkTargetRelForHref(c.href, undefined);
+
+  return {
+    elem: (
+      <a href={c.href} target={target} rel={rel}>
+        {c.display}
+      </a>
+    ),
+    index: c.index,
+    length: c.length,
+  };
+};
+
 const injectAnchor: Injector = (content: string) => {
   const regex = /<a\s+([^>]+)>([\s\S]*?)<\/a\s*>/i;
   const matches = content.match(regex);
@@ -356,18 +499,12 @@ const injectAnchor: Injector = (content: string) => {
     return null;
   }
 
-  const opensNewTab = targetRaw.toLowerCase() === '_blank';
-  const target = opensNewTab ? '_blank' : targetRaw || undefined;
-  const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
+  const { target, rel } = linkTargetRelForHref(href, targetRaw || undefined);
 
   return {
     elem: (
       <a href={href} target={target} rel={rel}>
-        {runFormattingPipeline(inner, [
-          injectHTMLTags,
-          injectBold,
-          injectNewlines,
-        ])}
+        {runFormattingPipeline(inner, linkLabelInjectors)}
       </a>
     ),
     index: matches.index!,
@@ -379,17 +516,23 @@ const applyFormatting = (text: string): React.ReactNode[] =>
   runFormattingPipeline(text, [
     injectHeaders,
     injectAnchor,
+    injectMarkdownLink,
     injectHTMLTags,
     injectBullet,
     injectBold,
+    injectItalic,
+    injectAutolinkUrl,
     injectNewlines,
   ]);
 
 const applyFormattingInline = (text: string): React.ReactNode[] =>
   runFormattingPipeline(text, [
     injectAnchor,
+    injectMarkdownLink,
     injectHTMLTags,
     injectBold,
+    injectItalic,
+    injectAutolinkUrl,
     injectNewlines,
   ]);
 
@@ -397,6 +540,7 @@ export {
   injectHeaders,
   injectAnchor,
   injectBold,
+  injectItalic,
   injectBullet,
   injectNewlines,
   convertMarkdownTableToHTML,

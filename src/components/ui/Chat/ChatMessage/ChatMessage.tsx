@@ -1,5 +1,7 @@
 import cn from 'classnames';
 
+import { InteractiveContent } from '#uilib/components/ui/InteractiveContent';
+
 import { TextShimmer } from '../../TextShimmer';
 import {
   type ChatMessageProps,
@@ -48,7 +50,9 @@ export function ChatMessage({
         />
       ) : (
         <div className={S.userColumn}>
-          <div className={S.text}>{text}</div>
+          <div className={S.text}>
+            <InteractiveContent text={text} />
+          </div>
           {userCsvAttachment ? (
             <UserCsvAttachmentBubble attachment={userCsvAttachment} />
           ) : null}

@@ -1,3 +1,20 @@
 .root
   strong
     font-weight 600
+
+  em
+    font-style italic
+
+  a
+    color var(--sb-green-600)
+    text-decoration underline
+    text-underline-offset 2px
+
+    &:hover
+      color var(--sb-green-700)
+
+    :global(.dark) &
+      color var(--sb-green-400)
+
+      &:hover
+        color var(--sb-green-300)

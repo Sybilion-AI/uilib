@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
-import { type Chat, type ChatSendMessagePayload, type UserCsvAttachment, MessageRole } from '#uilib/components/ui/Chat/Chat.types';
+import { type Chat, type ChatSendMessagePayload, MessageRole, type UserCsvAttachment } from '#uilib/components/ui/Chat/Chat.types';
 import type { ChatResponse } from '#uilib/types/chat-api.types';
 export type SendChatMessageFn = (message: string, targetChatId: string) => Promise<ChatResponse>;
-export type { ChatSendMessagePayload, UserCsvAttachment } from '#uilib/components/ui/Chat/Chat.types';
+export type { ChatSendMessagePayload, UserCsvAttachment, } from '#uilib/components/ui/Chat/Chat.types';
 export type AddChatMessageOptions = {
     userCsvAttachment?: UserCsvAttachment;
 };

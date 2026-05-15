@@ -56,6 +56,20 @@ const injectBold = (content) => {
         length: matches[0].length,
     };
 };
+/** `_italic_` (underscore) — avoids clashing with `* ` bullet markers. */
+const injectItalic = (content) => {
+    const matches = content.match(/(?<![A-Za-z0-9])_([^_\n]+?)_(?![A-Za-z0-9])/);
+    if (!matches || matches.index === undefined)
+        return null;
+    if (isInsideHtmlListOrTable(content, matches.index)) {
+        return null;
+    }
+    return {
+        elem: jsx("em", { children: matches[1] }),
+        index: matches.index,
+        length: matches[0].length,
+    };
+};
 const injectBullet = (content) => {
     // Match bullet points: * or - followed by space
     // Match at start of string/line or after whitespace/colon (for nested bullets)
@@ -229,6 +243,33 @@ const isAllowedHref = (href) => {
         return true;
     return false;
 };
+const normalizeWwwToHttps = (raw) => {
+    const t = raw.trim();
+    if (/^www\./i.test(t))
+        return `https://${t}`;
+    return t;
+};
+/** Strip ASCII closing punctuation often pasted after URLs. */
+const stripTrailingUrlPunctuation = (s) => {
+    let u = s;
+    while (u.length > 0 && /[.,;:!?)}\]]$/u.test(u)) {
+        u = u.slice(0, -1);
+    }
+    return u;
+};
+function linkTargetRelForHref(href, explicitTarget) {
+    if (explicitTarget) {
+        const t = explicitTarget.trim();
+        if (t.toLowerCase() === '_blank') {
+            return { target: '_blank', rel: 'noopener noreferrer' };
+        }
+        return { target: t || undefined, rel: undefined };
+    }
+    if (/^https?:\/\//i.test(href) || /^mailto:/i.test(href)) {
+        return { target: '_blank', rel: 'noopener noreferrer' };
+    }
+    return { target: undefined, rel: undefined };
+}
 const runFormattingPipeline = (text, injectors) => {
     let result = [text];
     try {
@@ -260,6 +301,76 @@ const runFormattingPipeline = (text, injectors) => {
     }
     return result;
 };
+const linkLabelInjectors = [
+    injectHTMLTags,
+    injectBold,
+    injectItalic,
+    injectNewlines,
+];
+const injectMarkdownLink = (content) => {
+    const matches = content.match(/\[([^\]]+)\]\(([^)]+)\)/);
+    if (!matches || matches.index === undefined)
+        return null;
+    if (isInsideHtmlListOrTable(content, matches.index)) {
+        return null;
+    }
+    const href = normalizeWwwToHttps(matches[2].trim());
+    if (!isAllowedHref(href))
+        return null;
+    const { target, rel } = linkTargetRelForHref(href, undefined);
+    const label = matches[1];
+    return {
+        elem: (jsx("a", { href: href, target: target, rel: rel, children: runFormattingPipeline(label, linkLabelInjectors) })),
+        index: matches.index,
+        length: matches[0].length,
+    };
+};
+const injectAutolinkUrl = (content) => {
+    const candidates = [];
+    const reHttp = /https?:\/\/[^\s<>"']+/gi;
+    let hm;
+    while ((hm = reHttp.exec(content)) !== null) {
+        const href = stripTrailingUrlPunctuation(hm[0]);
+        if (href.length >= (href.startsWith('https://') ? 8 : 7) &&
+            isAllowedHref(href) &&
+            /^https?:\/\//i.test(href)) {
+            candidates.push({
+                index: hm.index,
+                length: href.length,
+                href,
+                display: href,
+            });
+        }
+    }
+    const reWww = /(^|[^A-Za-z0-9/])(www\.[^\s<>"']+)/gi;
+    while ((hm = reWww.exec(content)) !== null) {
+        const prefix = hm[1] ?? '';
+        const rawWww = hm[2];
+        const body = stripTrailingUrlPunctuation(rawWww);
+        const href = `https://${body}`;
+        if (body.length > 4 && isAllowedHref(href)) {
+            candidates.push({
+                index: hm.index + prefix.length,
+                length: body.length,
+                href,
+                display: body,
+            });
+        }
+    }
+    if (candidates.length === 0)
+        return null;
+    candidates.sort((a, b) => a.index - b.index);
+    const c = candidates[0];
+    if (isInsideHtmlListOrTable(content, c.index)) {
+        return null;
+    }
+    const { target, rel } = linkTargetRelForHref(c.href, undefined);
+    return {
+        elem: (jsx("a", { href: c.href, target: target, rel: rel, children: c.display })),
+        index: c.index,
+        length: c.length,
+    };
+};
 const injectAnchor = (content) => {
     const regex = /<a\s+([^>]+)>([\s\S]*?)<\/a\s*>/i;
     const matches = content.match(regex);
@@ -281,15 +392,9 @@ const injectAnchor = (content) => {
     if (!href || !isAllowedHref(href)) {
         return null;
     }
-    const opensNewTab = targetRaw.toLowerCase() === '_blank';
-    const target = opensNewTab ? '_blank' : targetRaw || undefined;
-    const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
+    const { target, rel } = linkTargetRelForHref(href, targetRaw || undefined);
     return {
-        elem: (jsx("a", { href: href, target: target, rel: rel, children: runFormattingPipeline(inner, [
-                injectHTMLTags,
-                injectBold,
-                injectNewlines,
-            ]) })),
+        elem: (jsx("a", { href: href, target: target, rel: rel, children: runFormattingPipeline(inner, linkLabelInjectors) })),
         index: matches.index,
         length: matches[0].length,
     };
@@ -297,16 +402,22 @@ const injectAnchor = (content) => {
 const applyFormatting = (text) => runFormattingPipeline(text, [
     injectHeaders,
     injectAnchor,
+    injectMarkdownLink,
     injectHTMLTags,
     injectBullet,
     injectBold,
+    injectItalic,
+    injectAutolinkUrl,
     injectNewlines,
 ]);
 const applyFormattingInline = (text) => runFormattingPipeline(text, [
     injectAnchor,
+    injectMarkdownLink,
     injectHTMLTags,
     injectBold,
+    injectItalic,
+    injectAutolinkUrl,
     injectNewlines,
 ]);
 
-export { applyFormatting, applyFormattingInline, convertMarkdownTableToHTML, injectAnchor, injectBold, injectBullet, injectHeaders, injectNewlines };
+export { applyFormatting, applyFormattingInline, convertMarkdownTableToHTML, injectAnchor, injectBold, injectBullet, injectHeaders, injectItalic, injectNewlines };
