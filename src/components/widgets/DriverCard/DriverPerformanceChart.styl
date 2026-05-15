@@ -1,0 +1,43 @@
+// Driver performance chart (normalized series)
+.driverChartContainer
+  width 100%
+  position relative
+
+  svg
+    overflow visible
+
+.chartContainer
+  height 214px
+  width 100%
+  margin-left -0.5rem
+  padding var(--p-4) 0
+
+.chartContainerDisabled
+  opacity 0.1
+
+.noDataMessage
+  position absolute
+  top 50%
+  left 50%
+  transform translate(-50%, -50%)
+  font-size 0.875rem
+  font-weight 500
+  color var(--foreground)
+  pointer-events none
+  z-index 10
+
+.chartTooltip
+  background-color var(--popover)
+  border 1px solid var(--border)
+  border-radius 0.5rem
+  padding 0.75rem
+  box-shadow 0 10px 15px -3px rgba(0, 0, 0, 0.1)
+
+.tooltipDate
+  font-size 0.875rem
+  font-weight 500
+  color var(--popover-foreground)
+
+.tooltipPerformance
+  font-size 0.875rem
+  color var(--muted-foreground)

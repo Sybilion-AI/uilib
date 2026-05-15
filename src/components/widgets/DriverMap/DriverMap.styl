@@ -1,5 +1,5 @@
 @import '../../../lib/theme.styl'
-@import './MapBackground/mapAspect.mixin.styl'
+@import '../../ui/WorldMap/mapAspect.mixin.styl'
 
 
 .root
@@ -21,6 +21,11 @@
   margin 0 auto
   border-radius var(--p-4)
   overflow hidden
+
+.mapWorld
+  position absolute
+  inset 0
+  box-sizing border-box
 
 .shimmerOverlay
   z-index 20

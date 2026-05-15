@@ -73,7 +73,7 @@ export default [
       json(),
       url({
         limit: 250_000,
-        include: [/DriverMap[/\\]MapBackground[/\\]map\.svg$/],
+        include: [/components[/\\]ui[/\\]WorldMap[/\\]map\.svg$/],
       }),
       url({
         limit: 0,
@@ -82,7 +82,7 @@ export default [
       }),
       svgr({
         exportType: 'default',
-        exclude: /DriverMap[/\\]MapBackground[/\\]map\.svg$/,
+        exclude: /components[/\\]ui[/\\]WorldMap[/\\]map\.svg$/,
       }),
       postcss({
         // Default inject uses an absolute path to style-inject; Rollup turns it into a relative

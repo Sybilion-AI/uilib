@@ -1,8 +1,7 @@
-'use client';
-
 import cn from 'classnames';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { WorldMap } from '#uilib/components/ui/WorldMap';
 import useEvent from '#uilib/hooks/useEvent';
 import { Shimmer } from '@homecode/ui';
 
@@ -15,7 +14,6 @@ import {
   hasValidCoords,
 } from './DriverMap.helpers';
 import S from './DriverMap.styl';
-import { MapBackground } from './MapBackground/MapBackground';
 import type { DriverData } from './driverMapGeography';
 import { getHighestImportanceDriver } from './driverMapSelection';
 
@@ -172,7 +170,7 @@ export function DriverMap({
   return (
     <div className={cn(S.root, isTransitioning && S.inTransition)}>
       <div className={S.mapInner}>
-        <MapBackground />
+        <WorldMap className={S.mapWorld} />
         {isLoading && <Shimmer className={S.shimmerOverlay} size="l" />}
         {otherDrivers.map(driver => (
           <DriverIcon

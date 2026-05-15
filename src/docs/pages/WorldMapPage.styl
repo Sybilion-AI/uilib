@@ -1,0 +1,14 @@
+@import '../../components/ui/WorldMap/mapAspect.mixin.styl'
+
+.demoFrame
+  position relative
+  width 100%
+  max-width 42rem
+  mapAspect()
+  border-radius var(--p-4)
+  overflow hidden
+
+.demoFill
+  position absolute
+  inset 0
+  box-sizing border-box

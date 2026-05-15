@@ -1,5 +1,3 @@
-'use client';
-
 import cn from 'classnames';
 
 import { Badge } from '#uilib/components/ui/Badge';

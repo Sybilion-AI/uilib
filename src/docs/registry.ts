@@ -117,7 +117,7 @@ export const DOC_REGISTRY: DocEntry[] = [
   },
   {
     slug: 'driver-map',
-    title: 'DriverMap',
+    title: 'DriverMap & DriverCard',
     section: 'Widgets',
     load: () => import('./pages/DriverMapPage'),
   },
@@ -222,6 +222,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     title: 'Page',
     section: 'Layout',
     load: () => import('./pages/PagePage'),
+  },
+  {
+    slug: 'page-columns',
+    title: 'PageColumns',
+    section: 'Layout',
+    load: () => import('./pages/PageColumnsPage'),
   },
   {
     slug: 'page-footer',
@@ -373,6 +379,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     title: 'VimeoEmbed',
     section: 'Media',
     load: () => import('./pages/VimeoEmbedPage'),
+  },
+  {
+    slug: 'world-map',
+    title: 'WorldMap',
+    section: 'Media',
+    load: () => import('./pages/WorldMapPage'),
   },
 ];
 

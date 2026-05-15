@@ -1,0 +1,60 @@
+@import '../../../../../lib/theme.styl'
+
+.root
+  display flex
+  flex-direction column
+  gap var(--p-1)
+  max-width 42rem
+  padding 0 var(--p-3)
+
+  border-radius var(--p-4)
+  backdrop-filter blur(4px)
+  box-shadow 0 0 0 2px var(--page-color)
+  pointer-events auto
+
+.rootPanel
+  width 100%
+  min-height var(--chart-height)
+  justify-content center
+  padding var(--p-6)
+  border-radius var(--radius-md)
+  background var(--muted) / 0.35
+
+.rootInline
+  width fit-content
+  max-width 100%
+
+.rootAlignCenter
+  align-items center
+  text-align center
+
+.rootAlignStart
+  align-items flex-start
+  text-align left
+
+.hint
+  font-size 14px
+  line-height 1.5
+  font-weight 400
+  color var(--muted-foreground)
+  margin 0
+
+  a
+    color var(--sb-cyan-400)
+    text-decoration underline
+    font-weight 500
+
+    &:hover
+      opacity 0.9
+
+.status
+  font-size 14px
+  line-height 1.5
+  font-weight 400
+  margin 0
+
+.statusMuted
+  color var(--muted-foreground)
+
+.statusDestructive
+  color var(--destructive)

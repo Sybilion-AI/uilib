@@ -104,7 +104,7 @@ export default (env, argv) => {
               type: 'asset/resource',
             },
             {
-              include: /DriverMap[/\\]MapBackground[/\\]map\.svg$/,
+              include: /components[/\\]ui[/\\]WorldMap[/\\]map\.svg$/,
               type: 'asset/resource',
             },
             {

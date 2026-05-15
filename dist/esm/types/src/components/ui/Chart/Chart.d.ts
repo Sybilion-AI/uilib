@@ -10,3 +10,4 @@ export { ChartTooltipItem } from './components/ChartTooltipItem';
 export { ChartLegendItem } from './components/ChartLegendItem';
 export { CustomChartLegend } from './components/CustomChartLegend/CustomChartLegend';
 export { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent, ChartStyle, BaseChartWrapper, };
+export { ChartEmptyState, type ChartEmptyStateProps, type ChartEmptyStatusTone, } from './components/ChartEmptyState/ChartEmptyState';

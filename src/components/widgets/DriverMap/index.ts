@@ -13,6 +13,4 @@ export {
   getResponsiveCoordinates,
   svgToPercentage,
 } from './driverMapGeography';
-export { MapBackground } from './MapBackground/MapBackground';
-export { LoadingSpinner } from './LoadingSpinner/LoadingSpinner';
 export type { BadgeSize } from './DriverIcon/DriverIcon';

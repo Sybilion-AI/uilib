@@ -1,13 +1,13 @@
 import { jsxs, jsx } from 'react/jsx-runtime';
 import cn from 'classnames';
 import { useRef, useState, useMemo, useEffect, useCallback } from 'react';
+import { WorldMap } from '../../ui/WorldMap/WorldMap.js';
 import useEvent from '../../../hooks/useEvent.js';
 import { Shimmer } from '@homecode/ui';
 import { DriverIcon } from './DriverIcon/DriverIcon.js';
 import constants from './DriverIcon/DriverIcon.constants.json.js';
 import { findMostSpecificRegion, getDriverCoordinates, hasValidCoords, calculateBadgeSizes } from './DriverMap.helpers.js';
 import S from './DriverMap.styl.js';
-import { MapBackground } from './MapBackground/MapBackground.js';
 import { getHighestImportanceDriver } from './driverMapSelection.js';
 
 const delay = (ms) => new Promise(r => setTimeout(r, ms));
@@ -113,7 +113,7 @@ function DriverMap({ drivers, isLoading, setSelectedDriver, selectedDriver, }) {
         callback: handleKeyDown,
         isCapture: true,
     });
-    return (jsxs("div", { className: cn(S.root, isTransitioning && S.inTransition), children: [jsxs("div", { className: S.mapInner, children: [jsx(MapBackground, {}), isLoading && jsx(Shimmer, { className: S.shimmerOverlay, size: "l" }), otherDrivers.map(driver => (jsx(DriverIcon, { isLoading: isLoading, isVisible: isVisible, driver: driver, size: badgeSizes[driver.id] || 's', isSelected: selectedDriver?.id === driver.id, onClick: () => setSelectedDriver(driver) }, driver.id)))] }), jsx("div", { className: S.worldDrivers, children: worldDrivers.map(driver => {
+    return (jsxs("div", { className: cn(S.root, isTransitioning && S.inTransition), children: [jsxs("div", { className: S.mapInner, children: [jsx(WorldMap, { className: S.mapWorld }), isLoading && jsx(Shimmer, { className: S.shimmerOverlay, size: "l" }), otherDrivers.map(driver => (jsx(DriverIcon, { isLoading: isLoading, isVisible: isVisible, driver: driver, size: badgeSizes[driver.id] || 's', isSelected: selectedDriver?.id === driver.id, onClick: () => setSelectedDriver(driver) }, driver.id)))] }), jsx("div", { className: S.worldDrivers, children: worldDrivers.map(driver => {
                     const driverWithCoords = {
                         ...driver,
                         coordinates: driver.coordinates || {

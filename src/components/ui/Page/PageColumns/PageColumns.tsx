@@ -8,7 +8,7 @@ export function PageColumns({
   className,
 }: {
   columns: React.ReactNode[];
-  fill: 'left' | 'right' | 'all';
+  fill?: 'left' | 'right' | 'all';
   className?: string;
 }) {
   return (
