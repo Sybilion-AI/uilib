@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.22](https://github.com/Mir-Insight/uilib/compare/v1.2.21...v1.2.22) (2026-05-15)
+
+
+### Features
+
+* ChatMessage - User bubble links and rich text ([27ae648](https://github.com/Mir-Insight/uilib/commit/27ae648ccb1b04bd2adc420fda582b72c1e93587))
+
 ### [1.2.21](https://github.com/Mir-Insight/uilib/compare/v1.2.20...v1.2.21) (2026-05-15)
 
 
