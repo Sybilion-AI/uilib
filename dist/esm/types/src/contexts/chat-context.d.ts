@@ -16,8 +16,15 @@ export interface ChatContextType {
     getChatsForScopeId: (scopeId: string) => Chat[];
     getCurrentChatId: (scopeId: string) => string | null;
     deleteChat: (scopeId: string, sessionId: string) => void;
+    /**
+     * Ref-count of in-flight `sendChatMessage` requests keyed by
+     * `outboundPendingKey(scopeId, chatSessionId)` (session id at send start).
+     */
+    outboundPendingByKey: Readonly<Record<string, number>>;
 }
 declare const ChatContext: import("react").Context<ChatContextType>;
+/** Stable composite key; avoids collisions if `scopeId` contains `:`. */
+export declare function outboundPendingKey(scopeId: string, chatSessionId: string): string;
 export interface ChatProviderProps {
     children: ReactNode;
     /** When null, chat state is cleared (logged out). When set, only LS rows for scopes starting with `${userId}-` are loaded. */
@@ -28,10 +35,12 @@ export declare function ChatProvider({ children, userSwitchKey, sendChatMessage:
 export declare const isChatEmpty: (chat: Chat | null) => boolean;
 export declare function useChats(): ChatContextType;
 export declare function useChat(scopeId: string | undefined, chatId: string | undefined): Chat | null;
+export declare function useChatOutboundPending(scopeId: string | undefined | null, chatSessionId: string | null | undefined): boolean;
 export declare function useChatsForScopeId(scopeId: string): {
     chats: Chat[];
     currentChat: Chat;
     currentChatId: string;
+    isOutboundPending: boolean;
     setCurrentChatId: (targetId: string) => void;
     newChat: () => string;
     addMessage: (chatId: string, role: MessageRole, text: string, options?: AddChatMessageOptions) => string;
@@ -44,6 +53,7 @@ export declare function useChatsForDataset(scopeId: string): {
     chats: Chat[];
     currentChat: Chat;
     currentChatId: string;
+    isOutboundPending: boolean;
     setCurrentChatId: (targetId: string) => void;
     newChat: () => string;
     addMessage: (chatId: string, role: MessageRole, text: string, options?: AddChatMessageOptions) => string;

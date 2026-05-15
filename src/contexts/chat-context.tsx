@@ -12,8 +12,8 @@ import {
   type Chat,
   type ChatSendMessagePayload,
   type Message,
-  type UserCsvAttachment,
   MessageRole,
+  type UserCsvAttachment,
 } from '#uilib/components/ui/Chat/Chat.types';
 import { stripJsonDashboardFences } from '#uilib/lib/dashboard-spec/stripJsonDashboardFences';
 import type { ChatResponse } from '#uilib/types/chat-api.types';
@@ -24,7 +24,10 @@ export type SendChatMessageFn = (
   targetChatId: string,
 ) => Promise<ChatResponse>;
 
-export type { ChatSendMessagePayload, UserCsvAttachment } from '#uilib/components/ui/Chat/Chat.types';
+export type {
+  ChatSendMessagePayload,
+  UserCsvAttachment,
+} from '#uilib/components/ui/Chat/Chat.types';
 
 const CHATS_PREFIX = 'chats-';
 const CHAT_SCOPE_IDS_REGISTRY_KEY = 'chat-scope-ids';
@@ -57,9 +60,19 @@ export interface ChatContextType {
   getChatsForScopeId: (scopeId: string) => Chat[];
   getCurrentChatId: (scopeId: string) => string | null;
   deleteChat: (scopeId: string, sessionId: string) => void;
+  /**
+   * Ref-count of in-flight `sendChatMessage` requests keyed by
+   * `outboundPendingKey(scopeId, chatSessionId)` (session id at send start).
+   */
+  outboundPendingByKey: Readonly<Record<string, number>>;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
+
+/** Stable composite key; avoids collisions if `scopeId` contains `:`. */
+export function outboundPendingKey(scopeId: string, chatSessionId: string) {
+  return `${scopeId}\0${chatSessionId}`;
+}
 
 function getCurrentChatIdKey(scopeId: string) {
   return `chat-current-id-${scopeId}`;
@@ -157,6 +170,35 @@ export function ChatProvider({
     if (userSwitchKey === null) return {};
     return loadChatsFromLS(userSwitchKey).currentChatId;
   });
+
+  const [outboundPendingByKey, setOutboundPendingByKey] = useState<
+    Record<string, number>
+  >({});
+
+  const beginOutboundPending = useCallback(
+    (scopeId: string, chatSessionId: string) => {
+      const key = outboundPendingKey(scopeId, chatSessionId);
+      setOutboundPendingByKey(prev => ({
+        ...prev,
+        [key]: (prev[key] ?? 0) + 1,
+      }));
+    },
+    [],
+  );
+
+  const endOutboundPending = useCallback(
+    (scopeId: string, chatSessionId: string) => {
+      const key = outboundPendingKey(scopeId, chatSessionId);
+      setOutboundPendingByKey(prev => {
+        const next = { ...prev };
+        const n = (next[key] ?? 0) - 1;
+        if (n <= 0) delete next[key];
+        else next[key] = n;
+        return next;
+      });
+    },
+    [],
+  );
 
   const getChatsForScopeId = useCallback(
     (scopeId: string): Chat[] => chats[scopeId] ?? [],
@@ -324,19 +366,27 @@ export function ChatProvider({
       if (typeof message === 'string') {
         addMessage(scopeId, targetChatId, MessageRole.USER, message);
       } else {
-        addMessage(scopeId, targetChatId, MessageRole.USER, message.displayText, {
-          userCsvAttachment: message.userCsvAttachment,
-        });
+        addMessage(
+          scopeId,
+          targetChatId,
+          MessageRole.USER,
+          message.displayText,
+          {
+            userCsvAttachment: message.userCsvAttachment,
+          },
+        );
       }
 
+      const pendingChatSessionId = targetChatId;
+      beginOutboundPending(scopeId, pendingChatSessionId);
       try {
-        const data = await sendChatMessageFn(apiPayload, targetChatId);
+        const data = await sendChatMessageFn(apiPayload, pendingChatSessionId);
 
-        if (data.session_id && data.session_id !== targetChatId) {
+        if (data.session_id && data.session_id !== pendingChatSessionId) {
           setChats(prev => {
             const scopeChats = prev[scopeId] ?? [];
             const updatedChats = scopeChats.map(chat =>
-              chat.session_id === targetChatId
+              chat.session_id === pendingChatSessionId
                 ? { ...chat, session_id: data.session_id! }
                 : chat,
             );
@@ -351,7 +401,7 @@ export function ChatProvider({
 
         addMessage(
           scopeId,
-          data.session_id ? data.session_id : targetChatId,
+          data.session_id ? data.session_id : pendingChatSessionId,
           MessageRole.ASSISTANT,
           data.response,
         );
@@ -363,17 +413,32 @@ export function ChatProvider({
             ? error.message
             : 'Sorry, I encountered an error processing your message. Please try again.';
 
-        addMessage(scopeId, targetChatId, MessageRole.ASSISTANT, errorMessage);
+        addMessage(
+          scopeId,
+          pendingChatSessionId,
+          MessageRole.ASSISTANT,
+          errorMessage,
+        );
         throw error;
+      } finally {
+        endOutboundPending(scopeId, pendingChatSessionId);
       }
     },
-    [addMessage, getCurrentChatId, sendChatMessageFn, setCurrentChatId],
+    [
+      addMessage,
+      beginOutboundPending,
+      endOutboundPending,
+      getCurrentChatId,
+      sendChatMessageFn,
+      setCurrentChatId,
+    ],
   );
 
   useEffect(() => {
     if (userSwitchKey === null) {
       setChats({});
       setCurrentChatIdState({});
+      setOutboundPendingByKey({});
       return;
     }
 
@@ -404,6 +469,7 @@ export function ChatProvider({
         getChatsForScopeId,
         getCurrentChatId,
         deleteChat,
+        outboundPendingByKey,
       }}
     >
       {children}
@@ -436,6 +502,18 @@ export function useChat(
   }, [scopeId, chatId, getChatsForScopeId]);
 }
 
+export function useChatOutboundPending(
+  scopeId: string | undefined | null,
+  chatSessionId: string | null | undefined,
+): boolean {
+  const { outboundPendingByKey } = useChats();
+  return useMemo(() => {
+    if (!scopeId || !chatSessionId) return false;
+    const key = outboundPendingKey(scopeId, chatSessionId);
+    return (outboundPendingByKey[key] ?? 0) > 0;
+  }, [scopeId, chatSessionId, outboundPendingByKey]);
+}
+
 export function useChatsForScopeId(scopeId: string) {
   const {
     getChatsForScopeId,
@@ -450,11 +528,13 @@ export function useChatsForScopeId(scopeId: string) {
   const chats = getChatsForScopeId(scopeId);
   const currentChatId = getCurrentChatId(scopeId);
   const currentChat = useChat(scopeId, currentChatId ?? undefined);
+  const isOutboundPending = useChatOutboundPending(scopeId, currentChatId);
 
   return {
     chats,
     currentChat,
     currentChatId,
+    isOutboundPending,
     setCurrentChatId: (targetId: string) => setCurrentChatId(scopeId, targetId),
     newChat: () => newChat(scopeId),
     addMessage: (

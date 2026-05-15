@@ -26,6 +26,7 @@ import {
 import {
   isChatEmpty,
   useChat,
+  useChatOutboundPending,
   useChatsForScopeId,
 } from '#uilib/contexts/chat-context';
 import useEvent from '#uilib/hooks/useEvent';
@@ -112,6 +113,7 @@ export function useChatPanelChromeModel({
     getShellWidth,
     setChatPanelOpen,
   } = useSidebar();
+  const [localUiBusy, setLocalUiBusy] = useState(false);
   const {
     chats,
     currentChatId,
@@ -122,6 +124,11 @@ export function useChatPanelChromeModel({
     removeMessageById,
   } = useChatsForScopeId(effectiveScopeId);
   const chat = useChat(effectiveScopeId, currentChatId);
+  const isOutboundPending = useChatOutboundPending(
+    effectiveScopeId,
+    currentChatId,
+  );
+  const isLoading = isOutboundPending || localUiBusy;
 
   const {
     searchParams,
@@ -130,7 +137,6 @@ export function useChatPanelChromeModel({
     mutateSearchParams,
   } = useQueryParams();
   const chatOpen = searchParams.has(CHAT_QUERY_PARAM);
-  const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   /** `?prompt=` deep link text for one-shot composer pre-fill (see ChatPrompt). */
   const [promptLinkPrefill, setPromptLinkPrefill] = useState<string | null>(
@@ -355,7 +361,7 @@ export function useChatPanelChromeModel({
       ) {
         if (quickReplyLockRef.current) return;
         quickReplyLockRef.current = true;
-        setIsLoading(true);
+        setLocalUiBusy(true);
         setUsedScriptBranchKeysByChat(prev => ({
           ...prev,
           [chatId]: [...new Set([...(prev[chatId] || []), branchKey])],
@@ -413,7 +419,7 @@ export function useChatPanelChromeModel({
           } catch (error) {
             logger.error('Error resolving preset quick reply:', error);
           } finally {
-            setIsLoading(false);
+            setLocalUiBusy(false);
             quickReplyLockRef.current = false;
           }
         })();
@@ -422,14 +428,11 @@ export function useChatPanelChromeModel({
 
       endLocalDemoFlow(chatId);
       void (async () => {
-        setIsLoading(true);
         try {
           await sendMessage(displayLabel);
           onMessage?.(displayLabel);
         } catch (error) {
           logger.error('Error sending chat message:', error);
-        } finally {
-          setIsLoading(false);
         }
       })();
     },
@@ -499,7 +502,7 @@ export function useChatPanelChromeModel({
         ) {
           if (quickReplyLockRef.current) return;
           quickReplyLockRef.current = true;
-          setIsLoading(true);
+          setLocalUiBusy(true);
           const newAnswers = {
             ...intake.answers,
             [intake.scriptStepId]: message,
@@ -544,7 +547,7 @@ export function useChatPanelChromeModel({
             } catch (e) {
               logger.error('Error advancing freeform preset script:', e);
             } finally {
-              setIsLoading(false);
+              setLocalUiBusy(false);
               quickReplyLockRef.current = false;
             }
           })();
@@ -569,15 +572,12 @@ export function useChatPanelChromeModel({
         }
       }
 
-      setIsLoading(true);
       try {
         if (chatId) endLocalDemoFlow(chatId);
         await sendMessage(message);
         onMessage?.(message);
       } catch (error) {
         logger.error('Error sending chat message:', error);
-      } finally {
-        setIsLoading(false);
       }
     },
     [
@@ -613,7 +613,7 @@ export function useChatPanelChromeModel({
       return;
     }
 
-    setIsLoading(true);
+    setLocalUiBusy(true);
     try {
       if (!currentChatId) return;
       setScriptCompleteByChatId(prev => {
@@ -683,7 +683,7 @@ export function useChatPanelChromeModel({
     } catch (error) {
       logger.error('Error sending chat message:', error);
     } finally {
-      setIsLoading(false);
+      setLocalUiBusy(false);
     }
   };
 
@@ -717,7 +717,7 @@ export function useChatPanelChromeModel({
 
     const chatId = currentChatId;
     scriptAdvanceLockRef.current = true;
-    setIsLoading(true);
+    setLocalUiBusy(true);
     addMessage(chatId, MessageRole.USER, step.buttonLabel);
 
     void (async () => {
@@ -761,7 +761,7 @@ export function useChatPanelChromeModel({
       } catch (error) {
         logger.error('Error advancing preset script:', error);
       } finally {
-        setIsLoading(false);
+        setLocalUiBusy(false);
         scriptAdvanceLockRef.current = false;
       }
     })();
