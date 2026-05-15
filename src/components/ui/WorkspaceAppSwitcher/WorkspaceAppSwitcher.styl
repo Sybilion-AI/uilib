@@ -21,6 +21,18 @@
   &:hover
     background-color var(--muted)
 
+  @media (max-width MOBILE)
+    max-width none
+    margin-left 0 !important
+    padding-right var(--p-1) !important
+    gap 0
+
+    .textCol
+      display none
+
+    .chevron
+      display none
+
 .iconTile
   position relative
   display flex

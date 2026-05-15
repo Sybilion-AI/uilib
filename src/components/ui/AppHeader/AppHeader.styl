@@ -11,6 +11,10 @@
 
   background-color var(--color-background)
 
+  @media (max-width MOBILE)
+    padding-left 200px
+    max-width 100%
+
   @media (min-width MOBILE)
     :global([data-slot='sidebar-wrapper'][data-state='collapsed']) &
       padding-left 200px

@@ -2,6 +2,7 @@ import cn from 'classnames';
 import { useMemo } from 'react';
 
 import { useTheme } from '#uilib/contexts/theme-context';
+import { useIsMobile } from '#uilib/hooks/useIsMobile';
 import {
   MoonIcon,
   SignOutIcon,
@@ -25,7 +26,7 @@ import S from './NavUserHeader.styl';
 import type { NavUserHeaderProps } from './NavUserHeader.types';
 
 export function NavUserHeader({
-  variant = 'default',
+  variant,
   isLoading = false,
   isAuthenticated,
   user = null,
@@ -37,6 +38,8 @@ export function NavUserHeader({
   onThemeToggle: onThemeToggleFromHost,
 }: NavUserHeaderProps) {
   const docsTheme = useTheme();
+  const isMobile = useIsMobile();
+  const effectiveVariant = variant ?? (isMobile ? 'compact' : 'default');
   const hostControlsTheme =
     themeFromHost !== undefined && onThemeToggleFromHost !== undefined;
   const theme = hostControlsTheme ? themeFromHost : docsTheme.theme;
@@ -106,10 +109,13 @@ export function NavUserHeader({
         <Button
           variant="ghost"
           size="sm"
-          className={cn(S.userButton, variant === 'compact' && S.compact)}
+          className={cn(
+            S.userButton,
+            effectiveVariant === 'compact' && S.compact,
+          )}
         >
           {avatar}
-          {variant === 'default' && (
+          {effectiveVariant === 'default' && (
             <>
               {userIdentity}
               <ChevronDownIcon className={S.iconSm} />

@@ -124,7 +124,7 @@ export function WorkspaceAppSwitcher({
             <span className={S.name}>{displayApp.displayName}</span>
             <span className={S.sub}>{displayApp.subtitle}</span>
           </span>
-          <ChevronDown size={12} />
+          <ChevronDown className={S.chevron} size={12} aria-hidden />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
