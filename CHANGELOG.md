@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.26](https://github.com/Mir-Insight/uilib/compare/v1.2.24...v1.2.26) (2026-05-15)
+
+
+### Features
+
+* DriverMap - widget, docs Widgets, map asset ([d3ce4ed](https://github.com/Mir-Insight/uilib/commit/d3ce4ed0102557734ad99876fb4f6f83f19bb7e0))
+
+
+### Bug Fixes
+
+* ChatSelector - Label empty threads as New chat ([9cffec9](https://github.com/Mir-Insight/uilib/commit/9cffec99b9ce2d4f4ffab05434383dd40a37ec5a))
+* DropdownMenu - Default collision padding ([7c4fae1](https://github.com/Mir-Insight/uilib/commit/7c4fae1f72146a9fb184324b42ea91ebb3aa9b4a))
+
 ### [1.2.24](https://github.com/Mir-Insight/uilib/compare/v1.2.23...v1.2.24) (2026-05-15)
 
 
