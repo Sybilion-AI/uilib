@@ -9,6 +9,8 @@ import {
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
+const TOOLTIP_SIDES = ['left', 'top', 'bottom', 'right'] as const;
+
 export default function TooltipPage() {
   return (
     <>
@@ -19,16 +21,18 @@ export default function TooltipPage() {
         actions={<DocsHeaderActions />}
       />
       <PageContentSection>
-        <span>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button type="button" variant="outline">
-                Hover me
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Tooltip text</TooltipContent>
-          </Tooltip>
-        </span>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          {TOOLTIP_SIDES.map(side => (
+            <Tooltip key={side}>
+              <TooltipTrigger asChild>
+                <Button type="button" variant="outline">
+                  {side.charAt(0).toUpperCase() + side.slice(1)}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side={side}>Tooltip opens {side}</TooltipContent>
+            </Tooltip>
+          ))}
+        </div>
       </PageContentSection>
     </>
   );
