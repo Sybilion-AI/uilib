@@ -157,8 +157,8 @@ function StandaloneLayoutPreview() {
               appsStorageKey={DOCS_WORKSPACE_APPS_LS_KEY}
               defaultApps={DOCS_PREVIEW_APPS}
               user={{
-                name: 'Preview User',
-                email: 'preview@example.com',
+                name: 'Example User',
+                email: 'user@example.com',
                 avatar: '',
               }}
               onLogout={() => undefined}
@@ -191,11 +191,9 @@ export default function StandaloneAppLayoutPage() {
         title="Standalone app layout"
         subheader={
           <>
-            Live preview of AppShell + Sidebar + main column.{' '}
-            <br />
-            Greenfield wiring: copy{' '}
-            <code>mini/sybilion-app-template/</code> and follow its README — this
-            page is layout only.
+            Live preview of AppShell + Sidebar + main column. <br />
+            Greenfield wiring: copy <code>mini/sybilion-app-template/</code> and
+            follow its README — this page is layout only.
           </>
         }
         actions={<DocsHeaderActions />}
