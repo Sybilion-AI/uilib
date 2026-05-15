@@ -2,7 +2,7 @@ import type { DropdownMenuCheckboxItemProps, DropdownMenuContentProps, DropdownM
 declare function DropdownMenu({ ...props }: DropdownMenuProps): import("react/jsx-runtime").JSX.Element;
 declare function DropdownMenuPortal({ ...props }: DropdownMenuPortalProps): import("react/jsx-runtime").JSX.Element;
 declare function DropdownMenuTrigger({ ...props }: DropdownMenuTriggerProps): import("react/jsx-runtime").JSX.Element;
-declare function DropdownMenuContent({ className, sideOffset, elevation, ...props }: DropdownMenuContentProps): import("react/jsx-runtime").JSX.Element;
+declare function DropdownMenuContent({ className, sideOffset, collisionPadding, elevation, ...props }: DropdownMenuContentProps): import("react/jsx-runtime").JSX.Element;
 declare function DropdownMenuGroup({ ...props }: DropdownMenuGroupProps): import("react/jsx-runtime").JSX.Element;
 declare function DropdownMenuItem({ className, inset, variant, ...props }: DropdownMenuItemProps): import("react/jsx-runtime").JSX.Element;
 declare function DropdownMenuCheckboxItem({ className, children, checked, ...props }: DropdownMenuCheckboxItemProps): import("react/jsx-runtime").JSX.Element;
@@ -13,5 +13,5 @@ declare function DropdownMenuSeparator({ className, ...props }: DropdownMenuSepa
 declare function DropdownMenuShortcut({ className, ...props }: DropdownMenuShortcutProps): import("react/jsx-runtime").JSX.Element;
 declare function DropdownMenuSub({ ...props }: DropdownMenuSubProps): import("react/jsx-runtime").JSX.Element;
 declare function DropdownMenuSubTrigger({ className, inset, children, ...props }: DropdownMenuSubTriggerProps): import("react/jsx-runtime").JSX.Element;
-declare function DropdownMenuSubContent({ className, ...props }: DropdownMenuSubContentProps): import("react/jsx-runtime").JSX.Element;
+declare function DropdownMenuSubContent({ className, collisionPadding, ...props }: DropdownMenuSubContentProps): import("react/jsx-runtime").JSX.Element;
 export { DropdownMenu, DropdownMenuPortal, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, };

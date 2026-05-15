@@ -44,6 +44,7 @@ function DropdownMenuTrigger({ ...props }: DropdownMenuTriggerProps) {
 function DropdownMenuContent({
   className,
   sideOffset = 4,
+  collisionPadding = 8,
   elevation = 'sm',
   ...props
 }: DropdownMenuContentProps) {
@@ -52,6 +53,7 @@ function DropdownMenuContent({
       <DropdownMenuPrimitive.Content
         data-slot="dropdown-menu-content"
         sideOffset={sideOffset}
+        collisionPadding={collisionPadding}
         className={cn(S.content, S[`elevation-${elevation}`], className)}
         {...props}
       />
@@ -201,11 +203,13 @@ function DropdownMenuSubTrigger({
 
 function DropdownMenuSubContent({
   className,
+  collisionPadding = 8,
   ...props
 }: DropdownMenuSubContentProps) {
   return (
     <DropdownMenuPrimitive.SubContent
       data-slot="dropdown-menu-sub-content"
+      collisionPadding={collisionPadding}
       className={cn(S.subContent, className)}
       {...props}
     />

@@ -13,8 +13,8 @@ function DropdownMenuPortal({ ...props }) {
 function DropdownMenuTrigger({ ...props }) {
     return (jsx(DropdownMenuPrimitive.Trigger, { "data-slot": "dropdown-menu-trigger", ...props }));
 }
-function DropdownMenuContent({ className, sideOffset = 4, elevation = 'sm', ...props }) {
-    return (jsx(DropdownMenuPrimitive.Portal, { children: jsx(DropdownMenuPrimitive.Content, { "data-slot": "dropdown-menu-content", sideOffset: sideOffset, className: cn(S.content, S[`elevation-${elevation}`], className), ...props }) }));
+function DropdownMenuContent({ className, sideOffset = 4, collisionPadding = 8, elevation = 'sm', ...props }) {
+    return (jsx(DropdownMenuPrimitive.Portal, { children: jsx(DropdownMenuPrimitive.Content, { "data-slot": "dropdown-menu-content", sideOffset: sideOffset, collisionPadding: collisionPadding, className: cn(S.content, S[`elevation-${elevation}`], className), ...props }) }));
 }
 function DropdownMenuGroup({ ...props }) {
     return (jsx(DropdownMenuPrimitive.Group, { "data-slot": "dropdown-menu-group", ...props }));
@@ -46,8 +46,8 @@ function DropdownMenuSub({ ...props }) {
 function DropdownMenuSubTrigger({ className, inset, children, ...props }) {
     return (jsxs(DropdownMenuPrimitive.SubTrigger, { "data-slot": "dropdown-menu-sub-trigger", "data-inset": inset, className: cn(S.subTrigger, className), ...props, children: [children, jsx(CaretRight, { className: "ml-auto size-4" })] }));
 }
-function DropdownMenuSubContent({ className, ...props }) {
-    return (jsx(DropdownMenuPrimitive.SubContent, { "data-slot": "dropdown-menu-sub-content", className: cn(S.subContent, className), ...props }));
+function DropdownMenuSubContent({ className, collisionPadding = 8, ...props }) {
+    return (jsx(DropdownMenuPrimitive.SubContent, { "data-slot": "dropdown-menu-sub-content", collisionPadding: collisionPadding, className: cn(S.subContent, className), ...props }));
 }
 
 export { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger };
