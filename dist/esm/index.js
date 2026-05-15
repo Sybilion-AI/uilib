@@ -89,6 +89,12 @@ export { WORKSPACE_APP_ICONS, isWorkspaceAppIconKey } from './components/ui/Work
 export { findWorkspaceAppByPathname, workspaceAppSlugPath } from './components/ui/WorkspaceAppSwitcher/workspaceAppPaths.js';
 export { SidebarDatasetsItemsGrouped } from './components/widgets/SidebarDatasetsItemsGrouped/SidebarDatasetsItemsGrouped.js';
 export { groupSidebarDatasets } from './components/widgets/SidebarDatasetsItemsGrouped/groupSidebarDatasets.js';
+export { DriverMap } from './components/widgets/DriverMap/DriverMap.js';
+export { getCategoryIcon } from './components/widgets/DriverMap/driverCategoryIcon.js';
+export { getDriverImportance, getHighestImportanceDriver } from './components/widgets/DriverMap/driverMapSelection.js';
+export { geographicCoordinates, geographicToSVG, getContinentFromRegion, getPreciseCoordinates, getResponsiveCoordinates, svgToPercentage } from './components/widgets/DriverMap/driverMapGeography.js';
+export { MapBackground } from './components/widgets/DriverMap/MapBackground/MapBackground.js';
+export { LoadingSpinner } from './components/widgets/DriverMap/LoadingSpinner/LoadingSpinner.js';
 export { SybilionAppHeader } from './components/widgets/SybilionAppHeader/SybilionAppHeader.js';
 export { SybilionAuthLayout } from './components/widgets/SybilionAuthLayout/SybilionAuthLayout.js';
 export { SybilionAuthHeadline } from './components/widgets/SybilionAuthLayout/SybilionAuthHeadline.js';

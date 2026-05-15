@@ -1,0 +1,45 @@
+@import '../../../lib/theme.styl'
+@import './MapBackground/mapAspect.mixin.styl'
+
+
+.root
+  position relative
+  width 100%
+  mapAspect()
+  padding 0
+  overflow hidden
+
+  @media (min-width: 768px)
+    height 35rem
+    width fit-content
+    flex 1
+
+.mapInner
+  position relative
+  max-height 100%
+  mapAspect()
+  margin 0 auto
+  border-radius var(--p-4)
+  overflow hidden
+
+.shimmerOverlay
+  z-index 20
+
+.inTransition
+  pointer-events none
+
+.worldDrivers
+  position absolute
+  bottom 0
+  display flex
+  align-items center
+  gap 0.5rem
+  padding 0.5rem
+
+  button
+    position static !important
+    transform none !important
+
+    & > span
+      transform none !important
+      opacity 1 !important

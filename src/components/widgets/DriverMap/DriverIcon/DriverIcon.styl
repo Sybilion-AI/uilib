@@ -1,0 +1,125 @@
+@import '../../../../lib/theme.styl';
+json('./DriverIcon.constants.json')
+
+$dur = unit(FADE_DURATION, 'ms')
+$msOffset = 30ms
+
+.root
+  position absolute
+  transform translateX(-50%) translateY(-50%)
+  cursor pointer
+  outline none
+
+  &:hover
+    transition transform 300ms ease-out
+
+  &:focus
+    outline none
+
+.loadingHidden
+  opacity 0
+  pointer-events none
+
+.badge
+  padding 0.25rem
+  transition all $dur ease-out
+  pointer-events none
+
+  opacity 0
+  transform translateY(10px)
+
+  svg
+    height 20px
+    width 20px
+
+.size-s
+.size-s .badge
+  width 2rem
+  height 2rem
+  border-radius 10px
+.size-m
+.size-m .badge
+  width 2.5rem
+  height 2.5rem
+  border-radius 12px
+.size-l
+.size-l .badge
+  width 3rem
+  height 3rem
+  border-radius 14px
+
+
+// show/hide animations
+.visible .badge
+  transition $dur ease-out
+  transition-property opacity, transform
+  opacity 1
+  transform translateY(0)
+
+  span
+    transition box-shadow 0s .1s ease-out
+
+for $i in (1..6)
+  .root:nth-child({$i}) .badge
+    transition-delay ($i * $msOffset)
+  .visible:nth-child({$i}) .badge
+    transition-delay ($i * ($msOffset * 2))
+  .hidden:nth-child({$i}) .badge
+    transition-duration 'calc(%s - %s)' % ($dur ($i * $msOffset))
+
+
+// Hover
+.root:hover
+  z-index 10
+
+  .badge
+    box-shadow 0 0 0 1px var(--background)
+    transform scale(1.1)
+    transition-delay 0ms
+    transition-duration .2s
+
+.selected .badge
+.selected:hover .badge
+  transform scale(1.1)
+
+  // span
+  box-shadow inset 0 0 0 3px var(--sb-cyan-400)
+
+  :global(.dark) &
+    box-shadow inset 0 0 0 2px var(--sb-cyan-500)
+
+.root:not(.selected):hover .icon
+  transform scale(1.05)
+
+
+.tooltipContent
+  max-width 20rem
+  border 1px solid var(--border)
+  background-color var(--popover)
+  color var(--popover-foreground)
+  font-size 0.75rem
+  font-family var(--font-family-body)
+  box-shadow 0 10px 15px -3px rgba(0, 0, 0, 0.1)
+
+.tooltipCategory
+  color var(--muted-foreground)
+  display flex
+  align-items center
+  gap 0.25rem
+
+.tooltipCategoryIcon
+  height 0.75rem
+  width 0.75rem
+  color var(--muted-foreground)
+
+.tooltipCategoryText
+  line-clamp(1)
+  overflow hidden
+
+.tooltipName
+  font-weight normal
+
+.tooltipSpacing
+  display flex
+  flex-direction column
+  gap 0.25rem

@@ -13,6 +13,7 @@ export const DOC_SECTION_ORDER = [
   'Feedback',
   'Layout',
   'Navigation',
+  'Widgets',
   'Overlays',
   'Data display',
   'Charts',
@@ -115,10 +116,10 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/DialogPage'),
   },
   {
-    slug: 'drawer',
-    title: 'Drawer',
-    section: 'Overlays',
-    load: () => import('./pages/DrawerPage'),
+    slug: 'driver-map',
+    title: 'DriverMap',
+    section: 'Widgets',
+    load: () => import('./pages/DriverMapPage'),
   },
   {
     slug: 'dropdown-menu',
@@ -286,7 +287,7 @@ export const DOC_REGISTRY: DocEntry[] = [
   {
     slug: 'sidebar-datasets-items-grouped',
     title: 'SidebarDatasetsItemsGrouped',
-    section: 'Navigation',
+    section: 'Widgets',
     load: () => import('./pages/SidebarDatasetsItemsGroupedPage'),
   },
   {

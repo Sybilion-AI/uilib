@@ -20,11 +20,9 @@ export default function useEvent({
   const callbackRef = useRef(callback);
   callbackRef.current = callback;
 
-  // Track when elem.current changes to force effect re-run
   const [elemKey, setElemKey] = useState(0);
   const prevElemRef = useRef<HTMLElement | null>(null);
 
-  // Watch for elem.current changes and update state to trigger main effect re-run
   useEffect(() => {
     const currentElem = Array.isArray(elem)
       ? elem.find(ref => ref?.current)?.current || null

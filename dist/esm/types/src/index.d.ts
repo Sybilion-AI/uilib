@@ -60,6 +60,7 @@ export * from './components/ui/Tooltip';
 export * from './components/ui/VimeoEmbed';
 export * from './components/ui/WorkspaceAppSwitcher';
 export * from './components/widgets/SidebarDatasetsItemsGrouped';
+export * from './components/widgets/DriverMap';
 export * from './components/widgets/SybilionAppHeader';
 export * from './components/widgets/SybilionAuthLayout';
 export * from './components/widgets/SybilionSignInPanel';

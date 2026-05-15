@@ -97,16 +97,32 @@ export default (env, argv) => {
           ],
         },
         {
-          test: /\.svg$/,
-          use: [
+          test: /\.svg$/i,
+          oneOf: [
             {
-              loader: '@svgr/webpack',
-              options: {
-                icon: true,
-                ext: 'tsx',
-                typescript: true,
-                exportType: 'default',
-              },
+              resourceQuery: /url/i,
+              type: 'asset/resource',
+            },
+            {
+              include: /DriverMap[/\\]MapBackground[/\\]map\.svg$/,
+              type: 'asset/resource',
+            },
+            {
+              issuer: /\.[jt]sx?$/,
+              use: [
+                {
+                  loader: '@svgr/webpack',
+                  options: {
+                    icon: true,
+                    ext: 'tsx',
+                    typescript: true,
+                    exportType: 'default',
+                  },
+                },
+              ],
+            },
+            {
+              type: 'asset/resource',
             },
           ],
         },

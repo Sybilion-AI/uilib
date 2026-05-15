@@ -8,7 +8,7 @@ export type DocEntry = {
     }>;
 };
 /** Sidebar group order */
-export declare const DOC_SECTION_ORDER: readonly ["Forms", "Feedback", "Layout", "Navigation", "Overlays", "Data display", "Charts", "Chat", "Media", "Misc"];
+export declare const DOC_SECTION_ORDER: readonly ["Forms", "Feedback", "Layout", "Navigation", "Widgets", "Overlays", "Data display", "Charts", "Chat", "Media", "Misc"];
 export declare const DOC_DEFAULT_SLUG = "button";
 export declare const DOC_REGISTRY: DocEntry[];
 export declare const docPageComponents: Record<string, LazyExoticComponent<ComponentType<object>>>;

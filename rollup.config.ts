@@ -72,11 +72,18 @@ export default [
       commonjs(),
       json(),
       url({
+        limit: 250_000,
+        include: [/DriverMap[/\\]MapBackground[/\\]map\.svg$/],
+      }),
+      url({
         limit: 0,
         include: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.webp'],
         fileName: 'assets/[name]-[hash][extname]',
       }),
-      svgr({ exportType: 'default' }),
+      svgr({
+        exportType: 'default',
+        exclude: /DriverMap[/\\]MapBackground[/\\]map\.svg$/,
+      }),
       postcss({
         // Default inject uses an absolute path to style-inject; Rollup turns it into a relative
         // path from each output file, which breaks in consumers (e.g. design-demo). Use the
