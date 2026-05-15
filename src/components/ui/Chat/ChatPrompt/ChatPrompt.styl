@@ -1,33 +1,60 @@
 @import 'lib/theme.styl';
 
+INPUT_MAX_HEIGHT = 200px
+
 .root
   position relative
   display flex
   flex-direction column
   gap var(--p-2)
-  align-items center
+  align-items stretch
   padding var(--p-6)
+  padding-top var(--p-5)
+
+.composer
+  position relative
+  display flex
+  flex-direction row
+  align-items flex-end
+  gap var(--p-3)
+  width 100%
+
+.notice
+  position absolute
+  top calc(-1 * var(--p-12))
+  left 0
+  right 0
+  margin-bottom var(--p-1)
+
+  font-size var(--text-xs)
+  text-align center
+  color var(--muted-foreground)
+  pointer-events none
+
+  @media (max-width MOBILE)
+    font-size 10px
 
 .input
   flex 1
-  min-height 70px
+  min-width 0
+  min-height 40px
+  max-height INPUT_MAX_HEIGHT
   resize none
+  overflow-y auto
   border none
-  padding 0 !important
+  padding var(--p-2) 0 0 !important
   border-radius 0 !important
   box-shadow none !important
 
   &:focus
     box-shadow none !important
 
-.actions
+.submitColumn
   display flex
+  flex-direction column
+  flex-shrink 0
   align-items center
-  flex-direction row-reverse
-  justify-content space-between
-  gap var(--p-2)
-
-  width 100%
+  justify-content flex-end
 
   & > button:focus
     box-shadow 0 0 0 2px var(--brand-color-500) !important
@@ -52,14 +79,3 @@
   .attachButton
     background-color var(--page-color)
     box-shadow 0 0 20px var(--background)
-
-.notice
-  font-size var(--text-xs)
-  text-align center
-  color var(--muted-foreground)
-  width 100%
-  // padding 0 var(--p-9)
-  // text-align center
-
-  @media (max-width MOBILE)
-    font-size 10px

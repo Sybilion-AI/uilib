@@ -199,6 +199,7 @@ export function ChatChrome({
               onSubmit={onPromptSubmit}
               disabled={isLoading}
               prefillMessage={promptPrefill ?? undefined}
+              showNotice={isEmpty}
             />
           </div>
         </Chat>
