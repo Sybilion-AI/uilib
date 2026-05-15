@@ -48,7 +48,7 @@ export default [
       'react-router-dom',
       '@homecode/ui',
       '@auth0/auth0-react',
-      '@sybilion/sdk',
+      '@sybilion/platform-sdk',
     ],
     plugins: [
       del({ targets: './dist/*' }),

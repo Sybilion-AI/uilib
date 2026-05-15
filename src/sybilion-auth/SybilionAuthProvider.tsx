@@ -15,7 +15,7 @@ import {
 } from 'react';
 
 import { normalizeApiBaseUrl } from '#uilib/sybilion-auth/authPaths';
-import type { LoginTokenResponse, SybilionSDK } from '@sybilion/sdk';
+import type { LoginTokenResponse, SybilionSDK } from '@sybilion/platform-sdk';
 
 const DEFAULT_TOKEN_KEY = 'sybilion.standalone.jwt';
 

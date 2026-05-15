@@ -111,7 +111,7 @@
   },
   "peerDependencies": {
     "@auth0/auth0-react": "^2.3.1",
-    "@sybilion/sdk": ">=0.0.1",
+    "@sybilion/platform-sdk": ">=0.0.1",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0",
     "react-router-dom": ">=6.0.0",
@@ -121,7 +121,7 @@
     "@auth0/auth0-react": {
       "optional": true
     },
-    "@sybilion/sdk": {
+    "@sybilion/platform-sdk": {
       "optional": true
     },
     "vite": {
@@ -130,7 +130,7 @@
   },
   "devDependencies": {
     "@auth0/auth0-react": "^2.3.1",
-    "@sybilion/sdk": "file:../sdk",
+    "@sybilion/platform-sdk": "file:../sdk",
     "@babel/core": "^7.20.12",
     "@babel/preset-typescript": "^7.21.0",
     "@homecode/ui": "^4.30.6",
