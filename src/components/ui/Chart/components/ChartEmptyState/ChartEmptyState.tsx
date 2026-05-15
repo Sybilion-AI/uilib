@@ -1,5 +1,3 @@
-'use client';
-
 import cn from 'classnames';
 import { ReactNode } from 'react';
 

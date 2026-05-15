@@ -8,6 +8,7 @@ import { ensureChartForecastBridge } from '../../../utils/chartConnectionPoint.j
 import { CHART_MARGINS } from './ChartAreaInteractive.constants.js';
 import { filterDataForTimeRange, shortDateFormatter, longDateFormatter } from './ChartAreaInteractive.helpers.js';
 import S from './ChartAreaInteractive.styl.js';
+import { TimeRangeBrushHost } from './TimeRangeBrushLayer.js';
 import { PinOverlay } from './overlays/PinOverlay/PinOverlay.js';
 import { IntervalsOverlay } from './overlays/IntervalsOverlay/IntervalsOverlay.js';
 import { ThresholdsOverlay } from './overlays/ThresholdsOverlay/ThresholdsOverlay.js';
@@ -15,7 +16,7 @@ import { ThresholdsOverlay } from './overlays/ThresholdsOverlay/ThresholdsOverla
 const chartConfig = {
 // Chart now supports light/dark themes with dynamic colors
 };
-function ChartAreaInteractive({ className, chartContainerClassName, legendClassName, xAxisClassName, yAxisClassName, timeRange, onTimeRangeChange, pinMonth, onPinMonthChange, onPreviewMonthChange, chartData, forecastData, error, loading = false, isDarkTheme = false, footerActions, mode, selectedForecast, upperQuantiles, lowerQuantiles, selectedLowerQuantile, selectedUpperQuantile, onLowerQuantileChange, onUpperQuantileChange, lowerThreshold, upperThreshold, onLowerThresholdChange, onUpperThresholdChange, discreteThresholdValues, headerActions, excludeLegendIds, loadingAnalyses, onLegendClick, onAnalysisSelect, disableTimeRangeSelector, forecastLineStyle = 'dashed', selectedAnalysisId, chartRenderId, toggleLegendSeries, ensureAnalysisSeriesVisible, overlayForecastData = {}, hiddenSeries, disableForecastHistoricalBridge, ...restProps }) {
+function ChartAreaInteractive({ className, chartContainerClassName, legendClassName, xAxisClassName, yAxisClassName, timeRange, onTimeRangeChange, pinMonth, onPinMonthChange, onPreviewMonthChange, chartData, forecastData, error, loading = false, isDarkTheme = false, footerActions, mode, selectedForecast, upperQuantiles, lowerQuantiles, selectedLowerQuantile, selectedUpperQuantile, onLowerQuantileChange, onUpperQuantileChange, lowerThreshold, upperThreshold, onLowerThresholdChange, onUpperThresholdChange, discreteThresholdValues, headerActions, excludeLegendIds, loadingAnalyses, onLegendClick, onAnalysisSelect, disableTimeRangeSelector, forecastLineStyle = 'dashed', selectedAnalysisId, chartRenderId, toggleLegendSeries, ensureAnalysisSeriesVisible, overlayForecastData = {}, hiddenSeries, disableForecastHistoricalBridge, overlayElements: overlayElementsProp, ...restProps }) {
     const seriesHidden = hiddenSeries ?? new Set();
     const hiddenSeriesRef = useRef(seriesHidden);
     const prevSelectedAnalysisIdRef = useRef(selectedAnalysisId);
@@ -90,9 +91,11 @@ function ChartAreaInteractive({ className, chartContainerClassName, legendClassN
         loadingMessage,
         excludeLegendIds,
         forecastLineStyle,
+        overlayElements: overlayElementsProp,
         // loadingAnalyses,
         ...restProps,
     };
+    const brushEnabled = !disableTimeRangeSelector && !loading && bridgedChartData.length > 1;
     const renderChart = () => {
         const overlayClassName = cn(chartContainerClassName);
         switch (mode) {
@@ -106,7 +109,7 @@ function ChartAreaInteractive({ className, chartContainerClassName, legendClassN
                 return (jsx(BaseChartWrapper, { ...baseChartProps, chartClassName: cn(S.chartContainer, chartContainerClassName) }));
         }
     };
-    return (jsxs(InteractionOverlay, { className: cn(className, loading && S.loading), children: [(!disableTimeRangeSelector || headerActions) && (jsxs("div", { className: S.chartHeaderContainer, children: [!disableTimeRangeSelector && (jsx(TimeRangeControls, { timeRange: timeRange, onTimeRangeChange: onTimeRangeChange, loading: loading })), headerActions] })), renderChart()] }));
+    return (jsxs(InteractionOverlay, { className: cn(className, loading && S.loading), children: [(!disableTimeRangeSelector || headerActions) && (jsxs("div", { className: S.chartHeaderContainer, children: [!disableTimeRangeSelector && (jsx(TimeRangeControls, { timeRange: timeRange, onTimeRangeChange: onTimeRangeChange, loading: loading })), headerActions] })), jsx(TimeRangeBrushHost, { chartData: bridgedChartData, onTimeRangeChange: onTimeRangeChange, enabled: brushEnabled, layoutKey: chartRenderId ?? null, children: renderChart() })] }));
 }
 
 export { ChartAreaInteractive, chartConfig };

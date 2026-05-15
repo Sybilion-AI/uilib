@@ -134,6 +134,7 @@ export function useQuantileButton({
 
   const handleDragStart = useCallback(
     (e: PointerEvent) => {
+      e.stopPropagation();
       setIsDragging(true);
       if (buttonRef.current) {
         buttonRef.current.style.transition = 'none';

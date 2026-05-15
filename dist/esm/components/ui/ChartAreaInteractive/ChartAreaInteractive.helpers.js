@@ -6,6 +6,30 @@ const timeRangeToMonths = {
     '5y': 60,
     All: 12,
 };
+const DRAG_TIME_RANGE_PREFIX = '__drag:';
+function encodeDragTimeRange(a, b) {
+    const t0 = Math.min(a.getTime(), b.getTime());
+    const t1 = Math.max(a.getTime(), b.getTime());
+    return `${DRAG_TIME_RANGE_PREFIX}${t0},${t1}`;
+}
+function parseDragTimeRange(s) {
+    if (!s.startsWith(DRAG_TIME_RANGE_PREFIX))
+        return null;
+    const body = s.slice(DRAG_TIME_RANGE_PREFIX.length);
+    const comma = body.indexOf(',');
+    if (comma === -1)
+        return null;
+    const a = Number(body.slice(0, comma));
+    const b = Number(body.slice(comma + 1));
+    if (!Number.isFinite(a) || !Number.isFinite(b))
+        return null;
+    const t0 = Math.min(a, b);
+    const t1 = Math.max(a, b);
+    return { start: new Date(t0), end: new Date(t1) };
+}
+function isTimeRangePreset(s) {
+    return Object.prototype.hasOwnProperty.call(timeRangeToMonths, s);
+}
 function isPlottableNumber(value) {
     return typeof value === 'number' && Number.isFinite(value);
 }
@@ -76,7 +100,19 @@ function computeLatestPlottableDate(data, options) {
     return latest;
 }
 const filterDataForTimeRange = (data, currentTimeRange, options) => {
+    const dragRange = parseDragTimeRange(currentTimeRange);
+    if (dragRange) {
+        const { start, end } = dragRange;
+        return data.filter(item => {
+            if (!item.date)
+                return false;
+            const d = new Date(item.date);
+            return d >= start && d <= end;
+        });
+    }
     if (currentTimeRange === 'All')
+        return data;
+    if (!isTimeRangePreset(currentTimeRange))
         return data;
     const latestDate = computeLatestPlottableDate(data, options);
     // Pre-compute start date based on latest date in data
@@ -112,4 +148,4 @@ const longDateFormatter = (value) => {
     });
 };
 
-export { filterDataForTimeRange, longDateFormatter, shortDateFormatter };
+export { DRAG_TIME_RANGE_PREFIX, encodeDragTimeRange, filterDataForTimeRange, isTimeRangePreset, longDateFormatter, parseDragTimeRange, shortDateFormatter };

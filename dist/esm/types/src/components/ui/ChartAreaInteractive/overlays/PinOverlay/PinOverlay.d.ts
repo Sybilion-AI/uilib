@@ -6,5 +6,5 @@ interface PinOverlayProps {
     onPreviewMonthChange?: (month: string | undefined) => void;
     className?: string;
 }
-export declare function PinOverlay({ baseChartProps, pinMonth, onPinMonthChange, onPreviewMonthChange, className, }: PinOverlayProps): import("react/jsx-runtime").JSX.Element;
+export declare function PinOverlay({ baseChartProps, pinMonth, onPinMonthChange, onPreviewMonthChange: _onPreviewMonthChange, className, }: PinOverlayProps): import("react/jsx-runtime").JSX.Element;
 export {};

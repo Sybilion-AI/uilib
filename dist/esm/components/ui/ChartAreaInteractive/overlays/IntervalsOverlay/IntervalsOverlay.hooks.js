@@ -76,6 +76,7 @@ function useQuantileButton({ buttonRef, overlayContainerRef, quantiles, selected
         onQuantileChange,
     ]);
     const handleDragStart = useCallback((e) => {
+        e.stopPropagation();
         setIsDragging(true);
         if (buttonRef.current) {
             buttonRef.current.style.transition = 'none';

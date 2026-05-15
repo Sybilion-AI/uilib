@@ -4,7 +4,6 @@ interface CssExports {
   'pinAnimating': string;
   'pinButton': string;
   'pinContainer': string;
-  'pinDragging': string;
   'pinHovered': string;
   'pinIcon': string;
   'pinLineBase': string;

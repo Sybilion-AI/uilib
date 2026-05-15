@@ -1,46 +1,21 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
 import cn from 'classnames';
 import { forwardRef, useState, useRef, useMemo, useEffect } from 'react';
-import { ChartTooltip } from '../Chart.js';
-import { QuantileBands } from './QuantileBands.js';
 import { getForecastColor, ChartLines } from '../../ChartAreaInteractive/ChartLines.js';
 import { Skeleton } from '../../Skeleton/Skeleton.js';
 import { chartRenderQueue } from '../../../../utils/chartRenderQueue.js';
-import { LineChart, ComposedChart } from 'recharts';
+import { Tooltip, LineChart, ComposedChart } from 'recharts';
+import { ChartContainer } from './ChartContainer.js';
+import { ChartTooltipContent } from './ChartTooltipContent.js';
+import { CustomChartLegend } from './CustomChartLegend/CustomChartLegend.js';
+import { QuantileBands } from './QuantileBands.js';
+import { resolveChartMargin, getPlotViewBox } from '../tools/chartPlotGeometry.js';
 import { formatDate } from '../tools/formatters.js';
 import S from './BaseChartWrapper.styl.js';
 import { ChartAxes } from './ChartAxes.js';
 import { ChartGrid } from './ChartGrid.js';
 import { LegendSvg } from './LegendSvg/LegendSvg.js';
-import { ChartContainer } from './ChartContainer.js';
-import { CustomChartLegend } from './CustomChartLegend/CustomChartLegend.js';
-import { ChartTooltipContent } from './ChartTooltipContent.js';
 
-const DEFAULT_CHART_MARGIN = {
-    top: 5,
-    right: 5,
-    bottom: 5,
-    left: 5,
-};
-function resolveChartMargin(margin) {
-    return {
-        top: margin?.top ?? DEFAULT_CHART_MARGIN.top,
-        right: margin?.right ?? DEFAULT_CHART_MARGIN.right,
-        bottom: margin?.bottom ?? DEFAULT_CHART_MARGIN.bottom,
-        left: margin?.left ?? DEFAULT_CHART_MARGIN.left,
-    };
-}
-/** Plot box inside `.recharts-wrapper`, same convention as Recharts cartesian viewBox. */
-function getPlotViewBox(wrapper, m) {
-    const w = wrapper.clientWidth;
-    const h = wrapper.clientHeight;
-    return {
-        x: m.left,
-        y: m.top,
-        width: Math.max(0, w - m.left - m.right),
-        height: Math.max(0, h - m.top - m.bottom),
-    };
-}
 function clampTooltipTranslate(args) {
     const { coordinate, viewBox, tooltipWidth: tw, tooltipHeight: th, offset, edgeMargin, } = args;
     const minX = viewBox.x + edgeMargin;
@@ -332,7 +307,7 @@ const BaseChartWrapperContent = forwardRef((props, ref) => {
     }
     const ChartComponent = chartType === 'line' ? LineChart : ComposedChart;
     const defaultLabelFormatter = (v) => formatDateFn(v, true);
-    return (jsxs("div", { className: cn(S.root, !showLegend && S.noLegend, !showChartAxesLegend && S.hideChartAxesLegend, isLoaded && S.loaded, className), ref: setRefs, children: [loading && (jsx("div", { className: S.loadingOverlay, children: jsx(Skeleton, {}) })), showGrid && (jsx(ChartContainer, { config: chartConfig, className: cn(S.gridLayer, chartClassName), style: height ? { height: `${height}px` } : undefined, children: jsxs(ChartComponent, { data: chartData, margin: margin, children: [jsx(ChartGrid, {}), showAxes && (jsx(ChartAxes, { formatDate: formatDateFn, formatNumber: formatNumber, xAxisClassName: xAxisClassName, yAxisClassName: yAxisClassName, xAxisLabel: xAxisLabel, yAxisLabel: yAxisLabel, xMin: xMin, xMax: xMax, yMin: yMin, yMax: yMax, autoScaleYAxis: effectiveAutoScale }))] }) })), jsx(ChartContainer, { config: chartConfig, className: cn(S.chartLayer, chartClassName), style: height ? { height: `${height}px` } : undefined, ...containerProps, children: jsxs(ChartComponent, { data: chartData, margin: margin, children: [showAxes && (jsx(ChartAxes, { formatDate: formatDateFn, formatNumber: formatNumber, xAxisClassName: cn(xAxisClassName), yAxisClassName: cn(yAxisClassName), xAxisLabel: xAxisLabel, yAxisLabel: yAxisLabel, xMin: xMin, xMax: xMax, yMin: yMin, yMax: yMax, autoScaleYAxis: effectiveAutoScale })), quantileBands?.[0] && (jsx(QuantileBands, { hiddenBands: hiddenSeries, quantileBandKey: quantileBandKey, animate: true, animationDuration: 150, animationBegin: 0, customBands: quantileBands, showLegend: showLegend })), jsx(ChartLines, { historicalLineColor: historicalLineColor, chartData: chartData, forecastData: forecastData, hiddenSeries: hiddenSeries, isDarkTheme: isDarkTheme, shouldAnimate: shouldAnimate, showLegend: showLegend, forecastLineStyle: forecastLineStyle }), showTooltip && (jsx("div", { children: jsx(ChartTooltip, { cursor: false, offset: TOOLTIP_OFFSET, allowEscapeViewBox: { x: false, y: false }, content: renderTooltipContent }) }))] }) }), overlayElements, jsxs("div", { className: cn(S.footer, footerClassName), children: [showLegend &&
+    return (jsxs("div", { className: cn(S.root, !showLegend && S.noLegend, !showChartAxesLegend && S.hideChartAxesLegend, isLoaded && S.loaded, className), ref: setRefs, children: [loading && (jsx("div", { className: S.loadingOverlay, children: jsx(Skeleton, {}) })), showGrid && (jsx(ChartContainer, { config: chartConfig, className: cn(S.gridLayer, chartClassName), style: height ? { height: `${height}px` } : undefined, children: jsxs(ChartComponent, { data: chartData, margin: margin, children: [jsx(ChartGrid, {}), showAxes && (jsx(ChartAxes, { formatDate: formatDateFn, formatNumber: formatNumber, xAxisClassName: xAxisClassName, yAxisClassName: yAxisClassName, xAxisLabel: xAxisLabel, yAxisLabel: yAxisLabel, xMin: xMin, xMax: xMax, yMin: yMin, yMax: yMax, autoScaleYAxis: effectiveAutoScale }))] }) })), jsx(ChartContainer, { config: chartConfig, className: cn(S.chartLayer, chartClassName), style: height ? { height: `${height}px` } : undefined, ...containerProps, children: jsxs(ChartComponent, { data: chartData, margin: margin, children: [showAxes && (jsx(ChartAxes, { formatDate: formatDateFn, formatNumber: formatNumber, xAxisClassName: cn(xAxisClassName), yAxisClassName: cn(yAxisClassName), xAxisLabel: xAxisLabel, yAxisLabel: yAxisLabel, xMin: xMin, xMax: xMax, yMin: yMin, yMax: yMax, autoScaleYAxis: effectiveAutoScale })), quantileBands?.[0] && (jsx(QuantileBands, { hiddenBands: hiddenSeries, quantileBandKey: quantileBandKey, animate: true, animationDuration: 150, animationBegin: 0, customBands: quantileBands, showLegend: showLegend })), jsx(ChartLines, { historicalLineColor: historicalLineColor, chartData: chartData, forecastData: forecastData, hiddenSeries: hiddenSeries, isDarkTheme: isDarkTheme, shouldAnimate: shouldAnimate, showLegend: showLegend, forecastLineStyle: forecastLineStyle }), showTooltip && (jsx("div", { children: jsx(Tooltip, { cursor: false, offset: TOOLTIP_OFFSET, allowEscapeViewBox: { x: false, y: false }, content: renderTooltipContent }) }))] }) }), overlayElements, jsxs("div", { className: cn(S.footer, footerClassName), children: [showLegend &&
                         (legendVariant === 'svg' ? (jsx(LegendSvg, { payload: legendPayload.map(p => ({
                                 value: p.value,
                                 color: p.color,

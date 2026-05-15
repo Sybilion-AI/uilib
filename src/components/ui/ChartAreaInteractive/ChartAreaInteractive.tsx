@@ -169,10 +169,7 @@ export function ChartAreaInteractive({
   };
 
   const brushEnabled =
-    !disableTimeRangeSelector &&
-    !loading &&
-    bridgedChartData.length > 1 &&
-    mode == null;
+    !disableTimeRangeSelector && !loading && bridgedChartData.length > 1;
 
   const renderChart = () => {
     const overlayClassName = cn(chartContainerClassName);
@@ -222,17 +219,10 @@ export function ChartAreaInteractive({
 
       default:
         return (
-          <TimeRangeBrushHost
-            chartData={bridgedChartData}
-            onTimeRangeChange={onTimeRangeChange}
-            enabled={brushEnabled}
-            layoutKey={chartRenderId ?? null}
-          >
-            <BaseChartWrapper
-              {...baseChartProps}
-              chartClassName={cn(S.chartContainer, chartContainerClassName)}
-            />
-          </TimeRangeBrushHost>
+          <BaseChartWrapper
+            {...baseChartProps}
+            chartClassName={cn(S.chartContainer, chartContainerClassName)}
+          />
         );
     }
   };
@@ -253,7 +243,14 @@ export function ChartAreaInteractive({
         </div>
       )}
 
-      {renderChart()}
+      <TimeRangeBrushHost
+        chartData={bridgedChartData}
+        onTimeRangeChange={onTimeRangeChange}
+        enabled={brushEnabled}
+        layoutKey={chartRenderId ?? null}
+      >
+        {renderChart()}
+      </TimeRangeBrushHost>
     </InteractionOverlay>
   );
 }

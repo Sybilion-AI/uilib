@@ -15,11 +15,9 @@ function useChartYRange({ baseChartProps, chartData, disableRescaleWhenQuantileC
             Object.entries(point).forEach(([key, value]) => {
                 if (key === 'date')
                     return;
-                // When selectedForecastId is provided, scale only from selected forecast + its quantile band
-                // (exclude historical, other forecasts, and other forecasts' quantile values)
+                // When selectedForecastId is provided, scale from historical + selected forecast + its
+                // quantile band (exclude other forecasts and their quantile values only).
                 if (forecastId !== undefined) {
-                    if (key === 'historical')
-                        return;
                     if (key.startsWith('forecast_') && key !== `forecast_${forecastId}`)
                         return;
                     // Exclude q{quantile}_{otherAnalysisId} - only include selected forecast's quantiles

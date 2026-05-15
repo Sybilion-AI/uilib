@@ -9,15 +9,7 @@ import {
   useState,
 } from 'react';
 
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  CustomChartLegend,
-} from '#uilib/components/ui/Chart/Chart';
 import type { QuantileBandConfig } from '#uilib/components/ui/Chart/chartForecastVisualization.types';
-import { QuantileBands } from '#uilib/components/ui/Chart/components/QuantileBands';
 import { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
 import {
   ChartLines,
@@ -26,7 +18,13 @@ import {
 } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
 import { Skeleton } from '#uilib/components/ui/Skeleton';
 import { chartRenderQueue } from '#uilib/utils/chartRenderQueue';
-import { ComposedChart, LineChart } from 'recharts';
+import { ComposedChart, LineChart, Tooltip as ChartTooltip } from 'recharts';
+
+import type { ChartConfig } from '../Chart.types';
+import { ChartContainer } from './ChartContainer';
+import { ChartTooltipContent } from './ChartTooltipContent';
+import { CustomChartLegend } from './CustomChartLegend/CustomChartLegend';
+import { QuantileBands } from './QuantileBands';
 import { LegendPayload } from 'recharts/types/component/DefaultLegendContent';
 
 import { getPlotViewBox, resolveChartMargin } from '../tools/chartPlotGeometry';

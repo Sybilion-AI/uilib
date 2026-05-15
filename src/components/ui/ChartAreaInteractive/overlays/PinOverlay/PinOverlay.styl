@@ -46,8 +46,6 @@
     transition background-color 300ms ease-out
     border-radius 12px
 
-  .pinDragging &::after
-    background-color var(--background-alpha-700)
   .pinAnimating &
     transition left 300ms ease-out
 
@@ -64,13 +62,10 @@
   border-radius 9999px
   transition transform 200ms ease-out
   background-color var(--background)
-  cursor grab
+  cursor pointer
   user-select none
   pointer-events auto
   touch-action none
-
-  .pinDragging &
-    transition none
 
   .pinHovered &
     transform scale(1.1)
@@ -94,7 +89,7 @@
   margin-top -40px
   z-index 20
   pointer-events auto
-  cursor grab
+  cursor pointer
   touch-action none
   // Debug: uncomment to visualize
   // background-color rgba(255, 0, 0, 0.1)

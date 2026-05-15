@@ -127,6 +127,7 @@ export function useThresholdButton({
 
   const handleDragStart = useCallback(
     (e: PointerEvent) => {
+      e.stopPropagation();
       initialValueRef.current = initialValue;
       startYRef.current = e.clientY;
       setIsDragging(true);

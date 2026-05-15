@@ -70,6 +70,7 @@ function useThresholdButton({ lineRef, overlayContainerRef, initialValue, minVal
         onValueChangeThrottled(clampedValue);
     }, [clientYToValue, valueToPercent, minValue, maxValue]);
     const handleDragStart = useCallback((e) => {
+        e.stopPropagation();
         initialValueRef.current = initialValue;
         startYRef.current = e.clientY;
         setIsDragging(true);
