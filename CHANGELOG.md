@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.21](https://github.com/Mir-Insight/uilib/compare/v1.2.20...v1.2.21) (2026-05-15)
+
+
+### Features
+
+* ChatProvider - Centralize outbound send loading ([db7e2c7](https://github.com/Mir-Insight/uilib/commit/db7e2c705b6785cff242c1ba91075094cdad4615))
+
 ### [1.2.20](https://github.com/Mir-Insight/uilib/compare/v1.2.19...v1.2.20) (2026-05-14)
 
 
