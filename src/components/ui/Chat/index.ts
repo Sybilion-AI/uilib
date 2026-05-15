@@ -24,3 +24,4 @@ export type {
   UserCsvAttachment,
 } from './Chat.types';
 export { MessageRole } from './Chat.types';
+export { CsvIcon } from '../../icons/CsvIcon/CsvIcon';

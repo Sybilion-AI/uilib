@@ -8,7 +8,7 @@ import { Input } from '../../Input/Input.js';
 import { syncChatPromptTextareaHeight } from './ChatPrompt.helpers.js';
 import S from './ChatPrompt.styl.js';
 
-function ChatPrompt({ onSubmit, placeholder, className, footer, prefillMessage, }) {
+function ChatPrompt({ onSubmit, placeholder, className, footer, prefillMessage, showNotice = true, }) {
     const [message, setMessage] = useState('');
     const inputRef = useRef(null);
     useLayoutEffect(() => {
@@ -40,7 +40,7 @@ function ChatPrompt({ onSubmit, placeholder, className, footer, prefillMessage, 
             }
         },
     });
-    return (jsxs("form", { onSubmit: handleSubmit, className: cn(S.root, className), children: [jsxs("div", { className: S.composer, children: [jsx("div", { className: S.notice, children: "Forecast Assistant can make mistakes." }), jsx(Input, { ref: inputRef, type: "textarea", rows: 1, value: message, onChange: e => setMessage(e.target.value), placeholder: placeholder || 'Type a message...', className: cn(S.input) }), jsx("div", { className: S.submitColumn, children: jsx(Button, { type: "submit", size: "sm", disabled: !message.trim(), children: jsx(SendHorizontalIcon, { size: 16 }) }) })] }), footer] }));
+    return (jsxs("form", { onSubmit: handleSubmit, className: cn(S.root, className), children: [jsxs("div", { className: S.composer, children: [showNotice ? (jsx("div", { className: S.notice, children: "Forecast Assistant can make mistakes." })) : null, jsx(Input, { ref: inputRef, type: "textarea", rows: 1, value: message, onChange: e => setMessage(e.target.value), placeholder: placeholder || 'Type a message...', className: cn(S.input) }), jsx("div", { className: S.submitColumn, children: jsx(Button, { type: "submit", size: "sm", disabled: !message.trim(), children: jsx(SendHorizontalIcon, { size: 16 }) }) })] }), footer] }));
 }
 
 export { ChatPrompt };

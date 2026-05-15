@@ -26,6 +26,7 @@ export { ChatMessage } from './components/ui/Chat/ChatMessage/ChatMessage.js';
 export { ChatPrompt } from './components/ui/Chat/ChatPrompt/ChatPrompt.js';
 export { ChatPresets } from './components/ui/Chat/ChatPresets/ChatPresets.js';
 export { MessageRole } from './components/ui/Chat/Chat.types.js';
+export { CsvIcon } from './components/icons/CsvIcon/CsvIcon.js';
 export { Checkbox } from './components/ui/Checkbox/Checkbox.js';
 export { Dialog } from './components/ui/Dialog/Dialog.js';
 export { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerPortal, DrawerTitle, DrawerTrigger } from './components/ui/Drawer/Drawer.js';

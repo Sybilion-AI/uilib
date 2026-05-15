@@ -42,7 +42,7 @@ function ChatChrome({ showResizeHandle, resizeHandle, onClose, isEmpty, renderPr
                                                 })
                                                 : null, isScriptComplete &&
                                                 onGenerateDashboard &&
-                                                !generatingDashboard ? (jsxs(Button, { type: "button", variant: "default", size: "lg", disabled: isLoading, onClick: onGenerateDashboardClick, children: [jsx(ChartLineIcon, {}), "Generate Dashboard"] })) : null] })), showInlinePresets && renderPresets('inline'), isLoading && isLastMessageFromUser && (jsx(TextShimmer, { duration: 1, spread: 5, className: S.loader, children: "Thinking..." }))] }) })), jsx("div", { className: cn(S.footer, footerClassName), children: jsx(Chat.Prompt, { onSubmit: onPromptSubmit, disabled: isLoading, prefillMessage: promptPrefill ?? undefined }) })] }) })] }));
+                                                !generatingDashboard ? (jsxs(Button, { type: "button", variant: "default", size: "lg", disabled: isLoading, onClick: onGenerateDashboardClick, children: [jsx(ChartLineIcon, {}), "Generate Dashboard"] })) : null] })), showInlinePresets && renderPresets('inline'), isLoading && isLastMessageFromUser && (jsx(TextShimmer, { duration: 1, spread: 5, className: S.loader, children: "Thinking..." }))] }) })), jsx("div", { className: cn(S.footer, footerClassName), children: jsx(Chat.Prompt, { onSubmit: onPromptSubmit, disabled: isLoading, prefillMessage: promptPrefill ?? undefined, showNotice: isEmpty }) })] }) })] }));
 }
 
 export { ChatChrome };

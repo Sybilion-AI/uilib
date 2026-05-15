@@ -1,6 +1,6 @@
 import { jsxs, jsx } from 'react/jsx-runtime';
 import { downloadTextFile } from '../../../../utils/downloadTextFile.js';
-import { CsvIcon } from './icons/CsvIcon.js';
+import { CsvIcon } from '../../../icons/CsvIcon/CsvIcon.js';
 import S from './ChatMessage.styl.js';
 
 const CSV_DOWNLOAD_HINT = 'Download .CSV file';

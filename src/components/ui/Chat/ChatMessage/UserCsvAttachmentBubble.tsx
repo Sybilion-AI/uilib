@@ -1,7 +1,7 @@
-import type { UserCsvAttachment } from '../Chat.types';
 import { downloadTextFile } from '#uilib/utils/downloadTextFile';
 
-import { CsvIcon } from './icons/CsvIcon';
+import { CsvIcon } from '../../../icons/CsvIcon/CsvIcon';
+import type { UserCsvAttachment } from '../Chat.types';
 import S from './ChatMessage.styl';
 
 const CSV_DOWNLOAD_HINT = 'Download .CSV file';

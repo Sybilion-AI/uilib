@@ -66,6 +66,8 @@ export interface ChatPromptProps {
     footer?: ReactNode;
     /** Deep link `?prompt=` — one-shot composer pre-fill (see useChatPanelChromeModel). */
     prefillMessage?: string | null;
+    /** Disclaimer above composer; default true. ChatChrome sets false when thread has messages. */
+    showNotice?: boolean;
 }
 export interface ChatMessageProps {
     role: MessageRole;

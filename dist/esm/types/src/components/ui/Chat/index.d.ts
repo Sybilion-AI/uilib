@@ -11,3 +11,4 @@ export { ChatPrompt } from './ChatPrompt';
 export { ChatPresets } from './ChatPresets';
 export type { Chat as ChatType, ChatSendMessagePayload, ChatProps, ChatPreset as ChatPresetType, Message, UserCsvAttachment, } from './Chat.types';
 export { MessageRole } from './Chat.types';
+export { CsvIcon } from '../../icons/CsvIcon/CsvIcon';
