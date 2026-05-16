@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.2](https://github.com/Mir-Insight/uilib/compare/v1.3.1...v1.3.2) (2026-05-16)
+
+
+### Bug Fixes
+
+* PlatformSdk - NPM devDependency for GitHub Actions ([99d1173](https://github.com/Mir-Insight/uilib/commit/99d11736110de4a443bf5057697dbb7f2633bb91))
+
 ### [1.3.1](https://github.com/Mir-Insight/uilib/compare/v1.3.0...v1.3.1) (2026-05-16)
 
 
