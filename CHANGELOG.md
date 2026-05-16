@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/Mir-Insight/uilib/compare/v1.3.0...v1.3.1) (2026-05-16)
+
+
+### Features
+
+* **ci:** Publish on Github Pages ([399f92c](https://github.com/Mir-Insight/uilib/commit/399f92c5dad42d3b22f71fba030ad67d809a574e))
+* LightweightForecastChart - Add lightweight forecast chart ([9a0ac86](https://github.com/Mir-Insight/uilib/commit/9a0ac86ff23fca59da1b1dbb67041837b219234b))
+
 ## [1.3.0](https://github.com/Mir-Insight/uilib/compare/v1.2.26...v1.3.0) (2026-05-15)
 
 
