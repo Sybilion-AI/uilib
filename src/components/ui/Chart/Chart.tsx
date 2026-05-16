@@ -22,6 +22,10 @@ export {
   BaseChartWrapper,
 };
 export {
+  LightweightForecastChart,
+  type LightweightForecastChartProps,
+} from './lightweight/LightweightForecastChart';
+export {
   ChartEmptyState,
   type ChartEmptyStateProps,
   type ChartEmptyStatusTone,

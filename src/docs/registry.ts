@@ -92,6 +92,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/ChartAreaInteractivePage'),
   },
   {
+    slug: 'lightweight-forecast-chart',
+    title: 'LightweightForecastChart',
+    section: 'Charts',
+    load: () => import('./pages/LightweightChartPage'),
+  },
+  {
     slug: 'chat',
     title: 'Chat',
     section: 'Chat',
