@@ -10,7 +10,7 @@ const elem = document.getElementById('app-root') as HTMLElement;
 const root = createRoot(elem);
 
 root.render(
-  <BrowserRouter>
+  <BrowserRouter basename={DOCS_ROUTER_BASENAME || undefined}>
     <ThemeProvider activeColor={DEFAULT_THEME_ACTIVE_COLOR}>
       <App />
     </ThemeProvider>

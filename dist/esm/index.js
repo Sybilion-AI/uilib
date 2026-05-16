@@ -103,6 +103,7 @@ export { SignInPage } from './components/widgets/SignInPage/SignInPage.js';
 export { ChartTooltipItem } from './components/ui/Chart/components/ChartTooltipItem.js';
 export { ChartLegendItem } from './components/ui/Chart/components/ChartLegendItem.js';
 export { CustomChartLegend } from './components/ui/Chart/components/CustomChartLegend/CustomChartLegend.js';
+export { LightweightForecastChart } from './components/ui/Chart/lightweight/LightweightForecastChart.js';
 export { ChartEmptyState } from './components/ui/Chart/components/ChartEmptyState/ChartEmptyState.js';
 export { ChartContainer, ChartStyle } from './components/ui/Chart/components/ChartContainer.js';
 export { ChartTooltipContent } from './components/ui/Chart/components/ChartTooltipContent.js';

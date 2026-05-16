@@ -10,4 +10,5 @@ export { ChartTooltipItem } from './components/ChartTooltipItem';
 export { ChartLegendItem } from './components/ChartLegendItem';
 export { CustomChartLegend } from './components/CustomChartLegend/CustomChartLegend';
 export { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent, ChartStyle, BaseChartWrapper, };
+export { LightweightForecastChart, type LightweightForecastChartProps, } from './lightweight/LightweightForecastChart';
 export { ChartEmptyState, type ChartEmptyStateProps, type ChartEmptyStatusTone, } from './components/ChartEmptyState/ChartEmptyState';

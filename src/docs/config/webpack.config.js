@@ -22,9 +22,27 @@ const pkg = require('../../../package.json');
 const themeStyl = pathResolve(paths.src, 'theme.styl');
 const logoSvgPath = pathResolve(paths.assets, 'logo.svg');
 
+/** GitHub Pages project sites live at /<repo>/; set PUBLIC_PATH=/repo-name/ for production deploy. */
+function normalizePublicPath(raw) {
+  const v = (raw && String(raw).trim()) || '/';
+  if (v === '/') {
+    return '/';
+  }
+  const withLeading = v.startsWith('/') ? v : `/${v}`;
+  return withLeading.endsWith('/') ? withLeading : `${withLeading}/`;
+}
+
+function routerBasenameFromPublicPath(publicPath) {
+  if (publicPath === '/') {
+    return '';
+  }
+  return publicPath.replace(/\/$/, '');
+}
+
 export default (env, argv) => {
   const isDev = argv.mode === 'development';
-  const analyticsPath = `${paths.assets}/analytics.html`;
+  const publicPath = normalizePublicPath(process.env.PUBLIC_PATH);
+  const docsRouterBasename = routerBasenameFromPublicPath(publicPath);
   const alias = {
     '#uilib': paths.src,
     uilib: paths.src,
@@ -38,6 +56,7 @@ export default (env, argv) => {
     entry: [paths.docs],
     output: {
       path: paths.build,
+      publicPath,
     },
 
     resolve: {
@@ -152,6 +171,7 @@ export default (env, argv) => {
       new webpack.DefinePlugin({
         isDEV: JSON.stringify(isDev),
         VERSION: JSON.stringify(pkg.version),
+        DOCS_ROUTER_BASENAME: JSON.stringify(docsRouterBasename),
       }),
       new CopyWebpackPlugin({
         patterns: [
@@ -174,7 +194,7 @@ export default (env, argv) => {
 
       new HtmlWebpackPlugin({
         lang: 'en',
-        baseUrl: '/',
+        baseUrl: publicPath,
         filename: 'index.html',
         template: `${paths.assets}/index.html`,
         minify: isDev
@@ -221,6 +241,9 @@ export default (env, argv) => {
         hot: true,
         port: process.env.PORT || 8181,
         historyApiFallback: true,
+        ...(publicPath !== '/' && {
+          devMiddleware: { publicPath },
+        }),
       },
     });
   }

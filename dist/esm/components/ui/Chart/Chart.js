@@ -16,6 +16,10 @@ import '../TextShimmer/TextShimmer.js';
 import '@phosphor-icons/react';
 import '../AnalysesSelector/AnalysesSelector.styl.js';
 import './components/CustomChartLegend/CustomChartLegend.styl.js';
+import '../ChartAreaInteractive/ChartLines.js';
+import '../Skeleton/Skeleton.styl.js';
+import 'lightweight-charts';
+import './lightweight/LightweightForecastChart.styl.js';
 import './components/ChartEmptyState/ChartEmptyState.styl.js';
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
