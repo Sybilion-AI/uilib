@@ -36,6 +36,7 @@ export { DropZone } from './components/ui/DropZone/DropZone.js';
 export { FlickeringGrid } from './components/ui/FlickeringGrid/FlickeringGrid.js';
 export { Foldable } from './components/ui/Foldable/Foldable.js';
 export { Gap } from './components/ui/Gap/Gap.js';
+export { GridLayout } from './components/ui/GridLayout/GridLayout.js';
 export { Image } from './components/ui/Image/Image.js';
 export { ImageWithFallback } from './components/ui/ImageWithFallback/ImageWithFallback.js';
 export { Input } from './components/ui/Input/Input.js';

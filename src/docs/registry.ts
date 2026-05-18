@@ -158,6 +158,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/FoldablePage'),
   },
   {
+    slug: 'grid-layout',
+    title: 'GridLayout',
+    section: 'Layout',
+    load: () => import('./pages/GridLayoutPage'),
+  },
+  {
     slug: 'image',
     title: 'Image',
     section: 'Media',
