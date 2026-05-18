@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.8](https://github.com/Mir-Insight/uilib/compare/v1.3.6...v1.3.8) (2026-05-18)
+
+
+### Features
+
+* Sidebar - Narrow shell uses sheet + 1100px AppShell ([e84f0e5](https://github.com/Mir-Insight/uilib/commit/e84f0e5051e0f9ef61db600450e95c6244ebcb4a))
+
 ### [1.3.6](https://github.com/Mir-Insight/uilib/compare/v1.3.5...v1.3.6) (2026-05-18)
 
 
