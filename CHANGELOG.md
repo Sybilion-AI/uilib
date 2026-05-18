@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.6](https://github.com/Mir-Insight/uilib/compare/v1.3.5...v1.3.6) (2026-05-18)
+
+
+### Features
+
+* GridLayout - Add responsive grid and docs page ([f17abee](https://github.com/Mir-Insight/uilib/commit/f17abeeb159432076b9028d2a87b08f32c131b18))
+
 ### [1.3.5](https://github.com/Mir-Insight/uilib/compare/v1.3.4...v1.3.5) (2026-05-18)
 
 
