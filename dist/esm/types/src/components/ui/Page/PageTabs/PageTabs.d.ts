@@ -1,5 +1,5 @@
 import { TabsListProps, TabsProps } from '#uilib/components/ui/Tabs';
-export declare function PageTabs({ className, contentClassName, scrollbarClassName, items, tabsListProps, ...props }: {
+export declare function PageTabs({ className, contentClassName, innerClassName, scrollbarClassName, items, tabsListProps, ...props }: {
     items: {
         value: string;
         label: string;
@@ -11,5 +11,6 @@ export declare function PageTabs({ className, contentClassName, scrollbarClassNa
     };
 } & TabsProps & {
     contentClassName?: string;
+    innerClassName?: string;
     scrollbarClassName?: string;
 }): import("react/jsx-runtime").JSX.Element;

@@ -15,8 +15,8 @@ function hasTabPanelContent(content) {
         return false;
     return true;
 }
-function PageTabs({ className, contentClassName, scrollbarClassName, items, tabsListProps, ...props }) {
-    return (jsxs(Tabs, { className: cn(S.root, className), variant: "link", ...props, children: [jsx(TabsList, { ...tabsListProps, className: cn(S.list, tabsListProps?.withPaddings && S.withPaddings), children: jsx(PageXScroll, { size: "sm", scrollbarClassName: cn(S.scrollbar, scrollbarClassName), children: items.map(item => (jsx(TabsTrigger, { value: item.value, children: item.label }, item.value))) }) }), items.map(item => hasTabPanelContent(item.content) ? (jsx(TabsContent, { value: item.value, className: cn(S.content, contentClassName), children: item.content }, item.value)) : null)] }));
+function PageTabs({ className, contentClassName, innerClassName, scrollbarClassName, items, tabsListProps, ...props }) {
+    return (jsxs(Tabs, { className: cn(S.root, className), variant: "link", ...props, children: [jsx(TabsList, { ...tabsListProps, className: cn(S.list, tabsListProps?.withPaddings && S.withPaddings), children: jsx(PageXScroll, { size: "sm", scrollbarClassName: cn(S.scrollbar, scrollbarClassName), innerClassName: innerClassName, children: items.map(item => (jsx(TabsTrigger, { value: item.value, children: item.label }, item.value))) }) }), items.map(item => hasTabPanelContent(item.content) ? (jsx(TabsContent, { value: item.value, className: cn(S.content, contentClassName), children: item.content }, item.value)) : null)] }));
 }
 
 export { PageTabs };
