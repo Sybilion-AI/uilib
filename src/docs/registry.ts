@@ -122,6 +122,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/DialogPage'),
   },
   {
+    slug: 'confirm',
+    title: 'Confirm',
+    section: 'Overlays',
+    load: () => import('./pages/ConfirmPage'),
+  },
+  {
     slug: 'driver-map',
     title: 'DriverMap & DriverCard',
     section: 'Widgets',

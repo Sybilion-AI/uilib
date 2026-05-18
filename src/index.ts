@@ -17,6 +17,7 @@ export * from './components/ui/Chart';
 export * from './components/ui/ChartAreaInteractive';
 export * from './components/ui/Chat';
 export * from './components/ui/Checkbox';
+export * from './components/ui/Confirm';
 export * from './components/ui/Dialog';
 export * from './components/ui/Drawer';
 export * from './components/ui/DropdownMenu';

@@ -52,6 +52,28 @@ export default (env, argv) => {
     alias.theme = themeStyl;
   }
 
+  const docsHtmlMinify = isDev
+    ? false
+    : {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      };
+
+  const docsHtmlPluginBase = {
+    lang: 'en',
+    baseUrl: publicPath,
+    template: `${paths.assets}/index.html`,
+    minify: docsHtmlMinify,
+  };
+
   const config = {
     entry: [paths.docs],
     output: {
@@ -193,24 +215,13 @@ export default (env, argv) => {
       }),
 
       new HtmlWebpackPlugin({
-        lang: 'en',
-        baseUrl: publicPath,
+        ...docsHtmlPluginBase,
         filename: 'index.html',
-        template: `${paths.assets}/index.html`,
-        minify: isDev
-          ? false
-          : {
-              removeComments: true,
-              collapseWhitespace: true,
-              removeRedundantAttributes: true,
-              useShortDoctype: true,
-              removeEmptyAttributes: true,
-              removeStyleLinkTypeAttributes: true,
-              keepClosingSlash: true,
-              minifyJS: true,
-              minifyCSS: true,
-              minifyURLs: true,
-            },
+      }),
+      /** GitHub Pages serves this for missing paths; same shell as index.html so SPA routes work. */
+      new HtmlWebpackPlugin({
+        ...docsHtmlPluginBase,
+        filename: '404.html',
       }),
       existsSync(logoSvgPath) &&
         new FaviconWebpackPlugin({

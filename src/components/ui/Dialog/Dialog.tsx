@@ -210,7 +210,11 @@ export function Dialog({
 
         {footer && (
           <CardFooter
-            className={cn(S[`align-${footerAlignment}`], footerClassName)}
+            className={cn(
+              S.footer,
+              S[`align-${footerAlignment}`],
+              footerClassName,
+            )}
           >
             {footer}
           </CardFooter>
