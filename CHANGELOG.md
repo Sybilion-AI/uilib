@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.3](https://github.com/Mir-Insight/uilib/compare/v1.3.2...v1.3.3) (2026-05-18)
+
+
+### Features
+
+* Confirm - Dialog-based confirmation UI ([4840455](https://github.com/Mir-Insight/uilib/commit/48404557c1736865f3cf43b874a5c063521a7197))
+* LightweightForecastChart - Quantile bands follow forecast tint ([614d629](https://github.com/Mir-Insight/uilib/commit/614d6294b26922b021559a0fdb8fa76b59149ac9))
+
 ### [1.3.2](https://github.com/Mir-Insight/uilib/compare/v1.3.1...v1.3.2) (2026-05-16)
 
 
