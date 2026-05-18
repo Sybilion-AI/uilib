@@ -51,6 +51,8 @@ export interface ChartAreaInteractiveProps extends BaseChartWrapperProps {
   loadingAnalyses?: Set<string>;
   onLegendClick?: (data: LegendPayload) => undefined | boolean;
   disableTimeRangeSelector?: boolean;
+  /** When selector hidden (`disableTimeRangeSelector`), still allow drag brush on chart (defaults false). */
+  enableTimeRangeBrush?: boolean;
   forecastLineStyle?: 'dashed' | 'solid';
   /** When set, ensures this analysis is visible (selected) in chart legend */
   selectedAnalysisId?: number | null;

@@ -16,7 +16,7 @@ import { ThresholdsOverlay } from './overlays/ThresholdsOverlay/ThresholdsOverla
 const chartConfig = {
 // Chart now supports light/dark themes with dynamic colors
 };
-function ChartAreaInteractive({ className, chartContainerClassName, legendClassName, xAxisClassName, yAxisClassName, timeRange, onTimeRangeChange, pinMonth, onPinMonthChange, onPreviewMonthChange, chartData, forecastData, error, loading = false, isDarkTheme = false, footerActions, mode, selectedForecast, upperQuantiles, lowerQuantiles, selectedLowerQuantile, selectedUpperQuantile, onLowerQuantileChange, onUpperQuantileChange, lowerThreshold, upperThreshold, onLowerThresholdChange, onUpperThresholdChange, discreteThresholdValues, headerActions, excludeLegendIds, loadingAnalyses, onLegendClick, onAnalysisSelect, disableTimeRangeSelector, forecastLineStyle = 'dashed', selectedAnalysisId, chartRenderId, toggleLegendSeries, ensureAnalysisSeriesVisible, overlayForecastData = {}, hiddenSeries, disableForecastHistoricalBridge, overlayElements: overlayElementsProp, ...restProps }) {
+function ChartAreaInteractive({ className, chartContainerClassName, legendClassName, xAxisClassName, yAxisClassName, timeRange, onTimeRangeChange, pinMonth, onPinMonthChange, onPreviewMonthChange, chartData, forecastData, error, loading = false, isDarkTheme = false, footerActions, mode, selectedForecast, upperQuantiles, lowerQuantiles, selectedLowerQuantile, selectedUpperQuantile, onLowerQuantileChange, onUpperQuantileChange, lowerThreshold, upperThreshold, onLowerThresholdChange, onUpperThresholdChange, discreteThresholdValues, headerActions, excludeLegendIds, loadingAnalyses, onLegendClick, onAnalysisSelect, disableTimeRangeSelector, enableTimeRangeBrush = false, forecastLineStyle = 'dashed', selectedAnalysisId, chartRenderId, toggleLegendSeries, ensureAnalysisSeriesVisible, overlayForecastData = {}, hiddenSeries, disableForecastHistoricalBridge, overlayElements: overlayElementsProp, ...restProps }) {
     const seriesHidden = hiddenSeries ?? new Set();
     const hiddenSeriesRef = useRef(seriesHidden);
     const prevSelectedAnalysisIdRef = useRef(selectedAnalysisId);
@@ -95,7 +95,9 @@ function ChartAreaInteractive({ className, chartContainerClassName, legendClassN
         // loadingAnalyses,
         ...restProps,
     };
-    const brushEnabled = !disableTimeRangeSelector && !loading && bridgedChartData.length > 1;
+    const brushEnabled = (!disableTimeRangeSelector || enableTimeRangeBrush) &&
+        !loading &&
+        bridgedChartData.length > 1;
     const renderChart = () => {
         const overlayClassName = cn(chartContainerClassName);
         switch (mode) {

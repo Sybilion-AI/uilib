@@ -61,6 +61,7 @@ export function ChartAreaInteractive({
   onLegendClick,
   onAnalysisSelect,
   disableTimeRangeSelector,
+  enableTimeRangeBrush = false,
   forecastLineStyle = 'dashed',
   selectedAnalysisId,
   chartRenderId,
@@ -169,7 +170,9 @@ export function ChartAreaInteractive({
   };
 
   const brushEnabled =
-    !disableTimeRangeSelector && !loading && bridgedChartData.length > 1;
+    (!disableTimeRangeSelector || enableTimeRangeBrush) &&
+    !loading &&
+    bridgedChartData.length > 1;
 
   const renderChart = () => {
     const overlayClassName = cn(chartContainerClassName);
