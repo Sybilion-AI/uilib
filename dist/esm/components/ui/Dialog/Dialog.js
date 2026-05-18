@@ -118,7 +118,7 @@ function Dialog({ open, onOpenChange, disabled, trigger, title, subtitle, disabl
                     maxHeight: maxHeight
                         ? `min(${maxHeight}, calc(100% - var(--p-4)))`
                         : null,
-                }, children: [(title || subtitle || icon) && (jsx(CardHeader, { icon: icon, title: title, description: subtitle })), !disableCloseButton && (jsx("button", { className: S.dialogClose, onClick: handleCloseClick, "aria-label": "Close dialog", type: "button", children: jsx(XIcon, { size: 16 }) })), content && (jsx(CardContent, { className: contentClassName, noScroll: noScroll, autoScrollBottom: autoScrollBottom, children: content })), footer && (jsx(CardFooter, { className: cn(S[`align-${footerAlignment}`], footerClassName), children: footer }))] })] }));
+                }, children: [(title || subtitle || icon) && (jsx(CardHeader, { icon: icon, title: title, description: subtitle })), !disableCloseButton && (jsx("button", { className: S.dialogClose, onClick: handleCloseClick, "aria-label": "Close dialog", type: "button", children: jsx(XIcon, { size: 16 }) })), content && (jsx(CardContent, { className: contentClassName, noScroll: noScroll, autoScrollBottom: autoScrollBottom, children: content })), footer && (jsx(CardFooter, { className: cn(S.footer, S[`align-${footerAlignment}`], footerClassName), children: footer }))] })] }));
     const onTriggerClick = !disabled ? () => onOpenChange(true) : undefined;
     return (jsxs(Fragment, { children: [trigger && jsx("div", { onClick: onTriggerClick, children: trigger }), open && !disabled && createPortal(dialogContent, document.body)] }));
 }

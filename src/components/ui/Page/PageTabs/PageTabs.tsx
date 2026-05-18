@@ -23,6 +23,7 @@ function hasTabPanelContent(content: React.ReactNode | undefined): boolean {
 export function PageTabs({
   className,
   contentClassName,
+  scrollbarClassName,
   items,
   tabsListProps,
   ...props
@@ -32,14 +33,17 @@ export function PageTabs({
     fullWidth?: boolean;
     withPaddings?: boolean;
   };
-} & TabsProps & { contentClassName?: string }) {
+} & TabsProps & { contentClassName?: string; scrollbarClassName?: string }) {
   return (
     <Tabs className={cn(S.root, className)} variant="link" {...props}>
       <TabsList
         {...tabsListProps}
         className={cn(S.list, tabsListProps?.withPaddings && S.withPaddings)}
       >
-        <PageXScroll size="sm" scrollbarClassName={S.scrollbar}>
+        <PageXScroll
+          size="sm"
+          scrollbarClassName={cn(S.scrollbar, scrollbarClassName)}
+        >
           {items.map(item => (
             <TabsTrigger value={item.value} key={item.value}>
               {item.label}

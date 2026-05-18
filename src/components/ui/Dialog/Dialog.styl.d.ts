@@ -5,17 +5,17 @@ interface CssExports {
   'align-center': string;
   'align-left': string;
   'align-right': string;
-  dialogClose: string;
-  dialogContent: string;
-  dialogDescription: string;
-  dialogIn: string;
-  dialogOut: string;
-  dialogOverlay: string;
-  fadeIn: string;
-  fadeOut: string;
-  footer: string;
-  isClosed: string;
-  isOpen: string;
+  'dialogClose': string;
+  'dialogContent': string;
+  'dialogDescription': string;
+  'dialogIn': string;
+  'dialogOut': string;
+  'dialogOverlay': string;
+  'fadeIn': string;
+  'fadeOut': string;
+  'footer': string;
+  'isClosed': string;
+  'isOpen': string;
   'size-wide': string;
 }
 export const cssExports: CssExports;
