@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.9](https://github.com/Mir-Insight/uilib/compare/v1.3.8...v1.3.9) (2026-05-18)
+
+
+### Bug Fixes
+
+* PageFooter - mobile paddings ([ce0d0b8](https://github.com/Mir-Insight/uilib/commit/ce0d0b8a25ef8f0d33ca3aa35a7d243820329633))
+
 ### [1.3.8](https://github.com/Mir-Insight/uilib/compare/v1.3.6...v1.3.8) (2026-05-18)
 
 
