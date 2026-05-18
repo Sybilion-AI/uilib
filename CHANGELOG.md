@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.5](https://github.com/Mir-Insight/uilib/compare/v1.3.4...v1.3.5) (2026-05-18)
+
+
+### Features
+
+* PageTabs - innerClassName passthrough ([93c0974](https://github.com/Mir-Insight/uilib/commit/93c0974b9bf37a80956af967a2162a4580290e3b))
+
 ### [1.3.4](https://github.com/Mir-Insight/uilib/compare/v1.3.3...v1.3.4) (2026-05-18)
 
 
