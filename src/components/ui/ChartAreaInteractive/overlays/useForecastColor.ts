@@ -4,10 +4,9 @@ import { DEFAULT_QUANTILE_BAND_COLOR } from '#uilib/components/ui/Chart/componen
 
 import { Analysis } from '../ChartAreaInteractive.types';
 import {
-  FORECAST_COLORS_MAP,
   FORECAST_LINE_COLORS,
   ForecastItemData,
-  getForecastQuantileBandColor,
+  resolveQuantileBandFillForForecastLine,
 } from '../ChartLines';
 
 const DEFAULT_FORECAST_COLORS = {
@@ -37,9 +36,10 @@ export function useForecastColor(
       forecastItem.color ||
       FORECAST_LINE_COLORS[forecastIndex % FORECAST_LINE_COLORS.length];
 
-    const quantileBandColor = forecastItem.color
-      ? FORECAST_COLORS_MAP[forecastItem.color]
-      : getForecastQuantileBandColor(forecastIndex);
+    const quantileBandColor = resolveQuantileBandFillForForecastLine(
+      lineColor,
+      forecastIndex,
+    );
 
     return {
       lineColor,

@@ -72,6 +72,8 @@ export interface ForecastVisualizationRow {
 }
 export interface QuantileBandConfig {
     key: string;
+    /** When set, band fill follows this forecast series line color (LW chart). */
+    forecastSeriesId?: number;
     quantiles: [string, string];
     opacity: number;
     color?: string;

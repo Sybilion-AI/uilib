@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { DEFAULT_QUANTILE_BAND_COLOR } from '../../Chart/components/QuantileBands.js';
-import { FORECAST_LINE_COLORS, FORECAST_COLORS_MAP, getForecastQuantileBandColor } from '../ChartLines.js';
+import { FORECAST_LINE_COLORS, resolveQuantileBandFillForForecastLine } from '../ChartLines.js';
 
 const DEFAULT_FORECAST_COLORS = {
     lineColor: DEFAULT_QUANTILE_BAND_COLOR,
@@ -20,9 +20,7 @@ function useForecastColor(selectedForecast, forecastData) {
         const forecastItem = forecastData[forecastIndex];
         const lineColor = forecastItem.color ||
             FORECAST_LINE_COLORS[forecastIndex % FORECAST_LINE_COLORS.length];
-        const quantileBandColor = forecastItem.color
-            ? FORECAST_COLORS_MAP[forecastItem.color]
-            : getForecastQuantileBandColor(forecastIndex);
+        const quantileBandColor = resolveQuantileBandFillForForecastLine(lineColor, forecastIndex);
         return {
             lineColor,
             quantileBandColor,

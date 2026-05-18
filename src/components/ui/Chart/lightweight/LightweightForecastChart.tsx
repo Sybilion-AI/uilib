@@ -19,7 +19,7 @@ import type { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/C
 import {
   ForecastItemData,
   getForecastColor,
-  getForecastQuantileBandColor,
+  resolveQuantileBandFillForForecastLine,
 } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
 import { Skeleton } from '#uilib/components/ui/Skeleton';
 import { ensureChartForecastBridge } from '#uilib/utils/chartConnectionPoint';
@@ -54,6 +54,27 @@ type TooltipRow = {
   color: string;
   dataKey?: string;
 };
+
+function forecastIndexForQuantileBand(
+  band: QuantileBandConfig,
+  forecastData: ForecastItemData[],
+): number {
+  if (!forecastData.length) return 0;
+  if (band.forecastSeriesId != null) {
+    const idx = forecastData.findIndex(f => f.id === band.forecastSeriesId);
+    if (idx !== -1) return idx;
+  }
+  return 0;
+}
+
+function quantileBandFillForConfig(
+  band: QuantileBandConfig,
+  forecastData: ForecastItemData[],
+): string {
+  const fi = forecastIndexForQuantileBand(band, forecastData);
+  const lineColor = forecastData[fi]?.color?.toString() ?? getForecastColor(fi);
+  return resolveQuantileBandFillForForecastLine(lineColor, fi);
+}
 
 function clampTooltipTranslate(args: {
   coordinate: { x: number; y: number };
@@ -218,10 +239,10 @@ export function LightweightForecastChart(props: LightweightForecastChartProps) {
       };
     });
 
-    quantileBands?.forEach((band, index) => {
+    quantileBands?.forEach(band => {
       base[band.key] = {
         label: band.name,
-        color: band.color ?? getForecastQuantileBandColor(index),
+        color: quantileBandFillForConfig(band, forecastData),
       };
     });
 
@@ -353,8 +374,8 @@ export function LightweightForecastChart(props: LightweightForecastChartProps) {
       { api: ISeriesApi<'Custom'>; view: QuantileBandPaneView }
     >();
 
-    quantileBands?.forEach((band, index) => {
-      const fill = band.color ?? getForecastQuantileBandColor(index);
+    quantileBands?.forEach(band => {
+      const fill = quantileBandFillForConfig(band, forecastData);
       const view = new QuantileBandPaneView({
         fill,
         stroke: band.strokeWidth ? fill : undefined,
@@ -460,7 +481,7 @@ export function LightweightForecastChart(props: LightweightForecastChartProps) {
         });
       });
 
-      bandsCfg?.forEach((band, index) => {
+      bandsCfg?.forEach(band => {
         if (hid.has(band.key)) return;
         const tuple = row[band.key];
         if (
@@ -469,7 +490,7 @@ export function LightweightForecastChart(props: LightweightForecastChartProps) {
           typeof tuple[0] === 'number' &&
           typeof tuple[1] === 'number'
         ) {
-          const color = band.color ?? getForecastQuantileBandColor(index);
+          const color = quantileBandFillForConfig(band, forecastsList);
           payload.push({
             type: 'line',
             name: band.name,
@@ -539,10 +560,10 @@ export function LightweightForecastChart(props: LightweightForecastChartProps) {
       api.setData(buildForecastLineData(bridgedChartData, key));
     }
 
-    quantileBands?.forEach((band, index) => {
+    quantileBands?.forEach(band => {
       const entry = model.bands.get(band.key);
       if (!entry) return;
-      const fill = band.color ?? getForecastQuantileBandColor(index);
+      const fill = quantileBandFillForConfig(band, forecastData);
       entry.view.updateStyle({
         fill,
         stroke: band.strokeWidth ? fill : undefined,
@@ -557,7 +578,7 @@ export function LightweightForecastChart(props: LightweightForecastChartProps) {
     });
 
     scheduleFitTimeScale(model.chart);
-  }, [bridgedChartData, quantileBands]);
+  }, [bridgedChartData, quantileBands, forecastData]);
 
   // Visibility toggles
   useEffect(() => {

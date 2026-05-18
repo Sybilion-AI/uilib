@@ -32,6 +32,8 @@ export declare const FORECAST_COLORS_MAP: {
 export declare const FORECAST_LINE_COLORS: string[];
 export declare const getForecastColor: (index: number) => string;
 export declare const getForecastQuantileBandColor: (index: number) => any;
+/** Same tint logic as intervals/threshold overlays: band fill follows forecast line hex when known. */
+export declare function resolveQuantileBandFillForForecastLine(lineColor: string, forecastIndex: number): string;
 export declare const ChartLines: import("react").MemoExoticComponent<({ chartData, forecastData, hiddenSeries, isDarkTheme, shouldAnimate, historicalLineColor, showLegend, forecastLineStyle, disableHistoricalAnimation, }: {
     chartData: ChartDataPoint[];
     forecastData?: ForecastItemData[];

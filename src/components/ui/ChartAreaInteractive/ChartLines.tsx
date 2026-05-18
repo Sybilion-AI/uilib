@@ -52,6 +52,16 @@ export const getForecastQuantileBandColor = (index: number) =>
     FORECAST_LINE_COLORS[index % FORECAST_LINE_COLORS.length]
   ];
 
+/** Same tint logic as intervals/threshold overlays: band fill follows forecast line hex when known. */
+export function resolveQuantileBandFillForForecastLine(
+  lineColor: string,
+  forecastIndex: number,
+): string {
+  const mapped =
+    FORECAST_COLORS_MAP[lineColor as keyof typeof FORECAST_COLORS_MAP];
+  return mapped ?? getForecastQuantileBandColor(forecastIndex);
+}
+
 // Memoized component for chart lines - only re-renders when data/analyses/hiddenSeries change
 export const ChartLines = memo(
   ({

@@ -85,7 +85,6 @@ const DEMO_QUANTILE_BANDS: QuantileBandConfig[] = [
     opacity: 0.35,
     name: 'P10–P90',
     type: 'monotone',
-    color: 'rgba(100,190,220,0.35)',
     strokeWidth: 0,
   },
   {
@@ -94,7 +93,6 @@ const DEMO_QUANTILE_BANDS: QuantileBandConfig[] = [
     opacity: 0.45,
     name: 'P25–P75',
     type: 'monotone',
-    color: 'rgba(65,165,238,0.45)',
     strokeWidth: 0,
   },
 ];

@@ -17,6 +17,11 @@ const FORECAST_COLORS_MAP = {
 const FORECAST_LINE_COLORS = Object.keys(FORECAST_COLORS_MAP);
 const getForecastColor = (index) => FORECAST_LINE_COLORS[index % FORECAST_LINE_COLORS.length];
 const getForecastQuantileBandColor = (index) => FORECAST_COLORS_MAP[FORECAST_LINE_COLORS[index % FORECAST_LINE_COLORS.length]];
+/** Same tint logic as intervals/threshold overlays: band fill follows forecast line hex when known. */
+function resolveQuantileBandFillForForecastLine(lineColor, forecastIndex) {
+    const mapped = FORECAST_COLORS_MAP[lineColor];
+    return mapped ?? getForecastQuantileBandColor(forecastIndex);
+}
 // Memoized component for chart lines - only re-renders when data/analyses/hiddenSeries change
 const ChartLines = memo(({ chartData, forecastData, hiddenSeries, isDarkTheme, shouldAnimate, historicalLineColor = isDarkTheme ? '#ffffff' : '#000000', showLegend = true, forecastLineStyle = 'dashed', disableHistoricalAnimation = false, }) => {
     const dotStroke = isDarkTheme ? '#000000' : '#FFFFFF';
@@ -78,4 +83,4 @@ const ChartLines = memo(({ chartData, forecastData, hiddenSeries, isDarkTheme, s
 });
 ChartLines.displayName = 'ChartLines';
 
-export { ChartLines, FORECAST_COLORS_MAP, FORECAST_LINE_COLORS, getForecastColor, getForecastQuantileBandColor };
+export { ChartLines, FORECAST_COLORS_MAP, FORECAST_LINE_COLORS, getForecastColor, getForecastQuantileBandColor, resolveQuantileBandFillForForecastLine };
