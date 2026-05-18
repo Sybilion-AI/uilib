@@ -8,7 +8,7 @@ import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../Too
 import { clampSidebarWidthPx, CHAT_WIDTH_STORAGE_KEY, SIDEBAR_WIDTH_DEFAULT_PX, SIDEBAR_WIDTH_MIN_PX, SIDEBAR_WIDTH_STORAGE_KEY_PX, SIDEBAR_WIDTH_STORAGE_KEY_PCT, CHAT_WIDTH_DEFAULT_PX, CHAT_WIDTH_MIN_PX, defaultChatWidthPx, clampChatWidthPx } from '../../../hooks/panelWidth.js';
 import useElemDrag from '../../../hooks/useDragElem.js';
 import useEvent from '../../../hooks/useEvent.js';
-import { useIsMobile } from '../../../hooks/useIsMobile.js';
+import { useIsSidebarSheetLayout } from '../../../hooks/useIsSidebarSheetLayout.js';
 import { useShellWidthObserver } from '../../../hooks/useShellWidthObserver.js';
 import { setCookie, getCookie } from '../../../lib/cookie.js';
 import { getCookiePreferences } from '../../../lib/cookie-consent/cookie-consent.js';
@@ -68,8 +68,8 @@ function SidebarProvider({ defaultOpen = getCookie('isSidebarOpen') ?? true, cla
     const sidebarLsKey = sidebarWidthStorageKey ?? SIDEBAR_WIDTH_STORAGE_KEY_PX;
     const allowPersistSidebarWidth = persistSidebarWidthWithoutConsent ||
         Boolean(getCookiePreferences(userId)?.functional);
-    const isMobile = useIsMobile();
-    const [isOpen, setIsOpen] = useState(isMobile ? false : defaultOpen);
+    const isSidebarSheetLayout = useIsSidebarSheetLayout();
+    const [isOpen, setIsOpen] = useState(isSidebarSheetLayout ? false : defaultOpen);
     const wrapperRef = useRef(null);
     const shellWidthRef = useRef(0);
     const prevShellWidthRef = useRef(0);
@@ -194,14 +194,20 @@ function SidebarProvider({ defaultOpen = getCookie('isSidebarOpen') ?? true, cla
         allowPersistSidebarWidth,
     ]);
     useLayoutEffect(() => {
-        if (!shellEl || isMobile)
+        if (!shellEl || isSidebarSheetLayout)
             return;
         fitPanelWidthsToShell();
-    }, [shellEl, chatPanelOpen, isMobile, isOpen, fitPanelWidthsToShell]);
+    }, [
+        shellEl,
+        chatPanelOpen,
+        isSidebarSheetLayout,
+        isOpen,
+        fitPanelWidthsToShell,
+    ]);
     useShellWidthObserver(shellEl, handleShellResize);
     const setOpen = useCallback((value, options) => {
         const useViewTransition = options?.viewTransition !== false &&
-            !isMobile &&
+            !isSidebarSheetLayout &&
             'startViewTransition' in document &&
             document.startViewTransition;
         if (useViewTransition) {
@@ -215,7 +221,7 @@ function SidebarProvider({ defaultOpen = getCookie('isSidebarOpen') ?? true, cla
         if (getCookiePreferences(userId)?.functional) {
             setCookie('isSidebarOpen', value.toString(), 60 * 60 * 24 * 7);
         }
-    }, [isMobile, userId]);
+    }, [isSidebarSheetLayout, userId]);
     const toggleSidebar = useCallback(() => setOpen(!isOpen), [isOpen, setOpen]);
     useEffect(() => {
         const shell = wrapperRef.current;
@@ -223,7 +229,7 @@ function SidebarProvider({ defaultOpen = getCookie('isSidebarOpen') ?? true, cla
             return;
         if (chatPanelOpen) {
             shell.setAttribute('data-chat-open', '');
-            if (isMobile) {
+            if (isSidebarSheetLayout) {
                 shell.style.setProperty('--chat-panel-width', '100%');
                 shell.style.setProperty('--chat-panel-height', '100dvh');
             }
@@ -237,7 +243,7 @@ function SidebarProvider({ defaultOpen = getCookie('isSidebarOpen') ?? true, cla
             shell.style.setProperty('--chat-panel-width', '0px');
             shell.style.removeProperty('--chat-panel-height');
         }
-    }, [chatPanelOpen, isMobile, chatWidthPx]);
+    }, [chatPanelOpen, isSidebarSheetLayout, chatWidthPx]);
     useEffect(() => {
         return () => {
             const shell = wrapperRef.current;
@@ -291,18 +297,17 @@ function SidebarProvider({ defaultOpen = getCookie('isSidebarOpen') ?? true, cla
                 }, className: cn(SidebarStem.sidebarWrapper, className), ...props, children: [jsx("div", { className: SidebarStem.sidebarMainShell, children: children }), jsx("div", { ref: onChatPanelMount, className: SidebarStem.chatPanelMount, "data-slot": "chat-panel-mount" })] }) }) }));
 }
 function Sidebar({ defaultOpen = true, open: openProp, onOpenChange: setOpenProp, className, side = 'left', variant = 'sidebar', collapsible = 'offcanvas', children, fullHeightResizer = false, ...props }) {
-    const isMobile = useIsMobile();
+    const isSidebarSheetLayout = useIsSidebarSheetLayout();
     const { isOpen, setOpen } = useSidebar();
-    // Only force-close on mobile. Do not call setOpen(true) on desktop — that ran on every
-    // load and overwrote the isSidebarOpen cookie (collapsed → opened + cookie "true").
+    /** Narrow shell: sidebar is a sheet; collapse when crossing into this mode (preserve cookie semantics elsewhere). */
     useEffect(() => {
-        if (isMobile)
+        if (isSidebarSheetLayout)
             setOpen(false);
-    }, [isMobile, setOpen]);
+    }, [isSidebarSheetLayout, setOpen]);
     if (collapsible === 'none') {
         return (jsx("div", { "data-slot": "sidebar", className: cn(SidebarStem.sidebarNone, className), ...props, children: children }));
     }
-    if (isMobile) {
+    if (isSidebarSheetLayout) {
         return (jsx(Sheet, { open: isOpen, onOpenChange: setOpen, ...props, children: jsxs(SheetContent, { "data-sidebar": "sidebar", "data-slot": "sidebar", className: cn(SidebarStem.sheetContentSidebar, className), style: {
                     '--gap-top': '40px',
                     '--sidebar-width': SIDEBAR_WIDTH_MOBILE,
@@ -364,7 +369,7 @@ function PanelResizeHandle({ className, edge, isActive, startWidthPx, getShellWi
 }
 function SidebarResizeHandle({ className, side = 'left', ...props }) {
     const { isOpen, sidebarWidthPx, setSidebarWidthPx, getShellWidth } = useSidebar();
-    const isMobile = useIsMobile();
+    const isSidebarSheetLayout = useIsSidebarSheetLayout();
     const edge = side === 'left' ? 'trailing' : 'leading';
     const onDragWidth = useCallback((rawPx) => {
         setSidebarWidthPx(rawPx, { persist: false });
@@ -372,10 +377,10 @@ function SidebarResizeHandle({ className, side = 'left', ...props }) {
     const onDragComplete = useCallback((finalRawPx) => {
         setSidebarWidthPx(finalRawPx, { persist: true });
     }, [setSidebarWidthPx]);
-    if (isMobile || !isOpen) {
+    if (isSidebarSheetLayout || !isOpen) {
         return null;
     }
-    return (jsx(PanelResizeHandle, { edge: edge, isActive: isOpen && !isMobile, startWidthPx: sidebarWidthPx, getShellWidth: getShellWidth, onDragWidth: onDragWidth, onDragComplete: onDragComplete, "data-sidebar": "resize-handle", "data-slot": "sidebar-resize-handle", "data-side": side, className: cn(SidebarStem.sidebarResizeHandle, className), ...props }));
+    return (jsx(PanelResizeHandle, { edge: edge, isActive: isOpen && !isSidebarSheetLayout, startWidthPx: sidebarWidthPx, getShellWidth: getShellWidth, onDragWidth: onDragWidth, onDragComplete: onDragComplete, "data-sidebar": "resize-handle", "data-slot": "sidebar-resize-handle", "data-side": side, className: cn(SidebarStem.sidebarResizeHandle, className), ...props }));
 }
 function SidebarFooter({ className, ...props }) {
     return (jsx("div", { "data-slot": "sidebar-footer", "data-sidebar": "footer", className: cn(SidebarStem.sidebarFooter, className), ...props }));
@@ -421,9 +426,9 @@ function SidebarMenuSubItem({ className, ...props }) {
 function SidebarMenuSubButton({ asChild = false, size = 'md', isActive = false, tooltip, className, onClick, ...props }) {
     const Comp = asChild ? Slot : 'a';
     const { isOpen, setOpen } = useSidebar();
-    const isMobile = useIsMobile();
+    const isSidebarSheetLayout = useIsSidebarSheetLayout();
     const handleClick = (event) => {
-        if (isMobile && isOpen)
+        if (isSidebarSheetLayout && isOpen)
             setOpen(false);
         onClick?.(event);
     };
@@ -435,7 +440,7 @@ function SidebarMenuSubButton({ asChild = false, size = 'md', isActive = false, 
             children: tooltip,
         };
     }
-    return (jsxs(Tooltip, { children: [jsx(TooltipTrigger, { asChild: true, children: button }), jsx(TooltipContent, { side: "right", align: "center", hidden: !isOpen || isMobile, ...tooltip })] }));
+    return (jsxs(Tooltip, { children: [jsx(TooltipTrigger, { asChild: true, children: button }), jsx(TooltipContent, { side: "right", align: "center", hidden: !isOpen || isSidebarSheetLayout, ...tooltip })] }));
 }
 
 export { PanelResizeHandle, Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarMenu, SidebarMenuAction, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarResizeHandle, SidebarSeparator, SidebarTrigger, useSidebar };

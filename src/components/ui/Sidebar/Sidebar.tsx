@@ -37,7 +37,7 @@ import {
 } from '#uilib/hooks/panelWidth';
 import useElemDrag, { Delta } from '#uilib/hooks/useDragElem';
 import useEvent from '#uilib/hooks/useEvent';
-import { useIsMobile } from '#uilib/hooks/useIsMobile';
+import { useIsSidebarSheetLayout } from '#uilib/hooks/useIsSidebarSheetLayout';
 import { useShellWidthObserver } from '#uilib/hooks/useShellWidthObserver';
 import { getCookie, setCookie } from '#uilib/lib/cookie';
 import { getCookiePreferences } from '#uilib/lib/cookie-consent/cookie-consent';
@@ -153,8 +153,10 @@ function SidebarProvider({
     persistSidebarWidthWithoutConsent ||
     Boolean(getCookiePreferences(userId)?.functional);
 
-  const isMobile = useIsMobile();
-  const [isOpen, setIsOpen] = useState(isMobile ? false : defaultOpen);
+  const isSidebarSheetLayout = useIsSidebarSheetLayout();
+  const [isOpen, setIsOpen] = useState(
+    isSidebarSheetLayout ? false : defaultOpen,
+  );
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const shellWidthRef = useRef(0);
   const prevShellWidthRef = useRef(0);
@@ -297,9 +299,15 @@ function SidebarProvider({
   ]);
 
   useLayoutEffect(() => {
-    if (!shellEl || isMobile) return;
+    if (!shellEl || isSidebarSheetLayout) return;
     fitPanelWidthsToShell();
-  }, [shellEl, chatPanelOpen, isMobile, isOpen, fitPanelWidthsToShell]);
+  }, [
+    shellEl,
+    chatPanelOpen,
+    isSidebarSheetLayout,
+    isOpen,
+    fitPanelWidthsToShell,
+  ]);
 
   useShellWidthObserver(shellEl, handleShellResize);
 
@@ -307,7 +315,7 @@ function SidebarProvider({
     (value: boolean, options?: SetSidebarOpenOptions) => {
       const useViewTransition =
         options?.viewTransition !== false &&
-        !isMobile &&
+        !isSidebarSheetLayout &&
         'startViewTransition' in document &&
         document.startViewTransition;
 
@@ -323,7 +331,7 @@ function SidebarProvider({
         setCookie('isSidebarOpen', value.toString(), 60 * 60 * 24 * 7);
       }
     },
-    [isMobile, userId],
+    [isSidebarSheetLayout, userId],
   );
 
   const toggleSidebar = useCallback(() => setOpen(!isOpen), [isOpen, setOpen]);
@@ -333,7 +341,7 @@ function SidebarProvider({
     if (!shell) return;
     if (chatPanelOpen) {
       shell.setAttribute('data-chat-open', '');
-      if (isMobile) {
+      if (isSidebarSheetLayout) {
         shell.style.setProperty('--chat-panel-width', '100%');
         shell.style.setProperty('--chat-panel-height', '100dvh');
       } else {
@@ -345,7 +353,7 @@ function SidebarProvider({
       shell.style.setProperty('--chat-panel-width', '0px');
       shell.style.removeProperty('--chat-panel-height');
     }
-  }, [chatPanelOpen, isMobile, chatWidthPx]);
+  }, [chatPanelOpen, isSidebarSheetLayout, chatWidthPx]);
 
   useEffect(() => {
     return () => {
@@ -447,14 +455,13 @@ function Sidebar({
   fullHeightResizer = false,
   ...props
 }: SidebarProps) {
-  const isMobile = useIsMobile();
+  const isSidebarSheetLayout = useIsSidebarSheetLayout();
   const { isOpen, setOpen } = useSidebar();
 
-  // Only force-close on mobile. Do not call setOpen(true) on desktop — that ran on every
-  // load and overwrote the isSidebarOpen cookie (collapsed → opened + cookie "true").
+  /** Narrow shell: sidebar is a sheet; collapse when crossing into this mode (preserve cookie semantics elsewhere). */
   useEffect(() => {
-    if (isMobile) setOpen(false);
-  }, [isMobile, setOpen]);
+    if (isSidebarSheetLayout) setOpen(false);
+  }, [isSidebarSheetLayout, setOpen]);
 
   if (collapsible === 'none') {
     return (
@@ -468,7 +475,7 @@ function Sidebar({
     );
   }
 
-  if (isMobile) {
+  if (isSidebarSheetLayout) {
     return (
       <Sheet open={isOpen} onOpenChange={setOpen} {...props}>
         <SheetContent
@@ -640,7 +647,7 @@ function SidebarResizeHandle({
 }: ComponentProps<'div'> & { side?: 'left' | 'right' }) {
   const { isOpen, sidebarWidthPx, setSidebarWidthPx, getShellWidth } =
     useSidebar();
-  const isMobile = useIsMobile();
+  const isSidebarSheetLayout = useIsSidebarSheetLayout();
 
   const edge: 'leading' | 'trailing' = side === 'left' ? 'trailing' : 'leading';
 
@@ -658,14 +665,14 @@ function SidebarResizeHandle({
     [setSidebarWidthPx],
   );
 
-  if (isMobile || !isOpen) {
+  if (isSidebarSheetLayout || !isOpen) {
     return null;
   }
 
   return (
     <PanelResizeHandle
       edge={edge}
-      isActive={isOpen && !isMobile}
+      isActive={isOpen && !isSidebarSheetLayout}
       startWidthPx={sidebarWidthPx}
       getShellWidth={getShellWidth}
       onDragWidth={onDragWidth}
@@ -877,10 +884,10 @@ function SidebarMenuSubButton({
 }) {
   const Comp = asChild ? Slot : 'a';
   const { isOpen, setOpen } = useSidebar();
-  const isMobile = useIsMobile();
+  const isSidebarSheetLayout = useIsSidebarSheetLayout();
 
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (isMobile && isOpen) setOpen(false);
+    if (isSidebarSheetLayout && isOpen) setOpen(false);
     onClick?.(event);
   };
 
@@ -910,7 +917,7 @@ function SidebarMenuSubButton({
       <TooltipContent
         side="right"
         align="center"
-        hidden={!isOpen || isMobile}
+        hidden={!isOpen || isSidebarSheetLayout}
         {...tooltip}
       />
     </Tooltip>

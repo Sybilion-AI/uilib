@@ -1,4 +1,6 @@
 export { useIsMobile } from './hooks/useIsMobile';
+export { useIsSidebarSheetLayout } from './hooks/useIsSidebarSheetLayout';
+export { CENTRAL_AREA_MIN_PX, SIDEBAR_SHEET_LAYOUT_MAX_WIDTH_PX, SIDEBAR_SHEET_SPLIT_MIN_VIEWPORT_PX, SIDEBAR_WIDTH_MIN_PX, } from './hooks/panelWidth';
 export * from './contexts/theme-context';
 export { DEFAULT_THEME_ACTIVE_COLOR } from './docs/lib/theme';
 export * from './sybilion-auth';

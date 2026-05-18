@@ -1,4 +1,6 @@
 export { useIsMobile } from './hooks/useIsMobile.js';
+export { useIsSidebarSheetLayout } from './hooks/useIsSidebarSheetLayout.js';
+export { CENTRAL_AREA_MIN_PX, SIDEBAR_SHEET_LAYOUT_MAX_WIDTH_PX, SIDEBAR_SHEET_SPLIT_MIN_VIEWPORT_PX, SIDEBAR_WIDTH_MIN_PX } from './hooks/panelWidth.js';
 export { ThemeProvider, useTheme } from './contexts/theme-context.js';
 export { DEFAULT_THEME_ACTIVE_COLOR } from './docs/lib/theme.js';
 export { SybilionAuthProvider, createSybilionApiFetch, getSybilionApiOriginFromSdk, sybilionApiFetch, useSybilionApiFetch, useSybilionAuth } from './sybilion-auth/SybilionAuthProvider.js';

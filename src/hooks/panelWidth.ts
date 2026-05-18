@@ -10,6 +10,14 @@ export const SHELL_MAX_FRACTION = 0.4;
 export const CHAT_WIDTH_ABS_MAX_PX = 800;
 export const CENTRAL_AREA_MIN_PX = 800;
 
+/** Viewport below this uses sheet sidebar + single-column shell (central + sidebar mins cannot coexist). */
+export const SIDEBAR_SHEET_SPLIT_MIN_VIEWPORT_PX =
+  CENTRAL_AREA_MIN_PX + SIDEBAR_WIDTH_MIN_PX;
+
+/** `max-width` for media queries (`innerWidth < SIDEBAR_SHEET_SPLIT_MIN_VIEWPORT_PX`). */
+export const SIDEBAR_SHEET_LAYOUT_MAX_WIDTH_PX =
+  SIDEBAR_SHEET_SPLIT_MIN_VIEWPORT_PX - 1;
+
 export type ClampSidebarWidthOpts = {
   chatPanelOpen: boolean;
   chatWidthPx: number;

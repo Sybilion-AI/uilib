@@ -1,5 +1,7 @@
 @import 'lib/theme.styl'
 
+SIDEBAR_SHEET_SPLIT = 1100px
+
 .root
   display grid
   flex 1
@@ -9,12 +11,12 @@
   grid-template-columns 1fr
   grid-template-areas "main"
 
-  @media (min-width MOBILE)
+  @media (min-width SIDEBAR_SHEET_SPLIT)
     grid-template-columns var(--sidebar-width) 1fr
     grid-template-areas "sidebar main"
 
   :global([data-slot="sidebar-wrapper"][data-state="collapsed"]) &
-    @media (min-width MOBILE)
+    @media (min-width SIDEBAR_SHEET_SPLIT)
       grid-template-columns 0 1fr
 
 .mainColumn
