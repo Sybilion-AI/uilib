@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.14](https://github.com/Mir-Insight/uilib/compare/v1.3.12...v1.3.14) (2026-05-19)
+
+
+### Features
+
+* Chat - Wire file attachments through send path ([1eb1b57](https://github.com/Mir-Insight/uilib/commit/1eb1b570defe366596494990cbbd54e115aed2c0))
+
 ### [1.3.12](https://github.com/Mir-Insight/uilib/compare/v1.3.11...v1.3.12) (2026-05-19)
 
 
