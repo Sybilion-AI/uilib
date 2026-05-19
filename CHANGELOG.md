@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.16](https://github.com/Mir-Insight/uilib/compare/v1.3.15...v1.3.16) (2026-05-19)
+
+
+### Bug Fixes
+
+* InteractiveContent - Autolink URL pills with ellipsis ([cbf4216](https://github.com/Mir-Insight/uilib/commit/cbf42166a145427fb580dac7b1959e0db31fb82d))
+
 ### [1.3.15](https://github.com/Mir-Insight/uilib/compare/v1.3.14...v1.3.15) (2026-05-19)
 
 
