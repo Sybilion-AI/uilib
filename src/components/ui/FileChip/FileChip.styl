@@ -1,0 +1,108 @@
+@import 'lib/theme.styl'
+
+.root
+  appearance none
+  border 0
+  margin 0
+  font inherit
+  display flex
+  align-items stretch
+  width fit-content
+  max-width 100%
+  text-align left
+  padding var(--p-3)
+  padding-right var(--p-4)
+  background-color var(--background)
+  box-shadow 0 0 0 1px var(--border)
+  border-radius var(--p-3)
+  color inherit
+
+  :global(.dark) &
+    background-color var(--sb-gray-800)
+
+.header
+  display flex
+  flex-direction row
+  align-items center
+  gap var(--p-2)
+  width 100%
+  min-width 0
+  font-size inherit
+
+  :global([data-slot="card-action"])
+    grid-column auto
+    grid-row auto
+    align-self center
+    margin-left auto
+    flex-shrink 0
+    order 3
+
+  // CardHeader: icon wrapper, then action children, then headerText
+  & > div:first-child
+    order 1
+    display flex
+    align-items center
+    justify-content center
+    width 32px
+    height 32px
+    min-width 32px
+    flex-shrink 0
+    border-radius 0
+    box-shadow none
+    background transparent
+
+    & > svg
+      width 32px
+      height 32px
+
+  & > div:last-child
+    order 2
+    flex 1
+    min-width 0
+
+.interactive
+  cursor pointer
+  transition background-color 150ms
+
+  &:hover
+    background-color var(--sb-gray-50)
+
+  &:focus-visible
+    outline 2px solid var(--ring)
+    outline-offset 2px
+
+  :global(.dark) &
+    &:hover
+      background-color var(--sb-gray-900)
+
+.title
+  font-size var(--text-sm)
+  font-weight 500
+  line-height 1.4
+  white-space nowrap
+  overflow hidden
+  text-overflow ellipsis
+
+.hint
+  font-size var(--text-xs)
+  line-height 1.4
+
+.remove
+  display inline-flex
+  align-items center
+  justify-content center
+  width 28px
+  height 28px
+  border none
+  border-radius var(--p-2)
+  background transparent
+  color var(--muted-foreground)
+  cursor pointer
+
+  &:hover:not(:disabled)
+    background-color var(--muted)
+    color var(--foreground)
+
+  &:disabled
+    opacity 0.5
+    cursor not-allowed

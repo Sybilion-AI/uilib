@@ -62,6 +62,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/BadgePage'),
   },
   {
+    slug: 'file-chip',
+    title: 'FileChip',
+    section: 'Data display',
+    load: () => import('./pages/FileChipPage'),
+  },
+  {
     slug: 'breadcrumb',
     title: 'Breadcrumb',
     section: 'Navigation',
@@ -108,6 +114,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     title: 'Chat user CSV attachment',
     section: 'Chat',
     load: () => import('./pages/ChatUserCsvAttachmentPage'),
+  },
+  {
+    slug: 'chat-attachments-dropzone',
+    title: 'Chat attachments dropzone',
+    section: 'Chat',
+    load: () => import('./pages/ChatAttachmentsDropzonePage'),
   },
   {
     slug: 'checkbox',

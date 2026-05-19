@@ -18,11 +18,6 @@ interface CssExports {
   'scrollHorizontal': string;
   'text': string;
   'userColumn': string;
-  'userCsvCard': string;
-  'userCsvCardContent': string;
-  'userCsvCardIcon': string;
-  'userCsvCardSubtitle': string;
-  'userCsvCardTitle': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

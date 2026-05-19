@@ -2,9 +2,10 @@
 // Please do not change this file!
 interface CssExports {
   'attachButton': string;
+  'attachmentItem': string;
+  'attachments': string;
   'composer': string;
   'input': string;
-  'notice': string;
   'root': string;
   'submitColumn': string;
 }

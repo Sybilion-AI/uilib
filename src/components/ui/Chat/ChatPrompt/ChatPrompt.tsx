@@ -9,6 +9,7 @@ import { Input } from '../../Input';
 import type { ChatPromptProps } from '../Chat.types';
 import { syncChatPromptTextareaHeight } from './ChatPrompt.helpers';
 import S from './ChatPrompt.styl';
+import { ChatPromptAttachments } from './ChatPromptAttachments';
 
 export function ChatPrompt({
   onSubmit,
@@ -16,7 +17,9 @@ export function ChatPrompt({
   className,
   footer,
   prefillMessage,
-  showNotice = true,
+  attachments = [],
+  onRemoveAttachment,
+  disabled = false,
 }: ChatPromptProps) {
   const [message, setMessage] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -35,10 +38,11 @@ export function ChatPrompt({
 
   const handleSubmit = (e: FormEvent | KeyboardEvent) => {
     const trimmedMessage = message.trim();
+    const hasAttachments = attachments.length > 0;
 
-    if (trimmedMessage) {
+    if (trimmedMessage || hasAttachments) {
       e.preventDefault();
-      onSubmit(trimmedMessage);
+      onSubmit(trimmedMessage, hasAttachments ? attachments : undefined);
       setMessage('');
     }
   };
@@ -56,11 +60,12 @@ export function ChatPrompt({
 
   return (
     <form onSubmit={handleSubmit} className={cn(S.root, className)}>
+      <ChatPromptAttachments
+        attachments={attachments}
+        onRemove={index => onRemoveAttachment?.(index)}
+        disabled={disabled}
+      />
       <div className={S.composer}>
-        {showNotice ? (
-          <div className={S.notice}>Forecast Assistant can make mistakes.</div>
-        ) : null}
-
         <Input
           ref={inputRef}
           type="textarea"
@@ -72,7 +77,11 @@ export function ChatPrompt({
         />
 
         <div className={S.submitColumn}>
-          <Button type="submit" size="sm" disabled={!message.trim()}>
+          <Button
+            type="submit"
+            size="sm"
+            disabled={disabled || (!message.trim() && attachments.length === 0)}
+          >
             <SendHorizontalIcon size={16} />
           </Button>
         </div>

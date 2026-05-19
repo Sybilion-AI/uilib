@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   displayLabelForBranchKeyFromMessages,
@@ -10,9 +10,17 @@ import { Scroll } from '@homecode/ui';
 import { ChartLineIcon, PaperPlaneRightIcon, X } from '@phosphor-icons/react';
 
 import { Button } from '../../Button';
+import { DropZone } from '../../DropZone/DropZone';
 import { PanelResizeHandle } from '../../Sidebar/Sidebar';
 import SidebarStem from '../../Sidebar/Sidebar.styl';
 import { Chat } from '../Chat';
+import type { ChatAttachmentDropItem } from '../Chat.types';
+import {
+  buildAcceptAttr,
+  filterToTextAttachments,
+  isAttachmentsDropzoneEnabled,
+} from '../chatAttachmentAccept';
+import { extractChatAttachmentItems } from '../chatAttachmentExtract';
 import S from './ChatChrome.styl';
 import type { ChatChromeProps } from './ChatChrome.types';
 
@@ -45,7 +53,65 @@ export function ChatChrome({
   promptPrefill,
   footerClassName,
   emptyState,
+  allowedAttachments,
+  allowPdfAttachments = false,
+  onAttachmentsDropped,
 }: ChatChromeProps) {
+  const filteredAllowedAttachments = useMemo(
+    () => filterToTextAttachments(allowedAttachments),
+    [allowedAttachments],
+  );
+  const attachmentsDropzoneEnabled = isAttachmentsDropzoneEnabled(
+    allowedAttachments,
+    allowPdfAttachments,
+  );
+  const attachmentAccept = useMemo(
+    () => buildAcceptAttr(filteredAllowedAttachments, allowPdfAttachments),
+    [filteredAllowedAttachments, allowPdfAttachments],
+  );
+  const [pendingAttachments, setPendingAttachments] = useState<
+    ChatAttachmentDropItem[]
+  >([]);
+  const [isExtractingAttachments, setIsExtractingAttachments] = useState(false);
+  const promptBusy = isLoading || isExtractingAttachments;
+
+  const handleAttachmentFiles = useCallback(
+    (files: File[]) => {
+      if (promptBusy || files.length === 0) return;
+
+      setIsExtractingAttachments(true);
+      void extractChatAttachmentItems(files, allowPdfAttachments)
+        .then(items => {
+          if (items.length > 0) {
+            setPendingAttachments(prev => [...prev, ...items]);
+          }
+        })
+        .finally(() => setIsExtractingAttachments(false));
+    },
+    [allowPdfAttachments, promptBusy],
+  );
+
+  const handleRemoveAttachment = useCallback((index: number) => {
+    setPendingAttachments(prev => prev.filter((_, i) => i !== index));
+  }, []);
+
+  const handlePromptSubmitWithAttachments = useCallback(
+    (message: string, submittedAttachments?: ChatAttachmentDropItem[]) => {
+      const trimmed = message.trim();
+      const attachments = submittedAttachments ?? [];
+      if (!trimmed && attachments.length === 0) return;
+
+      void onPromptSubmit(trimmed, attachments);
+
+      if (attachments.length > 0 && onAttachmentsDropped) {
+        void onAttachmentsDropped(attachments);
+      }
+
+      setPendingAttachments([]);
+    },
+    [onAttachmentsDropped, onPromptSubmit],
+  );
+
   useEffect(() => {
     if (isEmpty) return;
 
@@ -91,6 +157,18 @@ export function ChatChrome({
         ) : null}
       </div>
       <div className={S.content}>
+        {attachmentsDropzoneEnabled ? (
+          <DropZone
+            accept={attachmentAccept}
+            label="Drop text files to attach"
+            multiple
+            ghost
+            overlayScope="container"
+            disabled={promptBusy}
+            className={S.attachmentDropzone}
+            onFiles={handleAttachmentFiles}
+          />
+        ) : null}
         <Chat
           isEmpty={isEmpty}
           scopeId={effectiveScopeId}
@@ -195,11 +273,17 @@ export function ChatChrome({
           )}
 
           <div className={cn(S.footer, footerClassName)}>
+            {isEmpty ? (
+              <div className={S.notice}>
+                Forecast Assistant can make mistakes.
+              </div>
+            ) : null}
             <Chat.Prompt
-              onSubmit={onPromptSubmit}
-              disabled={isLoading}
+              onSubmit={handlePromptSubmitWithAttachments}
+              disabled={promptBusy}
+              attachments={pendingAttachments}
+              onRemoveAttachment={handleRemoveAttachment}
               prefillMessage={promptPrefill ?? undefined}
-              showNotice={isEmpty}
             />
           </div>
         </Chat>

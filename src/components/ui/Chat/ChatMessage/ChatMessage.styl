@@ -35,62 +35,6 @@
     :global(.dark) &
       background-color var(--sb-gray-800)
 
-  .userCsvCard
-    appearance none
-    border 0
-    margin 0
-    font inherit
-    display flex
-    align-items center
-    gap var(--p-2)
-    padding var(--p-3)
-    padding-right var(--p-4)
-    background-color var(--background)
-    box-shadow 0 0 0 1px var(--border)
-    border-radius var(--p-3)
-    width fit-content
-    max-width 100%
-    text-align left
-    cursor pointer
-    transition background-color 150ms
-
-    &:hover
-      background-color var(--sb-gray-50)
-
-    &:focus-visible
-      outline 2px solid var(--ring)
-      outline-offset 2px
-
-    :global(.dark) &
-      background-color var(--sb-gray-800)
-
-      &:hover
-        background-color var(--sb-gray-900)
-
-  .userCsvCardIcon
-    display flex
-    align-items center
-    justify-content center
-    width 32px
-    height 32px
-    flex-shrink 0
-
-  .userCsvCardContent
-    display flex
-    flex-direction column
-    flex 1
-    min-width 0
-
-  .userCsvCardTitle
-    font-size var(--text-sm)
-    font-weight 500
-    line-height 1.4
-
-  .userCsvCardSubtitle
-    font-size var(--text-xs)
-    color var(--muted-foreground)
-    line-height 1.4
-
 .role-system
   align-items center
 

@@ -19,21 +19,6 @@ INPUT_MAX_HEIGHT = 200px
   gap var(--p-3)
   width 100%
 
-.notice
-  position absolute
-  top calc(-1 * var(--p-12))
-  left 0
-  right 0
-  margin-bottom var(--p-1)
-
-  font-size var(--text-xs)
-  text-align center
-  color var(--muted-foreground)
-  pointer-events none
-
-  @media (max-width MOBILE)
-    font-size 10px
-
 .input
   flex 1
   min-width 0
@@ -79,3 +64,14 @@ INPUT_MAX_HEIGHT = 200px
   .attachButton
     background-color var(--page-color)
     box-shadow 0 0 20px var(--background)
+
+.attachments
+  display flex
+  flex-wrap wrap
+  gap var(--p-2)
+  margin-bottom var(--p-2)
+
+.attachmentItem
+  flex 1 1 300px
+  max-width 300px
+  min-width 0

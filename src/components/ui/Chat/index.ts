@@ -5,6 +5,10 @@ export type {
   ChatChromeProps,
   ChatChromeResizeHandleConfig,
 } from './ChatChrome';
+export {
+  TEXT_ATTACHMENT_ACCEPT_PARTS,
+  filterToTextAttachments,
+} from './chatAttachmentAccept';
 export { ChatSheet } from './ChatSheet/ChatSheet';
 export { useChatPanelChromeModel } from './ChatSheet/useChatPanelChromeModel';
 export type { ChatSheetActions, ChatSheetProps } from './ChatSheet/ChatSheet';
@@ -17,6 +21,7 @@ export { ChatPrompt } from './ChatPrompt';
 export { ChatPresets } from './ChatPresets';
 export type {
   Chat as ChatType,
+  ChatAttachmentDropItem,
   ChatSendMessagePayload,
   ChatProps,
   ChatPreset as ChatPresetType,

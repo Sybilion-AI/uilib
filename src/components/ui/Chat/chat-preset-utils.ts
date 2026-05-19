@@ -11,7 +11,10 @@ export function normalizePresetMatchText(s: string): string {
   return s.trim().normalize('NFC');
 }
 
-function presetMatchesUserText(presetText: string, userTextNorm: string): boolean {
+function presetMatchesUserText(
+  presetText: string,
+  userTextNorm: string,
+): boolean {
   const presetNorm = normalizePresetMatchText(presetText);
   if (!presetNorm) return false;
   if (userTextNorm === presetNorm) return true;

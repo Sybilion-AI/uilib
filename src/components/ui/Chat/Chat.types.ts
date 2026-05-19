@@ -67,9 +67,16 @@ export type ScriptCompletePayload = {
   answers: Record<string, string>;
 };
 
+export type ChatAttachmentDropItem = {
+  file: File;
+  /** UTF-8 text for native text files; PDF yields extracted text. */
+  text: string;
+  kind: 'text' | 'pdf';
+};
+
 export interface ChatPromptProps {
   className?: string;
-  onSubmit: (message: string) => void;
+  onSubmit: (message: string, attachments?: ChatAttachmentDropItem[]) => void;
   placeholder?: string;
   presets?: ChatPreset[];
   disabled?: boolean;
@@ -78,6 +85,9 @@ export interface ChatPromptProps {
   prefillMessage?: string | null;
   /** Disclaimer above composer; default true. ChatChrome sets false when thread has messages. */
   showNotice?: boolean;
+  /** Staged files shown above the composer until send. */
+  attachments?: ChatAttachmentDropItem[];
+  onRemoveAttachment?: (index: number) => void;
 }
 
 export interface ChatMessageProps {

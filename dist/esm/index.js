@@ -22,6 +22,7 @@ export { ChartAreaInteractive, chartConfig } from './components/ui/ChartAreaInte
 export { Chat } from './components/ui/Chat/Chat.js';
 export { usedPresetIdsFromMessages } from './components/ui/Chat/chat-preset-utils.js';
 export { ChatChrome } from './components/ui/Chat/ChatChrome/ChatChrome.js';
+export { TEXT_ATTACHMENT_ACCEPT_PARTS, filterToTextAttachments } from './components/ui/Chat/chatAttachmentAccept.js';
 export { ChatSheet } from './components/ui/Chat/ChatSheet/ChatSheet.js';
 export { useChatPanelChromeModel } from './components/ui/Chat/ChatSheet/useChatPanelChromeModel.js';
 export { ChatMessage } from './components/ui/Chat/ChatMessage/ChatMessage.js';
@@ -35,6 +36,7 @@ export { Dialog } from './components/ui/Dialog/Dialog.js';
 export { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerPortal, DrawerTitle, DrawerTrigger } from './components/ui/Drawer/Drawer.js';
 export { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from './components/ui/DropdownMenu/DropdownMenu.js';
 export { DropZone } from './components/ui/DropZone/DropZone.js';
+export { FileChip } from './components/ui/FileChip/FileChip.js';
 export { FlickeringGrid } from './components/ui/FlickeringGrid/FlickeringGrid.js';
 export { Foldable } from './components/ui/Foldable/Foldable.js';
 export { Gap } from './components/ui/Gap/Gap.js';

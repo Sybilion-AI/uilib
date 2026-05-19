@@ -39,6 +39,7 @@ import { ScrollRef } from '@homecode/ui';
 import { useSidebar } from '../../Sidebar/Sidebar';
 import { Chat } from '../Chat';
 import type { ChatChromeProps } from '../ChatChrome';
+import type { ChatAttachmentDropItem } from '../ChatChrome/ChatChrome.types';
 import type { ChatEmptyStateProps } from '../ChatEmptyState/ChatEmptyState.types';
 
 export type UseChatPanelChromeModelInput = {
@@ -56,6 +57,13 @@ export type UseChatPanelChromeModelInput = {
   renderMessageChart?: () => React.ReactNode;
   /** Forwarded to `ChatChrome` when the thread is empty. */
   emptyState?: ChatEmptyStateProps;
+  /** MIME types / extensions for text-only chat attachments (filtered by uilib allowlist). */
+  allowedAttachments?: readonly string[];
+  /** When true, PDF drops are accepted and parsed to plain text. */
+  allowPdfAttachments?: boolean;
+  onAttachmentsDropped?: (
+    items: ChatAttachmentDropItem[],
+  ) => void | Promise<void>;
 };
 
 export type UseChatPanelChromeModelResult = {
@@ -101,6 +109,9 @@ export function useChatPanelChromeModel({
   onGenerateDashboard,
   renderMessageChart,
   emptyState,
+  allowedAttachments,
+  allowPdfAttachments,
+  onAttachmentsDropped,
 }: UseChatPanelChromeModelInput): UseChatPanelChromeModelResult {
   const effectiveScopeId = scopeId ?? NO_SCOPE_FALLBACK;
   const isMobile = useIsMobile();
@@ -998,6 +1009,9 @@ export function useChatPanelChromeModel({
     onChatDeleted: endLocalDemoFlow,
     promptPrefill: promptLinkPrefill,
     emptyState,
+    allowedAttachments,
+    allowPdfAttachments,
+    onAttachmentsDropped,
   };
 
   const toggleOpen = () => onOpenChange(!isOpen);

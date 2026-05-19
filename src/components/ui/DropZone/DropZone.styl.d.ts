@@ -6,8 +6,11 @@ interface CssExports {
   'error': string;
   'fileInput': string;
   'isDragging': string;
+  'isDraggingContained': string;
   'label': string;
   'root': string;
+  'rootContained': string;
+  'rootDragging': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

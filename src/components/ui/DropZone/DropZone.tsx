@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import S from './DropZone.styl';
@@ -8,6 +9,8 @@ interface DropZoneBaseProps {
   error?: string | null;
   disabled?: boolean;
   ghost?: boolean;
+  /** When `container`, drag overlay fills the parent bounds instead of the viewport. */
+  overlayScope?: 'viewport' | 'container';
   id?: string;
   className?: string;
 }
@@ -59,37 +62,47 @@ export function DropZone(props: DropZoneProps) {
     error,
     disabled = false,
     ghost = false,
+    overlayScope = 'viewport',
     id,
     className,
   } = props;
   const [isDragging, setIsDragging] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
   const dropAreaRef = useRef<HTMLDivElement>(null);
   const inputId =
     id || `dropzone-file-input-${Math.random().toString(36).substr(2, 9)}`;
 
+  const dropProcessedRef = useRef(false);
+
+  const emitDroppedFiles = useCallback(
+    (files: FileList) => {
+      if (disabled || dropProcessedRef.current || files.length === 0) return;
+
+      const list = Array.from(files).filter(f => matchesAccept(f, accept));
+      if (list.length === 0) return;
+
+      dropProcessedRef.current = true;
+
+      if (props.multiple === true) {
+        props.onFiles(list);
+      } else {
+        props.onFile(list[0]!);
+      }
+    },
+    [accept, disabled, props],
+  );
+
   const handleDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault();
+      e.stopPropagation();
       setIsDragging(false);
 
       if (disabled) return;
 
-      const list = Array.from(e.dataTransfer.files).filter(f =>
-        matchesAccept(f, accept),
-      );
-
-      if (props.multiple === true) {
-        if (list.length > 0) {
-          props.onFiles(list);
-        }
-      } else {
-        const file = list[0];
-        if (file) {
-          props.onFile(file);
-        }
-      }
+      emitDroppedFiles(e.dataTransfer.files);
     },
-    [accept, disabled, props],
+    [disabled, emitDroppedFiles],
   );
 
   const handleFileInput = useCallback(
@@ -116,12 +129,20 @@ export function DropZone(props: DropZoneProps) {
   );
 
   useEffect(() => {
-    // Find closest dialog or fall back to body
-    const dialog = dropAreaRef.current?.closest('[role="dialog"]');
-    const targetElement = (dialog as HTMLElement) || document.body;
+    const root = rootRef.current;
+    if (!root) return;
+
+    const targetElement =
+      overlayScope === 'container'
+        ? root.parentElement
+        : ((root.closest('[role="dialog"]') as HTMLElement | null) ??
+          document.body);
+
+    if (!targetElement) return;
 
     const handleGlobalDragOver = (e: DragEvent) => {
       e.preventDefault();
+      dropProcessedRef.current = false;
       setIsDragging(true);
     };
 
@@ -136,30 +157,62 @@ export function DropZone(props: DropZoneProps) {
       }
     };
 
-    const handleGlobalDrop = () => {
+    const handleGlobalDropPrevent = (e: DragEvent) => {
+      e.preventDefault();
+    };
+
+    const handleGlobalDropFinalize = (e: DragEvent) => {
+      if (overlayScope === 'container' && e.dataTransfer?.files?.length) {
+        emitDroppedFiles(e.dataTransfer.files);
+      }
       setIsDragging(false);
     };
 
     targetElement.addEventListener('dragover', handleGlobalDragOver);
     targetElement.addEventListener('dragleave', handleGlobalDragLeave);
-    targetElement.addEventListener('drop', handleGlobalDrop);
+    targetElement.addEventListener('drop', handleGlobalDropPrevent, true);
+    targetElement.addEventListener('drop', handleGlobalDropFinalize);
 
     return () => {
       targetElement.removeEventListener('dragover', handleGlobalDragOver);
       targetElement.removeEventListener('dragleave', handleGlobalDragLeave);
-      targetElement.removeEventListener('drop', handleGlobalDrop);
+      targetElement.removeEventListener('drop', handleGlobalDropPrevent, true);
+      targetElement.removeEventListener('drop', handleGlobalDropFinalize);
     };
-  }, []);
+  }, [emitDroppedFiles, overlayScope]);
 
   const shouldShowDropArea = !ghost || isDragging;
   const multiple = props.multiple === true;
 
+  const isContainerOverlay = overlayScope === 'container';
+
   return (
-    <div className={`${S.root} ${className || ''}`}>
+    <div
+      ref={rootRef}
+      className={cn(
+        S.root,
+        isContainerOverlay && S.rootContained,
+        isDragging && isContainerOverlay && S.rootDragging,
+        className,
+      )}
+      style={
+        isContainerOverlay
+          ? { pointerEvents: isDragging ? 'auto' : 'none' }
+          : undefined
+      }
+    >
       {shouldShowDropArea && (
         <div
           ref={dropAreaRef}
-          className={`${S.dropArea} ${isDragging ? S.isDragging : ''} ${disabled ? S.disabled : ''}`}
+          className={cn(
+            S.dropArea,
+            isDragging
+              ? isContainerOverlay
+                ? S.isDraggingContained
+                : S.isDragging
+              : '',
+            disabled ? S.disabled : '',
+          )}
           onDrop={handleDrop}
         >
           <input

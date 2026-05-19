@@ -1,4 +1,5 @@
 import { jsxs, jsx } from 'react/jsx-runtime';
+import cn from 'classnames';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import S from './DropZone.styl.js';
 
@@ -32,28 +33,34 @@ function matchesAccept(file, accept) {
     return parts.some(part => matchesAcceptPart(file, part));
 }
 function DropZone(props) {
-    const { accept, label, error, disabled = false, ghost = false, id, className, } = props;
+    const { accept, label, error, disabled = false, ghost = false, overlayScope = 'viewport', id, className, } = props;
     const [isDragging, setIsDragging] = useState(false);
+    const rootRef = useRef(null);
     const dropAreaRef = useRef(null);
     const inputId = id || `dropzone-file-input-${Math.random().toString(36).substr(2, 9)}`;
+    const dropProcessedRef = useRef(false);
+    const emitDroppedFiles = useCallback((files) => {
+        if (disabled || dropProcessedRef.current || files.length === 0)
+            return;
+        const list = Array.from(files).filter(f => matchesAccept(f, accept));
+        if (list.length === 0)
+            return;
+        dropProcessedRef.current = true;
+        if (props.multiple === true) {
+            props.onFiles(list);
+        }
+        else {
+            props.onFile(list[0]);
+        }
+    }, [accept, disabled, props]);
     const handleDrop = useCallback((e) => {
         e.preventDefault();
+        e.stopPropagation();
         setIsDragging(false);
         if (disabled)
             return;
-        const list = Array.from(e.dataTransfer.files).filter(f => matchesAccept(f, accept));
-        if (props.multiple === true) {
-            if (list.length > 0) {
-                props.onFiles(list);
-            }
-        }
-        else {
-            const file = list[0];
-            if (file) {
-                props.onFile(file);
-            }
-        }
-    }, [accept, disabled, props]);
+        emitDroppedFiles(e.dataTransfer.files);
+    }, [disabled, emitDroppedFiles]);
     const handleFileInput = useCallback((e) => {
         if (disabled)
             return;
@@ -75,11 +82,18 @@ function DropZone(props) {
         e.target.value = '';
     }, [accept, disabled, props]);
     useEffect(() => {
-        // Find closest dialog or fall back to body
-        const dialog = dropAreaRef.current?.closest('[role="dialog"]');
-        const targetElement = dialog || document.body;
+        const root = rootRef.current;
+        if (!root)
+            return;
+        const targetElement = overlayScope === 'container'
+            ? root.parentElement
+            : (root.closest('[role="dialog"]') ??
+                document.body);
+        if (!targetElement)
+            return;
         const handleGlobalDragOver = (e) => {
             e.preventDefault();
+            dropProcessedRef.current = false;
             setIsDragging(true);
         };
         const handleGlobalDragLeave = (e) => {
@@ -90,21 +104,36 @@ function DropZone(props) {
                 setIsDragging(false);
             }
         };
-        const handleGlobalDrop = () => {
+        const handleGlobalDropPrevent = (e) => {
+            e.preventDefault();
+        };
+        const handleGlobalDropFinalize = (e) => {
+            if (overlayScope === 'container' && e.dataTransfer?.files?.length) {
+                emitDroppedFiles(e.dataTransfer.files);
+            }
             setIsDragging(false);
         };
         targetElement.addEventListener('dragover', handleGlobalDragOver);
         targetElement.addEventListener('dragleave', handleGlobalDragLeave);
-        targetElement.addEventListener('drop', handleGlobalDrop);
+        targetElement.addEventListener('drop', handleGlobalDropPrevent, true);
+        targetElement.addEventListener('drop', handleGlobalDropFinalize);
         return () => {
             targetElement.removeEventListener('dragover', handleGlobalDragOver);
             targetElement.removeEventListener('dragleave', handleGlobalDragLeave);
-            targetElement.removeEventListener('drop', handleGlobalDrop);
+            targetElement.removeEventListener('drop', handleGlobalDropPrevent, true);
+            targetElement.removeEventListener('drop', handleGlobalDropFinalize);
         };
-    }, []);
+    }, [emitDroppedFiles, overlayScope]);
     const shouldShowDropArea = !ghost || isDragging;
     const multiple = props.multiple === true;
-    return (jsxs("div", { className: `${S.root} ${className || ''}`, children: [shouldShowDropArea && (jsxs("div", { ref: dropAreaRef, className: `${S.dropArea} ${isDragging ? S.isDragging : ''} ${disabled ? S.disabled : ''}`, onDrop: handleDrop, children: [jsx("input", { type: "file", accept: accept, multiple: multiple, onChange: handleFileInput, className: S.fileInput, id: inputId, disabled: disabled }), jsx("label", { htmlFor: inputId, className: S.label, style: {
+    const isContainerOverlay = overlayScope === 'container';
+    return (jsxs("div", { ref: rootRef, className: cn(S.root, isContainerOverlay && S.rootContained, isDragging && isContainerOverlay && S.rootDragging, className), style: isContainerOverlay
+            ? { pointerEvents: isDragging ? 'auto' : 'none' }
+            : undefined, children: [shouldShowDropArea && (jsxs("div", { ref: dropAreaRef, className: cn(S.dropArea, isDragging
+                    ? isContainerOverlay
+                        ? S.isDraggingContained
+                        : S.isDragging
+                    : '', disabled ? S.disabled : ''), onDrop: handleDrop, children: [jsx("input", { type: "file", accept: accept, multiple: multiple, onChange: handleFileInput, className: S.fileInput, id: inputId, disabled: disabled }), jsx("label", { htmlFor: inputId, className: S.label, style: {
                             cursor: disabled ? 'not-allowed' : 'pointer',
                         }, children: label })] })), error && jsx("div", { className: S.error, children: error })] }));
 }

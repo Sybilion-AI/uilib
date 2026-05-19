@@ -1,6 +1,9 @@
 import type { RefObject } from 'react';
 
-import type { Message } from '#uilib/components/ui/Chat/Chat.types';
+import type {
+  ChatAttachmentDropItem,
+  Message,
+} from '#uilib/components/ui/Chat/Chat.types';
 import type { ChatEmptyStateProps } from '#uilib/components/ui/Chat/ChatEmptyState/ChatEmptyState.types';
 import type { ChatPresetsLayout } from '#uilib/components/ui/Chat/ChatPresets';
 import type { ScrollRef } from '@homecode/ui';
@@ -12,6 +15,8 @@ export type ChatChromeResizeHandleConfig = {
   onDragWidth: (rawPx: number) => void;
   onDragComplete: (finalRawPx: number) => void;
 };
+
+export type { ChatAttachmentDropItem };
 
 export interface ChatChromeProps {
   showResizeHandle: boolean;
@@ -40,10 +45,21 @@ export interface ChatChromeProps {
   isLastMessageFromUser: boolean;
   scrollRef: RefObject<ScrollRef | null>;
   effectiveScopeId: string;
-  onPromptSubmit: (message: string) => void | Promise<void>;
+  onPromptSubmit: (
+    message: string,
+    attachments?: ChatAttachmentDropItem[],
+  ) => void | Promise<void>;
   onChatDeleted: (sessionId: string) => void;
   /** `?prompt=` deep link text for one-shot composer pre-fill. */
   promptPrefill?: string | null;
   footerClassName?: string;
   emptyState?: ChatEmptyStateProps;
+  /** MIME types / extensions (filtered to text-only allowlist). Enables dropzone when non-empty. */
+  allowedAttachments?: readonly string[];
+  /** When true, PDF files are accepted and parsed to plain text on drop. */
+  allowPdfAttachments?: boolean;
+  /** Optional hook when attachments are sent with a message. */
+  onAttachmentsDropped?: (
+    items: ChatAttachmentDropItem[],
+  ) => void | Promise<void>;
 }

@@ -1,5 +1,6 @@
 import { ChatPreset, type ScriptCompletePayload } from '#uilib/components/ui/Chat/Chat.types';
 import type { ChatChromeProps } from '../ChatChrome';
+import type { ChatAttachmentDropItem } from '../ChatChrome/ChatChrome.types';
 import type { ChatEmptyStateProps } from '../ChatEmptyState/ChatEmptyState.types';
 export type UseChatPanelChromeModelInput = {
     /** When true, skip sidebar chat slot, URL `?chat=`, and portal behavior (e.g. page main content). */
@@ -16,6 +17,11 @@ export type UseChatPanelChromeModelInput = {
     renderMessageChart?: () => React.ReactNode;
     /** Forwarded to `ChatChrome` when the thread is empty. */
     emptyState?: ChatEmptyStateProps;
+    /** MIME types / extensions for text-only chat attachments (filtered by uilib allowlist). */
+    allowedAttachments?: readonly string[];
+    /** When true, PDF drops are accepted and parsed to plain text. */
+    allowPdfAttachments?: boolean;
+    onAttachmentsDropped?: (items: ChatAttachmentDropItem[]) => void | Promise<void>;
 };
 export type UseChatPanelChromeModelResult = {
     chromeProps: ChatChromeProps;
@@ -25,4 +31,4 @@ export type UseChatPanelChromeModelResult = {
     newChat: () => void;
     chatPanelContainer: HTMLElement | null;
 };
-export declare function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, emptyState, }: UseChatPanelChromeModelInput): UseChatPanelChromeModelResult;
+export declare function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, emptyState, allowedAttachments, allowPdfAttachments, onAttachmentsDropped, }: UseChatPanelChromeModelInput): UseChatPanelChromeModelResult;

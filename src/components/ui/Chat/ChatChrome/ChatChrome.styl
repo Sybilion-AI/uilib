@@ -57,6 +57,11 @@
   flex-direction column
   position relative
 
+.attachmentDropzone
+  position absolute
+  inset 0
+  z-index 200
+
 .scrollWrapper
   position relative
   flex 1
@@ -101,6 +106,21 @@
   background-color var(--background-alpha-800)
   border-top 1px solid var(--border)
   box-shadow 0 0 20px 16px var(--background)
+
+.notice
+  position absolute
+  top calc(-1 * var(--p-7))
+  left 0
+  right 0
+  margin-bottom var(--p-1)
+
+  font-size var(--text-xs)
+  text-align center
+  color var(--muted-foreground)
+  pointer-events none
+
+  @media (max-width MOBILE)
+    font-size 10px
 
 .loader
   // z-index 1

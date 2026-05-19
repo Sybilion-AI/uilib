@@ -7,8 +7,9 @@ import { Button } from '../../Button/Button.js';
 import { Input } from '../../Input/Input.js';
 import { syncChatPromptTextareaHeight } from './ChatPrompt.helpers.js';
 import S from './ChatPrompt.styl.js';
+import { ChatPromptAttachments } from './ChatPromptAttachments.js';
 
-function ChatPrompt({ onSubmit, placeholder, className, footer, prefillMessage, showNotice = true, }) {
+function ChatPrompt({ onSubmit, placeholder, className, footer, prefillMessage, attachments = [], onRemoveAttachment, disabled = false, }) {
     const [message, setMessage] = useState('');
     const inputRef = useRef(null);
     useLayoutEffect(() => {
@@ -24,9 +25,10 @@ function ChatPrompt({ onSubmit, placeholder, className, footer, prefillMessage, 
     }, [prefillMessage]);
     const handleSubmit = (e) => {
         const trimmedMessage = message.trim();
-        if (trimmedMessage) {
+        const hasAttachments = attachments.length > 0;
+        if (trimmedMessage || hasAttachments) {
             e.preventDefault();
-            onSubmit(trimmedMessage);
+            onSubmit(trimmedMessage, hasAttachments ? attachments : undefined);
             setMessage('');
         }
     };
@@ -40,7 +42,7 @@ function ChatPrompt({ onSubmit, placeholder, className, footer, prefillMessage, 
             }
         },
     });
-    return (jsxs("form", { onSubmit: handleSubmit, className: cn(S.root, className), children: [jsxs("div", { className: S.composer, children: [showNotice ? (jsx("div", { className: S.notice, children: "Forecast Assistant can make mistakes." })) : null, jsx(Input, { ref: inputRef, type: "textarea", rows: 1, value: message, onChange: e => setMessage(e.target.value), placeholder: placeholder || 'Type a message...', className: cn(S.input) }), jsx("div", { className: S.submitColumn, children: jsx(Button, { type: "submit", size: "sm", disabled: !message.trim(), children: jsx(SendHorizontalIcon, { size: 16 }) }) })] }), footer] }));
+    return (jsxs("form", { onSubmit: handleSubmit, className: cn(S.root, className), children: [jsx(ChatPromptAttachments, { attachments: attachments, onRemove: index => onRemoveAttachment?.(index), disabled: disabled }), jsxs("div", { className: S.composer, children: [jsx(Input, { ref: inputRef, type: "textarea", rows: 1, value: message, onChange: e => setMessage(e.target.value), placeholder: placeholder || 'Type a message...', className: cn(S.input) }), jsx("div", { className: S.submitColumn, children: jsx(Button, { type: "submit", size: "sm", disabled: disabled || (!message.trim() && attachments.length === 0), children: jsx(SendHorizontalIcon, { size: 16 }) }) })] }), footer] }));
 }
 
 export { ChatPrompt };

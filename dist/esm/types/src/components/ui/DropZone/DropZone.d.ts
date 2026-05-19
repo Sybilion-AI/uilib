@@ -4,6 +4,8 @@ interface DropZoneBaseProps {
     error?: string | null;
     disabled?: boolean;
     ghost?: boolean;
+    /** When `container`, drag overlay fills the parent bounds instead of the viewport. */
+    overlayScope?: 'viewport' | 'container';
     id?: string;
     className?: string;
 }

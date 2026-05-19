@@ -103,6 +103,7 @@
     "lightweight-charts": "^5.0.9",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.12",
+    "pdfjs-dist": "^4.10.38",
     "recharts": "^3.2.1",
     "standard-version": "^9.5.0",
     "style-inject": "^0.3.0",

@@ -1,8 +1,7 @@
+import { FileChip } from '#uilib/components/ui/FileChip';
 import { downloadTextFile } from '#uilib/utils/downloadTextFile';
 
-import { CsvIcon } from '../../../icons/CsvIcon/CsvIcon';
 import type { UserCsvAttachment } from '../Chat.types';
-import S from './ChatMessage.styl';
 
 const CSV_DOWNLOAD_HINT = 'Download .CSV file';
 
@@ -12,10 +11,10 @@ export function UserCsvAttachmentBubble({
   attachment: UserCsvAttachment;
 }) {
   return (
-    <button
-      type="button"
-      className={S.userCsvCard}
-      aria-label={`${CSV_DOWNLOAD_HINT}: ${attachment.displayName}`}
+    <FileChip
+      name={attachment.displayName}
+      format="csv"
+      hint={CSV_DOWNLOAD_HINT}
       onClick={() =>
         downloadTextFile(
           attachment.content,
@@ -23,14 +22,6 @@ export function UserCsvAttachmentBubble({
           'text/csv;charset=utf-8',
         )
       }
-    >
-      <div className={S.userCsvCardIcon}>
-        <CsvIcon size={32} />
-      </div>
-      <div className={S.userCsvCardContent}>
-        <div className={S.userCsvCardTitle}>{attachment.displayName}</div>
-        <div className={S.userCsvCardSubtitle}>{CSV_DOWNLOAD_HINT}</div>
-      </div>
-    </button>
+    />
   );
 }
