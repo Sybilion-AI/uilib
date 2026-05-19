@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.11](https://github.com/Mir-Insight/uilib/compare/v1.3.10...v1.3.11) (2026-05-19)
+
+
+### Features
+
+* FileChip - Unified file row for chat attachments ([2e0a1cc](https://github.com/Mir-Insight/uilib/commit/2e0a1cc63a5baf95f79f6bc90c08cb36643ff018))
+
+
+### Bug Fixes
+
+* ChatSelector - show delete button only on hover ([9d2e4cc](https://github.com/Mir-Insight/uilib/commit/9d2e4cc6f01d4cfee1bd8542340b1c71a4e4b949))
+
 ### [1.3.10](https://github.com/Mir-Insight/uilib/compare/v1.3.9...v1.3.10) (2026-05-18)
 
 
