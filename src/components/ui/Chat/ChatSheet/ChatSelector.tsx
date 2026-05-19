@@ -87,17 +87,18 @@ export function ChatSelector({
           </SelectContent>
         </Select>
       </div>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        className={S.deleteBtn}
-        aria-label="Delete chat"
-        disabled={!currentChatId || chats.length === 0}
-        onClick={handleDeleteChat}
-      >
-        <Trash2Icon size={16} />
-      </Button>
+      {currentChatId && chats.length > 0 && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className={S.deleteBtn}
+          aria-label="Delete chat"
+          onClick={handleDeleteChat}
+        >
+          <Trash2Icon size={16} />
+        </Button>
+      )}
     </div>
   );
 }

@@ -19,15 +19,15 @@ export function ChatPromptAttachments({
   return (
     <div className={S.attachments}>
       {attachments.map((item, index) => (
-        <div key={`${item.file.name}-${index}`} className={S.attachmentItem}>
-          <FileChip
-            name={item.file.name}
-            format={item.kind === 'pdf' ? 'pdf' : 'text'}
-            hint={item.kind === 'pdf' ? 'PDF' : 'Text file'}
-            onRemove={() => onRemove(index)}
-            disabled={disabled}
-          />
-        </div>
+        <FileChip
+          key={`${item.file.name}-${index}`}
+          className={S.attachmentItem}
+          name={item.file.name}
+          format={item.kind === 'pdf' ? 'pdf' : 'text'}
+          hint={item.kind === 'pdf' ? 'PDF' : 'Text file'}
+          onRemove={() => onRemove(index)}
+          disabled={disabled}
+        />
       ))}
     </div>
   );
