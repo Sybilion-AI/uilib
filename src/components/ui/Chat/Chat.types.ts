@@ -88,6 +88,10 @@ export interface ChatPromptProps {
   /** Staged files shown above the composer until send. */
   attachments?: ChatAttachmentDropItem[];
   onRemoveAttachment?: (index: number) => void;
+  /** HTML `accept` for the attach file picker; set with `onAttachmentFiles`. */
+  attachmentAccept?: string;
+  /** Called when the user picks files via the attach button. */
+  onAttachmentFiles?: (files: File[]) => void;
 }
 
 export interface ChatMessageProps {

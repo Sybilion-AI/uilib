@@ -1,8 +1,15 @@
 import cn from 'classnames';
-import { FormEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import useEvent from '#uilib/hooks/useEvent';
-import { SendHorizontalIcon } from 'lucide-react';
+import { PaperclipIcon, SendHorizontalIcon } from 'lucide-react';
 
 import { Button } from '../../Button';
 import { Input } from '../../Input';
@@ -20,9 +27,13 @@ export function ChatPrompt({
   attachments = [],
   onRemoveAttachment,
   disabled = false,
+  attachmentAccept,
+  onAttachmentFiles,
 }: ChatPromptProps) {
   const [message, setMessage] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const showAttachButton = Boolean(attachmentAccept && onAttachmentFiles);
 
   useLayoutEffect(() => {
     const el = inputRef.current;
@@ -47,6 +58,14 @@ export function ChatPrompt({
     }
   };
 
+  const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    e.target.value = '';
+    if (files.length > 0) {
+      onAttachmentFiles?.(files);
+    }
+  };
+
   useEvent({
     event: 'keydown',
     callback: (e: KeyboardEvent) => {
@@ -66,6 +85,35 @@ export function ChatPrompt({
         disabled={disabled}
       />
       <div className={S.composer}>
+        {showAttachButton ? (
+          <>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={attachmentAccept}
+              multiple
+              className={S.fileInput}
+              disabled={disabled}
+              onChange={handleFileInputChange}
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              icon
+              size="sm"
+              className={S.attachButton}
+              aria-label="Attach file"
+              disabled={disabled}
+              onClick={e => {
+                e.preventDefault();
+                fileInputRef.current?.click();
+              }}
+            >
+              <PaperclipIcon size={16} />
+            </Button>
+          </>
+        ) : null}
+
         <Input
           ref={inputRef}
           type="textarea"
@@ -85,15 +133,6 @@ export function ChatPrompt({
             <SendHorizontalIcon size={16} />
           </Button>
         </div>
-
-        {/* <Button
-          variant="outline"
-          size="sm"
-          onClick={e => e.preventDefault()}
-          className={S.attachButton}
-          >
-          <PaperclipIcon size={16} />
-          </Button> */}
       </div>
 
       {footer}

@@ -284,6 +284,12 @@ export function ChatChrome({
               attachments={pendingAttachments}
               onRemoveAttachment={handleRemoveAttachment}
               prefillMessage={promptPrefill ?? undefined}
+              attachmentAccept={
+                attachmentsDropzoneEnabled ? attachmentAccept : undefined
+              }
+              onAttachmentFiles={
+                attachmentsDropzoneEnabled ? handleAttachmentFiles : undefined
+              }
             />
           </div>
         </Chat>
