@@ -1,6 +1,8 @@
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
+import { shouldRenderAutolinkPill, AutolinkUrl } from '../../InteractiveContent/AutolinkUrl.js';
 import logger from '../../../../lib/logger.js';
 import S from './ChatMessage.styl.js';
+import S$1 from '../../InteractiveContent/InteractiveContent.styl.js';
 
 const injectHeaders = (content) => {
     // Match #, ##, ###, or #### headers at start of line
@@ -320,7 +322,7 @@ const injectMarkdownLink = (content) => {
     const { target, rel } = linkTargetRelForHref(href, undefined);
     const label = matches[1];
     return {
-        elem: (jsx("a", { href: href, target: target, rel: rel, children: runFormattingPipeline(label, linkLabelInjectors) })),
+        elem: shouldRenderAutolinkPill(label, href) ? (jsx(AutolinkUrl, { href: href, display: label, target: target, rel: rel })) : (jsx("a", { href: href, target: target, rel: rel, className: S$1.textLink, children: runFormattingPipeline(label, linkLabelInjectors) })),
         index: matches.index,
         length: matches[0].length,
     };
@@ -366,7 +368,7 @@ const injectAutolinkUrl = (content) => {
     }
     const { target, rel } = linkTargetRelForHref(c.href, undefined);
     return {
-        elem: (jsx("a", { href: c.href, target: target, rel: rel, children: c.display })),
+        elem: (jsx(AutolinkUrl, { href: c.href, display: c.display, target: target, rel: rel })),
         index: c.index,
         length: c.length,
     };
@@ -393,8 +395,9 @@ const injectAnchor = (content) => {
         return null;
     }
     const { target, rel } = linkTargetRelForHref(href, targetRaw || undefined);
+    const innerTrimmed = inner.trim();
     return {
-        elem: (jsx("a", { href: href, target: target, rel: rel, children: runFormattingPipeline(inner, linkLabelInjectors) })),
+        elem: shouldRenderAutolinkPill(innerTrimmed, href) ? (jsx(AutolinkUrl, { href: href, display: innerTrimmed, target: target, rel: rel })) : (jsx("a", { href: href, target: target, rel: rel, className: S$1.textLink, children: runFormattingPipeline(inner, linkLabelInjectors) })),
         index: matches.index,
         length: matches[0].length,
     };

@@ -1,5 +1,10 @@
 import React from 'react';
 
+import {
+  AutolinkUrl,
+  autolinkStyles,
+  shouldRenderAutolinkPill,
+} from '#uilib/components/ui/InteractiveContent/AutolinkUrl';
 import logger from '#uilib/lib/logger';
 
 import S from './ChatMessage.styl';
@@ -397,8 +402,15 @@ const injectMarkdownLink: Injector = (content: string) => {
   const label = matches[1];
 
   return {
-    elem: (
-      <a href={href} target={target} rel={rel}>
+    elem: shouldRenderAutolinkPill(label, href) ? (
+      <AutolinkUrl href={href} display={label} target={target} rel={rel} />
+    ) : (
+      <a
+        href={href}
+        target={target}
+        rel={rel}
+        className={autolinkStyles.textLink}
+      >
         {runFormattingPipeline(label, linkLabelInjectors)}
       </a>
     ),
@@ -459,9 +471,12 @@ const injectAutolinkUrl: Injector = (content: string) => {
 
   return {
     elem: (
-      <a href={c.href} target={target} rel={rel}>
-        {c.display}
-      </a>
+      <AutolinkUrl
+        href={c.href}
+        display={c.display}
+        target={target}
+        rel={rel}
+      />
     ),
     index: c.index,
     length: c.length,
@@ -500,10 +515,23 @@ const injectAnchor: Injector = (content: string) => {
   }
 
   const { target, rel } = linkTargetRelForHref(href, targetRaw || undefined);
+  const innerTrimmed = inner.trim();
 
   return {
-    elem: (
-      <a href={href} target={target} rel={rel}>
+    elem: shouldRenderAutolinkPill(innerTrimmed, href) ? (
+      <AutolinkUrl
+        href={href}
+        display={innerTrimmed}
+        target={target}
+        rel={rel}
+      />
+    ) : (
+      <a
+        href={href}
+        target={target}
+        rel={rel}
+        className={autolinkStyles.textLink}
+      >
         {runFormattingPipeline(inner, linkLabelInjectors)}
       </a>
     ),

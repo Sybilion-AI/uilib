@@ -8,13 +8,18 @@
 
 .text
   max-width 100%
+  min-width 0
   font-size var(--text-sm)
   color var(--text-secondary)
   width fit-content
   user-select text
+  overflow-wrap anywhere
+  word-break break-word
 
 .role-user
   align-items flex-end
+  max-width 100%
+  min-width 0
 
   .userColumn
     display flex
@@ -22,6 +27,7 @@
     align-items flex-end
     gap var(--p-2)
     max-width 100%
+    min-width 0
 
   .text
     padding var(--p-3) var(--p-4)
@@ -31,6 +37,8 @@
     border-bottom-right-radius 0
 
     white-space pre-wrap
+    overflow hidden
+    box-sizing border-box
 
     :global(.dark) &
       background-color var(--sb-gray-800)

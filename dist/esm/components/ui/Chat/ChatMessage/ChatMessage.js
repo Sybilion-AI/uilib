@@ -1,6 +1,8 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
 import cn from 'classnames';
 import { InteractiveContent } from '../../InteractiveContent/InteractiveContent.js';
+import 'lucide-react';
+import '../../InteractiveContent/InteractiveContent.styl.js';
 import { TextShimmer } from '../../TextShimmer/TextShimmer.js';
 import { MessageRole, GENERATING_DASHBOARD_SYSTEM_TEXT } from '../Chat.types.js';
 import { userTextFileAttachmentsFromMessage } from '../userTextFileAttachments.js';

@@ -47,6 +47,7 @@ export { Image } from './components/ui/Image/Image.js';
 export { ImageWithFallback } from './components/ui/ImageWithFallback/ImageWithFallback.js';
 export { Input } from './components/ui/Input/Input.js';
 export { InteractiveContent } from './components/ui/InteractiveContent/InteractiveContent.js';
+export { AutolinkUrl, displayUrlForAutolink } from './components/ui/InteractiveContent/AutolinkUrl.js';
 export { Label } from './components/ui/Label/Label.js';
 export { LabeledInput } from './components/ui/LabeledInput/LabeledInput.js';
 export { AltKeyProvider } from './components/ui/LabelWithId/AltKeyProvider.js';
