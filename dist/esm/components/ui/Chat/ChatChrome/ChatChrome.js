@@ -31,6 +31,9 @@ function ChatChrome({ showResizeHandle, resizeHandle, onClose, isEmpty, renderPr
                 setPendingAttachments(prev => [...prev, ...items]);
             }
         })
+            .catch(() => {
+            // Extraction failed (parse error, size limit, etc.); skip staging.
+        })
             .finally(() => setIsExtractingAttachments(false));
     }, [allowPdfAttachments, promptBusy]);
     const handleRemoveAttachment = useCallback((index) => {

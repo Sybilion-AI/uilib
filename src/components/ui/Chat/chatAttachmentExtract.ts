@@ -1,6 +1,8 @@
 import type { ChatAttachmentDropItem } from './Chat.types';
-import { isPdfFile } from './chatAttachmentAccept';
+import { isDocxFile, isPdfFile, isXlsxFile } from './chatAttachmentAccept';
+import { extractDocxFileToText } from './chatDocxExtract';
 import { extractPdfFileToText } from './chatPdfExtract';
+import { extractXlsxFileToText } from './chatXlsxExtract';
 
 function readTextFile(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -22,6 +24,16 @@ export async function extractChatAttachmentItems(
         if (!allowPdfAttachments) return null;
         const text = await extractPdfFileToText(file);
         return { file, text, kind: 'pdf' as const };
+      }
+
+      if (isDocxFile(file)) {
+        const text = await extractDocxFileToText(file);
+        return { file, text, kind: 'docx' as const };
+      }
+
+      if (isXlsxFile(file)) {
+        const text = await extractXlsxFileToText(file);
+        return { file, text, kind: 'xlsx' as const };
       }
 
       const text = await readTextFile(file);

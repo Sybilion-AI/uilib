@@ -24,7 +24,15 @@ export function ChatPromptAttachments({
           className={S.attachmentItem}
           name={item.file.name}
           format={item.kind === 'pdf' ? 'pdf' : 'text'}
-          hint={item.kind === 'pdf' ? 'PDF' : 'Text file'}
+          hint={
+            item.kind === 'pdf'
+              ? 'PDF'
+              : item.kind === 'docx'
+                ? 'Word document'
+                : item.kind === 'xlsx'
+                  ? 'Spreadsheet'
+                  : 'Text file'
+          }
           onRemove={() => onRemove(index)}
           disabled={disabled}
         />

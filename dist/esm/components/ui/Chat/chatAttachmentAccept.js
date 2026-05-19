@@ -24,6 +24,10 @@ const TEXT_ATTACHMENT_ACCEPT_PARTS = [
     '.tsv',
     'text/calendar',
     '.ics',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    '.docx',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    '.xlsx',
 ];
 const PDF_ATTACHMENT_ACCEPT_PARTS = ['application/pdf', '.pdf'];
 const TEXT_ATTACHMENT_ACCEPT_SET = new Set(TEXT_ATTACHMENT_ACCEPT_PARTS.map(part => part.toLowerCase()));
@@ -46,9 +50,24 @@ function isPdfFile(file) {
         return true;
     return file.name.toLowerCase().endsWith('.pdf');
 }
+function isDocxFile(file) {
+    const type = file.type.toLowerCase();
+    if (type ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        return true;
+    }
+    return file.name.toLowerCase().endsWith('.docx');
+}
+function isXlsxFile(file) {
+    const type = file.type.toLowerCase();
+    if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        return true;
+    }
+    return file.name.toLowerCase().endsWith('.xlsx');
+}
 function isAttachmentsDropzoneEnabled(allowedAttachments, allowPdfAttachments) {
     return (filterToTextAttachments(allowedAttachments).length > 0 ||
         Boolean(allowPdfAttachments));
 }
 
-export { PDF_ATTACHMENT_ACCEPT_PARTS, TEXT_ATTACHMENT_ACCEPT_PARTS, buildAcceptAttr, filterToTextAttachments, isAttachmentsDropzoneEnabled, isPdfFile };
+export { PDF_ATTACHMENT_ACCEPT_PARTS, TEXT_ATTACHMENT_ACCEPT_PARTS, buildAcceptAttr, filterToTextAttachments, isAttachmentsDropzoneEnabled, isDocxFile, isPdfFile, isXlsxFile };

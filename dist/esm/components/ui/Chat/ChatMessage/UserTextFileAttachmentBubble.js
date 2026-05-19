@@ -8,6 +8,8 @@ function formatFromFilename(filename) {
         return 'csv';
     if (lower.endsWith('.pdf'))
         return 'pdf';
+    if (lower.endsWith('.xlsx'))
+        return 'text';
     return 'text';
 }
 function mimeForFormat(format) {
@@ -17,16 +19,21 @@ function mimeForFormat(format) {
         return 'application/pdf';
     return 'text/plain;charset=utf-8';
 }
-function hintForFormat(format) {
+function hintForFormat(format, filename) {
+    const lower = filename.toLowerCase();
     if (format === 'csv')
         return 'Download .CSV file';
     if (format === 'pdf')
         return 'Download file';
+    if (lower.endsWith('.docx'))
+        return 'Download Word document';
+    if (lower.endsWith('.xlsx'))
+        return 'Download spreadsheet';
     return 'Download text file';
 }
 function UserTextFileAttachmentBubble({ attachment, }) {
     const format = formatFromFilename(attachment.filename);
-    return (jsx(FileChip, { name: attachment.displayName, format: format, hint: hintForFormat(format), onClick: () => downloadTextFile(attachment.content, attachment.filename, mimeForFormat(format)) }));
+    return (jsx(FileChip, { name: attachment.displayName, format: format, hint: hintForFormat(format, attachment.filename), onClick: () => downloadTextFile(attachment.content, attachment.filename, mimeForFormat(format)) }));
 }
 
 export { UserTextFileAttachmentBubble };

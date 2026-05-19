@@ -8,6 +8,8 @@ import { sanitizeAttachmentFilename } from './sanitizeAttachmentFilename';
 function defaultExtForAttachment(item: ChatAttachmentDropItem): string {
   const name = item.file.name.toLowerCase();
   if (item.kind === 'pdf' || name.endsWith('.pdf')) return 'pdf';
+  if (item.kind === 'docx' || name.endsWith('.docx')) return 'docx';
+  if (item.kind === 'xlsx' || name.endsWith('.xlsx')) return 'xlsx';
   if (name.endsWith('.csv')) return 'csv';
   if (name.endsWith('.json')) return 'json';
   if (name.endsWith('.md') || name.endsWith('.markdown')) return 'md';

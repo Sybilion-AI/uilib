@@ -86,6 +86,9 @@ export function ChatChrome({
             setPendingAttachments(prev => [...prev, ...items]);
           }
         })
+        .catch(() => {
+          // Extraction failed (parse error, size limit, etc.); skip staging.
+        })
         .finally(() => setIsExtractingAttachments(false));
     },
     [allowPdfAttachments, promptBusy],

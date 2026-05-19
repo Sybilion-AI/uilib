@@ -8,7 +8,7 @@ import {
 function makeDropItem(
   name: string,
   text: string,
-  kind: 'text' | 'pdf' = 'text',
+  kind: ChatAttachmentDropItem['kind'] = 'text',
 ): ChatAttachmentDropItem {
   return {
     file: { name } as File,
@@ -48,6 +48,20 @@ describe('buildChatSendMessagePayload', () => {
     expect(result.displayText).toBe('report.pdf');
     expect(result.apiMessage).toBe('report.pdf\n\npdf text');
     expect(result.userTextFileAttachments?.[0].filename).toMatch(/\.pdf$/i);
+  });
+
+  it('uses docx and xlsx extensions from kind', () => {
+    const docx = buildChatSendMessagePayload('', [
+      makeDropItem('brief.docx', 'word body', 'docx'),
+    ]);
+    const xlsx = buildChatSendMessagePayload('', [
+      makeDropItem('sheet.xlsx', 'a,b', 'xlsx'),
+    ]);
+    if (typeof docx === 'string' || typeof xlsx === 'string') {
+      throw new Error('expected payload object');
+    }
+    expect(docx.userTextFileAttachments?.[0].filename).toMatch(/\.docx$/i);
+    expect(xlsx.userTextFileAttachments?.[0].filename).toMatch(/\.xlsx$/i);
   });
 
   it('maps multiple attachments', () => {

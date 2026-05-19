@@ -69,9 +69,9 @@ export type ScriptCompletePayload = {
 
 export type ChatAttachmentDropItem = {
   file: File;
-  /** UTF-8 text for native text files; PDF yields extracted text. */
+  /** UTF-8 text for native text files; PDF/DOCX/XLSX yield extracted text. */
   text: string;
-  kind: 'text' | 'pdf';
+  kind: 'text' | 'pdf' | 'docx' | 'xlsx';
 };
 
 export interface ChatPromptProps {

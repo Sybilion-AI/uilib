@@ -97,16 +97,16 @@ export default function ChatAttachmentsDropzonePage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'Chat' }, { label: 'Attachments dropzone' }]}
         title="Chat — attachments dropzone"
-        subheader="Drop text files onto the chat shell; they appear on the prompt until you send."
+        subheader="Drop text, Office, or PDF files onto the chat shell; they appear on the prompt until you send."
         actions={<DocsHeaderActions />}
       />
       <PageContentSection>
         <p style={{ marginBottom: 16, fontSize: 14, lineHeight: 1.5 }}>
-          Drop a <code>.txt</code>, <code>.csv</code>, <code>.md</code>, or{' '}
-          <code>.pdf</code> file anywhere on the chat panel. The file shows
-          above the composer; press send to post it. Only MIME types from the
-          text allowlist are accepted; PDF parsing is optional via{' '}
-          <code>allowPdfAttachments</code>.
+          Drop a <code>.txt</code>, <code>.csv</code>, <code>.md</code>,{' '}
+          <code>.docx</code>, <code>.xlsx</code>, or <code>.pdf</code> file
+          anywhere on the chat panel. The file shows above the composer; press
+          send to post it. Office and PDF parsers load on demand when you attach
+          those types; PDF also requires <code>allowPdfAttachments</code>.
         </p>
         <ChatChrome
           showResizeHandle={false}
@@ -133,25 +133,19 @@ export default function ChatAttachmentsDropzonePage() {
           effectiveScopeId="docs-chat-attachments-dropzone"
           onPromptSubmit={onPromptSubmit}
           onChatDeleted={() => {}}
-          allowedAttachments={[
-            'text/plain',
-            '.txt',
-            'text/csv',
-            '.csv',
-            'text/markdown',
-            '.md',
-            'application/json',
-            '.json',
-          ]}
+          allowedAttachments={TEXT_ATTACHMENT_ACCEPT_PARTS}
           allowPdfAttachments
           emptyState={{
-            title: 'Drop a text file or PDF',
+            title: 'Drop a text, Office, or PDF file',
             description:
-              'Drag a file onto this panel, review it above the composer, then send.',
+              'Drag a file onto this panel, review it above the composer, then send. DOCX and XLSX are parsed in the browser.',
             additionalContent: (
               <p style={{ fontSize: 13, opacity: 0.85 }}>
-                Base allowlist includes{' '}
-                {TEXT_ATTACHMENT_ACCEPT_PARTS.slice(0, 6).join(', ')}…
+                Accepted types include <code>.txt</code>, <code>.csv</code>,{' '}
+                <code>.md</code>, <code>.json</code>, <code>.docx</code>,{' '}
+                <code>.xlsx</code>, and more (
+                {TEXT_ATTACHMENT_ACCEPT_PARTS.length} entries in the text
+                allowlist).
               </p>
             ),
           }}

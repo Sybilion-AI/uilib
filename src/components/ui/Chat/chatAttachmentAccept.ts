@@ -24,6 +24,10 @@ export const TEXT_ATTACHMENT_ACCEPT_PARTS = [
   '.tsv',
   'text/calendar',
   '.ics',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  '.docx',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  '.xlsx',
 ] as const;
 
 export const PDF_ATTACHMENT_ACCEPT_PARTS = ['application/pdf', '.pdf'] as const;
@@ -57,6 +61,27 @@ export function isPdfFile(file: File): boolean {
   const type = file.type.toLowerCase();
   if (type === 'application/pdf') return true;
   return file.name.toLowerCase().endsWith('.pdf');
+}
+
+export function isDocxFile(file: File): boolean {
+  const type = file.type.toLowerCase();
+  if (
+    type ===
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  ) {
+    return true;
+  }
+  return file.name.toLowerCase().endsWith('.docx');
+}
+
+export function isXlsxFile(file: File): boolean {
+  const type = file.type.toLowerCase();
+  if (
+    type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  ) {
+    return true;
+  }
+  return file.name.toLowerCase().endsWith('.xlsx');
 }
 
 export function isAttachmentsDropzoneEnabled(
