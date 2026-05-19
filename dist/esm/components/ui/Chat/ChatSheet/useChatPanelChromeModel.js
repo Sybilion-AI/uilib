@@ -2,6 +2,7 @@ import { jsx } from 'react/jsx-runtime';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { MessageRole, GENERATING_DASHBOARD_SYSTEM_TEXT } from '../Chat.types.js';
 import { isGraphIntakeAssistantStepComplete, matchUserTextToQuickReply, parseScriptLine, textHasQuickReplyMarkers, branchKeysUsedFromChatHistory, branchKeysUsedByUserMessages, extractQuickReplyLabelKeyPairsFromText, entryBranchKeyBeforeLastAssistant, isPresetScriptGraph, branchesFromPresetScriptGraph } from '../ChatMessage/presetScript.js';
+import { buildChatSendMessagePayload, displayTextFromSendPayload } from '../buildChatSendMessagePayload.js';
 import { usedPresetIdsFromMessages, formatChatTranscript } from '../chat-preset-utils.js';
 import { useChatsForScopeId, useChat, useChatOutboundPending, isChatEmpty } from '../../../../contexts/chat-context.js';
 import useEvent from '../../../../hooks/useEvent.js';
@@ -296,10 +297,11 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
         onMessage,
         onScriptComplete,
     ]);
-    const handlePromptSubmit = useCallback(async (message) => {
+    const handlePromptSubmit = useCallback(async (message, attachments) => {
         const chatId = currentChatId;
         if (!chatId)
             return;
+        const stagedAttachments = attachments ?? [];
         const quickBranches = quickReplyBranchesByChat[chatId];
         const graphActive = Boolean(quickBranches && Object.keys(quickBranches).length > 0);
         const intake = intakeByChatId[chatId];
@@ -402,8 +404,9 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
         try {
             if (chatId)
                 endLocalDemoFlow(chatId);
-            await sendMessage(message);
-            onMessage?.(message);
+            const payload = buildChatSendMessagePayload(message, stagedAttachments);
+            await sendMessage(payload);
+            onMessage?.(displayTextFromSendPayload(payload));
         }
         catch (error) {
             logger.error('Error sending chat message:', error);

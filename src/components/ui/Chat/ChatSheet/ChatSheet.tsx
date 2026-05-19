@@ -44,6 +44,9 @@ export function ChatSheet({
   onGenerateDashboard,
   renderMessageChart,
   emptyState,
+  allowedAttachments,
+  allowPdfAttachments,
+  onAttachmentsDropped,
   inline = false,
 }: ChatSheetProps) {
   const model = useChatPanelChromeModel({
@@ -55,6 +58,9 @@ export function ChatSheet({
     onGenerateDashboard,
     renderMessageChart,
     emptyState,
+    allowedAttachments,
+    allowPdfAttachments,
+    onAttachmentsDropped,
   });
 
   if (actionsRef) {

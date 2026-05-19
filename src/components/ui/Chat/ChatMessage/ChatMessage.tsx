@@ -8,14 +8,15 @@ import {
   GENERATING_DASHBOARD_SYSTEM_TEXT,
   MessageRole,
 } from '../Chat.types';
+import { userTextFileAttachmentsFromMessage } from '../userTextFileAttachments';
 import { AgentMessageContent } from './AgentMessageContent';
 import S from './ChatMessage.styl';
-import { UserCsvAttachmentBubble } from './UserCsvAttachmentBubble';
+import { UserTextFileAttachmentBubble } from './UserTextFileAttachmentBubble';
 
 export function ChatMessage({
   role,
   text,
-  userCsvAttachment,
+  userTextFileAttachments,
   onQuickReply,
   suppressedQuickReplyKeys,
   quickReplyDisabled,
@@ -24,6 +25,9 @@ export function ChatMessage({
   onScriptContinue,
   renderMessageChart,
 }: ChatMessageProps) {
+  const fileAttachments = userTextFileAttachmentsFromMessage({
+    userTextFileAttachments,
+  });
   const isAssistant = role === MessageRole.ASSISTANT;
   const isSystem = role === MessageRole.SYSTEM;
 
@@ -53,9 +57,12 @@ export function ChatMessage({
           <div className={S.text}>
             <InteractiveContent text={text} />
           </div>
-          {userCsvAttachment ? (
-            <UserCsvAttachmentBubble attachment={userCsvAttachment} />
-          ) : null}
+          {fileAttachments.map(attachment => (
+            <UserTextFileAttachmentBubble
+              key={`${attachment.displayName}:${attachment.filename}`}
+              attachment={attachment}
+            />
+          ))}
         </div>
       )}
     </div>

@@ -42,11 +42,13 @@ function makeUserMessageWithCsv(
     role: MessageRole.USER,
     text: displayText,
     timestamp: Date.now(),
-    userCsvAttachment: {
-      displayName,
-      filename: 'docs-sample.csv',
-      content: SAMPLE_CSV,
-    },
+    userTextFileAttachments: [
+      {
+        displayName,
+        filename: 'docs-sample.csv',
+        content: SAMPLE_CSV,
+      },
+    ],
   };
 }
 

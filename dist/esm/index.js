@@ -23,6 +23,8 @@ export { Chat } from './components/ui/Chat/Chat.js';
 export { usedPresetIdsFromMessages } from './components/ui/Chat/chat-preset-utils.js';
 export { ChatChrome } from './components/ui/Chat/ChatChrome/ChatChrome.js';
 export { TEXT_ATTACHMENT_ACCEPT_PARTS, filterToTextAttachments } from './components/ui/Chat/chatAttachmentAccept.js';
+export { buildChatSendMessagePayload, displayTextFromSendPayload, normalizeUserTextFileAttachments } from './components/ui/Chat/buildChatSendMessagePayload.js';
+export { sanitizeAttachmentFilename } from './components/ui/Chat/sanitizeAttachmentFilename.js';
 export { ChatSheet } from './components/ui/Chat/ChatSheet/ChatSheet.js';
 export { useChatPanelChromeModel } from './components/ui/Chat/ChatSheet/useChatPanelChromeModel.js';
 export { ChatMessage } from './components/ui/Chat/ChatMessage/ChatMessage.js';

@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
-import { type Chat, type ChatSendMessagePayload, MessageRole, type UserCsvAttachment } from '#uilib/components/ui/Chat/Chat.types';
+import { type Chat, type ChatSendMessagePayload, MessageRole, type UserTextFileAttachment } from '#uilib/components/ui/Chat/Chat.types';
 import type { ChatResponse } from '#uilib/types/chat-api.types';
 export type SendChatMessageFn = (message: string, targetChatId: string) => Promise<ChatResponse>;
-export type { ChatSendMessagePayload, UserCsvAttachment, } from '#uilib/components/ui/Chat/Chat.types';
+export type { ChatSendMessagePayload, UserTextFileAttachment, } from '#uilib/components/ui/Chat/Chat.types';
 export type AddChatMessageOptions = {
-    userCsvAttachment?: UserCsvAttachment;
+    userTextFileAttachments?: UserTextFileAttachment[];
 };
 export interface ChatContextType {
     /** Returns the new session id, or undefined if no user / not created. */

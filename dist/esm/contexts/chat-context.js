@@ -1,6 +1,7 @@
 import { jsx } from 'react/jsx-runtime';
 import { createContext, useState, useCallback, useEffect, useContext, useMemo } from 'react';
 import { MessageRole } from '../components/ui/Chat/Chat.types.js';
+import { normalizeUserTextFileAttachments } from '../components/ui/Chat/buildChatSendMessagePayload.js';
 import { stripJsonDashboardFences } from '../lib/dashboard-spec/stripJsonDashboardFences.js';
 import { LS } from '@homecode/ui';
 
@@ -181,13 +182,17 @@ function ChatProvider({ children, userSwitchKey, sendChatMessage: sendChatMessag
             return undefined;
         addScopeIdToRegistry(scopeId);
         const storedText = stripJsonDashboardFences(text);
-        const attachment = role === MessageRole.USER ? options?.userCsvAttachment : undefined;
+        const attachments = role === MessageRole.USER
+            ? options?.userTextFileAttachments
+            : undefined;
         const newMessage = {
             id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             role,
             text: storedText,
             timestamp: Date.now(),
-            ...(attachment ? { userCsvAttachment: attachment } : {}),
+            ...(attachments?.length
+                ? { userTextFileAttachments: attachments }
+                : {}),
         };
         setChats(prev => {
             const scopeChats = prev[scopeId] ?? [];
@@ -232,7 +237,7 @@ function ChatProvider({ children, userSwitchKey, sendChatMessage: sendChatMessag
         }
         else {
             addMessage(scopeId, targetChatId, MessageRole.USER, message.displayText, {
-                userCsvAttachment: message.userCsvAttachment,
+                userTextFileAttachments: normalizeUserTextFileAttachments(message),
             });
         }
         const pendingChatSessionId = targetChatId;

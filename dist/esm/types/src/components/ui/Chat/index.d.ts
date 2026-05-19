@@ -3,6 +3,8 @@ export { usedPresetIdsFromMessages } from './chat-preset-utils';
 export { ChatChrome } from './ChatChrome';
 export type { ChatChromeProps, ChatChromeResizeHandleConfig, } from './ChatChrome';
 export { TEXT_ATTACHMENT_ACCEPT_PARTS, filterToTextAttachments, } from './chatAttachmentAccept';
+export { buildChatSendMessagePayload, displayTextFromSendPayload, normalizeUserTextFileAttachments, } from './buildChatSendMessagePayload';
+export { sanitizeAttachmentFilename } from './sanitizeAttachmentFilename';
 export { ChatSheet } from './ChatSheet/ChatSheet';
 export { useChatPanelChromeModel } from './ChatSheet/useChatPanelChromeModel';
 export type { ChatSheetActions, ChatSheetProps } from './ChatSheet/ChatSheet';
@@ -10,6 +12,6 @@ export type { UseChatPanelChromeModelInput, UseChatPanelChromeModelResult, } fro
 export { ChatMessage } from './ChatMessage';
 export { ChatPrompt } from './ChatPrompt';
 export { ChatPresets } from './ChatPresets';
-export type { Chat as ChatType, ChatAttachmentDropItem, ChatSendMessagePayload, ChatProps, ChatPreset as ChatPresetType, Message, UserCsvAttachment, } from './Chat.types';
+export type { Chat as ChatType, ChatAttachmentDropItem, ChatSendMessagePayload, ChatProps, ChatPreset as ChatPresetType, Message, UserTextFileAttachment, } from './Chat.types';
 export { MessageRole } from './Chat.types';
 export { CsvIcon } from '../../icons/CsvIcon/CsvIcon';

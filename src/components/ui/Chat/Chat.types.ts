@@ -11,18 +11,18 @@ export enum MessageRole {
 /** System placeholder while dashboard generation runs (must match ChatSheet `addMessage` text). */
 export const GENERATING_DASHBOARD_SYSTEM_TEXT = 'Generating dashboard…';
 
-/** USER-only: sample CSV attached to a preset message; shown as a file row + client-side download. */
-export type UserCsvAttachment = {
+/** USER-only: text file attached to a message; shown as downloadable file row(s). */
+export type UserTextFileAttachment = {
   displayName: string;
   filename: string;
   content: string;
 };
 
-/** Send full text to the chat API while showing `displayText` + optional CSV attachment in the UI. */
+/** Send full text to the chat API while showing `displayText` + optional file attachment(s) in the UI. */
 export type ChatSendMessagePayload = {
   apiMessage: string;
   displayText: string;
-  userCsvAttachment?: UserCsvAttachment;
+  userTextFileAttachments?: UserTextFileAttachment[];
 };
 
 export interface Message {
@@ -30,7 +30,7 @@ export interface Message {
   role: MessageRole;
   text: string;
   timestamp: number;
-  userCsvAttachment?: UserCsvAttachment;
+  userTextFileAttachments?: UserTextFileAttachment[];
 }
 
 export interface Chat {
@@ -97,7 +97,7 @@ export interface ChatPromptProps {
 export interface ChatMessageProps {
   role: MessageRole;
   text: string;
-  userCsvAttachment?: UserCsvAttachment;
+  userTextFileAttachments?: UserTextFileAttachment[];
   onQuickReply?: (branchKey: string, displayLabel: string) => void;
   /** Branch keys already taken (e.g. from chat history); hide quick-reply buttons for these. */
   suppressedQuickReplyKeys?: ReadonlySet<string>;

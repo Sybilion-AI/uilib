@@ -9,6 +9,12 @@ export {
   TEXT_ATTACHMENT_ACCEPT_PARTS,
   filterToTextAttachments,
 } from './chatAttachmentAccept';
+export {
+  buildChatSendMessagePayload,
+  displayTextFromSendPayload,
+  normalizeUserTextFileAttachments,
+} from './buildChatSendMessagePayload';
+export { sanitizeAttachmentFilename } from './sanitizeAttachmentFilename';
 export { ChatSheet } from './ChatSheet/ChatSheet';
 export { useChatPanelChromeModel } from './ChatSheet/useChatPanelChromeModel';
 export type { ChatSheetActions, ChatSheetProps } from './ChatSheet/ChatSheet';
@@ -26,7 +32,7 @@ export type {
   ChatProps,
   ChatPreset as ChatPresetType,
   Message,
-  UserCsvAttachment,
+  UserTextFileAttachment,
 } from './Chat.types';
 export { MessageRole } from './Chat.types';
 export { CsvIcon } from '../../icons/CsvIcon/CsvIcon';

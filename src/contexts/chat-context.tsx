@@ -13,8 +13,9 @@ import {
   type ChatSendMessagePayload,
   type Message,
   MessageRole,
-  type UserCsvAttachment,
+  type UserTextFileAttachment,
 } from '#uilib/components/ui/Chat/Chat.types';
+import { normalizeUserTextFileAttachments } from '#uilib/components/ui/Chat/buildChatSendMessagePayload';
 import { stripJsonDashboardFences } from '#uilib/lib/dashboard-spec/stripJsonDashboardFences';
 import type { ChatResponse } from '#uilib/types/chat-api.types';
 import { LS } from '@homecode/ui';
@@ -26,14 +27,14 @@ export type SendChatMessageFn = (
 
 export type {
   ChatSendMessagePayload,
-  UserCsvAttachment,
+  UserTextFileAttachment,
 } from '#uilib/components/ui/Chat/Chat.types';
 
 const CHATS_PREFIX = 'chats-';
 const CHAT_SCOPE_IDS_REGISTRY_KEY = 'chat-scope-ids';
 
 export type AddChatMessageOptions = {
-  userCsvAttachment?: UserCsvAttachment;
+  userTextFileAttachments?: UserTextFileAttachment[];
 };
 
 export interface ChatContextType {
@@ -300,14 +301,18 @@ export function ChatProvider({
       if (userSwitchKey === null) return undefined;
       addScopeIdToRegistry(scopeId);
       const storedText = stripJsonDashboardFences(text);
-      const attachment =
-        role === MessageRole.USER ? options?.userCsvAttachment : undefined;
+      const attachments =
+        role === MessageRole.USER
+          ? options?.userTextFileAttachments
+          : undefined;
       const newMessage: Message = {
         id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         role,
         text: storedText,
         timestamp: Date.now(),
-        ...(attachment ? { userCsvAttachment: attachment } : {}),
+        ...(attachments?.length
+          ? { userTextFileAttachments: attachments }
+          : {}),
       };
 
       setChats(prev => {
@@ -372,7 +377,7 @@ export function ChatProvider({
           MessageRole.USER,
           message.displayText,
           {
-            userCsvAttachment: message.userCsvAttachment,
+            userTextFileAttachments: normalizeUserTextFileAttachments(message),
           },
         );
       }

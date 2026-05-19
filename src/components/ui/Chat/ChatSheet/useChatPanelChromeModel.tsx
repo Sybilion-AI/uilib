@@ -20,6 +20,10 @@ import {
 } from '#uilib/components/ui/Chat/ChatMessage/presetScript';
 import type { ChatPresetsLayout } from '#uilib/components/ui/Chat/ChatPresets';
 import {
+  buildChatSendMessagePayload,
+  displayTextFromSendPayload,
+} from '#uilib/components/ui/Chat/buildChatSendMessagePayload';
+import {
   formatChatTranscript,
   usedPresetIdsFromMessages,
 } from '#uilib/components/ui/Chat/chat-preset-utils';
@@ -462,9 +466,11 @@ export function useChatPanelChromeModel({
   );
 
   const handlePromptSubmit = useCallback(
-    async (message: string) => {
+    async (message: string, attachments?: ChatAttachmentDropItem[]) => {
       const chatId = currentChatId;
       if (!chatId) return;
+
+      const stagedAttachments = attachments ?? [];
 
       const quickBranches = quickReplyBranchesByChat[chatId];
       const graphActive = Boolean(
@@ -585,8 +591,9 @@ export function useChatPanelChromeModel({
 
       try {
         if (chatId) endLocalDemoFlow(chatId);
-        await sendMessage(message);
-        onMessage?.(message);
+        const payload = buildChatSendMessagePayload(message, stagedAttachments);
+        await sendMessage(payload);
+        onMessage?.(displayTextFromSendPayload(payload));
       } catch (error) {
         logger.error('Error sending chat message:', error);
       }
