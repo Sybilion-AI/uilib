@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.15](https://github.com/Mir-Insight/uilib/compare/v1.3.14...v1.3.15) (2026-05-19)
+
+
+### Features
+
+* Chat - Add DOCX and XLSX chat attachments ([079c95c](https://github.com/Mir-Insight/uilib/commit/079c95c77adbc3386c97df740a0b5621fbe7efa0))
+
 ### [1.3.14](https://github.com/Mir-Insight/uilib/compare/v1.3.12...v1.3.14) (2026-05-19)
 
 
