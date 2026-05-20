@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.19](https://github.com/Mir-Insight/uilib/compare/v1.3.18...v1.3.19) (2026-05-20)
+
+
+### Bug Fixes
+
+* InteractionOverlay - Hide when chat or chart loading ([d5d042d](https://github.com/Mir-Insight/uilib/commit/d5d042deca893a854aee1bb8483e4d35042c6619))
+
 ### [1.3.18](https://github.com/Mir-Insight/uilib/compare/v1.3.17...v1.3.18) (2026-05-20)
 
 
