@@ -1,13 +1,15 @@
 import { jsxs, Fragment, jsx } from 'react/jsx-runtime';
 import cn from 'classnames';
-import React__default, { useState, useRef, useId, useEffect } from 'react';
+import React__default, { useState, useRef, useId, useEffect, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Card, CardHeader, CardContent, CardFooter } from '../Card/Card.js';
+import { APP_MODAL_ID } from '../../../constants/appMount.js';
 import { XIcon } from '@phosphor-icons/react';
 import S from './Dialog.styl.js';
 
 function Dialog({ open, onOpenChange, disabled, trigger, title, subtitle, disableCloseButton, icon, content, contentClassName, footer, footerClassName, footerAlignment = 'center', size = 'default', className, noScroll, maxHeight, autoScrollBottom, width, }) {
     const [isMounted, setIsMounted] = useState(false);
+    const [modalContainer, setModalContainer] = useState(null);
     const [isAnimating, setIsAnimating] = useState(false);
     const dialogRef = useRef(null);
     const triggerRef = useRef(null);
@@ -18,6 +20,9 @@ function Dialog({ open, onOpenChange, disabled, trigger, title, subtitle, disabl
     useEffect(() => {
         setIsMounted(true);
         return () => setIsMounted(false);
+    }, []);
+    useLayoutEffect(() => {
+        setModalContainer(document.getElementById(APP_MODAL_ID));
     }, []);
     // Handle open/close animations
     useEffect(() => {
@@ -120,7 +125,10 @@ function Dialog({ open, onOpenChange, disabled, trigger, title, subtitle, disabl
                         : null,
                 }, children: [(title || subtitle || icon) && (jsx(CardHeader, { icon: icon, title: title, description: subtitle })), !disableCloseButton && (jsx("button", { className: S.dialogClose, onClick: handleCloseClick, "aria-label": "Close dialog", type: "button", children: jsx(XIcon, { size: 16 }) })), content && (jsx(CardContent, { className: contentClassName, noScroll: noScroll, autoScrollBottom: autoScrollBottom, children: content })), footer && (jsx(CardFooter, { className: cn(S.footer, S[`align-${footerAlignment}`], footerClassName), children: footer }))] })] }));
     const onTriggerClick = !disabled ? () => onOpenChange(true) : undefined;
-    return (jsxs(Fragment, { children: [trigger && jsx("div", { onClick: onTriggerClick, children: trigger }), open && !disabled && createPortal(dialogContent, document.body)] }));
+    return (jsxs(Fragment, { children: [trigger && jsx("div", { onClick: onTriggerClick, children: trigger }), open &&
+                !disabled &&
+                modalContainer &&
+                createPortal(dialogContent, modalContainer)] }));
 }
 
 export { Dialog, S as DialogStyles };
