@@ -8,11 +8,13 @@ import S from './InteractionOverlay.styl';
 interface InteractionOverlayProps {
   className?: string;
   children?: React.ReactNode;
+  message?: string;
 }
 
 export function InteractionOverlay({
   className,
   children,
+  message = 'Touch to interact',
 }: InteractionOverlayProps) {
   const isTouchDevice = useIsTouchDevice();
   const [isVisible, setIsVisible] = useState(true);
@@ -45,11 +47,16 @@ export function InteractionOverlay({
   }
 
   return (
-    <div
-      className={cn(S.root, !isVisible && S.hidden, className)}
-      onClick={handleClick}
-    >
+    <div className={cn(S.root, !isVisible && S.hidden, className)}>
       {children}
+      <button
+        type="button"
+        className={S.overlay}
+        onClick={handleClick}
+        aria-label={message}
+      >
+        <span className={S.message}>{message}</span>
+      </button>
     </div>
   );
 }
