@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.20](https://github.com/Mir-Insight/uilib/compare/v1.3.19...v1.3.20) (2026-05-20)
+
+
+### Bug Fixes
+
+* ChartTooltip - Fix narrow overflow and refine styling ([4eb1ee3](https://github.com/Mir-Insight/uilib/commit/4eb1ee38f844f9e2f7e974e9c14f4ce94adab870))
+
 ### [1.3.19](https://github.com/Mir-Insight/uilib/compare/v1.3.18...v1.3.19) (2026-05-20)
 
 
