@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.18](https://github.com/Mir-Insight/uilib/compare/v1.3.17...v1.3.18) (2026-05-20)
+
+
+### Bug Fixes
+
+* InteractionOverlay - placeholder bg ([e50c066](https://github.com/Mir-Insight/uilib/commit/e50c066c036ed582152426c0eb7fc780141af966))
+
 ### [1.3.17](https://github.com/Mir-Insight/uilib/compare/v1.3.16...v1.3.17) (2026-05-20)
 
 
