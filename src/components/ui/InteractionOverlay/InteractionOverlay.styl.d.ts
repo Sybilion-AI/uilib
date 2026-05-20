@@ -2,6 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'hidden': string;
+  'message': string;
+  'overlay': string;
   'root': string;
 }
 export const cssExports: CssExports;
