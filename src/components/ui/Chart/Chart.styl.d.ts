@@ -16,6 +16,7 @@ interface CssExports {
   'tooltipIndicator': string;
   'tooltipItem': string;
   'tooltipLabel': string;
+  'tooltipLabelText': string;
   'tooltipValue': string;
 }
 export const cssExports: CssExports;
