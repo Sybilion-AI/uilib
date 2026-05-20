@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.17](https://github.com/Mir-Insight/uilib/compare/v1.3.16...v1.3.17) (2026-05-20)
+
+
+### Features
+
+* InteractionOverlay - Touch vignette hint ([9ac7af3](https://github.com/Mir-Insight/uilib/commit/9ac7af38707bb64e8d0328453d259300e74ae7b0))
+
+
+### Bug Fixes
+
+* Logo - Render inline SVG in header ([138ad56](https://github.com/Mir-Insight/uilib/commit/138ad56558af869e769cc91636c2171e9ab3a474))
+
 ### [1.3.16](https://github.com/Mir-Insight/uilib/compare/v1.3.15...v1.3.16) (2026-05-19)
 
 
