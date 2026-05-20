@@ -6,7 +6,9 @@ import type {
   OverlayMode,
 } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
 import { ForecastItemData } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
+import { Label } from '#uilib/components/ui/Label';
 import { PageContentSection } from '#uilib/components/ui/Page';
+import { Switch } from '#uilib/components/ui/Switch';
 import { Tabs, TabsList, TabsTrigger } from '#uilib/components/ui/Tabs';
 import { useTheme } from '#uilib/contexts/theme-context';
 import type { ForecastData } from '#uilib/types/forecast-data';
@@ -102,6 +104,7 @@ export default function ChartAreaInteractivePage() {
     string | null
   >('0.9');
   const [upperThreshold, setUpperThreshold] = useState(15);
+  const [loading, setLoading] = useState(false);
 
   const toggleLegendSeries = useCallback((key: string) => {
     setHidden(prev => {
@@ -155,6 +158,21 @@ export default function ChartAreaInteractivePage() {
             <TabsTrigger value="thresholds">Thresholds</TabsTrigger>
           </TabsList>
         </Tabs>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            marginBottom: 16,
+          }}
+        >
+          <Switch
+            id="chart-loading"
+            checked={loading}
+            onCheckedChange={setLoading}
+          />
+          <Label htmlFor="chart-loading">Loading</Label>
+        </div>
         <ChartAreaInteractive
           timeRange={timeRange}
           onTimeRangeChange={setTimeRange}
@@ -163,7 +181,7 @@ export default function ChartAreaInteractivePage() {
           mode={mode}
           chartData={chartData}
           forecastData={DEMO_FORECAST_ITEMS}
-          loading={false}
+          loading={loading}
           isDarkTheme={isDarkMode}
           toggleLegendSeries={toggleLegendSeries}
           ensureAnalysisSeriesVisible={ensureAnalysisSeriesVisible}

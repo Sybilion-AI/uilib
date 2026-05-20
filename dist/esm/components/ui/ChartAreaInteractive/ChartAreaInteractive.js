@@ -111,7 +111,7 @@ function ChartAreaInteractive({ className, chartContainerClassName, legendClassN
                 return (jsx(BaseChartWrapper, { ...baseChartProps, chartClassName: cn(S.chartContainer, chartContainerClassName) }));
         }
     };
-    return (jsxs(InteractionOverlay, { className: cn(className, loading && S.loading), children: [(!disableTimeRangeSelector || headerActions) && (jsxs("div", { className: S.chartHeaderContainer, children: [!disableTimeRangeSelector && (jsx(TimeRangeControls, { timeRange: timeRange, onTimeRangeChange: onTimeRangeChange, loading: loading })), headerActions] })), jsx(TimeRangeBrushHost, { chartData: bridgedChartData, onTimeRangeChange: onTimeRangeChange, enabled: brushEnabled, layoutKey: chartRenderId ?? null, children: renderChart() })] }));
+    return (jsxs(InteractionOverlay, { className: cn(className, loading && S.loading), disabled: loading, children: [(!disableTimeRangeSelector || headerActions) && (jsxs("div", { className: S.chartHeaderContainer, children: [!disableTimeRangeSelector && (jsx(TimeRangeControls, { timeRange: timeRange, onTimeRangeChange: onTimeRangeChange, loading: loading })), headerActions] })), jsx(TimeRangeBrushHost, { chartData: bridgedChartData, onTimeRangeChange: onTimeRangeChange, enabled: brushEnabled, layoutKey: chartRenderId ?? null, children: renderChart() })] }));
 }
 
 export { ChartAreaInteractive, chartConfig };

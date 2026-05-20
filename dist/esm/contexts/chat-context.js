@@ -92,6 +92,13 @@ function ChatProvider({ children, userSwitchKey, sendChatMessage: sendChatMessag
         return loadChatsFromLS(userSwitchKey).currentChatId;
     });
     const [outboundPendingByKey, setOutboundPendingByKey] = useState({});
+    const [panelBusyCount, setPanelBusyCount] = useState(0);
+    const acquirePanelBusy = useCallback(() => {
+        setPanelBusyCount(count => count + 1);
+    }, []);
+    const releasePanelBusy = useCallback(() => {
+        setPanelBusyCount(count => Math.max(0, count - 1));
+    }, []);
     const beginOutboundPending = useCallback((scopeId, chatSessionId) => {
         const key = outboundPendingKey(scopeId, chatSessionId);
         setOutboundPendingByKey(prev => ({
@@ -282,6 +289,7 @@ function ChatProvider({ children, userSwitchKey, sendChatMessage: sendChatMessag
             setChats({});
             setCurrentChatIdState({});
             setOutboundPendingByKey({});
+            setPanelBusyCount(0);
             return;
         }
         const loaded = loadChatsFromLS(userSwitchKey);
@@ -306,6 +314,9 @@ function ChatProvider({ children, userSwitchKey, sendChatMessage: sendChatMessag
             getCurrentChatId,
             deleteChat,
             outboundPendingByKey,
+            panelBusyCount,
+            acquirePanelBusy,
+            releasePanelBusy,
         }, children: children }));
 }
 const isChatEmpty = (chat) => chat?.messages.length === 0;
@@ -333,6 +344,29 @@ function useChatOutboundPending(scopeId, chatSessionId) {
         const key = outboundPendingKey(scopeId, chatSessionId);
         return (outboundPendingByKey[key] ?? 0) > 0;
     }, [scopeId, chatSessionId, outboundPendingByKey]);
+}
+/** True when chat is waiting on API or panel UI busy (safe outside ChatProvider). */
+function useIsChatLoading() {
+    const context = useContext(ChatContext);
+    return useMemo(() => {
+        if (!context)
+            return false;
+        const outboundPending = Object.values(context.outboundPendingByKey).some(count => count > 0);
+        return outboundPending || context.panelBusyCount > 0;
+    }, [context?.outboundPendingByKey, context?.panelBusyCount]);
+}
+/** Syncs chat panel `isLoading` into context for touch-overlay suppression. */
+function useSyncChatPanelBusy(isLoading) {
+    const acquirePanelBusy = useContext(ChatContext)?.acquirePanelBusy;
+    const releasePanelBusy = useContext(ChatContext)?.releasePanelBusy;
+    useEffect(() => {
+        if (!isLoading || !acquirePanelBusy || !releasePanelBusy)
+            return;
+        acquirePanelBusy();
+        return () => {
+            releasePanelBusy();
+        };
+    }, [isLoading, acquirePanelBusy, releasePanelBusy]);
 }
 function useChatsForScopeId(scopeId) {
     const { getChatsForScopeId, getCurrentChatId, setCurrentChatId, newChat, addMessage, removeMessageById, sendMessage, deleteChat, } = useChats();
@@ -363,4 +397,4 @@ function useCurrentChat(scopeId) {
     return useChat(scopeId, chatId ?? undefined);
 }
 
-export { ChatContext, ChatProvider, isChatEmpty, outboundPendingKey, useChat, useChatOutboundPending, useChats, useChatsForDataset, useChatsForScopeId, useCurrentChat };
+export { ChatContext, ChatProvider, isChatEmpty, outboundPendingKey, useChat, useChatOutboundPending, useChats, useChatsForDataset, useChatsForScopeId, useCurrentChat, useIsChatLoading, useSyncChatPanelBusy };

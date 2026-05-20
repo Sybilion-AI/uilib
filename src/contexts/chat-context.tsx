@@ -66,6 +66,10 @@ export interface ChatContextType {
    * `outboundPendingKey(scopeId, chatSessionId)` (session id at send start).
    */
   outboundPendingByKey: Readonly<Record<string, number>>;
+  /** Ref-count of chat panels reporting UI busy (outbound wait, preset scripts, etc.). */
+  panelBusyCount: number;
+  acquirePanelBusy: () => void;
+  releasePanelBusy: () => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -175,6 +179,15 @@ export function ChatProvider({
   const [outboundPendingByKey, setOutboundPendingByKey] = useState<
     Record<string, number>
   >({});
+  const [panelBusyCount, setPanelBusyCount] = useState(0);
+
+  const acquirePanelBusy = useCallback(() => {
+    setPanelBusyCount(count => count + 1);
+  }, []);
+
+  const releasePanelBusy = useCallback(() => {
+    setPanelBusyCount(count => Math.max(0, count - 1));
+  }, []);
 
   const beginOutboundPending = useCallback(
     (scopeId: string, chatSessionId: string) => {
@@ -444,6 +457,7 @@ export function ChatProvider({
       setChats({});
       setCurrentChatIdState({});
       setOutboundPendingByKey({});
+      setPanelBusyCount(0);
       return;
     }
 
@@ -475,6 +489,9 @@ export function ChatProvider({
         getCurrentChatId,
         deleteChat,
         outboundPendingByKey,
+        panelBusyCount,
+        acquirePanelBusy,
+        releasePanelBusy,
       }}
     >
       {children}
@@ -517,6 +534,31 @@ export function useChatOutboundPending(
     const key = outboundPendingKey(scopeId, chatSessionId);
     return (outboundPendingByKey[key] ?? 0) > 0;
   }, [scopeId, chatSessionId, outboundPendingByKey]);
+}
+
+/** True when chat is waiting on API or panel UI busy (safe outside ChatProvider). */
+export function useIsChatLoading(): boolean {
+  const context = useContext(ChatContext);
+  return useMemo(() => {
+    if (!context) return false;
+    const outboundPending = Object.values(context.outboundPendingByKey).some(
+      count => count > 0,
+    );
+    return outboundPending || context.panelBusyCount > 0;
+  }, [context?.outboundPendingByKey, context?.panelBusyCount]);
+}
+
+/** Syncs chat panel `isLoading` into context for touch-overlay suppression. */
+export function useSyncChatPanelBusy(isLoading: boolean): void {
+  const acquirePanelBusy = useContext(ChatContext)?.acquirePanelBusy;
+  const releasePanelBusy = useContext(ChatContext)?.releasePanelBusy;
+  useEffect(() => {
+    if (!isLoading || !acquirePanelBusy || !releasePanelBusy) return;
+    acquirePanelBusy();
+    return () => {
+      releasePanelBusy();
+    };
+  }, [isLoading, acquirePanelBusy, releasePanelBusy]);
 }
 
 export function useChatsForScopeId(scopeId: string) {

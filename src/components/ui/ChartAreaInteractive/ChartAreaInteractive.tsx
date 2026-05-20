@@ -231,7 +231,10 @@ export function ChartAreaInteractive({
   };
 
   return (
-    <InteractionOverlay className={cn(className, loading && S.loading)}>
+    <InteractionOverlay
+      className={cn(className, loading && S.loading)}
+      disabled={loading}
+    >
       {(!disableTimeRangeSelector || headerActions) && (
         <div className={S.chartHeaderContainer}>
           {!disableTimeRangeSelector && (
