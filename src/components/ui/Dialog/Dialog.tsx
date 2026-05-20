@@ -1,5 +1,11 @@
 import cn from 'classnames';
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { createPortal } from 'react-dom';
 
 import {
@@ -8,6 +14,7 @@ import {
   CardFooter,
   CardHeader,
 } from '#uilib/components/ui/Card/Card';
+import { APP_MODAL_ID } from '#uilib/constants/appMount';
 import { XIcon } from '@phosphor-icons/react';
 
 import S from './Dialog.styl';
@@ -35,6 +42,9 @@ export function Dialog({
   width,
 }: DialogProps) {
   const [isMounted, setIsMounted] = useState(false);
+  const [modalContainer, setModalContainer] = useState<HTMLElement | null>(
+    null,
+  );
   const [isAnimating, setIsAnimating] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
@@ -46,6 +56,10 @@ export function Dialog({
   useEffect(() => {
     setIsMounted(true);
     return () => setIsMounted(false);
+  }, []);
+
+  useLayoutEffect(() => {
+    setModalContainer(document.getElementById(APP_MODAL_ID));
   }, []);
 
   // Handle open/close animations
@@ -228,7 +242,10 @@ export function Dialog({
   return (
     <>
       {trigger && <div onClick={onTriggerClick}>{trigger}</div>}
-      {open && !disabled && createPortal(dialogContent, document.body)}
+      {open &&
+        !disabled &&
+        modalContainer &&
+        createPortal(dialogContent, modalContainer)}
     </>
   );
 }
