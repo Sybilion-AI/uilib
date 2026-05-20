@@ -20,7 +20,7 @@ const FaviconWebpackPlugin = require('favicons-webpack-plugin');
 const pkg = require('../../../package.json');
 
 const themeStyl = pathResolve(paths.src, 'theme.styl');
-const logoSvgPath = pathResolve(paths.assets, 'logo.svg');
+const logoSvgPath = pathResolve(paths.src, 'components/ui/Logo/logo.svg');
 
 /** GitHub Pages project sites live at /<repo>/; set PUBLIC_PATH=/repo-name/ for production deploy. */
 function normalizePublicPath(raw) {
@@ -209,6 +209,11 @@ export default (env, argv) => {
           {
             from: logoSvgPath,
             to: paths.build,
+            noErrorOnMissing: true,
+          },
+          {
+            from: logoSvgPath,
+            to: `${paths.assets}/logo.svg`,
             noErrorOnMissing: true,
           },
         ],

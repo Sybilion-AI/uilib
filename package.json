@@ -35,7 +35,7 @@
       "default": "./dist/esm/hooks/index.js"
     },
     "./src/*": "./src/*",
-    "./logo.svg": "./src/assets/logo.svg"
+    "./logo.svg": "./src/components/ui/Logo/logo.svg"
   },
   "files": [
     "assets",
@@ -52,6 +52,7 @@
     "tests:watch": "jest --watch",
     "ts": "tsc --noEmit",
     "dev": "NODE_OPTIONS='--loader ts-node/esm' NODE_ENV=development webpack-dev-server --mode=development --config ./src/docs/config/webpack.config.js --progress",
+    "prebuild": "cp src/components/ui/Logo/logo.svg assets/logo.svg",
     "build": "rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "build:watch": "yarn build --watch",
     "build:compress": "COMPRESS=true yarn build",

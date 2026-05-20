@@ -119,3 +119,4 @@ export { ChartTooltipContent } from './components/ui/Chart/components/ChartToolt
 export { ChartLegendContent } from './components/ui/Chart/components/ChartLegendContent.js';
 export { BaseChartWrapper } from './components/ui/Chart/components/BaseChartWrapper.js';
 export { default as DialogStyles } from './components/ui/Dialog/Dialog.styl.js';
+export { default as LogoMark } from './components/ui/Logo/logo.svg.js';

@@ -1,6 +1,7 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { AppHeaderHost } from '#uilib/components/ui/AppHeader';
+import { LogoMark } from '#uilib/components/ui/Logo';
 import { AppShell, AppShellMainContent } from '#uilib/components/ui/Page';
 import { PageFooter } from '#uilib/components/ui/Page/PageFooter/PageFooter';
 import { PageScroll } from '#uilib/components/ui/Page/PageScroll/PageScroll';
@@ -8,7 +9,6 @@ import { SybilionAppHeader } from '#uilib/components/widgets/SybilionAppHeader';
 import { ThemeToggle } from '#uilib/docs/App/ThemeToggle';
 import { DocsSidebar } from '#uilib/docs/components/DocsSidebar/DocsSidebar';
 
-import LogoSvg from '../../assets/logo.svg';
 import S from './DocsShell.styl';
 
 export function DocsShell() {
@@ -24,7 +24,7 @@ export function DocsShell() {
           header={<AppHeaderHost />}
           footer={
             <PageFooter
-              logo={<LogoSvg />}
+              logo={<LogoMark />}
               versionLink="/releases"
               versionLabel="1.0.0-docs"
             />
