@@ -2,10 +2,13 @@ import cn from 'classnames';
 
 import S from './Logo.styl';
 import type { LogoProps } from './Logo.types';
+import LogoMarkSvg from './logo.svg';
+
+export { LogoMarkSvg as LogoMark };
 
 /**
- * Public URL for the Sybilion logo in standalone apps. Copy `@sybilion/uilib/logo.svg`
- * to `public/logo.svg` (Sybilion app template README documents postinstall copies).
+ * Public URL for standalone apps. Copy `@sybilion/uilib/logo.svg` (Logo component asset)
+ * to `public/logo.svg` (app template README documents postinstall copies).
  * Same path as the favicon `<link href>`.
  */
 export const SYBILION_STANDALONE_LOGO_PUBLIC_URL = '/logo.svg' as const;
@@ -18,11 +21,11 @@ export function Logo({
 }: LogoProps) {
   return (
     <div className={cn(S.root, S[size], className)} {...props}>
-      <img
-        src={SYBILION_STANDALONE_LOGO_PUBLIC_URL}
-        alt={showText ? '' : 'Sybilion'}
+      <LogoMarkSvg
         className={S.icon}
-        {...(showText ? { 'aria-hidden': true } : {})}
+        {...(showText
+          ? { 'aria-hidden': true }
+          : { 'aria-label': 'Sybilion', role: 'img' })}
       />
       {showText && <span className={S.text}>Sybilion</span>}
     </div>

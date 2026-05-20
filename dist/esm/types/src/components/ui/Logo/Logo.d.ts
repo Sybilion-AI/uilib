@@ -1,7 +1,9 @@
 import type { LogoProps } from './Logo.types';
+import LogoMarkSvg from './logo.svg';
+export { LogoMarkSvg as LogoMark };
 /**
- * Public URL for the Sybilion logo in standalone apps. Copy `@sybilion/uilib/logo.svg`
- * to `public/logo.svg` (Sybilion app template README documents postinstall copies).
+ * Public URL for standalone apps. Copy `@sybilion/uilib/logo.svg` (Logo component asset)
+ * to `public/logo.svg` (app template README documents postinstall copies).
  * Same path as the favicon `<link href>`.
  */
 export declare const SYBILION_STANDALONE_LOGO_PUBLIC_URL: "/logo.svg";
