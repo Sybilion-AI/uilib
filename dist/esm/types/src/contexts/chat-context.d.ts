@@ -21,6 +21,10 @@ export interface ChatContextType {
      * `outboundPendingKey(scopeId, chatSessionId)` (session id at send start).
      */
     outboundPendingByKey: Readonly<Record<string, number>>;
+    /** Ref-count of chat panels reporting UI busy (outbound wait, preset scripts, etc.). */
+    panelBusyCount: number;
+    acquirePanelBusy: () => void;
+    releasePanelBusy: () => void;
 }
 declare const ChatContext: import("react").Context<ChatContextType>;
 /** Stable composite key; avoids collisions if `scopeId` contains `:`. */
@@ -36,6 +40,10 @@ export declare const isChatEmpty: (chat: Chat | null) => boolean;
 export declare function useChats(): ChatContextType;
 export declare function useChat(scopeId: string | undefined, chatId: string | undefined): Chat | null;
 export declare function useChatOutboundPending(scopeId: string | undefined | null, chatSessionId: string | null | undefined): boolean;
+/** True when chat is waiting on API or panel UI busy (safe outside ChatProvider). */
+export declare function useIsChatLoading(): boolean;
+/** Syncs chat panel `isLoading` into context for touch-overlay suppression. */
+export declare function useSyncChatPanelBusy(isLoading: boolean): void;
 export declare function useChatsForScopeId(scopeId: string): {
     chats: Chat[];
     currentChat: Chat;

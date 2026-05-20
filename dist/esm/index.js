@@ -6,7 +6,7 @@ export { DEFAULT_THEME_ACTIVE_COLOR } from './docs/lib/theme.js';
 export { SybilionAuthProvider, createSybilionApiFetch, getSybilionApiOriginFromSdk, sybilionApiFetch, useSybilionApiFetch, useSybilionAuth } from './sybilion-auth/SybilionAuthProvider.js';
 export { SYBILION_AUTH_LOGIN_PATH, normalizeApiBaseUrl } from './sybilion-auth/authPaths.js';
 export { exchangeAuth0AccessTokenForSybilionJwt } from './sybilion-auth/exchangeSybilionToken.js';
-export { ChatContext, ChatProvider, isChatEmpty, outboundPendingKey, useChat, useChatOutboundPending, useChats, useChatsForDataset, useChatsForScopeId, useCurrentChat } from './contexts/chat-context.js';
+export { ChatContext, ChatProvider, isChatEmpty, outboundPendingKey, useChat, useChatOutboundPending, useChats, useChatsForDataset, useChatsForScopeId, useCurrentChat, useIsChatLoading, useSyncChatPanelBusy } from './contexts/chat-context.js';
 export { AnalysesSelector } from './components/ui/AnalysesSelector/AnalysesSelector.js';
 export { AnalysisLineIcon } from './components/ui/AnalysisLineIcon/AnalysisLineIcon.js';
 export { AppHeaderHost, AppHeaderPortal } from './components/ui/AppHeader/AppHeader.js';

@@ -4,7 +4,7 @@ import { MessageRole, GENERATING_DASHBOARD_SYSTEM_TEXT } from '../Chat.types.js'
 import { isGraphIntakeAssistantStepComplete, matchUserTextToQuickReply, parseScriptLine, textHasQuickReplyMarkers, branchKeysUsedFromChatHistory, branchKeysUsedByUserMessages, extractQuickReplyLabelKeyPairsFromText, entryBranchKeyBeforeLastAssistant, isPresetScriptGraph, branchesFromPresetScriptGraph } from '../ChatMessage/presetScript.js';
 import { buildChatSendMessagePayload, displayTextFromSendPayload } from '../buildChatSendMessagePayload.js';
 import { usedPresetIdsFromMessages, formatChatTranscript } from '../chat-preset-utils.js';
-import { useChatsForScopeId, useChat, useChatOutboundPending, isChatEmpty } from '../../../../contexts/chat-context.js';
+import { useChatsForScopeId, useChat, useChatOutboundPending, useSyncChatPanelBusy, isChatEmpty } from '../../../../contexts/chat-context.js';
 import useEvent from '../../../../hooks/useEvent.js';
 import { useIsMobile } from '../../../../hooks/useIsMobile.js';
 import { useQueryParams } from '../../../../hooks/useQueryParams.js';
@@ -31,6 +31,7 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
     const chat = useChat(effectiveScopeId, currentChatId);
     const isOutboundPending = useChatOutboundPending(effectiveScopeId, currentChatId);
     const isLoading = isOutboundPending || localUiBusy;
+    useSyncChatPanelBusy(isLoading);
     const { searchParams, addSearchParams, removeSearchParams, mutateSearchParams, } = useQueryParams();
     const chatOpen = searchParams.has(CHAT_QUERY_PARAM);
     const [isOpen, setIsOpen] = useState(false);

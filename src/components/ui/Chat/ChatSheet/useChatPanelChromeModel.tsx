@@ -32,6 +32,7 @@ import {
   useChat,
   useChatOutboundPending,
   useChatsForScopeId,
+  useSyncChatPanelBusy,
 } from '#uilib/contexts/chat-context';
 import useEvent from '#uilib/hooks/useEvent';
 import { useIsMobile } from '#uilib/hooks/useIsMobile';
@@ -144,6 +145,7 @@ export function useChatPanelChromeModel({
     currentChatId,
   );
   const isLoading = isOutboundPending || localUiBusy;
+  useSyncChatPanelBusy(isLoading);
 
   const {
     searchParams,
