@@ -92,7 +92,7 @@ export function ChartTooltipItem({
           >
             <div className={S.tooltipLabel}>
               {nestLabel ? tooltipLabel : null}
-              <span className="text-muted-foreground">
+              <span className={cn('text-muted-foreground', S.tooltipLabelText)}>
                 {itemConfig?.label || item.name}
               </span>
             </div>

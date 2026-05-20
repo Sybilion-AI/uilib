@@ -85,7 +85,10 @@ const INITIAL_CHART: ChartDataPoint[] = [
 ];
 
 const DEMO_FORECAST_ITEMS: ForecastItemData[] = [
-  { id: DEMO_FORECAST_ID, name: 'My custom forecast' },
+  {
+    id: DEMO_FORECAST_ID,
+    name: 'My custom forecast with an extremely long descriptive name that should wrap and clamp inside the chart tooltip after three lines',
+  },
 ];
 
 type DemoMode = 'none' | OverlayMode;
