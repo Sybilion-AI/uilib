@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.22](https://github.com/Mir-Insight/uilib/compare/v1.3.21...v1.3.22) (2026-05-21)
+
+
+### Features
+
+* ChatEmptyState - Expose submitPreset to empty state ([9f09268](https://github.com/Mir-Insight/uilib/commit/9f092682e572e2a88541949c55d3671bc9978e35))
+
 ### [1.3.21](https://github.com/Mir-Insight/uilib/compare/v1.3.20...v1.3.21) (2026-05-20)
 
 ### [1.3.20](https://github.com/Mir-Insight/uilib/compare/v1.3.19...v1.3.20) (2026-05-20)
