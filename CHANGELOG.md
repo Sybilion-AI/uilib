@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.32](https://github.com/Mir-Insight/uilib/compare/v1.3.31...v1.3.32) (2026-05-21)
+
+
+### Features
+
+* Tooltip styles ([5d26a28](https://github.com/Mir-Insight/uilib/commit/5d26a285b015fc17151500b0df5987136b13a455))
+
 ### [1.3.31](https://github.com/Mir-Insight/uilib/compare/v1.3.30...v1.3.31) (2026-05-21)
 
 
