@@ -11,6 +11,9 @@ import { DocsHeaderActions } from '../docsHeaderActions';
 
 const TOOLTIP_SIDES = ['left', 'top', 'bottom', 'right'] as const;
 
+const OVER_TRIGGER_TEXT =
+  'Actual Order volume for Baerlocher MB 301, a compound that includes stearin as a component. MB 301 is typically used in construction-grade applications.';
+
 export default function TooltipPage() {
   return (
     <>
@@ -32,6 +35,33 @@ export default function TooltipPage() {
               <TooltipContent side={side}>Tooltip opens {side}</TooltipContent>
             </Tooltip>
           ))}
+        </div>
+      </PageContentSection>
+      <PageContentSection>
+        <p style={{ margin: '0 0 8px', fontWeight: 600 }}>Over trigger</p>
+        <div
+          style={{
+            maxWidth: 280,
+            border: '1px dashed var(--border)',
+            padding: 8,
+          }}
+        >
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div
+                style={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {OVER_TRIGGER_TEXT}
+              </div>
+            </TooltipTrigger>
+            <TooltipContent overTrigger maxWidth={400}>
+              {OVER_TRIGGER_TEXT}
+            </TooltipContent>
+          </Tooltip>
         </div>
       </PageContentSection>
     </>

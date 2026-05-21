@@ -1,5 +1,3 @@
-import LogoMarkSvg from './logo.svg';
-export { LogoMarkSvg as LogoMark };
 import type { LogoProps } from './Logo.types';
 import LogoMarkSvg from './logo.svg';
 export { LogoMarkSvg as LogoMark };

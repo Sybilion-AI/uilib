@@ -20,4 +20,5 @@ export interface TooltipContentProps extends React.ComponentProps<
   className?: string;
   sideOffset?: number;
   maxWidth?: number;
+  overTrigger?: boolean;
 }

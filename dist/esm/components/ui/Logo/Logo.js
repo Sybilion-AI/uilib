@@ -1,6 +1,5 @@
 import { jsxs, jsx } from 'react/jsx-runtime';
 import cn from 'classnames';
-import LogoMarkSvg from './logo.svg.js';
 import S from './Logo.styl.js';
 import LogoMarkSvg from './logo.svg.js';
 
