@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.25](https://github.com/Mir-Insight/uilib/compare/v1.3.23...v1.3.25) (2026-05-21)
+
+
+### Features
+
+* PerformanceChart - Add performance widget ([2f317a1](https://github.com/Mir-Insight/uilib/commit/2f317a132be8983e62ce6d4f0d99ad9bc722b205))
+
 ### [1.3.23](https://github.com/Mir-Insight/uilib/compare/v1.3.22...v1.3.23) (2026-05-21)
 
 
