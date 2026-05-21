@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.29](https://github.com/Mir-Insight/uilib/compare/v1.3.28...v1.3.29) (2026-05-21)
+
 ### [1.3.28](https://github.com/Mir-Insight/uilib/compare/v1.3.27...v1.3.28) (2026-05-21)
 
 
