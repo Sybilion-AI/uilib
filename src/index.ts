@@ -74,6 +74,7 @@ export * from './components/widgets/SidebarDatasetsItemsGrouped';
 export * from './components/widgets/DriverCard';
 export * from './components/widgets/DriverMap';
 export * from './components/widgets/DriversComparisonChart';
+export * from './components/widgets/PerformanceChart';
 export * from './components/widgets/SybilionAppHeader';
 export * from './components/widgets/SybilionAuthLayout';
 export * from './components/widgets/SybilionSignInPanel';

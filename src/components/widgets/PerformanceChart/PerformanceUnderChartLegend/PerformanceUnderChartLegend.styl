@@ -1,0 +1,49 @@
+@import '../../../../lib/theme.styl'
+
+.root
+  display flex
+  align-items center
+  flex-wrap wrap
+  gap var(--p-4)
+
+.row
+  display inline-flex
+  align-items center
+  gap var(--p-2)
+  padding var(--p-1) var(--p-2)
+  border none
+  background transparent
+  cursor pointer
+  font inherit
+  color var(--foreground)
+  border-radius var(--radius-sm)
+  transition opacity 0.2s ease
+
+  &:hover
+    opacity 0.85
+
+.swatch
+  width 16px
+  height 3px
+  border-radius 1px
+  flex-shrink 0
+
+.swatchDashed
+  background transparent !important
+  box-sizing border-box
+  width 16px
+  height 2px
+  border none
+  border-bottom 2px dashed currentColor
+  border-radius 0
+
+.label
+  font-size var(--text-xs)
+  line-height var(--line-height-base)
+  white-space nowrap
+
+.eye
+  width 14px
+  height 14px
+  flex-shrink 0
+  opacity 0.8

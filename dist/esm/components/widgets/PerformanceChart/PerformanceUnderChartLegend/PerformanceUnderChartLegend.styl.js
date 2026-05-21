@@ -1,0 +1,7 @@
+import styleInject from 'style-inject';
+
+var css_248z = "@media (max-width:768px){:root{--page-x-padding:var(--p-6);--page-y-padding:var(--p-6)}}.PerformanceUnderChartLegend_root__Yp6dg{align-items:center;display:flex;flex-wrap:wrap;gap:var(--p-4)}.PerformanceUnderChartLegend_row__-OveP{align-items:center;background:transparent;border:none;border-radius:var(--radius-sm);color:var(--foreground);cursor:pointer;display:inline-flex;font:inherit;gap:var(--p-2);padding:var(--p-1) var(--p-2);transition:opacity .2s ease}.PerformanceUnderChartLegend_row__-OveP:hover{opacity:.85}.PerformanceUnderChartLegend_swatch__uFVYm{border-radius:1px;flex-shrink:0;height:3px;width:16px}.PerformanceUnderChartLegend_swatchDashed__8q43E{background:transparent!important;border:none;border-bottom:2px dashed;border-radius:0;box-sizing:border-box;height:2px;width:16px}.PerformanceUnderChartLegend_label__XYAUN{font-size:var(--text-xs);line-height:var(--line-height-base);white-space:nowrap}.PerformanceUnderChartLegend_eye__gnfSZ{flex-shrink:0;height:14px;opacity:.8;width:14px}";
+var S = {"root":"PerformanceUnderChartLegend_root__Yp6dg","row":"PerformanceUnderChartLegend_row__-OveP","swatch":"PerformanceUnderChartLegend_swatch__uFVYm","swatchDashed":"PerformanceUnderChartLegend_swatchDashed__8q43E","label":"PerformanceUnderChartLegend_label__XYAUN","eye":"PerformanceUnderChartLegend_eye__gnfSZ"};
+styleInject(css_248z);
+
+export { S as default };

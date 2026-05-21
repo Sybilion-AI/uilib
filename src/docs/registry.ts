@@ -152,6 +152,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/DriversComparisonChartPage'),
   },
   {
+    slug: 'performance-chart',
+    title: 'PerformanceChart',
+    section: 'Widgets',
+    load: () => import('./pages/PerformanceChartPage'),
+  },
+  {
     slug: 'dropdown-menu',
     title: 'DropdownMenu',
     section: 'Overlays',
