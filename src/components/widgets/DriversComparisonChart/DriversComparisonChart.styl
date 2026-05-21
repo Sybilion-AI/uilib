@@ -1,0 +1,145 @@
+@import '../../../lib/theme.styl';
+
+.root
+  display flex
+  flex-direction column
+  gap var(--p-4)
+  width 100%
+
+.chartShell
+  position relative
+  width 100%
+
+.chartShellLoading
+  .chartSlot
+    opacity 0.3
+    pointer-events none
+
+  :global(.recharts-line-dots)
+    display none
+
+.chartSlot
+  width 100%
+
+.loadingLayer
+  position absolute
+  inset 0
+  z-index 10
+  pointer-events none
+
+.loadingMessage
+  position absolute
+  z-index 1
+  top calc(50% - 4em)
+  left 0
+  width 100%
+  display block
+  text-align center
+  color var(--foreground)
+
+.loadingText
+  font-size 16px
+  font-weight 500
+  color var(--foreground)
+  border-radius var(--p-4)
+  padding 0 var(--p-3)
+  backdrop-filter blur(10px)
+  box-shadow 0 0 0 2px var(--page-color)
+
+.chartWithOverlay
+  position relative
+  width 100%
+
+.chartInteractiveLayer
+  width 100%
+  transition opacity 0.2s ease-out
+
+.chartInteractiveDimmed
+  opacity 0.3
+  pointer-events none
+
+  :global(.recharts-line-dots)
+    display none
+
+.chartEmptyOverlay
+  position absolute
+  inset 0
+  z-index 6
+  display flex
+  align-items center
+  justify-content center
+  padding var(--p-4)
+  pointer-events none
+
+.chartEmptyBlurb
+  max-width 42rem
+  padding 0 var(--p-3)
+
+.seriesEmptyWrap
+  display flex
+  justify-content center
+  padding var(--p-8) var(--p-4)
+
+.seriesSection
+  width 100%
+
+.seriesTableWrapper
+  position relative
+  margin 0 calc(var(--page-x-padding) * -1)
+
+.seriesTableContainer
+  position relative
+  width 100%
+  overflow-x auto
+
+.seriesScrollbar
+  bottom calc(var(--p-7) * -1 + 2px) !important
+
+.seriesTable
+  table-layout auto
+  width 100%
+  max-width 100%
+
+  tr
+    position relative
+    cursor pointer
+
+  td
+  th
+    &:not(:first-child)
+      text-align right
+
+.seriesColSeries
+  text-align left
+  vertical-align middle
+
+.rowHidden
+  opacity .4
+
+.colorSwatch
+  display inline-flex
+  flex-shrink 0
+  width 10px
+  height 10px
+  margin-right var(--p-2)
+  border-radius 2px
+
+.seriesLabel
+  min-width 0
+  max-width 60vw
+  padding var(--p-2) 0
+  line-clamp(3)
+  white-space break-spaces
+
+.chartContainer
+  margin-left calc(-1 * var(--page-x-padding) + 26px)
+  width calc(100% + 60px)
+  max-width @width
+  transition opacity 300ms ease-out
+
+  :global(.recharts-yAxis-tick-labels)
+    display none
+
+  @media (max-width: unit(MOBILE, 'px'))
+    margin-left calc(-1 * var(--page-x-padding) + 10px)
+    width calc(100% + 30px)

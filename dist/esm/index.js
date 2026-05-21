@@ -104,6 +104,8 @@ export { DriverMap } from './components/widgets/DriverMap/DriverMap.js';
 export { getCategoryIcon } from './components/widgets/DriverMap/driverCategoryIcon.js';
 export { getDriverImportance, getHighestImportanceDriver } from './components/widgets/DriverMap/driverMapSelection.js';
 export { geographicCoordinates, geographicToSVG, getContinentFromRegion, getPreciseCoordinates, getResponsiveCoordinates, svgToPercentage } from './components/widgets/DriverMap/driverMapGeography.js';
+export { DriversComparisonChart } from './components/widgets/DriversComparisonChart/DriversComparisonChart.js';
+export { DRIVER_COMPARISON_CHART_LEAD_MONTHS, DRIVER_FORECAST_ID_BASE, INITIAL_VISIBLE_SERIES_COUNT, buildDriversComparisonChartData, formatSeriesImportance, mergeBacktestsChartData, mergeDatasetHistoricalWithBacktestsChartData } from './components/widgets/DriversComparisonChart/driversComparisonChart.helpers.js';
 export { SybilionAppHeader } from './components/widgets/SybilionAppHeader/SybilionAppHeader.js';
 export { SybilionAuthLayout } from './components/widgets/SybilionAuthLayout/SybilionAuthLayout.js';
 export { SybilionAuthHeadline } from './components/widgets/SybilionAuthLayout/SybilionAuthHeadline.js';
