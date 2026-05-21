@@ -23,7 +23,6 @@ function getPopperWrapper(contentEl) {
         return null;
     return wrapper;
 }
-const OVER_TRIGGER_OFFSET = { left: -12, top: -7 };
 const TRIGGER_TEXT_STYLE_PROPS = [
     'font-family',
     'font-size',
@@ -66,21 +65,31 @@ function clearTriggerTextStyles(contentEl) {
         contentEl.style.removeProperty(prop);
     }
 }
+function parsePx(value) {
+    return Number.parseFloat(value) || 0;
+}
 function applyOverTriggerStyles(contentEl, triggerEl) {
     const wrapper = getPopperWrapper(contentEl);
     if (!wrapper)
         return;
     const rect = triggerEl.getBoundingClientRect();
-    const computed = window.getComputedStyle(triggerEl);
+    const triggerComputed = window.getComputedStyle(triggerEl);
+    const contentComputed = window.getComputedStyle(contentEl);
+    const paddingLeft = parsePx(contentComputed.paddingLeft);
+    const paddingRight = parsePx(contentComputed.paddingRight);
+    const paddingTop = parsePx(contentComputed.paddingTop);
+    const borderLeft = parsePx(contentComputed.borderLeftWidth);
+    const borderRight = parsePx(contentComputed.borderRightWidth);
+    const borderTop = parsePx(contentComputed.borderTopWidth);
     wrapper.style.setProperty('position', 'fixed', 'important');
-    wrapper.style.setProperty('left', `${rect.left + OVER_TRIGGER_OFFSET.left}px`, 'important');
-    wrapper.style.setProperty('top', `${rect.top + OVER_TRIGGER_OFFSET.top}px`, 'important');
+    wrapper.style.setProperty('left', `${rect.left - paddingLeft - borderLeft}px`, 'important');
+    wrapper.style.setProperty('top', `${rect.top - paddingTop - borderTop}px`, 'important');
     wrapper.style.setProperty('transform', 'none', 'important');
     wrapper.style.setProperty('min-width', '0', 'important');
-    wrapper.style.setProperty('width', `${rect.width}px`, 'important');
+    wrapper.style.setProperty('width', `${rect.width + paddingLeft + paddingRight + borderLeft + borderRight}px`, 'important');
     contentEl.style.width = '100%';
     contentEl.style.boxSizing = 'border-box';
-    applyTriggerTextStyles(contentEl, computed);
+    applyTriggerTextStyles(contentEl, triggerComputed);
 }
 function clearOverTriggerStyles(contentEl) {
     if (!contentEl)
