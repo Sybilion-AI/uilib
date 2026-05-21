@@ -44,7 +44,7 @@ function getPopperWrapper(contentEl: HTMLElement): HTMLElement | null {
   return wrapper;
 }
 
-const OVER_TRIGGER_OFFSET = { left: -10, top: -6 };
+const OVER_TRIGGER_OFFSET = { left: -12, top: -7 };
 
 const TRIGGER_TEXT_STYLE_PROPS = [
   'font-family',

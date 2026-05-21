@@ -57,17 +57,18 @@
   &[data-state="closed"][data-side="top"]
     animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
 
+  &.tooltipContentOverTrigger
+    &[data-state="open"],
+    &[data-state="instant-open"],
+    &[data-state="delayed-open"]
+      animation fade-in 0.15s ease-out
+
+    &[data-state="closed"]
+      animation fade-out 0.1s ease-in
+
 .tooltipContentOverTrigger
   box-sizing border-box
   height auto
-
-  &[data-state="open"],
-  &[data-state="instant-open"],
-  &[data-state="delayed-open"]
-    animation fade-in 0.15s ease-out
-
-  &[data-state="closed"]
-    animation fade-out 0.1s ease-in
 
 .tooltipArrow
   z-index 50
