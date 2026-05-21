@@ -1,7 +1,7 @@
 import { ChatPreset, type ScriptCompletePayload } from '#uilib/components/ui/Chat/Chat.types';
 import type { ChatChromeProps } from '../ChatChrome';
 import type { ChatAttachmentDropItem } from '../ChatChrome/ChatChrome.types';
-import type { ChatEmptyStateProps } from '../ChatEmptyState/ChatEmptyState.types';
+import type { ChatEmptyStateConfig } from '../ChatEmptyState/ChatEmptyState.types';
 export type UseChatPanelChromeModelInput = {
     /** When true, skip sidebar chat slot, URL `?chat=`, and portal behavior (e.g. page main content). */
     embedAsPage: boolean;
@@ -16,7 +16,7 @@ export type UseChatPanelChromeModelInput = {
     /** Renders `[CHART]` tokens in assistant messages. */
     renderMessageChart?: () => React.ReactNode;
     /** Forwarded to `ChatChrome` when the thread is empty. */
-    emptyState?: ChatEmptyStateProps;
+    emptyState?: ChatEmptyStateConfig;
     /** MIME types / extensions for text-only chat attachments (filtered by uilib allowlist). */
     allowedAttachments?: readonly string[];
     /** When true, PDF drops are accepted and parsed to plain text. */

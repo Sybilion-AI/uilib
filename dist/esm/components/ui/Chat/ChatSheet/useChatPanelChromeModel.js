@@ -1,7 +1,7 @@
 import { jsx } from 'react/jsx-runtime';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { MessageRole, GENERATING_DASHBOARD_SYSTEM_TEXT } from '../Chat.types.js';
-import { isGraphIntakeAssistantStepComplete, matchUserTextToQuickReply, parseScriptLine, textHasQuickReplyMarkers, branchKeysUsedFromChatHistory, branchKeysUsedByUserMessages, extractQuickReplyLabelKeyPairsFromText, entryBranchKeyBeforeLastAssistant, isPresetScriptGraph, branchesFromPresetScriptGraph } from '../ChatMessage/presetScript.js';
+import { isGraphIntakeAssistantStepComplete, matchUserTextToQuickReply, isPresetScriptGraph, branchesFromPresetScriptGraph, parseScriptLine, textHasQuickReplyMarkers, branchKeysUsedFromChatHistory, branchKeysUsedByUserMessages, extractQuickReplyLabelKeyPairsFromText, entryBranchKeyBeforeLastAssistant } from '../ChatMessage/presetScript.js';
 import { buildChatSendMessagePayload, displayTextFromSendPayload } from '../buildChatSendMessagePayload.js';
 import { usedPresetIdsFromMessages, formatChatTranscript } from '../chat-preset-utils.js';
 import { useChatsForScopeId, useChat, useChatOutboundPending, useSyncChatPanelBusy, isChatEmpty } from '../../../../contexts/chat-context.js';
@@ -425,7 +425,7 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
         onMessage,
         onScriptComplete,
     ]);
-    const submitPreset = async (preset) => {
+    const submitPreset = useCallback(async (preset) => {
         const script = preset.script;
         const scriptGraph = isPresetScriptGraph(script);
         const hasLinearScript = Array.isArray(script) && script.length > 0;
@@ -518,7 +518,24 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
         finally {
             setLocalUiBusy(false);
         }
-    };
+    }, [
+        currentChatId,
+        endLocalDemoFlow,
+        handlePromptSubmit,
+        addMessage,
+        presetsWithFreeform,
+    ]);
+    const resolvedEmptyState = useMemo(() => {
+        if (!emptyState)
+            return undefined;
+        const { additionalContent, ...rest } = emptyState;
+        return {
+            ...rest,
+            additionalContent: typeof additionalContent === 'function'
+                ? additionalContent({ submitPreset })
+                : additionalContent,
+        };
+    }, [emptyState, submitPreset]);
     const activeScript = currentChatId
         ? scriptByChatId[currentChatId]
         : undefined;
@@ -765,7 +782,7 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
         onPromptSubmit: handlePromptSubmit,
         onChatDeleted: endLocalDemoFlow,
         promptPrefill: promptLinkPrefill,
-        emptyState,
+        emptyState: resolvedEmptyState,
         allowedAttachments,
         allowPdfAttachments,
         onAttachmentsDropped,
