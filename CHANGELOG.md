@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.23](https://github.com/Mir-Insight/uilib/compare/v1.3.22...v1.3.23) (2026-05-21)
+
+
+### Features
+
+* DriversComparisonChart - Add drivers comparison widget ([f53af30](https://github.com/Mir-Insight/uilib/commit/f53af30f1536b2c512c802e5aee27fb46c77949f))
+
 ### [1.3.22](https://github.com/Mir-Insight/uilib/compare/v1.3.21...v1.3.22) (2026-05-21)
 
 
