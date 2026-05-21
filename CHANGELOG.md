@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.26](https://github.com/Mir-Insight/uilib/compare/v1.3.16...v1.3.26) (2026-05-21)
+
+
+### Features
+
+* ChatEmptyState - Expose submitPreset to empty state ([b4d86ed](https://github.com/Mir-Insight/uilib/commit/b4d86ed5f30112c401e94f4fffc4fa2d43d8f093))
+* DriversComparisonChart - Add drivers comparison widget ([b043bd7](https://github.com/Mir-Insight/uilib/commit/b043bd7ff29ff8ce78b54b580323ddc50ff7437a))
+* InteractionOverlay - Touch vignette hint ([5996465](https://github.com/Mir-Insight/uilib/commit/5996465ef5fe49550869068bade0dea6783a3a2b))
+* PerformanceChart - Add performance widget ([a080bea](https://github.com/Mir-Insight/uilib/commit/a080bea9155189fe2f92a375ab2c8e452446db7e))
+* Tooltip - Add overTrigger overlay mode ([3201f0c](https://github.com/Mir-Insight/uilib/commit/3201f0c2af56789856c569281f3f6a86a01d54eb))
+
+
+### Bug Fixes
+
+* ChartTooltip - Fix narrow overflow and refine styling ([47775ca](https://github.com/Mir-Insight/uilib/commit/47775caa318a3f09d98fc218cb4c2b9b212da63f))
+* InteractionOverlay - Hide when chat or chart loading ([099b74b](https://github.com/Mir-Insight/uilib/commit/099b74be32cd4a800d67bdbd5ca31aac66638481))
+* InteractionOverlay - placeholder bg ([8e3eee1](https://github.com/Mir-Insight/uilib/commit/8e3eee1098764a3a6706c9f63914f7c13edb4bfd))
+* Logo - Render inline SVG in header ([bb8f317](https://github.com/Mir-Insight/uilib/commit/bb8f3173ebb09b5a6c44401f885f9b34be93fbcb))
+* Logo - Render inline SVG in header ([15e5588](https://github.com/Mir-Insight/uilib/commit/15e55883400613a0a0d4570f485412c860e9f71a))
+
 ### [1.3.25](https://github.com/Mir-Insight/uilib/compare/v1.3.23...v1.3.25) (2026-05-21)
 
 
