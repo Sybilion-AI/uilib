@@ -129,7 +129,7 @@ function applyOverTriggerStyles(
   wrapper.style.setProperty('min-width', '0', 'important');
   wrapper.style.setProperty(
     'width',
-    `${rect.width + paddingLeft + paddingRight + borderLeft + borderRight}px`,
+    `${rect.width + paddingLeft + paddingRight + borderLeft + borderRight + 20}px`,
     'important',
   );
 

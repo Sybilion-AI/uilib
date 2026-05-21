@@ -86,7 +86,7 @@ function applyOverTriggerStyles(contentEl, triggerEl) {
     wrapper.style.setProperty('top', `${rect.top - paddingTop - borderTop}px`, 'important');
     wrapper.style.setProperty('transform', 'none', 'important');
     wrapper.style.setProperty('min-width', '0', 'important');
-    wrapper.style.setProperty('width', `${rect.width + paddingLeft + paddingRight + borderLeft + borderRight}px`, 'important');
+    wrapper.style.setProperty('width', `${rect.width + paddingLeft + paddingRight + borderLeft + borderRight + 20}px`, 'important');
     contentEl.style.width = '100%';
     contentEl.style.boxSizing = 'border-box';
     applyTriggerTextStyles(contentEl, triggerComputed);
