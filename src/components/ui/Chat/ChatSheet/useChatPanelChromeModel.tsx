@@ -45,6 +45,7 @@ import { useSidebar } from '../../Sidebar/Sidebar';
 import { Chat } from '../Chat';
 import type { ChatChromeProps } from '../ChatChrome';
 import type { ChatAttachmentDropItem } from '../ChatChrome/ChatChrome.types';
+import type { ChatEmptyStateConfig } from '../ChatEmptyState/ChatEmptyState.types';
 import type { ChatEmptyStateProps } from '../ChatEmptyState/ChatEmptyState.types';
 
 export type UseChatPanelChromeModelInput = {
@@ -61,7 +62,7 @@ export type UseChatPanelChromeModelInput = {
   /** Renders `[CHART]` tokens in assistant messages. */
   renderMessageChart?: () => React.ReactNode;
   /** Forwarded to `ChatChrome` when the thread is empty. */
-  emptyState?: ChatEmptyStateProps;
+  emptyState?: ChatEmptyStateConfig;
   /** MIME types / extensions for text-only chat attachments (filtered by uilib allowlist). */
   allowedAttachments?: readonly string[];
   /** When true, PDF drops are accepted and parsed to plain text. */
@@ -615,7 +616,7 @@ export function useChatPanelChromeModel({
     ],
   );
 
-  const submitPreset = async (preset: ChatPreset) => {
+  const submitPreset = useCallback(async (preset: ChatPreset) => {
     const script = preset.script;
     const scriptGraph = isPresetScriptGraph(script);
     const hasLinearScript = Array.isArray(script) && script.length > 0;
@@ -705,7 +706,25 @@ export function useChatPanelChromeModel({
     } finally {
       setLocalUiBusy(false);
     }
-  };
+  }, [
+    currentChatId,
+    endLocalDemoFlow,
+    handlePromptSubmit,
+    addMessage,
+    presetsWithFreeform,
+  ]);
+
+  const resolvedEmptyState = useMemo((): ChatEmptyStateProps | undefined => {
+    if (!emptyState) return undefined;
+    const { additionalContent, ...rest } = emptyState;
+    return {
+      ...rest,
+      additionalContent:
+        typeof additionalContent === 'function'
+          ? additionalContent({ submitPreset })
+          : additionalContent,
+    };
+  }, [emptyState, submitPreset]);
 
   const activeScript = currentChatId
     ? scriptByChatId[currentChatId]
@@ -1017,7 +1036,7 @@ export function useChatPanelChromeModel({
     onPromptSubmit: handlePromptSubmit,
     onChatDeleted: endLocalDemoFlow,
     promptPrefill: promptLinkPrefill,
-    emptyState,
+    emptyState: resolvedEmptyState,
     allowedAttachments,
     allowPdfAttachments,
     onAttachmentsDropped,

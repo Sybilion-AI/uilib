@@ -26,6 +26,11 @@ export { ChatMessage } from './ChatMessage';
 export { ChatPrompt } from './ChatPrompt';
 export { ChatPresets } from './ChatPresets';
 export type {
+  ChatEmptyStateConfig,
+  ChatEmptyStateContext,
+  ChatEmptyStateProps,
+} from './ChatEmptyState/ChatEmptyState.types';
+export type {
   Chat as ChatType,
   ChatAttachmentDropItem,
   ChatSendMessagePayload,
