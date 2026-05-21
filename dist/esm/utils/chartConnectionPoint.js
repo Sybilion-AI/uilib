@@ -101,5 +101,13 @@ function getPreviousMonth(date) {
     d.setMonth(d.getMonth() - 1);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
 }
+/**
+ * Get the next month date (first day of next month)
+ */
+function getNextMonth(date) {
+    const d = new Date(date);
+    d.setMonth(d.getMonth() + 1);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+}
 
-export { ensureChartForecastBridge, findLastValidHistoricalChartPoint, getPreviousMonth, normalizeToMonthStart };
+export { ensureChartForecastBridge, findLastValidHistoricalChartPoint, getNextMonth, getPreviousMonth, normalizeToMonthStart };
