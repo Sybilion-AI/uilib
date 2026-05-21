@@ -24,6 +24,48 @@ function getPopperWrapper(contentEl) {
     return wrapper;
 }
 const OVER_TRIGGER_OFFSET = { left: -10, top: -6 };
+const TRIGGER_TEXT_STYLE_PROPS = [
+    'font-family',
+    'font-size',
+    'font-weight',
+    'font-style',
+    'font-variant',
+    'font-stretch',
+    'line-height',
+    'letter-spacing',
+    'word-spacing',
+    'text-transform',
+    'text-indent',
+    'text-decoration-line',
+    'text-decoration-color',
+    'text-decoration-style',
+    'text-decoration-thickness',
+    'text-underline-offset',
+    'font-feature-settings',
+    'font-variation-settings',
+    'font-kerning',
+    'font-optical-sizing',
+    'font-synthesis',
+    'font-variant-numeric',
+    'font-variant-ligatures',
+    'font-variant-caps',
+    'font-variant-east-asian',
+    'tab-size',
+    'color',
+    'word-break',
+    'overflow-wrap',
+    'hyphens',
+];
+function applyTriggerTextStyles(contentEl, computed) {
+    for (const prop of TRIGGER_TEXT_STYLE_PROPS) {
+        contentEl.style.setProperty(prop, computed.getPropertyValue(prop));
+    }
+}
+function clearTriggerTextStyles(contentEl) {
+    for (const prop of TRIGGER_TEXT_STYLE_PROPS) {
+        contentEl.style.removeProperty(prop);
+    }
+}
 function applyOverTriggerStyles(contentEl, triggerEl) {
     const wrapper = getPopperWrapper(contentEl);
     if (!wrapper)
@@ -38,8 +80,7 @@ function applyOverTriggerStyles(contentEl, triggerEl) {
     wrapper.style.setProperty('width', `${rect.width}px`, 'important');
     contentEl.style.width = '100%';
     contentEl.style.boxSizing = 'border-box';
-    contentEl.style.fontSize = computed.fontSize;
-    contentEl.style.lineHeight = computed.lineHeight;
+    applyTriggerTextStyles(contentEl, computed);
 }
 function clearOverTriggerStyles(contentEl) {
     if (!contentEl)
@@ -55,8 +96,7 @@ function clearOverTriggerStyles(contentEl) {
     wrapper.style.removeProperty('width');
     contentEl.style.removeProperty('width');
     contentEl.style.removeProperty('box-sizing');
-    contentEl.style.removeProperty('font-size');
-    contentEl.style.removeProperty('line-height');
+    clearTriggerTextStyles(contentEl);
 }
 function TooltipProvider({ delayDuration = 0, ...props }) {
     return (jsx(TooltipPrimitive.Provider, { "data-slot": "tooltip-provider", delayDuration: delayDuration, ...props }));

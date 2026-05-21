@@ -53,6 +53,7 @@ export default function TooltipPage() {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
+                  fontWeight: 600,
                 }}
               >
                 {OVER_TRIGGER_TEXT}

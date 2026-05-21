@@ -7,9 +7,9 @@ interface CssExports {
   'slide-in-from-left-2': string;
   'slide-in-from-right-2': string;
   'slide-in-from-top-2': string;
-  tooltipArrow: string;
-  tooltipContent: string;
-  tooltipContentOverTrigger: string;
+  'tooltipArrow': string;
+  'tooltipContent': string;
+  'tooltipContentOverTrigger': string;
   'zoom-in': string;
   'zoom-out': string;
 }
