@@ -106,6 +106,10 @@ export { getDriverImportance, getHighestImportanceDriver } from './components/wi
 export { geographicCoordinates, geographicToSVG, getContinentFromRegion, getPreciseCoordinates, getResponsiveCoordinates, svgToPercentage } from './components/widgets/DriverMap/driverMapGeography.js';
 export { DriversComparisonChart } from './components/widgets/DriversComparisonChart/DriversComparisonChart.js';
 export { DRIVER_COMPARISON_CHART_LEAD_MONTHS, DRIVER_FORECAST_ID_BASE, INITIAL_VISIBLE_SERIES_COUNT, buildDriversComparisonChartData, formatSeriesImportance, mergeBacktestsChartData, mergeDatasetHistoricalWithBacktestsChartData } from './components/widgets/DriversComparisonChart/driversComparisonChart.helpers.js';
+export { PerformanceChart } from './components/widgets/PerformanceChart/PerformanceChart.js';
+export { PerformanceTable } from './components/widgets/PerformanceChart/PerformanceTable.js';
+export { SPAGHETTI_DRIFT_PER_HORIZON_ID_BASE, SPAGHETTI_MODEL_PER_HORIZON_ID_BASE, averageForecastErrorsVsHistoricalForMatrixColumn, buildDriftSpaghettiMatrixForCustomDialog, buildPerHorizonSpaghettiEntries, buildSpaghettiMergedChartData, calculateYRangeFromChartData, getForecastModelDisplayName, spaghettiGridFromHistoricalPreviousMonth } from './components/widgets/PerformanceChart/performanceChart.helpers.js';
+export { SPAGHETTI_LOCAL_LS_USER_SERIES_ROW_ID, SPAGHETTI_TIME_SERIES_MATRIX_V, tryParseSpaghettiPerformanceMatrix } from './components/widgets/PerformanceChart/performanceChartUserSeries.js';
 export { SybilionAppHeader } from './components/widgets/SybilionAppHeader/SybilionAppHeader.js';
 export { SybilionAuthLayout } from './components/widgets/SybilionAuthLayout/SybilionAuthLayout.js';
 export { SybilionAuthHeadline } from './components/widgets/SybilionAuthLayout/SybilionAuthHeadline.js';
