@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.31](https://github.com/Mir-Insight/uilib/compare/v1.3.30...v1.3.31) (2026-05-21)
+
+
+### Bug Fixes
+
+* Tooltip - Align overTrigger text with trigger ([1a29197](https://github.com/Mir-Insight/uilib/commit/1a29197414a8299675591a8b4e9fcf52e31b4eb3))
+
 ### [1.3.30](https://github.com/Mir-Insight/uilib/compare/v1.3.29...v1.3.30) (2026-05-21)
 
 ### [1.3.29](https://github.com/Mir-Insight/uilib/compare/v1.3.28...v1.3.29) (2026-05-21)
