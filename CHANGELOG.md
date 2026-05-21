@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.27](https://github.com/Mir-Insight/uilib/compare/v1.3.26...v1.3.27) (2026-05-21)
+
+
+### Bug Fixes
+
+* Tooltip - Copy trigger text styles in overTrigger ([716d7b6](https://github.com/Mir-Insight/uilib/commit/716d7b6076a0f6176c24ab861b04506fa0117c33))
+
 ### [1.3.26](https://github.com/Mir-Insight/uilib/compare/v1.3.16...v1.3.26) (2026-05-21)
 
 
