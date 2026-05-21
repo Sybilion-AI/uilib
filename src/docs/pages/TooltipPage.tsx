@@ -41,7 +41,7 @@ export default function TooltipPage() {
         <p style={{ margin: '0 0 8px', fontWeight: 600 }}>Over trigger</p>
         <div
           style={{
-            maxWidth: 280,
+            maxWidth: 500,
             border: '1px dashed var(--border)',
             padding: 8,
           }}
