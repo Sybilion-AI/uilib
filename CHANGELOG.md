@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.37](https://github.com/Mir-Insight/uilib/compare/v1.3.36...v1.3.37) (2026-05-22)
+
+
+### Features
+
+* ChatSheet - Slash commands and palette placement ([2a7da2b](https://github.com/Mir-Insight/uilib/commit/2a7da2b8be784d72fa8f6934c6b95261f7b02483))
+
 ### [1.3.36](https://github.com/Mir-Insight/uilib/compare/v1.3.35...v1.3.36) (2026-05-22)
 
 ### [1.3.35](https://github.com/Mir-Insight/uilib/compare/v1.3.33...v1.3.35) (2026-05-22)
