@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.35](https://github.com/Mir-Insight/uilib/compare/v1.3.33...v1.3.35) (2026-05-22)
+
+
+### Features
+
+* ChatPrompt - TipTap slash composer and slash-mention module ([e88bb2b](https://github.com/Mir-Insight/uilib/commit/e88bb2b6c1e1f2d90ede1f1e788f7ddae205f687))
+
+
+### Bug Fixes
+
+* Tooltip - Match overTrigger width to trigger ([122dc97](https://github.com/Mir-Insight/uilib/commit/122dc97a899e089f9e5f3ff01c00d997e7623270))
+
 ### [1.3.33](https://github.com/Mir-Insight/uilib/compare/v1.3.31...v1.3.33) (2026-05-21)
 
 
