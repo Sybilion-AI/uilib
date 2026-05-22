@@ -38,6 +38,7 @@ import useEvent from '#uilib/hooks/useEvent';
 import { useIsMobile } from '#uilib/hooks/useIsMobile';
 import { useQueryParams } from '#uilib/hooks/useQueryParams';
 import logger from '#uilib/lib/logger';
+import type { SlashCommandItem } from '#uilib/tiptap/slash-mention/types';
 import { mergePresetFreeformDefaults } from '#uilib/utils/chatPresetMerge';
 import { ScrollRef } from '@homecode/ui';
 
@@ -70,6 +71,8 @@ export type UseChatPanelChromeModelInput = {
   onAttachmentsDropped?: (
     items: ChatAttachmentDropItem[],
   ) => void | Promise<void>;
+  /** Slash menu (`/`) in the composer; omit or pass empty to disable. */
+  slashCommandItems?: SlashCommandItem[];
 };
 
 export type UseChatPanelChromeModelResult = {
@@ -118,6 +121,7 @@ export function useChatPanelChromeModel({
   allowedAttachments,
   allowPdfAttachments,
   onAttachmentsDropped,
+  slashCommandItems,
 }: UseChatPanelChromeModelInput): UseChatPanelChromeModelResult {
   const effectiveScopeId = scopeId ?? NO_SCOPE_FALLBACK;
   const isMobile = useIsMobile();
@@ -616,103 +620,107 @@ export function useChatPanelChromeModel({
     ],
   );
 
-  const submitPreset = useCallback(async (preset: ChatPreset) => {
-    const script = preset.script;
-    const scriptGraph = isPresetScriptGraph(script);
-    const hasLinearScript = Array.isArray(script) && script.length > 0;
-    const hasReplies = preset.replies && Object.keys(preset.replies).length > 0;
-    const isLocalDemo =
-      hasLinearScript ||
-      scriptGraph ||
-      Boolean(preset.answer?.trim()) ||
-      Boolean(hasReplies);
+  const submitPreset = useCallback(
+    async (preset: ChatPreset) => {
+      const script = preset.script;
+      const scriptGraph = isPresetScriptGraph(script);
+      const hasLinearScript = Array.isArray(script) && script.length > 0;
+      const hasReplies =
+        preset.replies && Object.keys(preset.replies).length > 0;
+      const isLocalDemo =
+        hasLinearScript ||
+        scriptGraph ||
+        Boolean(preset.answer?.trim()) ||
+        Boolean(hasReplies);
 
-    if (!isLocalDemo) {
-      if (!currentChatId) return;
-      endLocalDemoFlow(currentChatId);
-      await handlePromptSubmit(preset.text);
-      return;
-    }
-
-    setLocalUiBusy(true);
-    try {
-      if (!currentChatId) return;
-      setScriptCompleteByChatId(prev => {
-        const next = { ...prev };
-        delete next[currentChatId];
-        return next;
-      });
-      addMessage(currentChatId, MessageRole.USER, preset.text);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const firstAssistant = scriptGraph
-        ? script.initialMessage
-        : (preset.answer ?? '');
-      addMessage(currentChatId, MessageRole.ASSISTANT, firstAssistant);
-
-      setScriptByChatId(prev => {
-        const next = { ...prev };
-        if (hasLinearScript) {
-          next[currentChatId] = {
-            lines: script,
-            nextIndex: 0,
-            presetId: preset.id,
-          };
-        } else {
-          delete next[currentChatId];
-        }
-        return next;
-      });
-      setQuickReplyBranchesByChat(prev => {
-        const next = { ...prev };
-        if (scriptGraph) {
-          next[currentChatId] = branchesFromPresetScriptGraph(script);
-        } else if (hasReplies && !hasLinearScript) {
-          next[currentChatId] = preset.replies!;
-        } else {
-          delete next[currentChatId];
-        }
-        return next;
-      });
-      if (scriptGraph || (hasReplies && !hasLinearScript)) {
-        setUsedScriptBranchKeysByChat(prev => ({
-          ...prev,
-          [currentChatId]: [],
-        }));
+      if (!isLocalDemo) {
+        if (!currentChatId) return;
+        endLocalDemoFlow(currentChatId);
+        await handlePromptSubmit(preset.text);
+        return;
       }
-      if (scriptGraph) {
-        const fromMerged = presetsWithFreeform.find(p => p.id === preset.id);
-        let freeformNext = {
-          ...(fromMerged?.freeformNext ?? {}),
-          ...(preset.freeformNext ?? {}),
-        };
-        if (Object.keys(freeformNext).length === 0) {
-          const ks = Object.keys(branchesFromPresetScriptGraph(script));
-          if (ks.length === 1) {
-            freeformNext = { initial: ks[0] };
+
+      setLocalUiBusy(true);
+      try {
+        if (!currentChatId) return;
+        setScriptCompleteByChatId(prev => {
+          const next = { ...prev };
+          delete next[currentChatId];
+          return next;
+        });
+        addMessage(currentChatId, MessageRole.USER, preset.text);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const firstAssistant = scriptGraph
+          ? script.initialMessage
+          : (preset.answer ?? '');
+        addMessage(currentChatId, MessageRole.ASSISTANT, firstAssistant);
+
+        setScriptByChatId(prev => {
+          const next = { ...prev };
+          if (hasLinearScript) {
+            next[currentChatId] = {
+              lines: script,
+              nextIndex: 0,
+              presetId: preset.id,
+            };
+          } else {
+            delete next[currentChatId];
           }
+          return next;
+        });
+        setQuickReplyBranchesByChat(prev => {
+          const next = { ...prev };
+          if (scriptGraph) {
+            next[currentChatId] = branchesFromPresetScriptGraph(script);
+          } else if (hasReplies && !hasLinearScript) {
+            next[currentChatId] = preset.replies!;
+          } else {
+            delete next[currentChatId];
+          }
+          return next;
+        });
+        if (scriptGraph || (hasReplies && !hasLinearScript)) {
+          setUsedScriptBranchKeysByChat(prev => ({
+            ...prev,
+            [currentChatId]: [],
+          }));
         }
-        setIntakeByChatId(prev => ({
-          ...prev,
-          [currentChatId!]: {
-            presetId: preset.id,
-            freeformNext,
-            scriptStepId: 'initial',
-            answers: {},
-          },
-        }));
+        if (scriptGraph) {
+          const fromMerged = presetsWithFreeform.find(p => p.id === preset.id);
+          let freeformNext = {
+            ...(fromMerged?.freeformNext ?? {}),
+            ...(preset.freeformNext ?? {}),
+          };
+          if (Object.keys(freeformNext).length === 0) {
+            const ks = Object.keys(branchesFromPresetScriptGraph(script));
+            if (ks.length === 1) {
+              freeformNext = { initial: ks[0] };
+            }
+          }
+          setIntakeByChatId(prev => ({
+            ...prev,
+            [currentChatId!]: {
+              presetId: preset.id,
+              freeformNext,
+              scriptStepId: 'initial',
+              answers: {},
+            },
+          }));
+        }
+      } catch (error) {
+        logger.error('Error sending chat message:', error);
+      } finally {
+        setLocalUiBusy(false);
       }
-    } catch (error) {
-      logger.error('Error sending chat message:', error);
-    } finally {
-      setLocalUiBusy(false);
-    }
-  }, [
-    currentChatId,
-    endLocalDemoFlow,
-    handlePromptSubmit,
-    addMessage,
-    presetsWithFreeform,
-  ]);
+    },
+    [
+      currentChatId,
+      endLocalDemoFlow,
+      handlePromptSubmit,
+      addMessage,
+      presetsWithFreeform,
+    ],
+  );
 
   const resolvedEmptyState = useMemo((): ChatEmptyStateProps | undefined => {
     if (!emptyState) return undefined;
@@ -1040,6 +1048,7 @@ export function useChatPanelChromeModel({
     allowedAttachments,
     allowPdfAttachments,
     onAttachmentsDropped,
+    slashCommandItems,
   };
 
   const toggleOpen = () => onOpenChange(!isOpen);

@@ -85,7 +85,9 @@ export default function ChatSlashCommandsPage() {
         breadcrumbs={[{ label: 'Chat' }, { label: 'Chat slash commands' }]}
         title="Chat slash commands"
         subheader={`Slash palette uses TipTap Mention with "/" as the trigger. Library default item list is empty — pass slashCommandItems from the app (this page uses a sample item for the demo).`}
-        actions={<DocsHeaderActions />}
+        actions={
+          <DocsHeaderActions slashCommandItems={DOCS_SAMPLE_SLASH_ITEMS} />
+        }
       />
       <PageContentSection>
         <p style={{ marginBottom: 16, fontSize: 14, lineHeight: 1.5 }}>

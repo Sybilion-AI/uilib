@@ -48,6 +48,7 @@ function useChatPromptEditor({ disabled, placeholder, slashCommandItems, prefill
         if (slashItemsStable.length > 0) {
             exts.push(createSlashMentionExtension({
                 items: slashItemsStable,
+                suggestionPlacement: 'above',
                 onSuggestionUiActiveChange: suggestionActiveUpdater,
             }));
         }

@@ -2,6 +2,7 @@ export type {
   SlashCommandItem,
   SlashOnItemCommand,
   SlashItemCommandContext,
+  SlashSuggestionPlacement,
   CreateSlashMentionExtensionOptions,
 } from './types';
 export {

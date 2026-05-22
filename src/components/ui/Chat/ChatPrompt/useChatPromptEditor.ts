@@ -94,6 +94,7 @@ export function useChatPromptEditor({
       exts.push(
         createSlashMentionExtension({
           items: slashItemsStable,
+          suggestionPlacement: 'above',
           onSuggestionUiActiveChange: suggestionActiveUpdater,
         }),
       );

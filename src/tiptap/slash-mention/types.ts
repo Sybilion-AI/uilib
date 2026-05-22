@@ -17,6 +17,9 @@ export type SlashItemCommandContext = {
  */
 export type SlashOnItemCommand = (ctx: SlashItemCommandContext) => boolean;
 
+/** Where the slash palette opens relative to the caret. */
+export type SlashSuggestionPlacement = 'below' | 'above' | 'auto';
+
 export type CreateSlashMentionExtensionOptions = {
   /** Items shown in the slash menu (filtered by query after `/`). */
   items: SlashCommandItem[];
@@ -26,4 +29,9 @@ export type CreateSlashMentionExtensionOptions = {
   pluginKey?: import('@tiptap/pm/state').PluginKey;
   /** Custom handler (e.g. insert a block node instead of a mention). */
   onItemCommand?: SlashOnItemCommand;
+  /**
+   * Palette position vs caret. Default `below`.
+   * Use `above` for bottom-anchored composers (chat prompt); `auto` flips by viewport space.
+   */
+  suggestionPlacement?: SlashSuggestionPlacement;
 };

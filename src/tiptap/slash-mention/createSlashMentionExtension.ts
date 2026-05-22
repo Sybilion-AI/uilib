@@ -14,10 +14,42 @@ import { filterSlashItems } from './defaultChatSlashItems';
 import type {
   CreateSlashMentionExtensionOptions,
   SlashCommandItem,
+  SlashSuggestionPlacement,
 } from './types';
+
+const SUGGESTION_GAP_PX = 4;
+
+function placeSlashSuggestionPopup(
+  popupElement: HTMLElement,
+  clientRect: DOMRect | null | undefined,
+  placement: SlashSuggestionPlacement,
+): void {
+  if (!clientRect) return;
+
+  const el = popupElement;
+  const popupHeight = el.getBoundingClientRect().height;
+  const spaceBelow = window.innerHeight - clientRect.bottom - SUGGESTION_GAP_PX;
+  const spaceAbove = clientRect.top - SUGGESTION_GAP_PX;
+
+  let showAbove = placement === 'above';
+  if (placement === 'auto') {
+    showAbove = spaceBelow < popupHeight && spaceAbove >= spaceBelow;
+  }
+
+  const top = showAbove
+    ? Math.max(
+        SUGGESTION_GAP_PX,
+        clientRect.top - popupHeight - SUGGESTION_GAP_PX,
+      )
+    : clientRect.bottom + SUGGESTION_GAP_PX;
+
+  el.style.left = `${clientRect.left}px`;
+  el.style.top = `${top}px`;
+}
 
 export function slashMentionSuggestionRender(
   uiRef: MutableRefObject<SlashSuggestionListHandle | null>,
+  placement: SlashSuggestionPlacement = 'below',
 ): {
   onStart?: (
     props: SuggestionProps<SlashCommandItem, SlashCommandItem>,
@@ -45,11 +77,11 @@ export function slashMentionSuggestionRender(
     >,
   ) => {
     if (!popup?.element) return;
-    const rect = props.clientRect?.();
-    if (!rect) return;
-    const el = popup.element;
-    el.style.left = `${rect.left}px`;
-    el.style.top = `${rect.bottom + 4}px`;
+    placeSlashSuggestionPopup(
+      popup.element,
+      props.clientRect?.() ?? null,
+      placement,
+    );
   };
 
   return {
@@ -69,6 +101,7 @@ export function slashMentionSuggestionRender(
       popup.element.style.zIndex = '10002';
       document.body.append(popup.element);
       place(props);
+      requestAnimationFrame(() => place(props));
     },
     onUpdate: props => {
       if (!popup) return;
@@ -78,6 +111,7 @@ export function slashMentionSuggestionRender(
         listHandleRef: uiRef,
       });
       place(props);
+      requestAnimationFrame(() => place(props));
     },
     onExit: () => {
       popup?.destroy();
@@ -149,6 +183,7 @@ export function createSlashMentionExtension({
   slashChar = '/',
   pluginKey,
   onItemCommand,
+  suggestionPlacement = 'below',
   onSuggestionUiActiveChange,
 }: CreateSlashMentionExtensionConfiguredOptions) {
   const uiRef: MutableRefObject<SlashSuggestionListHandle | null> = {
@@ -199,7 +234,7 @@ export function createSlashMentionExtension({
         return null;
       },
       render: () => {
-        const menu = slashMentionSuggestionRender(uiRef);
+        const menu = slashMentionSuggestionRender(uiRef, suggestionPlacement);
         return {
           ...menu,
           onStart: props => {

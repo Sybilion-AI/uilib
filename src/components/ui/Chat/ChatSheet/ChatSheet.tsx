@@ -47,6 +47,7 @@ export function ChatSheet({
   allowedAttachments,
   allowPdfAttachments,
   onAttachmentsDropped,
+  slashCommandItems,
   inline = false,
 }: ChatSheetProps) {
   const model = useChatPanelChromeModel({
@@ -61,6 +62,7 @@ export function ChatSheet({
     allowedAttachments,
     allowPdfAttachments,
     onAttachmentsDropped,
+    slashCommandItems,
   });
 
   if (actionsRef) {

@@ -1,9 +1,9 @@
-import { ChatSheet } from '#uilib/components/ui/Chat';
+import { ChatSheet, ChatSheetProps } from '#uilib/components/ui/Chat';
 import { MessageSquare } from 'lucide-react';
 
 import { DOCS_CHAT_SCOPE_ID } from './docsConstants';
 
-export function DocsHeaderActions() {
+export function DocsHeaderActions(props: ChatSheetProps) {
   return (
     <ChatSheet
       triggerLabel={
@@ -21,6 +21,7 @@ export function DocsHeaderActions() {
           <p>Optional empty-state slot via additionalContent.</p>
         ),
       }}
+      {...props}
     />
   );
 }
