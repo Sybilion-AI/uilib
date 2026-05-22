@@ -15,4 +15,5 @@ export { ChatPresets } from './ChatPresets';
 export type { ChatEmptyStateConfig, ChatEmptyStateContext, ChatEmptyStateProps, } from './ChatEmptyState/ChatEmptyState.types';
 export type { Chat as ChatType, ChatAttachmentDropItem, ChatSendMessagePayload, ChatProps, ChatPreset as ChatPresetType, Message, UserTextFileAttachment, } from './Chat.types';
 export { MessageRole } from './Chat.types';
+export type { SlashCommandItem } from '#uilib/tiptap/slash-mention/types';
 export { CsvIcon } from '../../icons/CsvIcon/CsvIcon';

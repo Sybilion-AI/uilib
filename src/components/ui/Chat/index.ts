@@ -40,4 +40,5 @@ export type {
   UserTextFileAttachment,
 } from './Chat.types';
 export { MessageRole } from './Chat.types';
+export type { SlashCommandItem } from '#uilib/tiptap/slash-mention/types';
 export { CsvIcon } from '../../icons/CsvIcon/CsvIcon';

@@ -7,6 +7,8 @@ export { SybilionAuthProvider, createSybilionApiFetch, getSybilionApiOriginFromS
 export { SYBILION_AUTH_LOGIN_PATH, normalizeApiBaseUrl } from './sybilion-auth/authPaths.js';
 export { exchangeAuth0AccessTokenForSybilionJwt } from './sybilion-auth/exchangeSybilionToken.js';
 export { ChatContext, ChatProvider, isChatEmpty, outboundPendingKey, useChat, useChatOutboundPending, useChats, useChatsForDataset, useChatsForScopeId, useCurrentChat, useIsChatLoading, useSyncChatPanelBusy } from './contexts/chat-context.js';
+export { DEFAULT_CHAT_SLASH_ITEMS, filterSlashItems } from './tiptap/slash-mention/defaultChatSlashItems.js';
+export { createSlashMentionExtension, slashMentionSuggestionRender } from './tiptap/slash-mention/createSlashMentionExtension.js';
 export { AnalysesSelector } from './components/ui/AnalysesSelector/AnalysesSelector.js';
 export { AnalysisLineIcon } from './components/ui/AnalysisLineIcon/AnalysisLineIcon.js';
 export { AppHeaderHost, AppHeaderPortal } from './components/ui/AppHeader/AppHeader.js';

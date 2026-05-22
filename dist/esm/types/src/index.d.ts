@@ -6,6 +6,7 @@ export { DEFAULT_THEME_ACTIVE_COLOR } from './docs/lib/theme';
 export * from './sybilion-auth';
 export * from './types/sybilionDatasetSnapshots';
 export * from './contexts/chat-context';
+export * from './tiptap/slash-mention';
 export * from './types/chat-api.types';
 export * from './components/ui/AnalysesSelector';
 export * from './components/ui/AnalysisLineIcon';

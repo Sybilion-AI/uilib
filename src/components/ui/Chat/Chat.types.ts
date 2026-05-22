@@ -1,5 +1,7 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 
+import type { SlashCommandItem } from '#uilib/tiptap/slash-mention/types';
+
 import type { PresetScriptGraph } from './ChatMessage/presetScript';
 
 export enum MessageRole {
@@ -92,6 +94,8 @@ export interface ChatPromptProps {
   attachmentAccept?: string;
   /** Called when the user picks files via the attach button. */
   onAttachmentFiles?: (files: File[]) => void;
+  /** Slash menu (`/`); omit or pass empty to disable Mention trigger (no default items). */
+  slashCommandItems?: SlashCommandItem[];
 }
 
 export interface ChatMessageProps {

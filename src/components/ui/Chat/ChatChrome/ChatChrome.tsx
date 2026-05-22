@@ -56,6 +56,8 @@ export function ChatChrome({
   allowedAttachments,
   allowPdfAttachments = false,
   onAttachmentsDropped,
+  slashCommandItems,
+  promptPlaceholder,
 }: ChatChromeProps) {
   const filteredAllowedAttachments = useMemo(
     () => filterToTextAttachments(allowedAttachments),
@@ -287,6 +289,8 @@ export function ChatChrome({
               attachments={pendingAttachments}
               onRemoveAttachment={handleRemoveAttachment}
               prefillMessage={promptPrefill ?? undefined}
+              placeholder={promptPlaceholder}
+              slashCommandItems={slashCommandItems}
               attachmentAccept={
                 attachmentsDropzoneEnabled ? attachmentAccept : undefined
               }

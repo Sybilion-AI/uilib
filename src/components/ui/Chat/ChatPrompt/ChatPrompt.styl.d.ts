@@ -5,8 +5,9 @@ interface CssExports {
   'attachmentItem': string;
   'attachments': string;
   'composer': string;
+  'editorMount': string;
+  'editorWrap': string;
   'fileInput': string;
-  'input': string;
   'root': string;
   'submitColumn': string;
 }

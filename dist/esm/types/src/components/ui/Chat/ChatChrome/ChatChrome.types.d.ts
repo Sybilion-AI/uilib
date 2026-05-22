@@ -2,6 +2,7 @@ import type { RefObject } from 'react';
 import type { ChatAttachmentDropItem, Message } from '#uilib/components/ui/Chat/Chat.types';
 import type { ChatEmptyStateProps } from '#uilib/components/ui/Chat/ChatEmptyState/ChatEmptyState.types';
 import type { ChatPresetsLayout } from '#uilib/components/ui/Chat/ChatPresets';
+import type { SlashCommandItem } from '#uilib/tiptap/slash-mention/types';
 import type { ScrollRef } from '@homecode/ui';
 export type ChatChromeResizeHandleConfig = {
     isActive: boolean;
@@ -48,4 +49,8 @@ export interface ChatChromeProps {
     allowPdfAttachments?: boolean;
     /** Optional hook when attachments are sent with a message. */
     onAttachmentsDropped?: (items: ChatAttachmentDropItem[]) => void | Promise<void>;
+    /** Slash menu (`/`), forwarded to `Chat.Prompt`; omit or pass empty list to disable slash palette. */
+    slashCommandItems?: SlashCommandItem[];
+    /** Composer placeholder forwarded to `Chat.Prompt`. */
+    promptPlaceholder?: string;
 }

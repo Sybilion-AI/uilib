@@ -6,6 +6,7 @@ import type {
 } from '#uilib/components/ui/Chat/Chat.types';
 import type { ChatEmptyStateProps } from '#uilib/components/ui/Chat/ChatEmptyState/ChatEmptyState.types';
 import type { ChatPresetsLayout } from '#uilib/components/ui/Chat/ChatPresets';
+import type { SlashCommandItem } from '#uilib/tiptap/slash-mention/types';
 import type { ScrollRef } from '@homecode/ui';
 
 export type ChatChromeResizeHandleConfig = {
@@ -62,4 +63,8 @@ export interface ChatChromeProps {
   onAttachmentsDropped?: (
     items: ChatAttachmentDropItem[],
   ) => void | Promise<void>;
+  /** Slash menu (`/`), forwarded to `Chat.Prompt`; omit or pass empty list to disable slash palette. */
+  slashCommandItems?: SlashCommandItem[];
+  /** Composer placeholder forwarded to `Chat.Prompt`. */
+  promptPlaceholder?: string;
 }
