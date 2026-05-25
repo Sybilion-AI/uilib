@@ -8,12 +8,18 @@ export type AddChatMessageOptions = {
     /** SYSTEM-only: mark as transient progress placeholder (shimmer until removed). */
     inProgress?: boolean;
 };
+export type UpdateChatMessagePatch = {
+    role?: MessageRole;
+    text?: string;
+    inProgress?: boolean;
+};
 export interface ChatContextType {
     /** Returns the new session id, or undefined if no user / not created. */
     newChat: (scopeId: string) => string | undefined;
     setCurrentChatId: (currScopeId: string, sessionId: string) => void;
     addMessage: (scopeId: string, chatId: string, role: MessageRole, text: string, options?: AddChatMessageOptions) => string | undefined;
     removeMessageById: (scopeId: string, chatId: string, messageId: string) => void;
+    updateMessageById: (scopeId: string, chatId: string, messageId: string, patch: UpdateChatMessagePatch) => void;
     sendMessage: (scopeId: string, message: string | ChatSendMessagePayload, chatId?: string) => Promise<string>;
     getChatsForScopeId: (scopeId: string) => Chat[];
     getCurrentChatId: (scopeId: string) => string | null;
@@ -55,6 +61,7 @@ export declare function useChatsForScopeId(scopeId: string): {
     newChat: () => string;
     addMessage: (chatId: string, role: MessageRole, text: string, options?: AddChatMessageOptions) => string;
     removeMessageById: (chatId: string, messageId: string) => void;
+    updateMessageById: (chatId: string, messageId: string, patch: UpdateChatMessagePatch) => void;
     sendMessage: (message: string | ChatSendMessagePayload, chatId?: string) => Promise<string>;
     deleteChat: (sessionId: string) => void;
 };
@@ -68,6 +75,7 @@ export declare function useChatsForDataset(scopeId: string): {
     newChat: () => string;
     addMessage: (chatId: string, role: MessageRole, text: string, options?: AddChatMessageOptions) => string;
     removeMessageById: (chatId: string, messageId: string) => void;
+    updateMessageById: (chatId: string, messageId: string, patch: UpdateChatMessagePatch) => void;
     sendMessage: (message: string | ChatSendMessagePayload, chatId?: string) => Promise<string>;
     deleteChat: (sessionId: string) => void;
 };

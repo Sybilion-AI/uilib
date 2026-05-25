@@ -28,10 +28,9 @@ const DOCS_SAMPLE_SLASH_ITEMS: SlashCommandItem[] = [
   },
 ];
 
-const SAMPLE_COMMAND_REPLY_TEXT =
-  'Sample command ran via `onSlashItemCommand` — composer cleared, no mention inserted.';
-
 const SAMPLE_COMMAND_PROGRESS_TEXT = 'Running sample command…';
+
+const SAMPLE_COMMAND_SUCCESS_TEXT = '✅ Sample command complete.';
 
 function makeMessage(
   role: MessageRole,
@@ -45,6 +44,33 @@ function makeMessage(
     timestamp: Date.now(),
     ...(options?.inProgress ? { inProgress: true } : {}),
   };
+}
+
+/** Local-state equivalent of chat-context `updateMessageById`. */
+function updateMessageInPlace(
+  messages: Message[],
+  messageId: string,
+  patch: { role?: MessageRole; text?: string; inProgress?: boolean },
+): Message[] {
+  return messages.map(message => {
+    if (message.id !== messageId) return message;
+    const next: Message = { ...message };
+    if (patch.role != null) {
+      next.role = patch.role;
+    }
+    if (patch.text != null) {
+      next.text = patch.text;
+    }
+    if (patch.inProgress === true) {
+      next.inProgress = true;
+    } else if (
+      patch.inProgress === false ||
+      (patch.role != null && patch.role !== MessageRole.SYSTEM)
+    ) {
+      delete next.inProgress;
+    }
+    return next;
+  });
 }
 
 const ASSISTANT_REPLY_TEXT =
@@ -88,10 +114,13 @@ export default function ChatSlashCommandsPage() {
     }
     replyTimeoutRef.current = setTimeout(() => {
       replyTimeoutRef.current = null;
-      setMessages(prev => [
-        ...prev.filter(m => m.id !== progressId),
-        makeMessage(MessageRole.ASSISTANT, SAMPLE_COMMAND_REPLY_TEXT),
-      ]);
+      setMessages(prev =>
+        updateMessageInPlace(prev, progressId, {
+          role: MessageRole.ASSISTANT,
+          text: SAMPLE_COMMAND_SUCCESS_TEXT,
+          inProgress: false,
+        }),
+      );
       setIsLoading(false);
     }, 1200);
   }, []);
@@ -140,7 +169,7 @@ export default function ChatSlashCommandsPage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'Chat' }, { label: 'Chat slash commands' }]}
         title="Chat slash commands"
-        subheader={`Slash palette uses TipTap Mention with "/" as the trigger. Pass slashCommandItems from the app; optional onSlashItemCommand can clear the composer and run an action instead of inserting a mention. Long-running handlers can append a SYSTEM message with inProgress while work is in flight, then remove it when done.`}
+        subheader={`Slash palette uses TipTap Mention with "/" as the trigger. Pass slashCommandItems from the app; optional onSlashItemCommand can clear the composer and run an action instead of inserting a mention. Long-running handlers can append a SYSTEM message with inProgress while work is in flight, then update it in place (e.g. via updateMessageById) to a final assistant message when done.`}
         actions={
           <DocsHeaderActions slashCommandItems={DOCS_SAMPLE_SLASH_ITEMS} />
         }
@@ -154,10 +183,9 @@ export default function ChatSlashCommandsPage() {
           shell below: scrolling history, empty state, disclaimer, composer.
           Type <kbd className="font-mono">/</kbd> at line start or after a
           space; pick <kbd className="font-mono">sample-command</kbd> to run the
-          custom handler (shows a transient{' '}
-          <kbd className="font-mono">inProgress</kbd> shimmer while the demo
-          action runs), or send <kbd className="font-mono">/sample-command</kbd>{' '}
-          with Enter.
+          custom handler (shows an <kbd className="font-mono">inProgress</kbd>{' '}
+          shimmer, then updates the same message to a success assistant reply),
+          or send <kbd className="font-mono">/sample-command</kbd> with Enter.
         </p>
         <ChatChrome
           showResizeHandle={false}
@@ -185,7 +213,7 @@ export default function ChatSlashCommandsPage() {
           emptyState={{
             title: 'Try a slash command',
             description:
-              'Pick sample-command from the palette or send /sample-command — onSlashItemCommand clears the composer, shows an inProgress placeholder, then posts the demo reply.',
+              'Pick sample-command from the palette or send /sample-command — inProgress placeholder shimmers, then becomes "✅ Sample command complete." in the same slot.',
           }}
         />
       </PageContentSection>

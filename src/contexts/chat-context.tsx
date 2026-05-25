@@ -39,6 +39,12 @@ export type AddChatMessageOptions = {
   inProgress?: boolean;
 };
 
+export type UpdateChatMessagePatch = {
+  role?: MessageRole;
+  text?: string;
+  inProgress?: boolean;
+};
+
 export interface ChatContextType {
   /** Returns the new session id, or undefined if no user / not created. */
   newChat: (scopeId: string) => string | undefined;
@@ -54,6 +60,12 @@ export interface ChatContextType {
     scopeId: string,
     chatId: string,
     messageId: string,
+  ) => void;
+  updateMessageById: (
+    scopeId: string,
+    chatId: string,
+    messageId: string,
+    patch: UpdateChatMessagePatch,
   ) => void;
   sendMessage: (
     scopeId: string,
@@ -370,6 +382,49 @@ export function ChatProvider({
     [userSwitchKey],
   );
 
+  const updateMessageById = useCallback(
+    (
+      scopeId: string,
+      chatId: string,
+      messageId: string,
+      patch: UpdateChatMessagePatch,
+    ) => {
+      if (userSwitchKey === null) return;
+      setChats(prev => {
+        const scopeChats = prev[scopeId] ?? [];
+        const updatedChats = scopeChats.map(chat => {
+          if (chat.session_id !== chatId) return chat;
+          return {
+            ...chat,
+            messages: chat.messages.map(message => {
+              if (message.id !== messageId) return message;
+              const next: Message = { ...message };
+              if (patch.role != null) {
+                next.role = patch.role;
+              }
+              if (patch.text != null) {
+                next.text = stripJsonDashboardFences(patch.text);
+              }
+              if (patch.inProgress === true) {
+                next.inProgress = true;
+              } else if (
+                patch.inProgress === false ||
+                (patch.role != null && patch.role !== MessageRole.SYSTEM)
+              ) {
+                delete next.inProgress;
+              }
+              return next;
+            }),
+          };
+        });
+        const chatsKey = getChatsKey(scopeId);
+        LS.set(chatsKey, updatedChats);
+        return { ...prev, [scopeId]: updatedChats };
+      });
+    },
+    [userSwitchKey],
+  );
+
   const sendMessage = useCallback(
     async (
       scopeId: string,
@@ -487,6 +542,7 @@ export function ChatProvider({
         setCurrentChatId,
         addMessage,
         removeMessageById,
+        updateMessageById,
         sendMessage,
         getChatsForScopeId,
         getCurrentChatId,
@@ -572,6 +628,7 @@ export function useChatsForScopeId(scopeId: string) {
     newChat,
     addMessage,
     removeMessageById,
+    updateMessageById,
     sendMessage,
     deleteChat,
   } = useChats();
@@ -595,6 +652,11 @@ export function useChatsForScopeId(scopeId: string) {
     ) => addMessage(scopeId, chatId, role, text, options),
     removeMessageById: (chatId: string, messageId: string) =>
       removeMessageById(scopeId, chatId, messageId),
+    updateMessageById: (
+      chatId: string,
+      messageId: string,
+      patch: UpdateChatMessagePatch,
+    ) => updateMessageById(scopeId, chatId, messageId, patch),
     sendMessage: (message: string | ChatSendMessagePayload, chatId?: string) =>
       sendMessage(scopeId, message, chatId),
     deleteChat: (sessionId: string) => deleteChat(scopeId, sessionId),

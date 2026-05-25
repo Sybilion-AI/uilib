@@ -234,6 +234,42 @@ function ChatProvider({ children, userSwitchKey, sendChatMessage: sendChatMessag
             return { ...prev, [scopeId]: updatedChats };
         });
     }, [userSwitchKey]);
+    const updateMessageById = useCallback((scopeId, chatId, messageId, patch) => {
+        if (userSwitchKey === null)
+            return;
+        setChats(prev => {
+            const scopeChats = prev[scopeId] ?? [];
+            const updatedChats = scopeChats.map(chat => {
+                if (chat.session_id !== chatId)
+                    return chat;
+                return {
+                    ...chat,
+                    messages: chat.messages.map(message => {
+                        if (message.id !== messageId)
+                            return message;
+                        const next = { ...message };
+                        if (patch.role != null) {
+                            next.role = patch.role;
+                        }
+                        if (patch.text != null) {
+                            next.text = stripJsonDashboardFences(patch.text);
+                        }
+                        if (patch.inProgress === true) {
+                            next.inProgress = true;
+                        }
+                        else if (patch.inProgress === false ||
+                            (patch.role != null && patch.role !== MessageRole.SYSTEM)) {
+                            delete next.inProgress;
+                        }
+                        return next;
+                    }),
+                };
+            });
+            const chatsKey = getChatsKey(scopeId);
+            LS.set(chatsKey, updatedChats);
+            return { ...prev, [scopeId]: updatedChats };
+        });
+    }, [userSwitchKey]);
     const sendMessage = useCallback(async (scopeId, message, chatId) => {
         const targetChatId = chatId ?? getCurrentChatId(scopeId);
         if (targetChatId === null || targetChatId === '') {
@@ -310,6 +346,7 @@ function ChatProvider({ children, userSwitchKey, sendChatMessage: sendChatMessag
             setCurrentChatId,
             addMessage,
             removeMessageById,
+            updateMessageById,
             sendMessage,
             getChatsForScopeId,
             getCurrentChatId,
@@ -370,7 +407,7 @@ function useSyncChatPanelBusy(isLoading) {
     }, [isLoading, acquirePanelBusy, releasePanelBusy]);
 }
 function useChatsForScopeId(scopeId) {
-    const { getChatsForScopeId, getCurrentChatId, setCurrentChatId, newChat, addMessage, removeMessageById, sendMessage, deleteChat, } = useChats();
+    const { getChatsForScopeId, getCurrentChatId, setCurrentChatId, newChat, addMessage, removeMessageById, updateMessageById, sendMessage, deleteChat, } = useChats();
     const chats = getChatsForScopeId(scopeId);
     const currentChatId = getCurrentChatId(scopeId);
     const currentChat = useChat(scopeId, currentChatId ?? undefined);
@@ -384,6 +421,7 @@ function useChatsForScopeId(scopeId) {
         newChat: () => newChat(scopeId),
         addMessage: (chatId, role, text, options) => addMessage(scopeId, chatId, role, text, options),
         removeMessageById: (chatId, messageId) => removeMessageById(scopeId, chatId, messageId),
+        updateMessageById: (chatId, messageId, patch) => updateMessageById(scopeId, chatId, messageId, patch),
         sendMessage: (message, chatId) => sendMessage(scopeId, message, chatId),
         deleteChat: (sessionId) => deleteChat(scopeId, sessionId),
     };
