@@ -71,11 +71,11 @@ export function ChatChrome({
     ChatAttachmentDropItem[]
   >([]);
   const [isExtractingAttachments, setIsExtractingAttachments] = useState(false);
-  const promptBusy = isLoading || isExtractingAttachments;
+  const promptDisabled = isExtractingAttachments;
 
   const handleAttachmentFiles = useCallback(
     (files: File[]) => {
-      if (promptBusy || files.length === 0) return;
+      if (promptDisabled || files.length === 0) return;
 
       setIsExtractingAttachments(true);
       void extractChatAttachmentItems(files, allowPdfAttachments)
@@ -89,7 +89,7 @@ export function ChatChrome({
         })
         .finally(() => setIsExtractingAttachments(false));
     },
-    [allowPdfAttachments, promptBusy],
+    [allowPdfAttachments, promptDisabled],
   );
 
   const handleRemoveAttachment = useCallback((index: number) => {
@@ -165,7 +165,7 @@ export function ChatChrome({
             multiple
             ghost
             overlayScope="container"
-            disabled={promptBusy}
+            disabled={promptDisabled}
             className={S.attachmentDropzone}
             onFiles={handleAttachmentFiles}
           />
@@ -263,7 +263,7 @@ export function ChatChrome({
             ) : null}
             <Chat.Prompt
               onSubmit={handlePromptSubmitWithAttachments}
-              disabled={promptBusy}
+              disabled={promptDisabled}
               attachments={pendingAttachments}
               onRemoveAttachment={handleRemoveAttachment}
               prefillMessage={promptPrefill ?? undefined}

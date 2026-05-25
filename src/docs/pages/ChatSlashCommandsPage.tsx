@@ -139,7 +139,7 @@ export default function ChatSlashCommandsPage() {
   const onSubmit = useCallback(
     (raw: string) => {
       const text = raw.trim();
-      if (!text || isLoading) return;
+      if (!text) return;
 
       if (text === `/${DOCS_SAMPLE_COMMAND_ID}`) {
         runSampleCommand();
@@ -161,7 +161,7 @@ export default function ChatSlashCommandsPage() {
         setIsLoading(false);
       }, 900);
     },
-    [isLoading, runSampleCommand],
+    [runSampleCommand],
   );
 
   return (

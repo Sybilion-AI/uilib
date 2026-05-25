@@ -84,7 +84,12 @@ export function ChatPromptComposer({
       </div>
 
       <div className={S.submitColumn}>
-        <Button type="submit" size="sm" disabled={disabled || !canSubmit}>
+        <Button
+          type="submit"
+          size="sm"
+          disabled={disabled || !canSubmit}
+          onMouseDown={e => e.preventDefault()}
+        >
           <SendHorizontalIcon size={16} />
         </Button>
       </div>
