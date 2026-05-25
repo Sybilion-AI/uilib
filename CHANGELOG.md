@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.40](https://github.com/Mir-Insight/uilib/compare/v1.3.39...v1.3.40) (2026-05-25)
+
+
+### Features
+
+* ChatMessage - add inProgress system placeholder SYB-841 ([d35f434](https://github.com/Mir-Insight/uilib/commit/d35f434708a826a2c5f9ada7c29afd35bd86da85))
+
 ### [1.3.39](https://github.com/Mir-Insight/uilib/compare/v1.3.38...v1.3.39) (2026-05-25)
 
 ### [1.3.38](https://github.com/Mir-Insight/uilib/compare/v1.3.37...v1.3.38) (2026-05-25)
