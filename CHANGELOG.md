@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.38](https://github.com/Mir-Insight/uilib/compare/v1.3.37...v1.3.38) (2026-05-25)
+
+
+### Features
+
+* ChatSheet - /generate-dashboard slash command SYB-841 ([ab2d5e2](https://github.com/Mir-Insight/uilib/commit/ab2d5e28465d45149f9f45306b12a8e1d0c1f274))
+
 ### [1.3.37](https://github.com/Mir-Insight/uilib/compare/v1.3.36...v1.3.37) (2026-05-22)
 
 
