@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.41](https://github.com/Mir-Insight/uilib/compare/v1.3.40...v1.3.41) (2026-05-25)
+
+
+### Features
+
+* ChatContext - add updateMessageById SYB-841 ([a69ac24](https://github.com/Mir-Insight/uilib/commit/a69ac24ab4566a20626b1524d3bc41e098f50ab5))
+
+
+### Bug Fixes
+
+* ChatMessage - decrease padding ([e24f839](https://github.com/Mir-Insight/uilib/commit/e24f83971c4af5736f6d90ed08311f5967f092ac))
+* ChatPrompt - Keep composer focused and unlocked ([0f2052e](https://github.com/Mir-Insight/uilib/commit/0f2052e8223ccc7892e4d7ccaf9756bc4fc9ed91))
+
 ### [1.3.40](https://github.com/Mir-Insight/uilib/compare/v1.3.39...v1.3.40) (2026-05-25)
 
 
