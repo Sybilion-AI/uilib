@@ -22,7 +22,7 @@ export { ChartLegend, ChartTooltip } from './components/ui/Chart/Chart.js';
 export { THEMES } from './components/ui/Chart/Chart.types.js';
 export { ChartAreaInteractive, chartConfig } from './components/ui/ChartAreaInteractive/ChartAreaInteractive.js';
 export { Chat } from './components/ui/Chat/Chat.js';
-export { usedPresetIdsFromMessages } from './components/ui/Chat/chat-preset-utils.js';
+export { formatChatTranscript, usedPresetIdsFromMessages } from './components/ui/Chat/chat-preset-utils.js';
 export { ChatChrome } from './components/ui/Chat/ChatChrome/ChatChrome.js';
 export { TEXT_ATTACHMENT_ACCEPT_PARTS, filterToTextAttachments } from './components/ui/Chat/chatAttachmentAccept.js';
 export { buildChatSendMessagePayload, displayTextFromSendPayload, normalizeUserTextFileAttachments } from './components/ui/Chat/buildChatSendMessagePayload.js';
@@ -32,7 +32,7 @@ export { useChatPanelChromeModel } from './components/ui/Chat/ChatSheet/useChatP
 export { ChatMessage } from './components/ui/Chat/ChatMessage/ChatMessage.js';
 export { ChatPrompt } from './components/ui/Chat/ChatPrompt/ChatPrompt.js';
 export { ChatPresets } from './components/ui/Chat/ChatPresets/ChatPresets.js';
-export { GENERATE_DASHBOARD_SLASH_COMMAND_ID, MessageRole, isGenerateDashboardSlashMessage } from './components/ui/Chat/Chat.types.js';
+export { MessageRole } from './components/ui/Chat/Chat.types.js';
 export { CsvIcon } from './components/icons/CsvIcon/CsvIcon.js';
 export { Checkbox } from './components/ui/Checkbox/Checkbox.js';
 export { Confirm } from './components/ui/Confirm/Confirm.js';

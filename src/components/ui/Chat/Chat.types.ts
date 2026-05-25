@@ -13,16 +13,6 @@ export enum MessageRole {
   SYSTEM = 'system',
 }
 
-/** System placeholder while dashboard generation runs (must match ChatSheet `addMessage` text). */
-export const GENERATING_DASHBOARD_SYSTEM_TEXT = 'Generating dashboard…';
-
-/** Slash command id that triggers dashboard generation when `onGenerateDashboard` is set. */
-export const GENERATE_DASHBOARD_SLASH_COMMAND_ID = 'generate-dashboard';
-
-export function isGenerateDashboardSlashMessage(message: string): boolean {
-  return message.trim() === `/${GENERATE_DASHBOARD_SLASH_COMMAND_ID}`;
-}
-
 /** USER-only: text file attached to a message; shown as downloadable file row(s). */
 export type UserTextFileAttachment = {
   displayName: string;

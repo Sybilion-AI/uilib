@@ -6,11 +6,6 @@ export declare enum MessageRole {
     ASSISTANT = "assistant",
     SYSTEM = "system"
 }
-/** System placeholder while dashboard generation runs (must match ChatSheet `addMessage` text). */
-export declare const GENERATING_DASHBOARD_SYSTEM_TEXT = "Generating dashboard\u2026";
-/** Slash command id that triggers dashboard generation when `onGenerateDashboard` is set. */
-export declare const GENERATE_DASHBOARD_SLASH_COMMAND_ID = "generate-dashboard";
-export declare function isGenerateDashboardSlashMessage(message: string): boolean;
 /** USER-only: text file attached to a message; shown as downloadable file row(s). */
 export type UserTextFileAttachment = {
     displayName: string;

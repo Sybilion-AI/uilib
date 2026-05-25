@@ -2,11 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   ChatPreset,
-  GENERATE_DASHBOARD_SLASH_COMMAND_ID,
-  GENERATING_DASHBOARD_SYSTEM_TEXT,
   MessageRole,
   type ScriptCompletePayload,
-  isGenerateDashboardSlashMessage,
 } from '#uilib/components/ui/Chat/Chat.types';
 import {
   branchKeysUsedByUserMessages,
@@ -25,10 +22,7 @@ import {
   buildChatSendMessagePayload,
   displayTextFromSendPayload,
 } from '#uilib/components/ui/Chat/buildChatSendMessagePayload';
-import {
-  formatChatTranscript,
-  usedPresetIdsFromMessages,
-} from '#uilib/components/ui/Chat/chat-preset-utils';
+import { usedPresetIdsFromMessages } from '#uilib/components/ui/Chat/chat-preset-utils';
 import {
   isChatEmpty,
   useChat,
@@ -42,7 +36,7 @@ import { useQueryParams } from '#uilib/hooks/useQueryParams';
 import logger from '#uilib/lib/logger';
 import type {
   SlashCommandItem,
-  SlashItemCommandContext,
+  SlashOnItemCommand,
 } from '#uilib/tiptap/slash-mention/types';
 import { mergePresetFreeformDefaults } from '#uilib/utils/chatPresetMerge';
 import { ScrollRef } from '@homecode/ui';
@@ -63,8 +57,6 @@ export type UseChatPanelChromeModelInput = {
   onMessage?: (message: string) => void;
   /** Fires when a preset script has no further `[Label|branchKey]` steps (graph leaf or linear script end). */
   onScriptComplete?: (payload: ScriptCompletePayload) => void;
-  /** Generate dashboard from chat transcript (e.g. via `/generate-dashboard` slash command). */
-  onGenerateDashboard?: (transcript: string) => void | Promise<void>;
   /** Renders `[CHART]` tokens in assistant messages. */
   renderMessageChart?: () => React.ReactNode;
   /** Forwarded to `ChatChrome` when the thread is empty. */
@@ -78,6 +70,8 @@ export type UseChatPanelChromeModelInput = {
   ) => void | Promise<void>;
   /** Slash menu (`/`) in the composer; omit or pass empty to disable. */
   slashCommandItems?: SlashCommandItem[];
+  /** Custom slash command handler (palette pick or Enter on `/id`). */
+  onSlashItemCommand?: SlashOnItemCommand;
 };
 
 export type UseChatPanelChromeModelResult = {
@@ -120,13 +114,13 @@ export function useChatPanelChromeModel({
   scopeId,
   onMessage,
   onScriptComplete,
-  onGenerateDashboard,
   renderMessageChart,
   emptyState,
   allowedAttachments,
   allowPdfAttachments,
   onAttachmentsDropped,
   slashCommandItems,
+  onSlashItemCommand,
 }: UseChatPanelChromeModelInput): UseChatPanelChromeModelResult {
   const effectiveScopeId = scopeId ?? NO_SCOPE_FALLBACK;
   const isMobile = useIsMobile();
@@ -202,7 +196,6 @@ export function useChatPanelChromeModel({
   const [scriptCompleteByChatId, setScriptCompleteByChatId] = useState<
     Record<string, boolean>
   >({});
-  const [generatingDashboard, setGeneratingDashboard] = useState(false);
   const scriptAdvanceLockRef = useRef(false);
   const quickReplyLockRef = useRef(false);
   const scrollRef = useRef<ScrollRef>(null);
@@ -961,75 +954,18 @@ export function useChatPanelChromeModel({
     !linearScriptActive &&
     (!graphActive || (!lastHasQuickMarkers && unusedBranchKeys.length === 0));
 
-  const handleGenerateDashboard = useCallback(async () => {
-    if (!currentChatId || !onGenerateDashboard) return;
-    const transcript = formatChatTranscript(
-      (chat?.messages ?? []).filter(m => m.role !== MessageRole.SYSTEM),
-    );
-    setGeneratingDashboard(true);
-    const systemPlaceholderId = addMessage(
-      currentChatId,
-      MessageRole.SYSTEM,
-      GENERATING_DASHBOARD_SYSTEM_TEXT,
-    );
-    try {
-      await Promise.resolve(onGenerateDashboard(transcript));
-      setScriptCompleteByChatId(prev => {
-        const next = { ...prev };
-        delete next[currentChatId];
-        return next;
-      });
-    } finally {
-      if (systemPlaceholderId) {
-        removeMessageById(currentChatId, systemPlaceholderId);
-      }
-      setGeneratingDashboard(false);
-    }
-  }, [
-    currentChatId,
-    onGenerateDashboard,
-    chat?.messages,
-    addMessage,
-    removeMessageById,
-  ]);
-
-  const onSlashItemCommand = useCallback(
-    ({ item }: SlashItemCommandContext) => {
-      if (
-        item.id !== GENERATE_DASHBOARD_SLASH_COMMAND_ID ||
-        !onGenerateDashboard
-      ) {
-        return false;
-      }
-      if (generatingDashboard) {
-        return true;
-      }
-      queueMicrotask(() => {
-        void handleGenerateDashboard();
-      });
-      return true;
-    },
-    [onGenerateDashboard, generatingDashboard, handleGenerateDashboard],
-  );
-
   const onPromptSubmitWithSlashCommands = useCallback(
     async (message: string, attachments?: ChatAttachmentDropItem[]) => {
-      if (
-        isGenerateDashboardSlashMessage(message) &&
-        onGenerateDashboard &&
-        !generatingDashboard
-      ) {
-        void handleGenerateDashboard();
+      const trimmed = message.trim();
+      const slashItem = slashCommandItems?.find(
+        item => trimmed === `/${item.id}`,
+      );
+      if (slashItem && onSlashItemCommand?.({ item: slashItem }) === true) {
         return;
       }
       return handlePromptSubmit(message, attachments);
     },
-    [
-      handlePromptSubmit,
-      onGenerateDashboard,
-      generatingDashboard,
-      handleGenerateDashboard,
-    ],
+    [handlePromptSubmit, slashCommandItems, onSlashItemCommand],
   );
 
   const onDragChatWidth = useCallback(

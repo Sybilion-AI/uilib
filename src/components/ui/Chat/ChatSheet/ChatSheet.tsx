@@ -41,13 +41,13 @@ export function ChatSheet({
   scopeId,
   onMessage,
   onScriptComplete,
-  onGenerateDashboard,
   renderMessageChart,
   emptyState,
   allowedAttachments,
   allowPdfAttachments,
   onAttachmentsDropped,
   slashCommandItems,
+  onSlashItemCommand,
   inline = false,
 }: ChatSheetProps) {
   const model = useChatPanelChromeModel({
@@ -56,13 +56,13 @@ export function ChatSheet({
     scopeId,
     onMessage,
     onScriptComplete,
-    onGenerateDashboard,
     renderMessageChart,
     emptyState,
     allowedAttachments,
     allowPdfAttachments,
     onAttachmentsDropped,
     slashCommandItems,
+    onSlashItemCommand,
   });
 
   if (actionsRef) {

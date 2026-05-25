@@ -1,5 +1,5 @@
 import { ChatPreset, type ScriptCompletePayload } from '#uilib/components/ui/Chat/Chat.types';
-import type { SlashCommandItem } from '#uilib/tiptap/slash-mention/types';
+import type { SlashCommandItem, SlashOnItemCommand } from '#uilib/tiptap/slash-mention/types';
 import type { ChatChromeProps } from '../ChatChrome';
 import type { ChatAttachmentDropItem } from '../ChatChrome/ChatChrome.types';
 import type { ChatEmptyStateConfig } from '../ChatEmptyState/ChatEmptyState.types';
@@ -12,8 +12,6 @@ export type UseChatPanelChromeModelInput = {
     onMessage?: (message: string) => void;
     /** Fires when a preset script has no further `[Label|branchKey]` steps (graph leaf or linear script end). */
     onScriptComplete?: (payload: ScriptCompletePayload) => void;
-    /** Generate dashboard from chat transcript (e.g. via `/generate-dashboard` slash command). */
-    onGenerateDashboard?: (transcript: string) => void | Promise<void>;
     /** Renders `[CHART]` tokens in assistant messages. */
     renderMessageChart?: () => React.ReactNode;
     /** Forwarded to `ChatChrome` when the thread is empty. */
@@ -25,6 +23,8 @@ export type UseChatPanelChromeModelInput = {
     onAttachmentsDropped?: (items: ChatAttachmentDropItem[]) => void | Promise<void>;
     /** Slash menu (`/`) in the composer; omit or pass empty to disable. */
     slashCommandItems?: SlashCommandItem[];
+    /** Custom slash command handler (palette pick or Enter on `/id`). */
+    onSlashItemCommand?: SlashOnItemCommand;
 };
 export type UseChatPanelChromeModelResult = {
     chromeProps: ChatChromeProps;
@@ -34,4 +34,4 @@ export type UseChatPanelChromeModelResult = {
     newChat: () => void;
     chatPanelContainer: HTMLElement | null;
 };
-export declare function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, emptyState, allowedAttachments, allowPdfAttachments, onAttachmentsDropped, slashCommandItems, }: UseChatPanelChromeModelInput): UseChatPanelChromeModelResult;
+export declare function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onScriptComplete, renderMessageChart, emptyState, allowedAttachments, allowPdfAttachments, onAttachmentsDropped, slashCommandItems, onSlashItemCommand, }: UseChatPanelChromeModelInput): UseChatPanelChromeModelResult;

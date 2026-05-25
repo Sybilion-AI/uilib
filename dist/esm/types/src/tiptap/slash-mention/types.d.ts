@@ -5,9 +5,10 @@ export type SlashCommandItem = {
     description?: string;
 };
 export type SlashItemCommandContext = {
-    editor: Editor;
-    range: Range;
     item: SlashCommandItem;
+    /** Present when picked from the slash palette; omitted on Enter submit of `/id`. */
+    editor?: Editor;
+    range?: Range;
 };
 /**
  * If provided, run when a slash item is picked. Return true to skip mention insert

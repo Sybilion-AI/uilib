@@ -1,9 +1,9 @@
 import { jsx } from 'react/jsx-runtime';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { MessageRole, GENERATING_DASHBOARD_SYSTEM_TEXT, GENERATE_DASHBOARD_SLASH_COMMAND_ID, isGenerateDashboardSlashMessage } from '../Chat.types.js';
+import { MessageRole } from '../Chat.types.js';
 import { isGraphIntakeAssistantStepComplete, matchUserTextToQuickReply, isPresetScriptGraph, branchesFromPresetScriptGraph, parseScriptLine, textHasQuickReplyMarkers, branchKeysUsedFromChatHistory, branchKeysUsedByUserMessages, extractQuickReplyLabelKeyPairsFromText, entryBranchKeyBeforeLastAssistant } from '../ChatMessage/presetScript.js';
 import { buildChatSendMessagePayload, displayTextFromSendPayload } from '../buildChatSendMessagePayload.js';
-import { usedPresetIdsFromMessages, formatChatTranscript } from '../chat-preset-utils.js';
+import { usedPresetIdsFromMessages } from '../chat-preset-utils.js';
 import { useChatsForScopeId, useChat, useChatOutboundPending, useSyncChatPanelBusy, isChatEmpty } from '../../../../contexts/chat-context.js';
 import useEvent from '../../../../hooks/useEvent.js';
 import { useIsMobile } from '../../../../hooks/useIsMobile.js';
@@ -22,7 +22,7 @@ const CHAT_NAV_COLLAPSE_BREAKPOINT_PX = 1400;
 const CHAT_QUERY_PARAM = 'chat';
 const CHAT_OPEN_VALUE = 'open';
 const PROMPT_QUERY_PARAM = 'prompt';
-function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, emptyState, allowedAttachments, allowPdfAttachments, onAttachmentsDropped, slashCommandItems, }) {
+function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onScriptComplete, renderMessageChart, emptyState, allowedAttachments, allowPdfAttachments, onAttachmentsDropped, slashCommandItems, onSlashItemCommand, }) {
     const effectiveScopeId = scopeId ?? NO_SCOPE_FALLBACK;
     const isMobile = useIsMobile();
     const { chatPanelContainer, isOpen: sidebarNavOpen, setOpen: setSidebarNavOpen, chatWidthPx, setChatWidthPx, getShellWidth, setChatPanelOpen, } = useSidebar();
@@ -60,7 +60,6 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
     const [intakeByChatId, setIntakeByChatId] = useState({});
     /** Preset intake finished for this session (e.g. `onScriptComplete` callback). */
     const [scriptCompleteByChatId, setScriptCompleteByChatId] = useState({});
-    const [generatingDashboard, setGeneratingDashboard] = useState(false);
     const scriptAdvanceLockRef = useRef(false);
     const quickReplyLockRef = useRef(false);
     const scrollRef = useRef(null);
@@ -712,60 +711,14 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
         lastMsg?.role === MessageRole.ASSISTANT &&
         !linearScriptActive &&
         (!graphActive || (!lastHasQuickMarkers && unusedBranchKeys.length === 0));
-    const handleGenerateDashboard = useCallback(async () => {
-        if (!currentChatId || !onGenerateDashboard)
-            return;
-        const transcript = formatChatTranscript((chat?.messages ?? []).filter(m => m.role !== MessageRole.SYSTEM));
-        setGeneratingDashboard(true);
-        const systemPlaceholderId = addMessage(currentChatId, MessageRole.SYSTEM, GENERATING_DASHBOARD_SYSTEM_TEXT);
-        try {
-            await Promise.resolve(onGenerateDashboard(transcript));
-            setScriptCompleteByChatId(prev => {
-                const next = { ...prev };
-                delete next[currentChatId];
-                return next;
-            });
-        }
-        finally {
-            if (systemPlaceholderId) {
-                removeMessageById(currentChatId, systemPlaceholderId);
-            }
-            setGeneratingDashboard(false);
-        }
-    }, [
-        currentChatId,
-        onGenerateDashboard,
-        chat?.messages,
-        addMessage,
-        removeMessageById,
-    ]);
-    const onSlashItemCommand = useCallback(({ item }) => {
-        if (item.id !== GENERATE_DASHBOARD_SLASH_COMMAND_ID ||
-            !onGenerateDashboard) {
-            return false;
-        }
-        if (generatingDashboard) {
-            return true;
-        }
-        queueMicrotask(() => {
-            void handleGenerateDashboard();
-        });
-        return true;
-    }, [onGenerateDashboard, generatingDashboard, handleGenerateDashboard]);
     const onPromptSubmitWithSlashCommands = useCallback(async (message, attachments) => {
-        if (isGenerateDashboardSlashMessage(message) &&
-            onGenerateDashboard &&
-            !generatingDashboard) {
-            void handleGenerateDashboard();
+        const trimmed = message.trim();
+        const slashItem = slashCommandItems?.find(item => trimmed === `/${item.id}`);
+        if (slashItem && onSlashItemCommand?.({ item: slashItem }) === true) {
             return;
         }
         return handlePromptSubmit(message, attachments);
-    }, [
-        handlePromptSubmit,
-        onGenerateDashboard,
-        generatingDashboard,
-        handleGenerateDashboard,
-    ]);
+    }, [handlePromptSubmit, slashCommandItems, onSlashItemCommand]);
     const onDragChatWidth = useCallback((rawPx) => setChatWidthPx(rawPx, { persist: false }), [setChatWidthPx]);
     const onDragChatComplete = useCallback((finalRawPx) => setChatWidthPx(finalRawPx, { persist: true }), [setChatWidthPx]);
     const chromeProps = {

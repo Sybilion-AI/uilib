@@ -7,9 +7,10 @@ export type SlashCommandItem = {
 };
 
 export type SlashItemCommandContext = {
-  editor: Editor;
-  range: Range;
   item: SlashCommandItem;
+  /** Present when picked from the slash palette; omitted on Enter submit of `/id`. */
+  editor?: Editor;
+  range?: Range;
 };
 
 /**

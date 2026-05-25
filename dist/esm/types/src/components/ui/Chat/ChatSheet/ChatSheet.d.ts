@@ -19,4 +19,4 @@ export interface ChatSheetProps extends Omit<UseChatPanelChromeModelInput, 'embe
      */
     inline?: boolean;
 }
-export declare function ChatSheet({ triggerLabel, triggerAriaLabel, actionsRef, renderTrigger, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, emptyState, allowedAttachments, allowPdfAttachments, onAttachmentsDropped, slashCommandItems, inline, }: ChatSheetProps): import("react/jsx-runtime").JSX.Element;
+export declare function ChatSheet({ triggerLabel, triggerAriaLabel, actionsRef, renderTrigger, presets, scopeId, onMessage, onScriptComplete, renderMessageChart, emptyState, allowedAttachments, allowPdfAttachments, onAttachmentsDropped, slashCommandItems, onSlashItemCommand, inline, }: ChatSheetProps): import("react/jsx-runtime").JSX.Element;

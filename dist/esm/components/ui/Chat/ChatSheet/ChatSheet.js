@@ -4,20 +4,20 @@ import { Button } from '../../Button/Button.js';
 import { ChatChrome } from '../ChatChrome/ChatChrome.js';
 import { useChatPanelChromeModel } from './useChatPanelChromeModel.js';
 
-function ChatSheet({ triggerLabel = 'Open Chat', triggerAriaLabel, actionsRef, renderTrigger, presets, scopeId, onMessage, onScriptComplete, onGenerateDashboard, renderMessageChart, emptyState, allowedAttachments, allowPdfAttachments, onAttachmentsDropped, slashCommandItems, inline = false, }) {
+function ChatSheet({ triggerLabel = 'Open Chat', triggerAriaLabel, actionsRef, renderTrigger, presets, scopeId, onMessage, onScriptComplete, renderMessageChart, emptyState, allowedAttachments, allowPdfAttachments, onAttachmentsDropped, slashCommandItems, onSlashItemCommand, inline = false, }) {
     const model = useChatPanelChromeModel({
         embedAsPage: inline,
         presets,
         scopeId,
         onMessage,
         onScriptComplete,
-        onGenerateDashboard,
         renderMessageChart,
         emptyState,
         allowedAttachments,
         allowPdfAttachments,
         onAttachmentsDropped,
         slashCommandItems,
+        onSlashItemCommand,
     });
     if (actionsRef) {
         actionsRef.current = {

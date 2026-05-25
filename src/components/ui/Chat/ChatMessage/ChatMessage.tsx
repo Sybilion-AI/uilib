@@ -2,12 +2,7 @@ import cn from 'classnames';
 
 import { InteractiveContent } from '#uilib/components/ui/InteractiveContent';
 
-import { TextShimmer } from '../../TextShimmer';
-import {
-  type ChatMessageProps,
-  GENERATING_DASHBOARD_SYSTEM_TEXT,
-  MessageRole,
-} from '../Chat.types';
+import { type ChatMessageProps, MessageRole } from '../Chat.types';
 import { userTextFileAttachmentsFromMessage } from '../userTextFileAttachments';
 import { AgentMessageContent } from './AgentMessageContent';
 import S from './ChatMessage.styl';
@@ -34,13 +29,7 @@ export function ChatMessage({
   return (
     <div className={cn(S.root, S[`role-${role}`])}>
       {isSystem ? (
-        <div className={S.text}>
-          {text === GENERATING_DASHBOARD_SYSTEM_TEXT ? (
-            <TextShimmer as="span">{text}</TextShimmer>
-          ) : (
-            text
-          )}
-        </div>
+        <div className={S.text}>{text}</div>
       ) : isAssistant ? (
         <AgentMessageContent
           text={text}
