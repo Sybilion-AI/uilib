@@ -32,7 +32,7 @@ export { useChatPanelChromeModel } from './components/ui/Chat/ChatSheet/useChatP
 export { ChatMessage } from './components/ui/Chat/ChatMessage/ChatMessage.js';
 export { ChatPrompt } from './components/ui/Chat/ChatPrompt/ChatPrompt.js';
 export { ChatPresets } from './components/ui/Chat/ChatPresets/ChatPresets.js';
-export { MessageRole } from './components/ui/Chat/Chat.types.js';
+export { GENERATE_DASHBOARD_SLASH_COMMAND_ID, MessageRole, isGenerateDashboardSlashMessage } from './components/ui/Chat/Chat.types.js';
 export { CsvIcon } from './components/icons/CsvIcon/CsvIcon.js';
 export { Checkbox } from './components/ui/Checkbox/Checkbox.js';
 export { Confirm } from './components/ui/Confirm/Confirm.js';

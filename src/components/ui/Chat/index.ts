@@ -39,6 +39,10 @@ export type {
   Message,
   UserTextFileAttachment,
 } from './Chat.types';
-export { MessageRole } from './Chat.types';
+export {
+  GENERATE_DASHBOARD_SLASH_COMMAND_ID,
+  isGenerateDashboardSlashMessage,
+  MessageRole,
+} from './Chat.types';
 export type { SlashCommandItem } from '#uilib/tiptap/slash-mention/types';
 export { CsvIcon } from '../../icons/CsvIcon/CsvIcon';

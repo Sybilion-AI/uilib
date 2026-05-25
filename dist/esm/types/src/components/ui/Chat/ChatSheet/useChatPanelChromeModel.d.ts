@@ -12,7 +12,7 @@ export type UseChatPanelChromeModelInput = {
     onMessage?: (message: string) => void;
     /** Fires when a preset script has no further `[Label|branchKey]` steps (graph leaf or linear script end). */
     onScriptComplete?: (payload: ScriptCompletePayload) => void;
-    /** After intake script completes, user can generate a dashboard from the full transcript (e.g. Decision board). */
+    /** Generate dashboard from chat transcript (e.g. via `/generate-dashboard` slash command). */
     onGenerateDashboard?: (transcript: string) => void | Promise<void>;
     /** Renders `[CHART]` tokens in assistant messages. */
     renderMessageChart?: () => React.ReactNode;

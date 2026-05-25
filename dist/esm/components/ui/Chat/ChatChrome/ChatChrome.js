@@ -4,7 +4,7 @@ import { useMemo, useState, useCallback, useEffect } from 'react';
 import { displayLabelForBranchKeyFromMessages, humanizeBranchKey } from '../ChatMessage/presetScript.js';
 import { TextShimmer } from '../../TextShimmer/TextShimmer.js';
 import { Scroll } from '@homecode/ui';
-import { X, PaperPlaneRightIcon, ChartLineIcon } from '@phosphor-icons/react';
+import { X, PaperPlaneRightIcon } from '@phosphor-icons/react';
 import { Button } from '../../Button/Button.js';
 import { DropZone } from '../../DropZone/DropZone.js';
 import { PanelResizeHandle } from '../../Sidebar/Sidebar.js';
@@ -14,7 +14,7 @@ import { filterToTextAttachments, isAttachmentsDropzoneEnabled, buildAcceptAttr 
 import { extractChatAttachmentItems } from '../chatAttachmentExtract.js';
 import S from './ChatChrome.styl.js';
 
-function ChatChrome({ showResizeHandle, resizeHandle, onClose, isEmpty, renderPresets, messages, onQuickReply, suppressedQuickReplyKeys, isLoading, scriptContinueLabel, onScriptContinue, renderMessageChart, showBranchActionsRow, showSyntheticBranchButtons, unusedBranchKeys, isScriptComplete, onGenerateDashboard, generatingDashboard, onGenerateDashboardClick, showInlinePresets, isLastMessageFromUser, scrollRef, effectiveScopeId, onPromptSubmit, onChatDeleted, promptPrefill, footerClassName, emptyState, allowedAttachments, allowPdfAttachments = false, onAttachmentsDropped, slashCommandItems, promptPlaceholder, }) {
+function ChatChrome({ showResizeHandle, resizeHandle, onClose, isEmpty, renderPresets, messages, onQuickReply, suppressedQuickReplyKeys, isLoading, scriptContinueLabel, onScriptContinue, renderMessageChart, showSyntheticBranchButtons, unusedBranchKeys, showInlinePresets, isLastMessageFromUser, scrollRef, effectiveScopeId, onPromptSubmit, onChatDeleted, promptPrefill, footerClassName, emptyState, allowedAttachments, allowPdfAttachments = false, onAttachmentsDropped, slashCommandItems, onSlashItemCommand, promptPlaceholder, }) {
     const filteredAllowedAttachments = useMemo(() => filterToTextAttachments(allowedAttachments), [allowedAttachments]);
     const attachmentsDropzoneEnabled = isAttachmentsDropzoneEnabled(allowedAttachments, allowPdfAttachments);
     const attachmentAccept = useMemo(() => buildAcceptAttr(filteredAllowedAttachments, allowPdfAttachments), [filteredAllowedAttachments, allowPdfAttachments]);
@@ -73,14 +73,11 @@ function ChatChrome({ showResizeHandle, resizeHandle, onClose, isEmpty, renderPr
                                                     : undefined, onScriptContinue: isLast && scriptContinueLabel
                                                     ? onScriptContinue
                                                     : undefined, renderMessageChart: renderMessageChart }, msg.id));
-                                        }), showBranchActionsRow && (jsxs("div", { className: S.branchRow, children: [showSyntheticBranchButtons
-                                                    ? unusedBranchKeys.map(key => {
-                                                        const label = displayLabelForBranchKeyFromMessages(key, messages) ?? humanizeBranchKey(key);
-                                                        return (jsx("span", { className: S.branchBtnWrap, children: jsxs(Button, { type: "button", variant: "outline", size: "sm", disabled: isLoading, onClick: () => onQuickReply(key, label), children: [jsx(PaperPlaneRightIcon, {}), label] }) }, key));
-                                                    })
-                                                    : null, isScriptComplete &&
-                                                    onGenerateDashboard &&
-                                                    !generatingDashboard ? (jsxs(Button, { type: "button", variant: "default", size: "lg", disabled: isLoading, onClick: onGenerateDashboardClick, children: [jsx(ChartLineIcon, {}), "Generate Dashboard"] })) : null] })), showInlinePresets && renderPresets('inline'), isLoading && isLastMessageFromUser && (jsx(TextShimmer, { duration: 1, spread: 5, className: S.loader, children: "Thinking..." }))] }) })), jsxs("div", { className: cn(S.footer, footerClassName), children: [isEmpty ? (jsx("div", { className: S.notice, children: "Forecast Assistant can make mistakes." })) : null, jsx(Chat.Prompt, { onSubmit: handlePromptSubmitWithAttachments, disabled: promptBusy, attachments: pendingAttachments, onRemoveAttachment: handleRemoveAttachment, prefillMessage: promptPrefill ?? undefined, placeholder: promptPlaceholder, slashCommandItems: slashCommandItems, attachmentAccept: attachmentsDropzoneEnabled ? attachmentAccept : undefined, onAttachmentFiles: attachmentsDropzoneEnabled ? handleAttachmentFiles : undefined })] })] })] })] }));
+                                        }), showSyntheticBranchButtons ? (jsx("div", { className: S.branchRow, children: unusedBranchKeys.map(key => {
+                                                const label = displayLabelForBranchKeyFromMessages(key, messages) ??
+                                                    humanizeBranchKey(key);
+                                                return (jsx("span", { className: S.branchBtnWrap, children: jsxs(Button, { type: "button", variant: "outline", size: "sm", disabled: isLoading, onClick: () => onQuickReply(key, label), children: [jsx(PaperPlaneRightIcon, {}), label] }) }, key));
+                                            }) })) : null, showInlinePresets && renderPresets('inline'), isLoading && isLastMessageFromUser && (jsx(TextShimmer, { duration: 1, spread: 5, className: S.loader, children: "Thinking..." }))] }) })), jsxs("div", { className: cn(S.footer, footerClassName), children: [isEmpty ? (jsx("div", { className: S.notice, children: "Forecast Assistant can make mistakes." })) : null, jsx(Chat.Prompt, { onSubmit: handlePromptSubmitWithAttachments, disabled: promptBusy, attachments: pendingAttachments, onRemoveAttachment: handleRemoveAttachment, prefillMessage: promptPrefill ?? undefined, placeholder: promptPlaceholder, slashCommandItems: slashCommandItems, onSlashItemCommand: onSlashItemCommand, attachmentAccept: attachmentsDropzoneEnabled ? attachmentAccept : undefined, onAttachmentFiles: attachmentsDropzoneEnabled ? handleAttachmentFiles : undefined })] })] })] })] }));
 }
 
 export { ChatChrome };

@@ -1,6 +1,6 @@
 import { jsx } from 'react/jsx-runtime';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { MessageRole, GENERATING_DASHBOARD_SYSTEM_TEXT } from '../Chat.types.js';
+import { MessageRole, GENERATING_DASHBOARD_SYSTEM_TEXT, GENERATE_DASHBOARD_SLASH_COMMAND_ID, isGenerateDashboardSlashMessage } from '../Chat.types.js';
 import { isGraphIntakeAssistantStepComplete, matchUserTextToQuickReply, isPresetScriptGraph, branchesFromPresetScriptGraph, parseScriptLine, textHasQuickReplyMarkers, branchKeysUsedFromChatHistory, branchKeysUsedByUserMessages, extractQuickReplyLabelKeyPairsFromText, entryBranchKeyBeforeLastAssistant } from '../ChatMessage/presetScript.js';
 import { buildChatSendMessagePayload, displayTextFromSendPayload } from '../buildChatSendMessagePayload.js';
 import { usedPresetIdsFromMessages, formatChatTranscript } from '../chat-preset-utils.js';
@@ -58,7 +58,7 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
     const [quickReplyBranchesByChat, setQuickReplyBranchesByChat] = useState({});
     const [usedScriptBranchKeysByChat, setUsedScriptBranchKeysByChat] = useState({});
     const [intakeByChatId, setIntakeByChatId] = useState({});
-    /** Preset intake finished for this session; show [Generate Dashboard] when `onGenerateDashboard` is set. */
+    /** Preset intake finished for this session (e.g. `onScriptComplete` callback). */
     const [scriptCompleteByChatId, setScriptCompleteByChatId] = useState({});
     const [generatingDashboard, setGeneratingDashboard] = useState(false);
     const scriptAdvanceLockRef = useRef(false);
@@ -712,10 +712,6 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
         lastMsg?.role === MessageRole.ASSISTANT &&
         !linearScriptActive &&
         (!graphActive || (!lastHasQuickMarkers && unusedBranchKeys.length === 0));
-    const isScriptComplete = Boolean(currentChatId && scriptCompleteByChatId[currentChatId]);
-    /** Branch row also when intake is done but all branches used (Generate Dashboard only). */
-    const showBranchActionsRow = showSyntheticBranchButtons ||
-        (isScriptComplete && Boolean(onGenerateDashboard) && !generatingDashboard);
     const handleGenerateDashboard = useCallback(async () => {
         if (!currentChatId || !onGenerateDashboard)
             return;
@@ -743,6 +739,33 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
         addMessage,
         removeMessageById,
     ]);
+    const onSlashItemCommand = useCallback(({ item }) => {
+        if (item.id !== GENERATE_DASHBOARD_SLASH_COMMAND_ID ||
+            !onGenerateDashboard) {
+            return false;
+        }
+        if (generatingDashboard) {
+            return true;
+        }
+        queueMicrotask(() => {
+            void handleGenerateDashboard();
+        });
+        return true;
+    }, [onGenerateDashboard, generatingDashboard, handleGenerateDashboard]);
+    const onPromptSubmitWithSlashCommands = useCallback(async (message, attachments) => {
+        if (isGenerateDashboardSlashMessage(message) &&
+            onGenerateDashboard &&
+            !generatingDashboard) {
+            void handleGenerateDashboard();
+            return;
+        }
+        return handlePromptSubmit(message, attachments);
+    }, [
+        handlePromptSubmit,
+        onGenerateDashboard,
+        generatingDashboard,
+        handleGenerateDashboard,
+    ]);
     const onDragChatWidth = useCallback((rawPx) => setChatWidthPx(rawPx, { persist: false }), [setChatWidthPx]);
     const onDragChatComplete = useCallback((finalRawPx) => setChatWidthPx(finalRawPx, { persist: true }), [setChatWidthPx]);
     const chromeProps = {
@@ -766,20 +789,13 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
         scriptContinueLabel,
         onScriptContinue,
         renderMessageChart,
-        showBranchActionsRow,
         showSyntheticBranchButtons,
         unusedBranchKeys,
-        isScriptComplete,
-        onGenerateDashboard,
-        generatingDashboard,
-        onGenerateDashboardClick: () => {
-            void handleGenerateDashboard();
-        },
         showInlinePresets,
         isLastMessageFromUser,
         scrollRef,
         effectiveScopeId,
-        onPromptSubmit: handlePromptSubmit,
+        onPromptSubmit: onPromptSubmitWithSlashCommands,
         onChatDeleted: endLocalDemoFlow,
         promptPrefill: promptLinkPrefill,
         emptyState: resolvedEmptyState,
@@ -787,6 +803,7 @@ function useChatPanelChromeModel({ embedAsPage, presets, scopeId, onMessage, onS
         allowPdfAttachments,
         onAttachmentsDropped,
         slashCommandItems,
+        onSlashItemCommand,
     };
     const toggleOpen = () => onOpenChange(!isOpen);
     return {

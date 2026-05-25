@@ -7,7 +7,7 @@ import {
 } from '#uilib/components/ui/Chat/ChatMessage/presetScript';
 import { TextShimmer } from '#uilib/components/ui/TextShimmer';
 import { Scroll } from '@homecode/ui';
-import { ChartLineIcon, PaperPlaneRightIcon, X } from '@phosphor-icons/react';
+import { PaperPlaneRightIcon, X } from '@phosphor-icons/react';
 
 import { Button } from '../../Button';
 import { DropZone } from '../../DropZone/DropZone';
@@ -37,13 +37,8 @@ export function ChatChrome({
   scriptContinueLabel,
   onScriptContinue,
   renderMessageChart,
-  showBranchActionsRow,
   showSyntheticBranchButtons,
   unusedBranchKeys,
-  isScriptComplete,
-  onGenerateDashboard,
-  generatingDashboard,
-  onGenerateDashboardClick,
   showInlinePresets,
   isLastMessageFromUser,
   scrollRef,
@@ -57,6 +52,7 @@ export function ChatChrome({
   allowPdfAttachments = false,
   onAttachmentsDropped,
   slashCommandItems,
+  onSlashItemCommand,
   promptPlaceholder,
 }: ChatChromeProps) {
   const filteredAllowedAttachments = useMemo(
@@ -223,48 +219,29 @@ export function ChatChrome({
                   );
                 })}
 
-                {showBranchActionsRow && (
+                {showSyntheticBranchButtons ? (
                   <div className={S.branchRow}>
-                    {showSyntheticBranchButtons
-                      ? unusedBranchKeys.map(key => {
-                          const label =
-                            displayLabelForBranchKeyFromMessages(
-                              key,
-                              messages,
-                            ) ?? humanizeBranchKey(key);
-                          return (
-                            <span key={key} className={S.branchBtnWrap}>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                disabled={isLoading}
-                                onClick={() => onQuickReply(key, label)}
-                              >
-                                <PaperPlaneRightIcon />
-                                {label}
-                              </Button>
-                            </span>
-                          );
-                        })
-                      : null}
-
-                    {isScriptComplete &&
-                    onGenerateDashboard &&
-                    !generatingDashboard ? (
-                      <Button
-                        type="button"
-                        variant="default"
-                        size="lg"
-                        disabled={isLoading}
-                        onClick={onGenerateDashboardClick}
-                      >
-                        <ChartLineIcon />
-                        Generate Dashboard
-                      </Button>
-                    ) : null}
+                    {unusedBranchKeys.map(key => {
+                      const label =
+                        displayLabelForBranchKeyFromMessages(key, messages) ??
+                        humanizeBranchKey(key);
+                      return (
+                        <span key={key} className={S.branchBtnWrap}>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            disabled={isLoading}
+                            onClick={() => onQuickReply(key, label)}
+                          >
+                            <PaperPlaneRightIcon />
+                            {label}
+                          </Button>
+                        </span>
+                      );
+                    })}
                   </div>
-                )}
+                ) : null}
 
                 {showInlinePresets && renderPresets('inline')}
 
@@ -291,6 +268,7 @@ export function ChatChrome({
               prefillMessage={promptPrefill ?? undefined}
               placeholder={promptPlaceholder}
               slashCommandItems={slashCommandItems}
+              onSlashItemCommand={onSlashItemCommand}
               attachmentAccept={
                 attachmentsDropzoneEnabled ? attachmentAccept : undefined
               }

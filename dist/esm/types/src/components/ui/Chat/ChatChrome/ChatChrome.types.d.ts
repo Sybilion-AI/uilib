@@ -2,7 +2,7 @@ import type { RefObject } from 'react';
 import type { ChatAttachmentDropItem, Message } from '#uilib/components/ui/Chat/Chat.types';
 import type { ChatEmptyStateProps } from '#uilib/components/ui/Chat/ChatEmptyState/ChatEmptyState.types';
 import type { ChatPresetsLayout } from '#uilib/components/ui/Chat/ChatPresets';
-import type { SlashCommandItem } from '#uilib/tiptap/slash-mention/types';
+import type { SlashCommandItem, SlashOnItemCommand } from '#uilib/tiptap/slash-mention/types';
 import type { ScrollRef } from '@homecode/ui';
 export type ChatChromeResizeHandleConfig = {
     isActive: boolean;
@@ -26,13 +26,8 @@ export interface ChatChromeProps {
     scriptContinueLabel: string | undefined;
     onScriptContinue: (() => void) | undefined;
     renderMessageChart?: () => React.ReactNode;
-    showBranchActionsRow: boolean;
     showSyntheticBranchButtons: boolean;
     unusedBranchKeys: string[];
-    isScriptComplete: boolean;
-    onGenerateDashboard: ((transcript: string) => void | Promise<void>) | undefined;
-    generatingDashboard: boolean;
-    onGenerateDashboardClick: () => void;
     showInlinePresets: boolean;
     isLastMessageFromUser: boolean;
     scrollRef: RefObject<ScrollRef | null>;
@@ -51,6 +46,8 @@ export interface ChatChromeProps {
     onAttachmentsDropped?: (items: ChatAttachmentDropItem[]) => void | Promise<void>;
     /** Slash menu (`/`), forwarded to `Chat.Prompt`; omit or pass empty list to disable slash palette. */
     slashCommandItems?: SlashCommandItem[];
+    /** Custom slash pick handler; forwarded to `Chat.Prompt`. */
+    onSlashItemCommand?: SlashOnItemCommand;
     /** Composer placeholder forwarded to `Chat.Prompt`. */
     promptPlaceholder?: string;
 }

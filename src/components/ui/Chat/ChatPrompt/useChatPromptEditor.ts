@@ -12,7 +12,10 @@ import {
   DEFAULT_CHAT_SLASH_ITEMS,
   createSlashMentionExtension,
 } from '#uilib/tiptap/slash-mention';
-import type { SlashCommandItem } from '#uilib/tiptap/slash-mention/types';
+import type {
+  SlashCommandItem,
+  SlashOnItemCommand,
+} from '#uilib/tiptap/slash-mention/types';
 import type { AnyExtension, Editor } from '@tiptap/core';
 import { Placeholder } from '@tiptap/extensions';
 import { useEditor } from '@tiptap/react';
@@ -28,6 +31,7 @@ export type UseChatPromptEditorOptions = {
   disabled: boolean;
   placeholder?: string;
   slashCommandItems?: SlashCommandItem[];
+  onSlashItemCommand?: SlashOnItemCommand;
   prefillMessage?: string | null;
   /** Staged attachment count — Enter-to-send when text empty but files present. */
   attachmentsCount?: number;
@@ -46,11 +50,14 @@ export function useChatPromptEditor({
   disabled,
   placeholder,
   slashCommandItems,
+  onSlashItemCommand,
   prefillMessage,
   attachmentsCount = 0,
   onEnterSubmit,
 }: UseChatPromptEditorOptions): UseChatPromptEditorResult {
   const slashOpenRef = useRef(false);
+  const onSlashItemCommandRef = useRef(onSlashItemCommand);
+  onSlashItemCommandRef.current = onSlashItemCommand;
   const suggestionActiveUpdater = useCallback((active: boolean) => {
     slashOpenRef.current = active;
   }, []);
@@ -96,6 +103,7 @@ export function useChatPromptEditor({
           items: slashItemsStable,
           suggestionPlacement: 'above',
           onSuggestionUiActiveChange: suggestionActiveUpdater,
+          onItemCommand: ctx => onSlashItemCommandRef.current?.(ctx) === true,
         }),
       );
     }
@@ -139,7 +147,7 @@ export function useChatPromptEditor({
       },
       onCreate: bindEditorDom,
     },
-    [extensions, disabled, bindEditorDom, ariaLabelComposer],
+    [extensions, bindEditorDom, ariaLabelComposer],
   );
 
   useEffect(() => {

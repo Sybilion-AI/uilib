@@ -84,13 +84,8 @@ export default function ChatPage() {
           isLoading={isLoading}
           scriptContinueLabel={undefined}
           onScriptContinue={undefined}
-          showBranchActionsRow={false}
           showSyntheticBranchButtons={false}
           unusedBranchKeys={[]}
-          isScriptComplete={false}
-          onGenerateDashboard={undefined}
-          generatingDashboard={false}
-          onGenerateDashboardClick={() => {}}
           showInlinePresets={false}
           isLastMessageFromUser={isLastMessageFromUser}
           scrollRef={scrollRef}

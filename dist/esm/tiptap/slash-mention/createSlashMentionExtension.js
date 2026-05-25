@@ -68,6 +68,28 @@ function slashMentionSuggestionRender(uiRef, placement = 'below') {
         onKeyDown: ({ event }) => uiRef.current?.onKeyboardEvent(event) ?? false,
     };
 }
+function clearSlashTriggerEditor(editor, range) {
+    if (editor.isDestroyed)
+        return;
+    try {
+        editor.chain().focus().deleteRange(range).clearContent().run();
+    }
+    catch {
+        // Editor view may be tearing down during suggestion exit.
+    }
+}
+function collapseEditorSelectionEnd(editor) {
+    if (editor.isDestroyed)
+        return;
+    try {
+        editor.view?.dom?.ownerDocument?.defaultView
+            ?.getSelection?.()
+            ?.collapseToEnd();
+    }
+    catch {
+        // view.dom throws when editor is not mounted
+    }
+}
 function insertDefaultMention(editor, range, props, slashChar) {
     const nodeAfter = editor.view.state.selection.$to.nodeAfter;
     const extend = nodeAfter?.text?.startsWith(' ') ? 1 : 0;
@@ -135,11 +157,8 @@ function createSlashMentionExtension({ items: resolvedItems, slashChar = '/', pl
             command: ({ editor, range, props }) => {
                 const item = props;
                 if (onItemCommand?.({ editor, range, item }) === true) {
-                    queueMicrotask(() => {
-                        editor.view.dom.ownerDocument?.defaultView
-                            ?.getSelection?.()
-                            ?.collapseToEnd();
-                    });
+                    clearSlashTriggerEditor(editor, range);
+                    queueMicrotask(() => collapseEditorSelectionEnd(editor));
                     return null;
                 }
                 insertDefaultMention(editor, range, item, slashChar);

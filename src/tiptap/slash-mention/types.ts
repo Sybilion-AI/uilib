@@ -13,7 +13,8 @@ export type SlashItemCommandContext = {
 };
 
 /**
- * If provided, run before default mention insertion. Return true to skip inserting a mention node.
+ * If provided, run when a slash item is picked. Return true to skip mention insert
+ * (extension clears the trigger text from the composer).
  */
 export type SlashOnItemCommand = (ctx: SlashItemCommandContext) => boolean;
 

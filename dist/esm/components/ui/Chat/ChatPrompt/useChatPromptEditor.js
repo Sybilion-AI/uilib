@@ -7,8 +7,10 @@ import StarterKit from '@tiptap/starter-kit';
 import { chatPromptSafeEditorDom, syncChatPromptComposerHeight } from './ChatPrompt.helpers.js';
 import { CHAT_PROMPT_EMPTY_DOC, chatPromptParagraphDoc } from './chatPromptDoc.js';
 
-function useChatPromptEditor({ disabled, placeholder, slashCommandItems, prefillMessage, attachmentsCount = 0, onEnterSubmit, }) {
+function useChatPromptEditor({ disabled, placeholder, slashCommandItems, onSlashItemCommand, prefillMessage, attachmentsCount = 0, onEnterSubmit, }) {
     const slashOpenRef = useRef(false);
+    const onSlashItemCommandRef = useRef(onSlashItemCommand);
+    onSlashItemCommandRef.current = onSlashItemCommand;
     const suggestionActiveUpdater = useCallback((active) => {
         slashOpenRef.current = active;
     }, []);
@@ -50,6 +52,7 @@ function useChatPromptEditor({ disabled, placeholder, slashCommandItems, prefill
                 items: slashItemsStable,
                 suggestionPlacement: 'above',
                 onSuggestionUiActiveChange: suggestionActiveUpdater,
+                onItemCommand: ctx => onSlashItemCommandRef.current?.(ctx) === true,
             }));
         }
         return exts;
@@ -86,7 +89,7 @@ function useChatPromptEditor({ disabled, placeholder, slashCommandItems, prefill
             setPlainDraft(ed.getText());
         },
         onCreate: bindEditorDom,
-    }, [extensions, disabled, bindEditorDom, ariaLabelComposer]);
+    }, [extensions, bindEditorDom, ariaLabelComposer]);
     useEffect(() => {
         if (!editor)
             return;

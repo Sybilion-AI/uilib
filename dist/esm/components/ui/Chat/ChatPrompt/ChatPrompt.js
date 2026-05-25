@@ -6,13 +6,14 @@ import { ChatPromptAttachments } from './ChatPromptAttachments.js';
 import { ChatPromptComposer } from './ChatPromptComposer.js';
 import { useChatPromptEditor } from './useChatPromptEditor.js';
 
-function ChatPrompt({ onSubmit, placeholder, className, footer, prefillMessage, slashCommandItems, attachments = [], onRemoveAttachment, disabled = false, attachmentAccept, onAttachmentFiles, }) {
+function ChatPrompt({ onSubmit, placeholder, className, footer, prefillMessage, slashCommandItems, onSlashItemCommand, attachments = [], onRemoveAttachment, disabled = false, attachmentAccept, onAttachmentFiles, }) {
     const attachmentsCount = attachments.length;
     const emitSubmitRef = useRef(() => { });
     const { editor, trimmedMessage, resetAfterSend, handleComposerKeyDown } = useChatPromptEditor({
         disabled,
         placeholder,
         slashCommandItems,
+        onSlashItemCommand,
         prefillMessage,
         attachmentsCount,
         onEnterSubmit: () => emitSubmitRef.current(),

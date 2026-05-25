@@ -1,6 +1,9 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 
-import type { SlashCommandItem } from '#uilib/tiptap/slash-mention/types';
+import type {
+  SlashCommandItem,
+  SlashOnItemCommand,
+} from '#uilib/tiptap/slash-mention/types';
 
 import type { PresetScriptGraph } from './ChatMessage/presetScript';
 
@@ -12,6 +15,13 @@ export enum MessageRole {
 
 /** System placeholder while dashboard generation runs (must match ChatSheet `addMessage` text). */
 export const GENERATING_DASHBOARD_SYSTEM_TEXT = 'Generating dashboard…';
+
+/** Slash command id that triggers dashboard generation when `onGenerateDashboard` is set. */
+export const GENERATE_DASHBOARD_SLASH_COMMAND_ID = 'generate-dashboard';
+
+export function isGenerateDashboardSlashMessage(message: string): boolean {
+  return message.trim() === `/${GENERATE_DASHBOARD_SLASH_COMMAND_ID}`;
+}
 
 /** USER-only: text file attached to a message; shown as downloadable file row(s). */
 export type UserTextFileAttachment = {
@@ -96,6 +106,8 @@ export interface ChatPromptProps {
   onAttachmentFiles?: (files: File[]) => void;
   /** Slash menu (`/`); omit or pass empty to disable Mention trigger (no default items). */
   slashCommandItems?: SlashCommandItem[];
+  /** Custom slash pick handler; return true to skip default mention insert. */
+  onSlashItemCommand?: SlashOnItemCommand;
 }
 
 export interface ChatMessageProps {
