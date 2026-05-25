@@ -157,9 +157,6 @@ export default function ChatSlashCommandsPage() {
             title: 'Try a slash command',
             description:
               'Pick sample-command from the palette or send /sample-command — onSlashItemCommand clears the composer and runs the demo action.',
-            additionalContent: (
-              <p>Optional empty-state slot via additionalContent.</p>
-            ),
           }}
         />
       </PageContentSection>
