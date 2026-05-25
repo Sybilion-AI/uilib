@@ -20,9 +20,9 @@ function ChatChrome({ showResizeHandle, resizeHandle, onClose, isEmpty, renderPr
     const attachmentAccept = useMemo(() => buildAcceptAttr(filteredAllowedAttachments, allowPdfAttachments), [filteredAllowedAttachments, allowPdfAttachments]);
     const [pendingAttachments, setPendingAttachments] = useState([]);
     const [isExtractingAttachments, setIsExtractingAttachments] = useState(false);
-    const promptBusy = isLoading || isExtractingAttachments;
+    const promptDisabled = isExtractingAttachments;
     const handleAttachmentFiles = useCallback((files) => {
-        if (promptBusy || files.length === 0)
+        if (promptDisabled || files.length === 0)
             return;
         setIsExtractingAttachments(true);
         void extractChatAttachmentItems(files, allowPdfAttachments)
@@ -35,7 +35,7 @@ function ChatChrome({ showResizeHandle, resizeHandle, onClose, isEmpty, renderPr
             // Extraction failed (parse error, size limit, etc.); skip staging.
         })
             .finally(() => setIsExtractingAttachments(false));
-    }, [allowPdfAttachments, promptBusy]);
+    }, [allowPdfAttachments, promptDisabled]);
     const handleRemoveAttachment = useCallback((index) => {
         setPendingAttachments(prev => prev.filter((_, i) => i !== index));
     }, []);
@@ -66,7 +66,7 @@ function ChatChrome({ showResizeHandle, resizeHandle, onClose, isEmpty, renderPr
         if (inner)
             setTimeout(scrollToBottom, 100);
     }, [isEmpty, messages.length]);
-    return (jsxs("div", { className: S.root, children: [showResizeHandle && resizeHandle ? (jsx(PanelResizeHandle, { edge: "leading", isActive: resizeHandle.isActive, startWidthPx: resizeHandle.startWidthPx, getShellWidth: resizeHandle.getShellWidth, onDragWidth: resizeHandle.onDragWidth, onDragComplete: resizeHandle.onDragComplete, className: cn(SidebarStem.sidebarResizeHandle, S.chatResizeHandle) })) : null, jsx("div", { className: S.panelHeader, children: onClose ? (jsx(Button, { type: "button", variant: "ghost", icon: true, className: S.panelClose, "aria-label": "Close chat", onClick: onClose, children: jsx(X, { className: "size-4" }) })) : null }), jsxs("div", { className: S.content, children: [attachmentsDropzoneEnabled ? (jsx(DropZone, { accept: attachmentAccept, label: "Drop text files to attach", multiple: true, ghost: true, overlayScope: "container", disabled: promptBusy, className: S.attachmentDropzone, onFiles: handleAttachmentFiles })) : null, jsxs(Chat, { isEmpty: isEmpty, scopeId: effectiveScopeId, onChatDeleted: onChatDeleted, children: [isEmpty ? (jsxs(Fragment, { children: [jsx(Chat.EmptyState, { ...emptyState }), renderPresets('fixed')] })) : (jsx("div", { className: S.scrollWrapper, children: jsxs(Scroll, { y: true, yScrollbarClassName: S.scrollbar, className: S.scroll, innerClassName: S.scrollInner, offset: { y: { before: 56, after: 180 } }, fadeSize: "m", autoHide: true, ref: scrollRef, children: [messages.map((msg, index, arr) => {
+    return (jsxs("div", { className: S.root, children: [showResizeHandle && resizeHandle ? (jsx(PanelResizeHandle, { edge: "leading", isActive: resizeHandle.isActive, startWidthPx: resizeHandle.startWidthPx, getShellWidth: resizeHandle.getShellWidth, onDragWidth: resizeHandle.onDragWidth, onDragComplete: resizeHandle.onDragComplete, className: cn(SidebarStem.sidebarResizeHandle, S.chatResizeHandle) })) : null, jsx("div", { className: S.panelHeader, children: onClose ? (jsx(Button, { type: "button", variant: "ghost", icon: true, className: S.panelClose, "aria-label": "Close chat", onClick: onClose, children: jsx(X, { className: "size-4" }) })) : null }), jsxs("div", { className: S.content, children: [attachmentsDropzoneEnabled ? (jsx(DropZone, { accept: attachmentAccept, label: "Drop text files to attach", multiple: true, ghost: true, overlayScope: "container", disabled: promptDisabled, className: S.attachmentDropzone, onFiles: handleAttachmentFiles })) : null, jsxs(Chat, { isEmpty: isEmpty, scopeId: effectiveScopeId, onChatDeleted: onChatDeleted, children: [isEmpty ? (jsxs(Fragment, { children: [jsx(Chat.EmptyState, { ...emptyState }), renderPresets('fixed')] })) : (jsx("div", { className: S.scrollWrapper, children: jsxs(Scroll, { y: true, yScrollbarClassName: S.scrollbar, className: S.scroll, innerClassName: S.scrollInner, offset: { y: { before: 56, after: 180 } }, fadeSize: "m", autoHide: true, ref: scrollRef, children: [messages.map((msg, index, arr) => {
                                             const isLast = index === arr.length - 1;
                                             return (jsx(Chat.Message, { role: msg.role, text: msg.text, inProgress: msg.inProgress, userTextFileAttachments: msg.userTextFileAttachments, onQuickReply: onQuickReply, suppressedQuickReplyKeys: suppressedQuickReplyKeys, quickReplyDisabled: isLoading, isLastMessage: isLast, scriptContinue: isLast && scriptContinueLabel
                                                     ? { label: scriptContinueLabel }
@@ -77,7 +77,7 @@ function ChatChrome({ showResizeHandle, resizeHandle, onClose, isEmpty, renderPr
                                                 const label = displayLabelForBranchKeyFromMessages(key, messages) ??
                                                     humanizeBranchKey(key);
                                                 return (jsx("span", { className: S.branchBtnWrap, children: jsxs(Button, { type: "button", variant: "outline", size: "sm", disabled: isLoading, onClick: () => onQuickReply(key, label), children: [jsx(PaperPlaneRightIcon, {}), label] }) }, key));
-                                            }) })) : null, showInlinePresets && renderPresets('inline'), isLoading && isLastMessageFromUser && (jsx(TextShimmer, { duration: 1, spread: 5, className: S.loader, children: "Thinking..." }))] }) })), jsxs("div", { className: cn(S.footer, footerClassName), children: [isEmpty ? (jsx("div", { className: S.notice, children: "Forecast Assistant can make mistakes." })) : null, jsx(Chat.Prompt, { onSubmit: handlePromptSubmitWithAttachments, disabled: promptBusy, attachments: pendingAttachments, onRemoveAttachment: handleRemoveAttachment, prefillMessage: promptPrefill ?? undefined, placeholder: promptPlaceholder, slashCommandItems: slashCommandItems, onSlashItemCommand: onSlashItemCommand, attachmentAccept: attachmentsDropzoneEnabled ? attachmentAccept : undefined, onAttachmentFiles: attachmentsDropzoneEnabled ? handleAttachmentFiles : undefined })] })] })] })] }));
+                                            }) })) : null, showInlinePresets && renderPresets('inline'), isLoading && isLastMessageFromUser && (jsx(TextShimmer, { duration: 1, spread: 5, className: S.loader, children: "Thinking..." }))] }) })), jsxs("div", { className: cn(S.footer, footerClassName), children: [isEmpty ? (jsx("div", { className: S.notice, children: "Forecast Assistant can make mistakes." })) : null, jsx(Chat.Prompt, { onSubmit: handlePromptSubmitWithAttachments, disabled: promptDisabled, attachments: pendingAttachments, onRemoveAttachment: handleRemoveAttachment, prefillMessage: promptPrefill ?? undefined, placeholder: promptPlaceholder, slashCommandItems: slashCommandItems, onSlashItemCommand: onSlashItemCommand, attachmentAccept: attachmentsDropzoneEnabled ? attachmentAccept : undefined, onAttachmentFiles: attachmentsDropzoneEnabled ? handleAttachmentFiles : undefined })] })] })] })] }));
 }
 
 export { ChatChrome };

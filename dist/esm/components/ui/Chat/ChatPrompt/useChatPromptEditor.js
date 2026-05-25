@@ -136,7 +136,7 @@ function useChatPromptEditor({ disabled, placeholder, slashCommandItems, onSlash
     const resetAfterSend = useCallback(() => {
         if (!editor)
             return;
-        editor.commands.clearContent();
+        editor.chain().clearContent().focus().run();
         queueMicrotask(() => {
             const dom = chatPromptSafeEditorDom(editor);
             if (dom)

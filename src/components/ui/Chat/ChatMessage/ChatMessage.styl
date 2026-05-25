@@ -3,7 +3,8 @@
   flex-direction column
   gap var(--p-1)
 
-  padding var(--p-1) var(--p-4)
+  padding var(--p-4)
+  padding-bottom var(--p-1)
   background var(--bg-secondary)
 
 .text
@@ -15,6 +16,12 @@
   user-select text
   overflow-wrap anywhere
   word-break break-word
+
+.role-user
+.role-assistant
+.role-system
+  & + &
+    padding-top var(--p-1)
 
 .role-user
   align-items flex-end
