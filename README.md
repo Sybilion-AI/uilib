@@ -108,15 +108,7 @@ Runtime dependencies are listed in `[package.json](./package.json)`.
 yarn publish:npm    # @sybilion/uilib
 ```
 
-runs `yarn build` before `npm publish`.
-
-**GitHub `github:` consumers:** after changing library **source**, regenerate and commit the prebuilt output:
-
-```bash
-yarn build
-```
-
-Then commit the updated `dist/` tree so GitHub installs stay up to date.
+runs `yarn build` before `npm publish`. `dist/` is build output only (not committed); consumers install prebuilt artifacts from the npm registry.
 
 ## Integration notes (injected props)
 
@@ -131,7 +123,6 @@ These areas expect the **app** to supply behavior or data (not vendored from pro
 
 ## Scripts (this repo)
 
-
 | Script                | Description                                 |
 | --------------------- | ------------------------------------------- |
 | `yarn dev`            | Webpack dev server for the docs app         |
@@ -143,5 +134,3 @@ These areas expect the **app** to supply behavior or data (not vendored from pro
 | `yarn ts`             | Typecheck (`tsc --noEmit`)                  |
 | `yarn tests`          | Jest smoke tests                            |
 | `yarn release`        | `standard-version` (bump changelog + tag)   |
-
-

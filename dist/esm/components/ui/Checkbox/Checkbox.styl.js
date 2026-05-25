@@ -1,7 +1,0 @@
-import styleInject from 'style-inject';
-
-var css_248z = ".Checkbox_checkboxRoot__r1zFW{background:transparent;border:1px solid var(--input);border-radius:4px;box-shadow:0 1px 2px 0 rgba(0,0,0,.05);cursor:pointer;flex-shrink:0;height:16px;outline:none;transition:box-shadow .15s ease-in-out;width:16px}.Checkbox_dark__l-gfs .Checkbox_checkboxRoot__r1zFW{background-color:var(--input-30)}.Checkbox_checkboxRoot__r1zFW[data-state=checked]{background-color:var(--primary);border-color:var(--primary);color:var(--primary-foreground)}.Checkbox_dark__l-gfs .Checkbox_checkboxRoot__r1zFW[data-state=checked]{background-color:var(--primary)}.Checkbox_checkboxRoot__r1zFW:focus-visible{border-color:var(--ring);box-shadow:0 0 0 3px var(--ring-50)}.Checkbox_checkboxRoot__r1zFW[aria-invalid=true]{border-color:var(--destructive);box-shadow:0 0 0 3px var(--destructive-200)}.Checkbox_dark__l-gfs .Checkbox_checkboxRoot__r1zFW[aria-invalid=true]{box-shadow:0 0 0 3px var(--destructive-400)}.Checkbox_checkboxRoot__r1zFW:disabled{cursor:not-allowed;opacity:.5}.Checkbox_checkboxIndicator__4fmLx{align-items:center;color:currentColor;display:flex;justify-content:center;transition:none}";
-var S = {"checkboxRoot":"Checkbox_checkboxRoot__r1zFW","dark":"Checkbox_dark__l-gfs","checkboxIndicator":"Checkbox_checkboxIndicator__4fmLx"};
-styleInject(css_248z);
-
-export { S as default };

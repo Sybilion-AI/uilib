@@ -1,7 +1,0 @@
-import styleInject from 'style-inject';
-
-var css_248z = "@media (max-width:768px){:root{--page-x-padding:var(--p-6);--page-y-padding:var(--p-6)}}.SybilionAppHeader_actionsAnchor__ress2{align-items:center;display:flex;flex-shrink:0;gap:var(--p-4)}.SybilionAppHeader_logoArea__3HAhG{align-items:center;display:flex;gap:var(--p-2);left:40px;position:absolute;top:22px;z-index:10}@media (max-width:768px){.SybilionAppHeader_logoArea__3HAhG{left:32px}}@media (min-width:768px){[data-slot=sidebar-wrapper][data-state=expanded] .SybilionAppHeader_logoArea__3HAhG{position:fixed}}.SybilionAppHeader_logoAreaWithBanner__7Iy78{top:22px;top:calc(22px + var(--welcome-banner-height, 0px))}@media (min-width:768px){[data-slot=sidebar-wrapper][data-state=collapsed] .SybilionAppHeader_logoAreaWithBanner__7Iy78{top:22px}}.SybilionAppHeader_logoLink__bH-KX{align-items:center;color:var(--color-foreground);display:flex;font-size:1.5rem;font-weight:400;gap:.5rem;text-decoration:none;white-space:nowrap;width:-moz-fit-content;width:fit-content}.SybilionAppHeader_logoLink__bH-KX svg{display:inline-flex;flex-shrink:0;height:32px;transition:transform .1s ease-in-out;width:auto}.SybilionAppHeader_logoLink__bH-KX:hover svg{transform:scale(1.05)}";
-var S = {"actionsAnchor":"SybilionAppHeader_actionsAnchor__ress2","logoArea":"SybilionAppHeader_logoArea__3HAhG","logoAreaWithBanner":"SybilionAppHeader_logoAreaWithBanner__7Iy78","logoLink":"SybilionAppHeader_logoLink__bH-KX"};
-styleInject(css_248z);
-
-export { S as default };

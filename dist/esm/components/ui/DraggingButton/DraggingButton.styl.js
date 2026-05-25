@@ -1,7 +1,0 @@
-import styleInject from 'style-inject';
-
-var css_248z = "@media (max-width:768px){:root{--page-x-padding:var(--p-6);--page-y-padding:var(--p-6)}}.DraggingButton_root__dEp3g{align-items:center;background:var(--background);border:1px solid var(--input);border-radius:9999px;cursor:grab;display:flex;justify-content:center;pointer-events:auto;position:absolute;right:0;top:0;touch-action:none;transform:translate(50%,-50%);z-index:10}.DraggingButton_root__dEp3g:before{border-radius:inherit;content:\"\";height:200%;left:-50%;position:absolute;top:-50%;width:200%}@media (max-width:768px){.DraggingButton_root__dEp3g{transform:translate(50%,-50%) scale(1.5)}}.DraggingButton_root__dEp3g:hover{background:var(--accent);border-color:var(--foreground)}.DraggingButton_root__dEp3g:active{border-color:initial!important;cursor:grabbing}.DraggingButton_size-md__ILl67{height:36px;width:36px}.DraggingButton_size-md__ILl67 svg{color:var(--foreground);height:16px;width:16px}.DraggingButton_size-sm__s2uh9{height:20px;width:20px}.DraggingButton_size-sm__s2uh9 svg{color:var(--foreground);height:10px;width:10px}.DraggingButton_size-lg__vnp-r{height:44px;width:44px}.DraggingButton_size-lg__vnp-r svg{color:var(--foreground);height:18px;width:18px}.DraggingButton_dragging__ghIEI{cursor:grabbing}";
-var S = {"root":"DraggingButton_root__dEp3g","size-md":"DraggingButton_size-md__ILl67","size-sm":"DraggingButton_size-sm__s2uh9","size-lg":"DraggingButton_size-lg__vnp-r","dragging":"DraggingButton_dragging__ghIEI"};
-styleInject(css_248z);
-
-export { S as default };

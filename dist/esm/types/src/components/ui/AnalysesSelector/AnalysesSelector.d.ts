@@ -1,2 +1,0 @@
-import type { AnalysesSelectorProps } from './AnalysesSelector.types';
-export declare function AnalysesSelector({ items, selectedIds, onItemToggle, inlineMode, placeholder, disabled, size, variant, darker, className, triggerProps, onFailedItemClick, showHistorical, enableToggleHidden, maxVisibleItems, preventDeselection, hiddenSeries: hiddenSeriesProp, onToggleSeries, isAnalysisInProgress: isAnalysisInProgressProp, }: AnalysesSelectorProps): import("react/jsx-runtime").JSX.Element;

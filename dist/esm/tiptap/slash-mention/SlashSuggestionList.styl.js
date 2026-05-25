@@ -1,7 +1,0 @@
-import styleInject from 'style-inject';
-
-var css_248z = "@media (max-width:768px){:root{--page-x-padding:var(--p-6);--page-y-padding:var(--p-6)}}.SlashSuggestionList_root__9KCb1{background:var(--popover,var(--card));border:1px solid var(--border);border-radius:8px;border-radius:var(--radius-lg,8px);box-shadow:0 8px 24px rgba(0,0,0,.12);color:var(--foreground);display:flex;flex-direction:column;font-size:var(--text-sm);list-style:none;margin:0;max-height:40vh;max-width:90vw;min-width:220px;overflow-y:auto;padding:var(--p-1)}.dark .SlashSuggestionList_root__9KCb1{box-shadow:0 8px 24px rgba(0,0,0,.5)}.SlashSuggestionList_item__9JBeY{align-items:flex-start;background:transparent;border:none;border-radius:6px;border-radius:var(--radius-md,6px);color:inherit;cursor:pointer;display:flex;flex-direction:column;margin:0;padding:var(--p-1) var(--p-2);text-align:left;width:100%}.SlashSuggestionList_itemHighlighted__cStZr,.SlashSuggestionList_item__9JBeY:hover{background:var(--muted)}.SlashSuggestionList_itemLabel__OMaov{font-weight:600}.SlashSuggestionList_itemDesc__fAdcA{color:var(--muted-foreground);font-size:var(--text-xs)}";
-var S = {"root":"SlashSuggestionList_root__9KCb1","item":"SlashSuggestionList_item__9JBeY","itemHighlighted":"SlashSuggestionList_itemHighlighted__cStZr","itemLabel":"SlashSuggestionList_itemLabel__OMaov","itemDesc":"SlashSuggestionList_itemDesc__fAdcA"};
-styleInject(css_248z);
-
-export { S as default };

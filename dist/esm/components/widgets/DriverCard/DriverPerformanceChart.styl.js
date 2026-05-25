@@ -1,7 +1,0 @@
-import styleInject from 'style-inject';
-
-var css_248z = ".DriverPerformanceChart_driverChartContainer__27xZ-{position:relative;width:100%}.DriverPerformanceChart_driverChartContainer__27xZ- svg{overflow:visible}.DriverPerformanceChart_chartContainer__--rGL{height:214px;margin-left:-.5rem;padding:var(--p-4) 0;width:100%}.DriverPerformanceChart_chartContainerDisabled__ndtPZ{opacity:.1}.DriverPerformanceChart_noDataMessage__RO3u1{color:var(--foreground);font-size:.875rem;font-weight:500;left:50%;pointer-events:none;position:absolute;top:50%;transform:translate(-50%,-50%);z-index:10}.DriverPerformanceChart_chartTooltip__cpaQw{background-color:var(--popover);border:1px solid var(--border);border-radius:.5rem;box-shadow:0 10px 15px -3px rgba(0,0,0,.1);padding:.75rem}.DriverPerformanceChart_tooltipDate__B2aeP{color:var(--popover-foreground);font-size:.875rem;font-weight:500}.DriverPerformanceChart_tooltipPerformance__3hfgE{color:var(--muted-foreground);font-size:.875rem}";
-var S = {"driverChartContainer":"DriverPerformanceChart_driverChartContainer__27xZ-","chartContainer":"DriverPerformanceChart_chartContainer__--rGL","chartContainerDisabled":"DriverPerformanceChart_chartContainerDisabled__ndtPZ","noDataMessage":"DriverPerformanceChart_noDataMessage__RO3u1","chartTooltip":"DriverPerformanceChart_chartTooltip__cpaQw","tooltipDate":"DriverPerformanceChart_tooltipDate__B2aeP","tooltipPerformance":"DriverPerformanceChart_tooltipPerformance__3hfgE"};
-styleInject(css_248z);
-
-export { S as default };
