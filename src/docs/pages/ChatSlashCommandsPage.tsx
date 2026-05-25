@@ -31,17 +31,24 @@ const DOCS_SAMPLE_SLASH_ITEMS: SlashCommandItem[] = [
 const SAMPLE_COMMAND_REPLY_TEXT =
   'Sample command ran via `onSlashItemCommand` — composer cleared, no mention inserted.';
 
-const ASSISTANT_REPLY_TEXT =
-  'Demo reply for a normal message. Slash picks with a custom handler skip mention insert.';
+const SAMPLE_COMMAND_PROGRESS_TEXT = 'Running sample command…';
 
-function makeMessage(role: MessageRole, text: string): Message {
+function makeMessage(
+  role: MessageRole,
+  text: string,
+  options?: { inProgress?: boolean },
+): Message {
   return {
     id: crypto.randomUUID(),
     role,
     text,
     timestamp: Date.now(),
+    ...(options?.inProgress ? { inProgress: true } : {}),
   };
 }
+
+const ASSISTANT_REPLY_TEXT =
+  'Demo reply for a normal message. Slash picks with a custom handler skip mention insert.';
 
 export default function ChatSlashCommandsPage() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -63,10 +70,30 @@ export default function ChatSlashCommandsPage() {
     messages[messages.length - 1]?.role === MessageRole.USER;
 
   const runSampleCommand = useCallback(() => {
+    const progressId = crypto.randomUUID();
+    setIsLoading(true);
     setMessages(prev => [
       ...prev,
-      makeMessage(MessageRole.ASSISTANT, SAMPLE_COMMAND_REPLY_TEXT),
+      {
+        id: progressId,
+        role: MessageRole.SYSTEM,
+        text: SAMPLE_COMMAND_PROGRESS_TEXT,
+        timestamp: Date.now(),
+        inProgress: true,
+      },
     ]);
+
+    if (replyTimeoutRef.current != null) {
+      clearTimeout(replyTimeoutRef.current);
+    }
+    replyTimeoutRef.current = setTimeout(() => {
+      replyTimeoutRef.current = null;
+      setMessages(prev => [
+        ...prev.filter(m => m.id !== progressId),
+        makeMessage(MessageRole.ASSISTANT, SAMPLE_COMMAND_REPLY_TEXT),
+      ]);
+      setIsLoading(false);
+    }, 1200);
   }, []);
 
   const onSlashItemCommand = useCallback(
@@ -113,7 +140,7 @@ export default function ChatSlashCommandsPage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'Chat' }, { label: 'Chat slash commands' }]}
         title="Chat slash commands"
-        subheader={`Slash palette uses TipTap Mention with "/" as the trigger. Pass slashCommandItems from the app; optional onSlashItemCommand can clear the composer and run an action instead of inserting a mention.`}
+        subheader={`Slash palette uses TipTap Mention with "/" as the trigger. Pass slashCommandItems from the app; optional onSlashItemCommand can clear the composer and run an action instead of inserting a mention. Long-running handlers can append a SYSTEM message with inProgress while work is in flight, then remove it when done.`}
         actions={
           <DocsHeaderActions slashCommandItems={DOCS_SAMPLE_SLASH_ITEMS} />
         }
@@ -127,8 +154,10 @@ export default function ChatSlashCommandsPage() {
           shell below: scrolling history, empty state, disclaimer, composer.
           Type <kbd className="font-mono">/</kbd> at line start or after a
           space; pick <kbd className="font-mono">sample-command</kbd> to run the
-          custom handler, or send{' '}
-          <kbd className="font-mono">/sample-command</kbd> with Enter.
+          custom handler (shows a transient{' '}
+          <kbd className="font-mono">inProgress</kbd> shimmer while the demo
+          action runs), or send <kbd className="font-mono">/sample-command</kbd>{' '}
+          with Enter.
         </p>
         <ChatChrome
           showResizeHandle={false}
@@ -156,7 +185,7 @@ export default function ChatSlashCommandsPage() {
           emptyState={{
             title: 'Try a slash command',
             description:
-              'Pick sample-command from the palette or send /sample-command — onSlashItemCommand clears the composer and runs the demo action.',
+              'Pick sample-command from the palette or send /sample-command — onSlashItemCommand clears the composer, shows an inProgress placeholder, then posts the demo reply.',
           }}
         />
       </PageContentSection>

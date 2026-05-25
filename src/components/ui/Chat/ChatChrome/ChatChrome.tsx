@@ -199,6 +199,7 @@ export function ChatChrome({
                       key={msg.id}
                       role={msg.role}
                       text={msg.text}
+                      inProgress={msg.inProgress}
                       userTextFileAttachments={msg.userTextFileAttachments}
                       onQuickReply={onQuickReply}
                       suppressedQuickReplyKeys={suppressedQuickReplyKeys}

@@ -200,6 +200,7 @@ function ChatProvider({ children, userSwitchKey, sendChatMessage: sendChatMessag
             ...(attachments?.length
                 ? { userTextFileAttachments: attachments }
                 : {}),
+            ...(options?.inProgress ? { inProgress: true } : {}),
         };
         setChats(prev => {
             const scopeChats = prev[scopeId] ?? [];

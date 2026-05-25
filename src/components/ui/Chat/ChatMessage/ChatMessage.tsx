@@ -1,6 +1,7 @@
 import cn from 'classnames';
 
 import { InteractiveContent } from '#uilib/components/ui/InteractiveContent';
+import { TextShimmer } from '#uilib/components/ui/TextShimmer';
 
 import { type ChatMessageProps, MessageRole } from '../Chat.types';
 import { userTextFileAttachmentsFromMessage } from '../userTextFileAttachments';
@@ -11,6 +12,7 @@ import { UserTextFileAttachmentBubble } from './UserTextFileAttachmentBubble';
 export function ChatMessage({
   role,
   text,
+  inProgress,
   userTextFileAttachments,
   onQuickReply,
   suppressedQuickReplyKeys,
@@ -29,7 +31,9 @@ export function ChatMessage({
   return (
     <div className={cn(S.root, S[`role-${role}`])}>
       {isSystem ? (
-        <div className={S.text}>{text}</div>
+        <div className={S.text}>
+          {inProgress ? <TextShimmer as="span">{text}</TextShimmer> : text}
+        </div>
       ) : isAssistant ? (
         <AgentMessageContent
           text={text}

@@ -35,6 +35,8 @@ const CHAT_SCOPE_IDS_REGISTRY_KEY = 'chat-scope-ids';
 
 export type AddChatMessageOptions = {
   userTextFileAttachments?: UserTextFileAttachment[];
+  /** SYSTEM-only: mark as transient progress placeholder (shimmer until removed). */
+  inProgress?: boolean;
 };
 
 export interface ChatContextType {
@@ -326,6 +328,7 @@ export function ChatProvider({
         ...(attachments?.length
           ? { userTextFileAttachments: attachments }
           : {}),
+        ...(options?.inProgress ? { inProgress: true } : {}),
       };
 
       setChats(prev => {

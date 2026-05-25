@@ -5,6 +5,8 @@ export type SendChatMessageFn = (message: string, targetChatId: string) => Promi
 export type { ChatSendMessagePayload, UserTextFileAttachment, } from '#uilib/components/ui/Chat/Chat.types';
 export type AddChatMessageOptions = {
     userTextFileAttachments?: UserTextFileAttachment[];
+    /** SYSTEM-only: mark as transient progress placeholder (shimmer until removed). */
+    inProgress?: boolean;
 };
 export interface ChatContextType {
     /** Returns the new session id, or undefined if no user / not created. */

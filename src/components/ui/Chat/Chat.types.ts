@@ -33,6 +33,8 @@ export interface Message {
   text: string;
   timestamp: number;
   userTextFileAttachments?: UserTextFileAttachment[];
+  /** SYSTEM-only: transient progress placeholder while work is in flight. */
+  inProgress?: boolean;
 }
 
 export interface Chat {
@@ -103,6 +105,7 @@ export interface ChatPromptProps {
 export interface ChatMessageProps {
   role: MessageRole;
   text: string;
+  inProgress?: boolean;
   userTextFileAttachments?: UserTextFileAttachment[];
   onQuickReply?: (branchKey: string, displayLabel: string) => void;
   /** Branch keys already taken (e.g. from chat history); hide quick-reply buttons for these. */
