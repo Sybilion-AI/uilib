@@ -91,7 +91,7 @@
   border 1px solid var(--border) / 0.5
   // background-color var(--background)
   backdrop-filter blur(10px)
-  background-color unquote('color-mix(in srgb, var(--background) 50%, transparent)')
+  background-color unquote('color-mix(in srgb, var(--background) 70%, transparent)')
   font-size 0.75rem /* text-xs */
   line-height 1rem
   box-shadow 0 10px 10px -5px rgba(0 0 0 0.2), 0 0 1px 0 var(--muted-foreground)
@@ -99,6 +99,7 @@
   transition opacity 0.5s ease-out
 
   :global(.dark) &
+    background-color unquote('color-mix(in srgb, var(--background) 50%, transparent)')
     box-shadow 0 0 1px 0 var(--sb-slate-700), 0 10px 10px -5px rgba(0 0 0 0.7)
 
   .chartContainer:hover &
