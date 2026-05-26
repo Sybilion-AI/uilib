@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.43](https://github.com/Mir-Insight/uilib/compare/v1.3.42...v1.3.43) (2026-05-26)
+
+
+### Bug Fixes
+
+* RegionSelector - Guard missing regions prop ([b5a7afc](https://github.com/Mir-Insight/uilib/commit/b5a7afc87598a98f21adc7ee4f49214f2d5a5251))
+
 ### [1.3.42](https://github.com/Mir-Insight/uilib/compare/v1.3.41...v1.3.42) (2026-05-26)
 
 
