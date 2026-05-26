@@ -17,7 +17,7 @@ export function RegionSelector({
   children,
   onSelect,
   className,
-  regions: regionCoordinates,
+  regions: regionCoordinates = {},
 }: RegionSelectorProps) {
   const [open, setOpen] = useState(false);
 
@@ -34,23 +34,25 @@ export function RegionSelector({
   return (
     <div className={cn(S.root, className)}>
       {children}
-      <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className={S.button}>
-            <CaretDownIcon size={16} />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {regions.map(region => (
-            <DropdownMenuItem
-              key={region}
-              onSelect={() => handleRegionSelect(region)}
-            >
-              {region}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      {regions.length > 0 && (
+        <DropdownMenu open={open} onOpenChange={setOpen}>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className={S.button}>
+              <CaretDownIcon size={16} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {regions.map(region => (
+              <DropdownMenuItem
+                key={region}
+                onSelect={() => handleRegionSelect(region)}
+              >
+                {region}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
     </div>
   );
 }

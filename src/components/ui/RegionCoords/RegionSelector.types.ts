@@ -6,5 +6,5 @@ export interface RegionSelectorProps {
   ) => void;
   className?: string;
   /** Region name → coordinates (app-defined; replaces app-only drivers catalog). */
-  regions: Record<string, { longitude: number; latitude: number }>;
+  regions?: Record<string, { longitude: number; latitude: number }>;
 }
