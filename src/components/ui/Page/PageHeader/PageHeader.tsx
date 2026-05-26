@@ -54,7 +54,7 @@ export function PageHeader({
           <div className={S.title}>
             <h1>{title}</h1>
             {subheader && (
-              <TextWithDeferTooltip className={S.subheader}>
+              <TextWithDeferTooltip className={S.subheader} overTrigger>
                 {subheader}
               </TextWithDeferTooltip>
             )}

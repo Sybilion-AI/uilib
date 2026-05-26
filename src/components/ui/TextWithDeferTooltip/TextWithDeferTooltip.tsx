@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { CSSProperties, useRef, useState } from 'react';
 
 import {
   Tooltip,
@@ -18,7 +18,9 @@ function TextWithDeferTooltip({
   ...props
 }: TextWithDeferTooltipProps) {
   const [withTooltip, setWithTooltip] = useState(false);
+  const [tooltipStyles, setTooltipStyles] = useState<CSSProperties>({});
   const ref = useRef<HTMLDivElement>(null);
+  const cachedFontSizeRef = useRef<string | null>(null);
 
   const handleMouseEnter = () => {
     if (!ref.current) return;
@@ -29,6 +31,31 @@ function TextWithDeferTooltip({
       ref.current.scrollHeight - ref.current.clientHeight > 3;
 
     if (isOverflowingHorizontally || isOverflowingVertically) {
+      const styles: CSSProperties = {
+        fontSize: cachedFontSizeRef.current || undefined,
+      };
+
+      if (ref.current) {
+        const {
+          width: rectWidth,
+          left,
+          top,
+        } = ref.current.getBoundingClientRect();
+
+        styles.width = `${width ?? rectWidth}px`;
+
+        if (!cachedFontSizeRef.current) {
+          const { fontSize } = window.getComputedStyle(ref.current);
+          cachedFontSizeRef.current = fontSize;
+          styles.fontSize = fontSize;
+        }
+
+        if (overTrigger) {
+          styles.transform = `translate(${left}px, ${top}px) !important`;
+        }
+      }
+
+      setTooltipStyles(styles);
       setWithTooltip(true);
     }
   };
@@ -45,14 +72,18 @@ function TextWithDeferTooltip({
   );
 
   if (withTooltip) {
+    const tooltipSide = overTrigger ? 'bottom' : side;
+
     return (
       <Tooltip open={withTooltip} onOpenChange={setWithTooltip}>
         <TooltipTrigger asChild>{textElement}</TooltipTrigger>
         <TooltipContent
-          side={side}
+          side={tooltipSide}
+          style={{
+            ...(maxWidth !== undefined && { maxWidth: `${maxWidth}px` }),
+            ...tooltipStyles,
+          }}
           overTrigger={overTrigger}
-          maxWidth={maxWidth}
-          style={width !== undefined ? { width: `${width}px` } : undefined}
         >
           {children}
         </TooltipContent>

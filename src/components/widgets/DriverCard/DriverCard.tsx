@@ -177,7 +177,11 @@ export function DriverCard({
                     id={id}
                     label={<TooltipTrigger asChild>{nameElem}</TooltipTrigger>}
                   />
-                  <TooltipContent side="left" className={S.tooltipContent}>
+                  <TooltipContent
+                    side="left"
+                    className={S.tooltipContent}
+                    overTrigger
+                  >
                     <div className={S.tooltipTitle}>{name}</div>
                   </TooltipContent>
                 </Tooltip>
