@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.44](https://github.com/Mir-Insight/uilib/compare/v1.3.43...v1.3.44) (2026-05-26)
+
+
+### Bug Fixes
+
+* ChatPrompt - TipTap Enter submit in portal ([0d49ac9](https://github.com/Mir-Insight/uilib/commit/0d49ac9ef802e54fe4356b3a49c3e755c824d676))
+* TextWithDeferTooltip - Over-trigger positioning ([b903c1c](https://github.com/Mir-Insight/uilib/commit/b903c1ceb217c6036dde0b5ad1e2c0cc2e9710f7))
+
 ### [1.3.43](https://github.com/Mir-Insight/uilib/compare/v1.3.42...v1.3.43) (2026-05-26)
 
 
