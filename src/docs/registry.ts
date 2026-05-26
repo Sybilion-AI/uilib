@@ -116,6 +116,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/ChatSlashCommandsPage'),
   },
   {
+    slug: 'chat-sheet',
+    title: 'Chat sheet (portal)',
+    section: 'Chat',
+    load: () => import('./pages/ChatSheetPage'),
+  },
+  {
     slug: 'chat-user-csv-attachment',
     title: 'Chat user CSV attachment',
     section: 'Chat',

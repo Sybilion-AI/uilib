@@ -62,7 +62,7 @@ INPUT_MAX_HEIGHT = 200px
     overflow-y auto !important
     overflow-x hidden !important
 
-  & :global(.ProseMirror p.is-empty::before)
+  & :global(.ProseMirror p.is-empty.is-editor-empty::before)
     color var(--muted-foreground)
     content attr(data-placeholder)
     float left

@@ -1,9 +1,4 @@
-import {
-  type ChangeEvent,
-  type KeyboardEvent as ReactKeyboardEvent,
-  useCallback,
-  useRef,
-} from 'react';
+import { type ChangeEvent, useCallback, useRef } from 'react';
 
 import type { Editor } from '@tiptap/core';
 import { EditorContent } from '@tiptap/react';
@@ -20,7 +15,6 @@ export type ChatPromptComposerProps = {
   attachments: ChatAttachmentDropItem[];
   attachmentAccept?: string;
   onAttachmentFiles?: (files: File[]) => void;
-  onComposerKeyDown: (event: ReactKeyboardEvent) => void;
 };
 
 export function ChatPromptComposer({
@@ -30,7 +24,6 @@ export function ChatPromptComposer({
   attachments,
   attachmentAccept,
   onAttachmentFiles,
-  onComposerKeyDown,
 }: ChatPromptComposerProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const showAttachButton = Boolean(attachmentAccept && onAttachmentFiles);
@@ -79,7 +72,7 @@ export function ChatPromptComposer({
         </>
       ) : null}
 
-      <div className={S.editorWrap} onKeyDown={onComposerKeyDown}>
+      <div className={S.editorWrap}>
         <EditorContent editor={editor} className={S.editorMount} />
       </div>
 

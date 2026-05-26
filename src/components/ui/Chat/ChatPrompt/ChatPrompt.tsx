@@ -24,16 +24,15 @@ export function ChatPrompt({
   const attachmentsCount = attachments.length;
 
   const emitSubmitRef = useRef(() => {});
-  const { editor, trimmedMessage, resetAfterSend, handleComposerKeyDown } =
-    useChatPromptEditor({
-      disabled,
-      placeholder,
-      slashCommandItems,
-      onSlashItemCommand,
-      prefillMessage,
-      attachmentsCount,
-      onEnterSubmit: () => emitSubmitRef.current(),
-    });
+  const { editor, trimmedMessage, resetAfterSend } = useChatPromptEditor({
+    disabled,
+    placeholder,
+    slashCommandItems,
+    onSlashItemCommand,
+    prefillMessage,
+    attachmentsCount,
+    onEnterSubmit: () => emitSubmitRef.current(),
+  });
 
   const emitSubmitAndClear = useCallback(() => {
     if (!editor) return;
@@ -79,7 +78,6 @@ export function ChatPrompt({
         attachments={attachments}
         attachmentAccept={attachmentAccept}
         onAttachmentFiles={onAttachmentFiles}
-        onComposerKeyDown={handleComposerKeyDown}
       />
       {footer}
     </form>

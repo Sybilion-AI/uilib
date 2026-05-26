@@ -1,5 +1,4 @@
 import {
-  type KeyboardEvent as ReactKeyboardEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -43,7 +42,6 @@ export type UseChatPromptEditorResult = {
   editor: Editor | null;
   trimmedMessage: string;
   resetAfterSend: () => void;
-  handleComposerKeyDown: (event: ReactKeyboardEvent) => void;
 };
 
 export function useChatPromptEditor({
@@ -94,7 +92,6 @@ export function useChatPromptEditor({
       Placeholder.configure({
         placeholder: placeholderText,
         showOnlyWhenEditable: true,
-        showOnlyCurrent: false,
       }),
     ];
     if (slashItemsStable.length > 0) {
@@ -126,6 +123,38 @@ export function useChatPromptEditor({
 
   const trimmedMessage = plainDraft.trim();
 
+  const trimmedMessageRef = useRef(trimmedMessage);
+  trimmedMessageRef.current = trimmedMessage;
+
+  const attachmentsCountRef = useRef(attachmentsCount);
+  attachmentsCountRef.current = attachmentsCount;
+
+  const onEnterSubmitRef = useRef(onEnterSubmit);
+  onEnterSubmitRef.current = onEnterSubmit;
+
+  const handleEditorKeyDown = useCallback(
+    (_view: unknown, event: KeyboardEvent) => {
+      if (
+        !(
+          event.key === 'Enter' &&
+          !event.shiftKey &&
+          !event.metaKey &&
+          !event.ctrlKey
+        )
+      ) {
+        return false;
+      }
+      if (slashOpenRef.current) return false;
+      if (!trimmedMessageRef.current && attachmentsCountRef.current === 0) {
+        return false;
+      }
+      event.preventDefault();
+      onEnterSubmitRef.current();
+      return true;
+    },
+    [],
+  );
+
   const editor = useEditor(
     {
       extensions,
@@ -137,6 +166,7 @@ export function useChatPromptEditor({
           spellcheck: 'true',
           'aria-label': ariaLabelComposer,
         },
+        handleKeyDown: handleEditorKeyDown,
       },
       onTransaction: ({ editor: ed }) => {
         const dom = chatPromptSafeEditorDom(ed);
@@ -147,7 +177,7 @@ export function useChatPromptEditor({
       },
       onCreate: bindEditorDom,
     },
-    [extensions, bindEditorDom, ariaLabelComposer],
+    [extensions, bindEditorDom, ariaLabelComposer, handleEditorKeyDown],
   );
 
   useEffect(() => {
@@ -188,9 +218,6 @@ export function useChatPromptEditor({
     syncChatPromptComposerHeight(dom, plainDraft);
   }, [editor, plainDraft]);
 
-  const onEnterSubmitRef = useRef(onEnterSubmit);
-  onEnterSubmitRef.current = onEnterSubmit;
-
   const resetAfterSend = useCallback(() => {
     if (!editor) return;
     editor.chain().clearContent().focus().run();
@@ -201,23 +228,9 @@ export function useChatPromptEditor({
     setPlainDraft('');
   }, [editor]);
 
-  const handleComposerKeyDown = useCallback(
-    (e: ReactKeyboardEvent) => {
-      if (!(e.key === 'Enter' && !e.shiftKey && !e.metaKey && !e.ctrlKey))
-        return;
-      if (!editorDomRef.current?.contains(e.target as Node)) return;
-      if (slashOpenRef.current) return;
-      if (!trimmedMessage && attachmentsCount === 0) return;
-      e.preventDefault();
-      onEnterSubmitRef.current();
-    },
-    [attachmentsCount, trimmedMessage],
-  );
-
   return {
     editor,
     trimmedMessage,
     resetAfterSend,
-    handleComposerKeyDown,
   };
 }
