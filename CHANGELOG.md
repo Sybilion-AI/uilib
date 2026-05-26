@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.42](https://github.com/Mir-Insight/uilib/compare/v1.3.41...v1.3.42) (2026-05-26)
+
+
+### Features
+
+* PerformanceChart and DriversComparisonChart - AGENT.md ([469965e](https://github.com/Mir-Insight/uilib/commit/469965ed24167c4494ea9777a2be0d47443e7f7d))
+
 ### [1.3.41](https://github.com/Mir-Insight/uilib/compare/v1.3.40...v1.3.41) (2026-05-25)
 
 
