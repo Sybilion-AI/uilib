@@ -1,19 +1,18 @@
-# DriversComparisonChart (agent notes)
+# DriversComparisonChart
 
-**Drivers vs target** backtests: **`BacktestsComponentPayload`** from **`@sybilion/platform-sdk`**, optional **`datasetHistorical`**, chart + **driver table** (row click toggles series; first N visible by default).
+Renders: target vs drivers backtests chart with ChartAreaInteractive plus table; row click toggles series visibility.
 
-## Host must supply
+Use when: drivers comparison tab with normalized target and driver series from backtests payload.
+Not when: geographic map or performance horizons — use DriverMap or PerformanceChart.
 
-- **`payload`**: `BacktestsComponentPayload | null` (target `normalized_series` + drivers with `normalized_series`, `importance`, `lag`)
-- **`datasetHistorical`**: optional `ChartDataPoint[]` overlay
-- Analysis selector and backtests API fetch **above** the widget (e.g. **`AnalysesSelector`** + platform SDK view call)
-- **`seriesInitKey`** when the selected analysis changes
-- Loading/empty: **`loading`**, **`chartLoading`**, **`runAnalysisHint`**, **`statusHint`**, **`statusTone`**
+Host provides:
 
-## Runnable demo
+- `payload`: BacktestsComponentPayload from platform SDK (host fetch per analysis)
+- Optional `datasetHistorical` overlay
+- `seriesInitKey` when selected analysis changes
 
-`src/docs/pages/DriversComparisonChartPage.tsx` (uilib docs app, **Widgets** section).
+Report tile: Not used in report tiles.
 
-## Discovery index for standalone apps
+Requires: `payload` — target + driver normalized_series; `loading` / `chartLoading` — spinners; `seriesInitKey` — reset visible series on analysis change; `runAnalysisHint` / `statusHint` — empty/error text.
 
-**[sybilion-app-template/docs/AGENT_UI_GLOSSARY.md](../../../../../sybilion-app-template/docs/AGENT_UI_GLOSSARY.md)** — import line and pointers; no prop list here. Types: `dist/esm/types/…/DriversComparisonChart` after install.
+Empty/loading: loading props shimmer chart; null `payload` with `runAnalysisHint` prompts to run analysis.

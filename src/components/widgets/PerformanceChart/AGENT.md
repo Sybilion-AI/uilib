@@ -1,19 +1,18 @@
-# PerformanceChart (agent notes)
+# PerformanceChart
 
-Forecast **performance** widget on **`ChartAreaInteractive`**: **per-horizon** tab (24m window, horizon selector, model/drift/custom lines, MAE/MAPE table) and **spaghetti** tab (all horizons overlaid).
+Renders: forecast performance on ChartAreaInteractive — per-horizon tab (24m window, MAE/MAPE table) and spaghetti tab (all horizons overlaid).
 
-## Host must supply
+Use when: dataset performance tab with horizon selector and error metrics.
+Not when: simple forecast card or driver backtests — use ChartAreaInteractive or DriversComparisonChart.
 
-- **`performanceData`**: `PerformanceChartPayload` (`model` / `drift` with `forecasts` per `horizon_*`, `metrics_history`)
-- **`historicalData`**: `ChartDataPoint[]`
-- Optional: **`forecastData`**, **`customPerformanceMatrix`**, **`userSeries`** / **`spaghettiUserSeries`**
-- Loading/empty: **`loading`**, **`chartLoading`**, **`performanceDataLoading`**, **`runAnalysisHint`**, **`statusHint`**
-- Analysis selection and API fetch live **outside** this widget
+Host provides:
 
-## Runnable demo
+- `performanceData` (PerformanceChartPayload) and `historicalData` from performance API
+- Analysis selection and fetch outside widget
+- Optional `forecastData`, `customPerformanceMatrix`, `userSeries` for spaghetti
 
-`src/docs/pages/PerformanceChartPage.tsx` (uilib docs app, **Widgets** section).
+Report tile: Not used in report tiles.
 
-## Discovery index for standalone apps
+Requires: `performanceData` — model/drift forecasts and metrics; `historicalData` — baseline series; `loading` / `chartLoading` / `performanceDataLoading` — spinners; `runAnalysisHint` / `statusHint` — empty states.
 
-**[sybilion-app-template/docs/AGENT_UI_GLOSSARY.md](../../../../../sybilion-app-template/docs/AGENT_UI_GLOSSARY.md)** — import line and pointers; no prop list here. Types: `dist/esm/types/…/PerformanceChart` after install.
+Empty/loading: loading props show shimmer/spinner; null `performanceData` with `runAnalysisHint` prompts to run analysis.
