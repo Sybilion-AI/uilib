@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
+import { Logo } from '#uilib/components/ui/Logo';
 import { GlobeIcon, MailIcon } from 'lucide-react';
 
 import S from './PageFooter.styl';
@@ -14,7 +15,6 @@ export interface PageFooterLinkItem {
 }
 
 export interface PageFooterProps {
-  logo?: ReactNode;
   /** Rendered between logo block and copyright (e.g. debug UI from the app). */
   children?: ReactNode;
   /** When non-empty, version badge links here (e.g. `/releases`). */
@@ -55,7 +55,6 @@ export function PageFooter({
   versionLabel,
   homeTo = '/',
   brandText = 'Sybilion',
-  logo,
   websiteHref = 'https://sybilion.com',
   mailHref = 'mailto:support@sybilion.com',
   copyrightText = '© 2026 Sybilion. All rights reserved.',
@@ -84,7 +83,7 @@ export function PageFooter({
       <div className={S.line}>
         <div className={S.logo}>
           <Link to={homeTo}>
-            {logo}
+            <Logo />
             &nbsp;{brandText}
           </Link>
           {versionLink !== '' && (
