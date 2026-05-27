@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.47](https://github.com/Mir-Insight/uilib/compare/v1.3.46...v1.3.47) (2026-05-27)
+
+
+### Bug Fixes
+
+* Move tiptap from peerDeps to deps ([020aed0](https://github.com/Mir-Insight/uilib/commit/020aed08f23df7fd147d6904428e413d5678cd14))
+
 ### [1.3.46](https://github.com/Mir-Insight/uilib/compare/v1.3.45...v1.3.46) (2026-05-27)
 
 
