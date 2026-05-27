@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.45](https://github.com/Mir-Insight/uilib/compare/v1.3.44...v1.3.45) (2026-05-27)
+
+
+### Features
+
+* ChatPrompt - Slash mention chips and composer API ([6ca015e](https://github.com/Mir-Insight/uilib/commit/6ca015edccae8b9d4b5c743f0e3450e2523d69d9))
+
 ### [1.3.44](https://github.com/Mir-Insight/uilib/compare/v1.3.43...v1.3.44) (2026-05-26)
 
 
