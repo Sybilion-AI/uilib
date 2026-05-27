@@ -10,12 +10,37 @@ import {
   SlashSuggestionList,
   type SlashSuggestionListHandle,
 } from './SlashSuggestionList';
+import S from './SlashSuggestionList.styl';
 import { filterSlashItems } from './defaultChatSlashItems';
 import type {
   CreateSlashMentionExtensionOptions,
   SlashCommandItem,
   SlashSuggestionPlacement,
 } from './types';
+
+const SlashMention = Mention.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      className: {
+        default: null,
+        parseHTML: element => element.getAttribute('data-slash-class'),
+        renderHTML: attributes => {
+          if (!attributes.className) return {};
+          return { 'data-slash-class': attributes.className };
+        },
+      },
+      color: {
+        default: null,
+        parseHTML: element => element.getAttribute('data-slash-color'),
+        renderHTML: attributes => {
+          if (!attributes.color) return {};
+          return { 'data-slash-color': attributes.color };
+        },
+      },
+    };
+  },
+});
 
 const SUGGESTION_GAP_PX = 4;
 
@@ -124,28 +149,11 @@ export function slashMentionSuggestionRender(
   };
 }
 
-function clearSlashTriggerEditor(
-  editor: Editor,
-  range: { from: number; to: number },
-): void {
-  if (editor.isDestroyed) return;
-  try {
-    editor.chain().focus().deleteRange(range).clearContent().run();
-  } catch {
-    // Editor view may be tearing down during suggestion exit.
-  }
+function slashMentionChipStyle(color: string | null): string | undefined {
+  if (!color) return undefined;
+  return `color: ${color}; background-color: color-mix(in srgb, ${color} 30%, transparent);`;
 }
 
-function collapseEditorSelectionEnd(editor: Editor): void {
-  if (editor.isDestroyed) return;
-  try {
-    editor.view?.dom?.ownerDocument?.defaultView
-      ?.getSelection?.()
-      ?.collapseToEnd();
-  } catch {
-    // view.dom throws when editor is not mounted
-  }
-}
 function insertDefaultMention(
   editor: Editor,
   range: { from: number; to: number },
@@ -166,6 +174,8 @@ function insertDefaultMention(
           id: props.id,
           label: props.label,
           mentionSuggestionChar: slashChar,
+          className: props.className ?? null,
+          color: props.color ?? null,
         },
       },
       { type: 'text', text: ' ' },
@@ -212,27 +222,38 @@ export function createSlashMentionExtension({
     current: null,
   };
 
-  return Mention.configure({
+  return SlashMention.configure({
     renderText({ node }) {
       return `/${node.attrs.id as string}`;
     },
-    renderHTML({ options, node, suggestion }) {
-      const suggestionChar = suggestion?.char ?? slashChar;
+    renderHTML({ options, node }) {
       const id =
         typeof node.attrs.id === 'string'
           ? node.attrs.id
           : String(node.attrs.id ?? '');
+      const label =
+        typeof node.attrs.label === 'string' && node.attrs.label.trim() !== ''
+          ? node.attrs.label
+          : id;
+      const color =
+        typeof node.attrs.color === 'string' ? node.attrs.color : null;
+      const className = [S.mention, node.attrs.className]
+        .filter(Boolean)
+        .join(' ');
+      const chipStyle = slashMentionChipStyle(color);
+
       return [
         'span',
         mergeAttributes(
           {
             'data-type': 'mention',
             'data-slash-command': id,
-            class: 'slash-mention',
+            class: className,
+            ...(chipStyle ? { style: chipStyle } : {}),
           },
           options.HTMLAttributes,
         ),
-        `${suggestionChar}${id}`,
+        label,
       ];
     },
     suggestion: {
@@ -245,8 +266,6 @@ export function createSlashMentionExtension({
       command: ({ editor, range, props }) => {
         const item = props as SlashCommandItem;
         if (onItemCommand?.({ editor, range, item }) === true) {
-          clearSlashTriggerEditor(editor, range);
-          queueMicrotask(() => collapseEditorSelectionEnd(editor));
           return null;
         }
         insertDefaultMention(editor, range, item, slashChar);

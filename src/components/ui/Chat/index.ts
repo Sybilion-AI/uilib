@@ -27,6 +27,15 @@ export type {
 } from './ChatSheet/useChatPanelChromeModel';
 export { ChatMessage } from './ChatMessage';
 export { ChatPrompt } from './ChatPrompt';
+export type { ChatPromptComposerHandle } from './ChatPrompt/ChatPromptComposer';
+export {
+  CHAT_PROMPT_COMMAND_CHIP_CLASS,
+  chatPromptChipHtml,
+  createChatPromptComposerHandle,
+  getChatPromptTokenRangeBeforePos,
+  insertChatPromptContentAtCaret,
+} from './ChatPrompt/chatPromptComposerInsert';
+export type { ChatPromptComposerInsertOptions } from './ChatPrompt/ChatPromptComposer.types';
 export { ChatPresets } from './ChatPresets';
 export type {
   ChatEmptyStateConfig,

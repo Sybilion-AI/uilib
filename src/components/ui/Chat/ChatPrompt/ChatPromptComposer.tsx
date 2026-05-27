@@ -1,4 +1,10 @@
-import { type ChangeEvent, useCallback, useRef } from 'react';
+import {
+  type ChangeEvent,
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 
 import type { Editor } from '@tiptap/core';
 import { EditorContent } from '@tiptap/react';
@@ -7,6 +13,15 @@ import { PaperclipIcon, SendHorizontalIcon } from 'lucide-react';
 import { Button } from '../../Button';
 import type { ChatAttachmentDropItem } from '../Chat.types';
 import S from './ChatPrompt.styl';
+import {
+  type ChatPromptComposerHandle,
+  createChatPromptComposerHandle,
+} from './chatPromptComposerInsert';
+
+export type {
+  ChatPromptComposerHandle,
+  ChatPromptComposerInsertOptions,
+} from './ChatPromptComposer.types';
 
 export type ChatPromptComposerProps = {
   editor: Editor;
@@ -17,16 +32,26 @@ export type ChatPromptComposerProps = {
   onAttachmentFiles?: (files: File[]) => void;
 };
 
-export function ChatPromptComposer({
-  editor,
-  disabled,
-  trimmedMessage,
-  attachments,
-  attachmentAccept,
-  onAttachmentFiles,
-}: ChatPromptComposerProps) {
+export const ChatPromptComposer = forwardRef<
+  ChatPromptComposerHandle,
+  ChatPromptComposerProps
+>(function ChatPromptComposer(
+  {
+    editor,
+    disabled,
+    trimmedMessage,
+    attachments,
+    attachmentAccept,
+    onAttachmentFiles,
+  },
+  ref,
+) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const showAttachButton = Boolean(attachmentAccept && onAttachmentFiles);
+
+  useImperativeHandle(ref, () => createChatPromptComposerHandle(editor), [
+    editor,
+  ]);
 
   const handleFileInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -88,4 +113,4 @@ export function ChatPromptComposer({
       </div>
     </div>
   );
-}
+});

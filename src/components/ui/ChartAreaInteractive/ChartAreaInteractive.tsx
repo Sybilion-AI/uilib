@@ -103,8 +103,15 @@ export function ChartAreaInteractive({
     const raw = selectedAnalysisId ?? selectedForecast?.id ?? null;
     const anchorId =
       raw == null ? null : typeof raw === 'number' ? raw : Number(raw);
+    const anchorForecastLoaded =
+      anchorId != null &&
+      Number.isFinite(anchorId) &&
+      chartData.some(row => {
+        const value = row[`forecast_${anchorId}`];
+        return typeof value === 'number' && Number.isFinite(value);
+      });
     const opts =
-      anchorId != null && Number.isFinite(anchorId)
+      anchorId != null && Number.isFinite(anchorId) && anchorForecastLoaded
         ? { endDateAnchorAnalysisId: anchorId }
         : undefined;
     return filterDataForTimeRange(chartData, timeRange, opts);

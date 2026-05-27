@@ -4,6 +4,10 @@ export type SlashCommandItem = {
   id: string;
   label: string;
   description?: string;
+  /** Extra class on the inserted mention chip (merged with `slash-mention`). */
+  className?: string;
+  /** CSS color for chip text; background is 30% of this color mixed with transparent. */
+  color?: string;
 };
 
 export type SlashItemCommandContext = {
@@ -14,8 +18,9 @@ export type SlashItemCommandContext = {
 };
 
 /**
- * If provided, run when a slash item is picked. Return true to skip mention insert
- * (extension clears the trigger text from the composer).
+ * If provided, run when a slash item is picked. Return true to skip default mention insert
+ * and handle the composer yourself (e.g. `createChatPromptComposerHandle(editor).insertAtCaret`
+ * with `{ replaceRange: range }` to replace `/query` with a custom chip).
  */
 export type SlashOnItemCommand = (ctx: SlashItemCommandContext) => boolean;
 

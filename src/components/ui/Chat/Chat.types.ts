@@ -98,7 +98,7 @@ export interface ChatPromptProps {
   onAttachmentFiles?: (files: File[]) => void;
   /** Slash menu (`/`); omit or pass empty to disable Mention trigger (no default items). */
   slashCommandItems?: SlashCommandItem[];
-  /** Custom slash pick handler; return true to skip default mention insert. */
+  /** Custom slash pick handler; return true to skip default mention insert and insert via composer API. */
   onSlashItemCommand?: SlashOnItemCommand;
 }
 

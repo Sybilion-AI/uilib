@@ -69,6 +69,31 @@ INPUT_MAX_HEIGHT = 200px
     height 0
     pointer-events none
 
+  & :global(.ProseMirror .slash-mention)
+    display inline-flex
+    align-items center
+    padding 0 var(--p-1)
+    border-radius var(--radius-sm)
+    background var(--muted)
+    font-size 0.875em
+    line-height 1.4
+    white-space nowrap
+    user-select none
+    vertical-align baseline
+
+  & :global(.ProseMirror .chat-prompt-command-chip)
+    display inline-flex
+    align-items center
+    padding 0 var(--p-1)
+    border-radius var(--radius-sm)
+    background var(--muted)
+    color var(--foreground)
+    font-size 0.875em
+    line-height 1.4
+    white-space nowrap
+    user-select none
+    vertical-align baseline
+
 .submitColumn
   display flex
   flex-direction column

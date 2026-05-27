@@ -8,7 +8,6 @@ import {
   type SlashCommandItem,
 } from '#uilib/components/ui/Chat';
 import { PageContentSection } from '#uilib/components/ui/Page';
-import type { SlashItemCommandContext } from '#uilib/tiptap/slash-mention/types';
 import { ScrollRef } from '@homecode/ui';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -16,65 +15,40 @@ import { DocsHeaderActions } from '../docsHeaderActions';
 
 const NO_QUICK_REPLY_KEYS: ReadonlySet<string> = new Set();
 
-const DOCS_SAMPLE_COMMAND_ID = 'sample-command';
-
-/** Sample items so the docs demo still shows a `/` palette (`DEFAULT_CHAT_SLASH_ITEMS` is empty). */
-const DOCS_SAMPLE_SLASH_ITEMS: SlashCommandItem[] = [
+/** Sample items — default TipTap mention insert; optional `className` / `color` style the chip. */
+const DOCS_SLASH_ITEMS: SlashCommandItem[] = [
   {
-    id: DOCS_SAMPLE_COMMAND_ID,
-    label: DOCS_SAMPLE_COMMAND_ID,
-    description:
-      'Demo handler — clears composer and runs `onSlashItemCommand` (no mention insert).',
+    id: 'generate-dashboard',
+    label: 'Generate dashboard',
+    description: 'Insert /generate-dashboard',
+    color: 'var(--brand-color-600)',
+  },
+  {
+    id: 'performance-chart',
+    label: 'Performance chart (bigger font)',
+    description: 'Insert /PerformanceChart',
+    className: 'docs-slash-mention-accent',
+    color: '#16a34a',
+  },
+  {
+    id: 'mention-fallback',
+    label: 'Mention fallback',
+    description: 'Default mention styling only',
+    color: 'var(--foreground)',
   },
 ];
 
-const SAMPLE_COMMAND_PROGRESS_TEXT = 'Running sample command…';
-
-const SAMPLE_COMMAND_SUCCESS_TEXT = '✅ Sample command complete.';
-
-function makeMessage(
-  role: MessageRole,
-  text: string,
-  options?: { inProgress?: boolean },
-): Message {
+function makeMessage(role: MessageRole, text: string): Message {
   return {
     id: crypto.randomUUID(),
     role,
     text,
     timestamp: Date.now(),
-    ...(options?.inProgress ? { inProgress: true } : {}),
   };
 }
 
-/** Local-state equivalent of chat-context `updateMessageById`. */
-function updateMessageInPlace(
-  messages: Message[],
-  messageId: string,
-  patch: { role?: MessageRole; text?: string; inProgress?: boolean },
-): Message[] {
-  return messages.map(message => {
-    if (message.id !== messageId) return message;
-    const next: Message = { ...message };
-    if (patch.role != null) {
-      next.role = patch.role;
-    }
-    if (patch.text != null) {
-      next.text = patch.text;
-    }
-    if (patch.inProgress === true) {
-      next.inProgress = true;
-    } else if (
-      patch.inProgress === false ||
-      (patch.role != null && patch.role !== MessageRole.SYSTEM)
-    ) {
-      delete next.inProgress;
-    }
-    return next;
-  });
-}
-
 const ASSISTANT_REPLY_TEXT =
-  'Demo reply for a normal message. Slash picks with a custom handler skip mention insert.';
+  'Demo reply. Slash picks insert inline mention chips; plain text on send uses each item id (e.g. /generate-dashboard).';
 
 export default function ChatSlashCommandsPage() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -95,84 +69,33 @@ export default function ChatSlashCommandsPage() {
     messages.length > 0 &&
     messages[messages.length - 1]?.role === MessageRole.USER;
 
-  const runSampleCommand = useCallback(() => {
-    const progressId = crypto.randomUUID();
+  const onSubmit = useCallback((raw: string) => {
+    const text = raw.trim();
+    if (!text) return;
+
+    setMessages(prev => [...prev, makeMessage(MessageRole.USER, text)]);
     setIsLoading(true);
-    setMessages(prev => [
-      ...prev,
-      {
-        id: progressId,
-        role: MessageRole.SYSTEM,
-        text: SAMPLE_COMMAND_PROGRESS_TEXT,
-        timestamp: Date.now(),
-        inProgress: true,
-      },
-    ]);
 
     if (replyTimeoutRef.current != null) {
       clearTimeout(replyTimeoutRef.current);
     }
     replyTimeoutRef.current = setTimeout(() => {
       replyTimeoutRef.current = null;
-      setMessages(prev =>
-        updateMessageInPlace(prev, progressId, {
-          role: MessageRole.ASSISTANT,
-          text: SAMPLE_COMMAND_SUCCESS_TEXT,
-          inProgress: false,
-        }),
-      );
+      setMessages(prev => [
+        ...prev,
+        makeMessage(MessageRole.ASSISTANT, ASSISTANT_REPLY_TEXT),
+      ]);
       setIsLoading(false);
-    }, 1200);
+    }, 900);
   }, []);
-
-  const onSlashItemCommand = useCallback(
-    ({ item }: SlashItemCommandContext) => {
-      if (item.id !== DOCS_SAMPLE_COMMAND_ID) {
-        return false;
-      }
-      queueMicrotask(() => runSampleCommand());
-      return true;
-    },
-    [runSampleCommand],
-  );
-
-  const onSubmit = useCallback(
-    (raw: string) => {
-      const text = raw.trim();
-      if (!text) return;
-
-      if (text === `/${DOCS_SAMPLE_COMMAND_ID}`) {
-        runSampleCommand();
-        return;
-      }
-
-      setMessages(prev => [...prev, makeMessage(MessageRole.USER, text)]);
-      setIsLoading(true);
-
-      if (replyTimeoutRef.current != null) {
-        clearTimeout(replyTimeoutRef.current);
-      }
-      replyTimeoutRef.current = setTimeout(() => {
-        replyTimeoutRef.current = null;
-        setMessages(prev => [
-          ...prev,
-          makeMessage(MessageRole.ASSISTANT, ASSISTANT_REPLY_TEXT),
-        ]);
-        setIsLoading(false);
-      }, 900);
-    },
-    [runSampleCommand],
-  );
 
   return (
     <>
       <AppPageHeader
         breadcrumbs={[{ label: 'Chat' }, { label: 'Chat slash commands' }]}
         title="Chat slash commands"
-        subheader={`Slash palette uses TipTap Mention with "/" as the trigger. Pass slashCommandItems from the app; optional onSlashItemCommand can clear the composer and run an action instead of inserting a mention. Long-running handlers can append a SYSTEM message with inProgress while work is in flight, then update it in place (e.g. via updateMessageById) to a final assistant message when done.`}
-        actions={
-          <DocsHeaderActions slashCommandItems={DOCS_SAMPLE_SLASH_ITEMS} />
-        }
+        subheader={`Slash palette uses TipTap Mention with "/" as the trigger. Pass slashCommandItems from the app — each item inserts an inline mention chip by default. Optional className and color on SlashCommandItem style the chip in the composer.`}
+        actions={<DocsHeaderActions slashCommandItems={DOCS_SLASH_ITEMS} />}
       />
       <PageContentSection>
         <p style={{ marginBottom: 16, fontSize: 14, lineHeight: 1.5 }}>
@@ -180,13 +103,17 @@ export default function ChatSlashCommandsPage() {
           <Link className="underline underline-offset-2" to="/docs/chat">
             Chat
           </Link>{' '}
-          shell below: scrolling history, empty state, disclaimer, composer.
-          Type <kbd className="font-mono">/</kbd> at line start or after a
-          space; pick <kbd className="font-mono">sample-command</kbd> to run the
-          custom handler (shows an <kbd className="font-mono">inProgress</kbd>{' '}
-          shimmer, then updates the same message to a success assistant reply),
-          or send <kbd className="font-mono">/sample-command</kbd> with Enter.
+          shell below. Type <kbd className="font-mono">/</kbd> at line start or
+          after a space, then pick a command — the composer inserts a styled
+          mention chip. Items can set <kbd className="font-mono">className</kbd>{' '}
+          and <kbd className="font-mono">color</kbd> on{' '}
+          <kbd className="font-mono">SlashCommandItem</kbd>.
         </p>
+        <style>{`
+          .docs-slash-mention-accent {
+            font-size: 150%;
+          }
+        `}</style>
         <ChatChrome
           showResizeHandle={false}
           resizeHandle={undefined}
@@ -207,13 +134,12 @@ export default function ChatSlashCommandsPage() {
           effectiveScopeId="docs-chat-slash-inline"
           onPromptSubmit={onSubmit}
           onChatDeleted={() => {}}
-          slashCommandItems={DOCS_SAMPLE_SLASH_ITEMS}
-          onSlashItemCommand={onSlashItemCommand}
+          slashCommandItems={DOCS_SLASH_ITEMS}
           promptPlaceholder='Ask something or type "/" for demo commands…'
           emptyState={{
-            title: 'Try a slash command',
+            title: 'Try slash commands',
             description:
-              'Pick sample-command from the palette or send /sample-command — inProgress placeholder shimmers, then becomes "✅ Sample command complete." in the same slot.',
+              'Pick a command from the palette to insert a mention chip with optional className and color.',
           }}
         />
       </PageContentSection>
