@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.46](https://github.com/Mir-Insight/uilib/compare/v1.3.45...v1.3.46) (2026-05-27)
+
+
+### Bug Fixes
+
+* Logo - use --brand-color for icon ([f26a836](https://github.com/Mir-Insight/uilib/commit/f26a836c6929c3511d6f984b2f05678e6627e408))
+* PageFooter - use Logo component ([5d15edd](https://github.com/Mir-Insight/uilib/commit/5d15edd81d3a9d8a3f1051c6f7c0772f0e52c49f))
+
 ### [1.3.45](https://github.com/Mir-Insight/uilib/compare/v1.3.44...v1.3.45) (2026-05-27)
 
 
