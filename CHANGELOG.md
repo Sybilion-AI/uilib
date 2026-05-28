@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.48](https://github.com/Mir-Insight/uilib/compare/v1.3.47...v1.3.48) (2026-05-28)
+
+
+### Features
+
+* ChatSheet - send payload transform hook ([5cdeec4](https://github.com/Mir-Insight/uilib/commit/5cdeec4dcd338c7ee32721f120c80de493ebd0cc))
+
+
+### Bug Fixes
+
+* favicon - use assets/logo.svg ([404e4f2](https://github.com/Mir-Insight/uilib/commit/404e4f2b61a7c1c164862d558447a22a1db62852))
+
 ### [1.3.47](https://github.com/Mir-Insight/uilib/compare/v1.3.46...v1.3.47) (2026-05-27)
 
 
