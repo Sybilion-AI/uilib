@@ -48,6 +48,7 @@ export function ChatSheet({
   onAttachmentsDropped,
   slashCommandItems,
   onSlashItemCommand,
+  transformSendPayload,
   inline = false,
 }: ChatSheetProps) {
   const model = useChatPanelChromeModel({
@@ -63,6 +64,7 @@ export function ChatSheet({
     onAttachmentsDropped,
     slashCommandItems,
     onSlashItemCommand,
+    transformSendPayload,
   });
 
   if (actionsRef) {

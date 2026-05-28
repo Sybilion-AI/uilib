@@ -11,7 +11,7 @@ Host provides:
 - Optional `datasetHistorical` overlay
 - `seriesInitKey` when selected analysis changes
 
-Report tile: Not used in report tiles.
+Report tile: `drivers_comparison_chart` — host loads normalized backtests payload + dataset historical; built-in analysis selector.
 
 Requires: `payload` — target + driver normalized_series; `loading` / `chartLoading` — spinners; `seriesInitKey` — reset visible series on analysis change; `runAnalysisHint` / `statusHint` — empty/error text.
 

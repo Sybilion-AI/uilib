@@ -111,7 +111,14 @@ export function Renamer({
               <Button
                 className={S.button}
                 variant="ghost"
-                onClick={handleEditClick}
+                onPointerDown={e => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                onClick={e => {
+                  e.stopPropagation();
+                  handleEditClick();
+                }}
                 size={buttonSizeMap[size]}
                 type="button"
               >

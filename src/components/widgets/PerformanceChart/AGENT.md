@@ -11,7 +11,7 @@ Host provides:
 - Analysis selection and fetch outside widget
 - Optional `forecastData`, `customPerformanceMatrix`, `userSeries` for spaghetti
 
-Report tile: Not used in report tiles.
+Report tile: `performance_chart` — host loads performance payload + dataset series; built-in analysis selector.
 
 Requires: `performanceData` — model/drift forecasts and metrics; `historicalData` — baseline series; `loading` / `chartLoading` / `performanceDataLoading` — spinners; `runAnalysisHint` / `statusHint` — empty states.
 

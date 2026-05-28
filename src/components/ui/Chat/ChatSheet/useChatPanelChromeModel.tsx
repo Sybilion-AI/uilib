@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   ChatPreset,
+  type ChatSendMessagePayload,
   MessageRole,
   type ScriptCompletePayload,
 } from '#uilib/components/ui/Chat/Chat.types';
@@ -54,7 +55,8 @@ export type UseChatPanelChromeModelInput = {
   presets?: ChatPreset[];
   /** Composite chat scope (e.g. `${userId}-${datasetId}`, `${userId}-dashboard`, `${userId}-report-${reportId}`). */
   scopeId?: string | null;
-  onMessage?: (message: string) => void;
+  /** Fires after send; second arg is the assistant reply when the API call succeeded. */
+  onMessage?: (displayText: string, assistantResponse?: string) => void;
   /** Fires when a preset script has no further `[Label|branchKey]` steps (graph leaf or linear script end). */
   onScriptComplete?: (payload: ScriptCompletePayload) => void;
   /** Renders `[CHART]` tokens in assistant messages. */
@@ -72,6 +74,15 @@ export type UseChatPanelChromeModelInput = {
   slashCommandItems?: SlashCommandItem[];
   /** Custom slash command handler (palette pick or Enter on `/id`). */
   onSlashItemCommand?: SlashOnItemCommand;
+  /** Override or extend the default send payload (e.g. api vs display text split). */
+  transformSendPayload?: (
+    message: string,
+    attachments: ChatAttachmentDropItem[] | undefined,
+    defaultPayload: string | ChatSendMessagePayload,
+  ) =>
+    | string
+    | ChatSendMessagePayload
+    | Promise<string | ChatSendMessagePayload>;
 };
 
 export type UseChatPanelChromeModelResult = {
@@ -121,6 +132,7 @@ export function useChatPanelChromeModel({
   onAttachmentsDropped,
   slashCommandItems,
   onSlashItemCommand,
+  transformSendPayload,
 }: UseChatPanelChromeModelInput): UseChatPanelChromeModelResult {
   const effectiveScopeId = scopeId ?? NO_SCOPE_FALLBACK;
   const isMobile = useIsMobile();
@@ -596,9 +608,16 @@ export function useChatPanelChromeModel({
 
       try {
         if (chatId) endLocalDemoFlow(chatId);
-        const payload = buildChatSendMessagePayload(message, stagedAttachments);
-        await sendMessage(payload);
-        onMessage?.(displayTextFromSendPayload(payload));
+        let payload = buildChatSendMessagePayload(message, stagedAttachments);
+        if (transformSendPayload) {
+          payload = await transformSendPayload(
+            message,
+            stagedAttachments,
+            payload,
+          );
+        }
+        const assistantResponse = await sendMessage(payload);
+        onMessage?.(displayTextFromSendPayload(payload), assistantResponse);
       } catch (error) {
         logger.error('Error sending chat message:', error);
       }
@@ -615,6 +634,7 @@ export function useChatPanelChromeModel({
       sendMessage,
       onMessage,
       onScriptComplete,
+      transformSendPayload,
     ],
   );
 
