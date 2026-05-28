@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.49](https://github.com/Mir-Insight/uilib/compare/v1.3.48...v1.3.49) (2026-05-28)
+
+
+### Bug Fixes
+
+* AnalysesSelector, Select - Limit production icon size in dropdown ([edefc11](https://github.com/Mir-Insight/uilib/commit/edefc11a6ce6eeafd0ee0bc8229f433877dbc503))
+
 ### [1.3.48](https://github.com/Mir-Insight/uilib/compare/v1.3.47...v1.3.48) (2026-05-28)
 
 
