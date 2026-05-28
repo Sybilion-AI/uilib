@@ -54,9 +54,22 @@ function renderItemContent(item: AnalysesSelectorItem) {
 function renderIcon(icon: AnalysesSelectorItem['icon']) {
   if (!icon) return null;
   if (typeof icon === 'string') {
-    return <img src={icon} alt="" className={S.icon} />;
+    return (
+      <img
+        src={icon}
+        alt=""
+        width={16}
+        height={16}
+        data-slot="analysis-icon"
+        className={cn(S.icon, S.iconImage)}
+      />
+    );
   }
-  return <span className={S.icon}>{icon}</span>;
+  return (
+    <span data-slot="analysis-icon" className={cn(S.icon, S.iconWrapper)}>
+      {icon}
+    </span>
+  );
 }
 
 export function AnalysesSelector({

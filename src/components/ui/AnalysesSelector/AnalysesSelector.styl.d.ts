@@ -5,6 +5,8 @@ interface CssExports {
   'disabled': string;
   'historical': string;
   'icon': string;
+  'iconImage': string;
+  'iconWrapper': string;
   'item': string;
   'itemLabelWithId': string;
   'label': string;
