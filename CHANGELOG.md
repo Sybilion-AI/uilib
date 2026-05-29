@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.50](https://github.com/Mir-Insight/uilib/compare/v1.3.49...v1.3.50) (2026-05-29)
+
+
+### Features
+
+* Tabs - Add outline variant for PageTabs ([ddc5b2f](https://github.com/Mir-Insight/uilib/commit/ddc5b2f6711b3f253ec4bf06cdb8a7025eee2e66))
+
 ### [1.3.49](https://github.com/Mir-Insight/uilib/compare/v1.3.48...v1.3.49) (2026-05-28)
 
 
