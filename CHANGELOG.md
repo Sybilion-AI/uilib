@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.52](https://github.com/Mir-Insight/uilib/compare/v1.3.51...v1.3.52) (2026-05-29)
+
+
+### Bug Fixes
+
+* Tooltip - Disable pointer events on popper wrapper ([ae44fa0](https://github.com/Mir-Insight/uilib/commit/ae44fa0a6f8a21ac7570e93c424af60b4d2eb02a))
+
 ### [1.3.51](https://github.com/Mir-Insight/uilib/compare/v1.3.50...v1.3.51) (2026-05-29)
 
 
