@@ -1,22 +1,57 @@
+import type { CSSProperties } from 'react';
+
 import { PageContentSection } from '#uilib/components/ui/Page';
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
+  type TabsVariant,
 } from '#uilib/components/ui/Tabs';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
-const VARIANTS = ['button', 'link'] as const;
+const VARIANTS: TabsVariant[] = ['button', 'link', 'outline'];
 const SIZES = ['sm', 'md', 'lg'] as const;
+
+const OUTLINE_DEMO_TABS = [
+  { value: 'crude-oil', label: 'Crude Oil', pct: 15 },
+  { value: 'consumer-staples', label: 'Consumer Staples Euro', pct: 15 },
+  { value: 'energy', label: 'Energy', pct: 8 },
+  { value: 'metals', label: 'Metals', pct: 12 },
+  { value: 'agriculture', label: 'Agriculture', pct: 5 },
+] as const;
+
+function OutlineTabLabel({ label, pct }: { label: string; pct: number }) {
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 'var(--p-2)',
+      }}
+    >
+      <span>{label}</span>
+      <span
+        style={{
+          color: 'var(--destructive)',
+          fontSize: 'var(--text-xs)',
+          fontWeight: 600,
+          fontVariantNumeric: 'tabular-nums',
+        }}
+      >
+        ↘ {pct}%
+      </span>
+    </span>
+  );
+}
 
 function TabsDemoCell({
   variant,
   size,
 }: {
-  variant: (typeof VARIANTS)[number];
+  variant: TabsVariant;
   size: (typeof SIZES)[number];
 }) {
   const id = `${variant}-${size}`;
@@ -89,6 +124,55 @@ export default function TabsPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </section>
+
+        <section>
+          <h3 style={{ marginBottom: '1rem' }}>Outline</h3>
+          <p
+            style={{
+              marginBottom: '0.75rem',
+              color: 'var(--muted-foreground)',
+            }}
+          >
+            White pill triggers; active tab uses a border via{' '}
+            <code>--selected-tab-outline-color</code> (defaults to{' '}
+            <code>--sb-cyan-400</code>).
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1.5rem',
+              padding: '1rem',
+              borderRadius: 'var(--p-3)',
+              backgroundColor: 'var(--muted)',
+            }}
+          >
+            <Tabs variant="outline" defaultValue={OUTLINE_DEMO_TABS[0].value}>
+              <TabsList>
+                {OUTLINE_DEMO_TABS.map(tab => (
+                  <TabsTrigger key={tab.value} value={tab.value}>
+                    <OutlineTabLabel label={tab.label} pct={tab.pct} />
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+
+            <Tabs
+              variant="outline"
+              defaultValue="custom-a"
+              style={
+                {
+                  '--selected-tab-outline-color': 'oklch(0.55 0.2 250)',
+                } as CSSProperties
+              }
+            >
+              <TabsList>
+                <TabsTrigger value="custom-a">Custom outline</TabsTrigger>
+                <TabsTrigger value="custom-b">Second tab</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
         </section>
 

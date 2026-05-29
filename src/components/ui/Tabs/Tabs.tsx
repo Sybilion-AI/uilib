@@ -8,6 +8,7 @@ import {
   TabsListProps,
   TabsProps,
   TabsTriggerProps,
+  TabsVariant,
 } from './Tabs.types';
 
 function Tabs({
@@ -17,7 +18,7 @@ function Tabs({
   darker = false,
   ...props
 }: TabsProps & {
-  variant?: 'button' | 'link';
+  variant?: TabsVariant;
   size?: 'sm' | 'md' | 'lg';
   darker?: boolean;
 }) {

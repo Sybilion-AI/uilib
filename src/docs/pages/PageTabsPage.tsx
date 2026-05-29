@@ -3,6 +3,13 @@ import { PageContentSection, PageTabs } from '#uilib/components/ui/Page';
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
+const OUTLINE_ITEMS = [
+  { value: 'outline-1', label: 'Crude Oil ↘ 15%' },
+  { value: 'outline-2', label: 'Consumer Staples ↘ 12%' },
+  { value: 'outline-3', label: 'Energy ↘ 8%' },
+  { value: 'outline-4', label: 'Metals ↘ 10%' },
+];
+
 const SCROLL_TEST_ITEMS = Array.from({ length: 10 }, (_, i) => {
   const n = i + 1;
   return {
@@ -51,6 +58,33 @@ export default function PageTabsPage() {
             <PageTabs
               defaultValue={SCROLL_TEST_ITEMS[0].value}
               items={SCROLL_TEST_ITEMS}
+            />
+          </div>
+        </section>
+
+        <section>
+          <h3 style={{ marginBottom: '0.75rem' }}>Outline variant</h3>
+          <p
+            style={{
+              marginBottom: '1rem',
+              color: 'var(--muted-foreground)',
+            }}
+          >
+            <code>variant=&quot;outline&quot;</code> with horizontal scroll on a
+            muted surface.
+          </p>
+          <div
+            style={{
+              maxWidth: 500,
+              padding: '0.5rem 0',
+              borderRadius: 'var(--p-3)',
+              backgroundColor: 'var(--muted)',
+            }}
+          >
+            <PageTabs
+              variant="outline"
+              defaultValue={OUTLINE_ITEMS[0].value}
+              items={OUTLINE_ITEMS}
             />
           </div>
         </section>

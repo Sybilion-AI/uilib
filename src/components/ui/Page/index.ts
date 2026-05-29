@@ -15,7 +15,7 @@ export type {
   PageFooterLinkItem,
   PageFooterProps,
 } from './PageFooter/PageFooter';
-export { PageTabs } from './PageTabs/PageTabs';
+export { PageTabs, type PageTabsItem } from './PageTabs/PageTabs';
 export { PageColumns } from './PageColumns/PageColumns';
 export { SectionHeader } from './SectionHeader';
 export type { SectionHeaderProps } from './SectionHeader';

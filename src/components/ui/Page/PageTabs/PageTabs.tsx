@@ -8,6 +8,7 @@ import {
   TabsListProps,
   TabsProps,
   TabsTrigger,
+  type TabsVariant,
 } from '#uilib/components/ui/Tabs';
 
 import S from './PageTabs.styl';
@@ -20,6 +21,14 @@ function hasTabPanelContent(content: React.ReactNode | undefined): boolean {
   return true;
 }
 
+export type PageTabsItem = {
+  value: string;
+  label: React.ReactNode;
+  content?: React.ReactNode;
+  /** React list key when multiple items may share `value`. */
+  key?: string;
+};
+
 export function PageTabs({
   className,
   contentClassName,
@@ -27,20 +36,22 @@ export function PageTabs({
   scrollbarClassName,
   items,
   tabsListProps,
+  variant = 'link',
   ...props
 }: {
-  items: { value: string; label: string; content?: React.ReactNode }[];
+  items: PageTabsItem[];
   tabsListProps?: TabsListProps & {
     fullWidth?: boolean;
     withPaddings?: boolean;
   };
+  variant?: TabsVariant;
 } & TabsProps & {
     contentClassName?: string;
     innerClassName?: string;
     scrollbarClassName?: string;
   }) {
   return (
-    <Tabs className={cn(S.root, className)} variant="link" {...props}>
+    <Tabs className={cn(S.root, className)} variant={variant} {...props}>
       <TabsList
         {...tabsListProps}
         className={cn(S.list, tabsListProps?.withPaddings && S.withPaddings)}
@@ -50,8 +61,11 @@ export function PageTabs({
           scrollbarClassName={cn(S.scrollbar, scrollbarClassName)}
           innerClassName={innerClassName}
         >
-          {items.map(item => (
-            <TabsTrigger value={item.value} key={item.value}>
+          {items.map((item, index) => (
+            <TabsTrigger
+              value={item.value}
+              key={item.key ?? `${item.value}-${index}`}
+            >
               {item.label}
             </TabsTrigger>
           ))}
