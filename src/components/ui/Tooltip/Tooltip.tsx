@@ -126,6 +126,7 @@ function applyOverTriggerStyles(
     'important',
   );
   wrapper.style.setProperty('transform', 'none', 'important');
+  wrapper.style.setProperty('pointer-events', 'none');
   wrapper.style.setProperty('min-width', '0', 'important');
   wrapper.style.setProperty(
     'width',
@@ -148,6 +149,7 @@ function clearOverTriggerStyles(contentEl: HTMLElement | null) {
   wrapper.style.removeProperty('left');
   wrapper.style.removeProperty('top');
   wrapper.style.removeProperty('transform');
+  wrapper.style.removeProperty('pointer-events');
   wrapper.style.removeProperty('min-width');
   wrapper.style.removeProperty('width');
 

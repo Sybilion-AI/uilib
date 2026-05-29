@@ -11,6 +11,9 @@ import { DocsHeaderActions } from '../docsHeaderActions';
 
 const TOOLTIP_SIDES = ['left', 'top', 'bottom', 'right'] as const;
 
+const LONG_TEXT =
+  'This is a long text that should overflow and show a tooltip on hover.';
+
 export default function TooltipPage() {
   return (
     <>
@@ -32,6 +35,34 @@ export default function TooltipPage() {
               <TooltipContent side={side}>Tooltip opens {side}</TooltipContent>
             </Tooltip>
           ))}
+        </div>
+
+        <div
+          style={{
+            display: 'inline-block',
+            padding: 'var(--p-4)',
+            marginTop: 'var(--p-4)',
+          }}
+        >
+          <h3>Tooltip over trigger:</h3>
+          <br />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div
+                style={{
+                  maxWidth: '200px',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {LONG_TEXT}
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" overTrigger>
+              {LONG_TEXT}
+            </TooltipContent>
+          </Tooltip>
         </div>
       </PageContentSection>
     </>
