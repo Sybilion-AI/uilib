@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.51](https://github.com/Mir-Insight/uilib/compare/v1.3.50...v1.3.51) (2026-05-29)
+
+
+### Bug Fixes
+
+* Tabs/PageTabs - styles ([dc68be3](https://github.com/Mir-Insight/uilib/commit/dc68be39b35cbf3d3a82d85c442059d263270b04))
+
 ### [1.3.50](https://github.com/Mir-Insight/uilib/compare/v1.3.49...v1.3.50) (2026-05-29)
 
 
