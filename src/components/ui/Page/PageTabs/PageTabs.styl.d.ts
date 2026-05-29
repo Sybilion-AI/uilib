@@ -3,8 +3,11 @@
 interface CssExports {
   'content': string;
   'list': string;
+  'listInner': string;
   'root': string;
   'scrollbar': string;
+  'variant-button': string;
+  'variant-outline': string;
   'withPaddings': string;
 }
 export const cssExports: CssExports;

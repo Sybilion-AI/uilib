@@ -94,14 +94,14 @@
     padding var(--p-1) var(--p-4)
     border-radius var(--p-6)
     transition box-shadow 0.15s ease-in-out, color 0.15s ease-in-out
-    font-weight 600
+    font-weight 500
     color var(--muted-foreground)
 
     &:hover
       color var(--foreground)
 
     &[data-state="active"]
-      box-shadow inset 0 0 0 2px var(--selected-tab-outline-color, var(--brand-color-400))
+      box-shadow inset 0 0 0 1px var(--selected-tab-outline-color, var(--brand-color-400))
       background-color var(--background)
       color var(--foreground)
 
@@ -136,7 +136,7 @@
   :global(.dark) .variant-outline .list &
     &[data-state="active"]
       background-color var(--background)
-      box-shadow inset 0 0 0 2px var(--selected-tab-outline-color, var(--brand-color-400))
+      box-shadow inset 0 0 0 1px var(--selected-tab-outline-color, var(--brand-color-400))
       color var(--foreground)
 
 .content

@@ -51,7 +51,11 @@ export function PageTabs({
     scrollbarClassName?: string;
   }) {
   return (
-    <Tabs className={cn(S.root, className)} variant={variant} {...props}>
+    <Tabs
+      className={cn(S.root, S[`variant-${variant}`], className)}
+      variant={variant}
+      {...props}
+    >
       <TabsList
         {...tabsListProps}
         className={cn(S.list, tabsListProps?.withPaddings && S.withPaddings)}
@@ -59,7 +63,7 @@ export function PageTabs({
         <PageXScroll
           size="sm"
           scrollbarClassName={cn(S.scrollbar, scrollbarClassName)}
-          innerClassName={innerClassName}
+          innerClassName={cn(innerClassName, S.listInner)}
         >
           {items.map((item, index) => (
             <TabsTrigger
