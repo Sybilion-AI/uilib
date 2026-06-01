@@ -43,6 +43,8 @@ export function ChatPresets({
           <Button
             key={preset.id}
             type="button"
+            variant="outline"
+            size="sm"
             className={cn(S.item)}
             onClick={() => {
               onSelect?.(preset);

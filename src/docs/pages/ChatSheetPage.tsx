@@ -2,11 +2,15 @@ import type { SlashCommandItem } from '#uilib/components/ui/Chat';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { MessageSquare } from 'lucide-react';
 
+import {
+  DOCS_DATASET_PRESETS,
+  DOCS_SAMPLE_DATASET_NAME,
+} from '../chatPresets.sample';
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DOCS_CHAT_USER_KEY } from '../docsConstants';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
-const DOCS_CHAT_SHEET_SCOPE_ID = `${DOCS_CHAT_USER_KEY}-docs-chat-sheet-portal`;
+const DOCS_CHAT_SHEET_SCOPE_ID = `${DOCS_CHAT_USER_KEY}-docs-dataset-chat`;
 
 const DOCS_SAMPLE_SLASH_ITEMS: SlashCommandItem[] = [
   {
@@ -22,24 +26,29 @@ export default function ChatSheetPage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'Chat' }, { label: 'Chat sheet' }]}
         title="Chat sheet (portal)"
-        subheader="Same integration as design-demo: ChatSheet in page header actions, chat panel portaled into the shell sidebar slot. No inline ChatChrome on this page."
+        subheader={`Same integration as the app dataset page: ChatSheet in header actions with dataset-scoped presets for "${DOCS_SAMPLE_DATASET_NAME}". Panel portaled into the shell chat slot.`}
         actions={
           <DocsHeaderActions
             scopeId={DOCS_CHAT_SHEET_SCOPE_ID}
             slashCommandItems={DOCS_SAMPLE_SLASH_ITEMS}
-            triggerLabel={
-              <>
-                <MessageSquare size={20} />
-                &nbsp;AI Assistant
-              </>
-            }
+            presets={DOCS_DATASET_PRESETS}
+            triggerLabel={<MessageSquare size={20} />}
+            triggerAriaLabel="AI Assistant"
+            emptyState={{
+              title: 'Start a conversation',
+            }}
           />
         }
       />
       <PageContentSection>
         <p style={{ marginBottom: 16, fontSize: 14, lineHeight: 1.5 }}>
-          Open <strong>AI Assistant</strong> in the header. The composer runs
-          inside the portaled chat panel (not inline on this page).
+          Open <strong>AI Assistant</strong> in the header. Presets render below
+          the empty state (fixed layout) and inline after the assistant reply,
+          same as{' '}
+          <code style={{ fontSize: 13 }}>
+            presets=&#123;datasetPresets&#125;
+          </code>{' '}
+          on the app dataset page.
         </p>
         <h3 style={{ marginBottom: 8, fontSize: 14, fontWeight: 600 }}>
           Regression checklist
@@ -47,6 +56,10 @@ export default function ChatSheetPage() {
         <ul
           style={{ margin: 0, paddingLeft: 20, fontSize: 14, lineHeight: 1.6 }}
         >
+          <li>
+            Empty chat → three outline preset chips with dataset-scoped labels
+          </li>
+          <li>Preset click → sends preset text, chip hides for that session</li>
           <li>Plain Enter with text → submit and clear composer</li>
           <li>
             Plain Enter must not create empty lines with duplicated placeholders
