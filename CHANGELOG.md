@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.56](https://github.com/Mir-Insight/uilib/compare/v1.3.55...v1.3.56) (2026-06-01)
+
+
+### Bug Fixes
+
+* BaseChartWrapper - Tab switch chart animation ([aa517fd](https://github.com/Mir-Insight/uilib/commit/aa517fd0c250cbc029510f37bfaaaf82e24c7f56))
+* DriversComparisonChart - Preserve legend on tab switch ([e22df19](https://github.com/Mir-Insight/uilib/commit/e22df192e0420519f16f127f41942d1520dd7a98))
+
 ### [1.3.55](https://github.com/Mir-Insight/uilib/compare/v1.3.54...v1.3.55) (2026-06-01)
 
 
