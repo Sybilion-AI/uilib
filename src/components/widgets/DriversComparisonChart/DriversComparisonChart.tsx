@@ -192,7 +192,9 @@ export function DriversComparisonChart({
     });
   }, [originalDriversById, sortedDriversWithData, viewTab]);
 
-  const seriesInitKeyResolved = `${seriesInitKey ?? `${tableSeriesRows.map(r => r.id).join(',') || 'none'}`}:${viewTab}`;
+  const seriesInitKeyResolved =
+    seriesInitKey ??
+    `${tableSeriesRows.map(r => r.id).join(',') || 'none'}`;
 
   const backtestsSeriesInitKeyRef = useRef<string>('');
 
