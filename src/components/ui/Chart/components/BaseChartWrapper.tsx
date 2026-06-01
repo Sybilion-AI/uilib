@@ -18,21 +18,20 @@ import {
 } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
 import { Skeleton } from '#uilib/components/ui/Skeleton';
 import { chartRenderQueue } from '#uilib/utils/chartRenderQueue';
-import { ComposedChart, LineChart, Tooltip as ChartTooltip } from 'recharts';
-
-import type { ChartConfig } from '../Chart.types';
-import { ChartContainer } from './ChartContainer';
-import { ChartTooltipContent } from './ChartTooltipContent';
-import { CustomChartLegend } from './CustomChartLegend/CustomChartLegend';
-import { QuantileBands } from './QuantileBands';
+import { Tooltip as ChartTooltip, ComposedChart, LineChart } from 'recharts';
 import { LegendPayload } from 'recharts/types/component/DefaultLegendContent';
 
+import type { ChartConfig } from '../Chart.types';
 import { getPlotViewBox, resolveChartMargin } from '../tools/chartPlotGeometry';
 import { formatDate } from '../tools/formatters';
 import S from './BaseChartWrapper.styl';
 import { ChartAxes } from './ChartAxes';
+import { ChartContainer } from './ChartContainer';
 import { ChartGrid } from './ChartGrid';
+import { ChartTooltipContent } from './ChartTooltipContent';
+import { CustomChartLegend } from './CustomChartLegend/CustomChartLegend';
 import { LegendSvg } from './LegendSvg/LegendSvg';
+import { QuantileBands } from './QuantileBands';
 
 function clampTooltipTranslate(args: {
   coordinate: { x: number; y: number };
@@ -107,6 +106,11 @@ export interface BaseChartWrapperProps {
   children?: ReactNode;
   chartType?: 'composed' | 'line';
   disableAnimation?: boolean;
+  /**
+   * Skip left-to-right line path draw; still animate Y on data updates.
+   * Independent of `disableAnimation` (full off).
+   */
+  disableLineDrawAnimation?: boolean;
   showGrid?: boolean;
   showAxes?: boolean;
   showTooltip?: boolean;
@@ -210,6 +214,7 @@ const BaseChartWrapperContent = forwardRef<
     margin,
     chartType = 'composed',
     disableAnimation = false,
+    disableLineDrawAnimation = false,
     showGrid = true,
     showAxes = true,
     showTooltip = true,
@@ -240,6 +245,7 @@ const BaseChartWrapperContent = forwardRef<
   } = props;
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
+  const lineDataInitializedRef = useRef(false);
 
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -483,12 +489,20 @@ const BaseChartWrapperContent = forwardRef<
   }, [forecastData, excludeLegendIds, showLegend]);
 
   useEffect(() => {
-    if (disableAnimation) return;
+    if (disableAnimation) {
+      setShouldAnimate(false);
+      return;
+    }
+    if (disableLineDrawAnimation && !lineDataInitializedRef.current) {
+      lineDataInitializedRef.current = true;
+      setShouldAnimate(false);
+      return;
+    }
     // Enable animation briefly when line data changes (not quantile band data)
     setShouldAnimate(true);
     const timer = setTimeout(() => setShouldAnimate(false), 1000);
     return () => clearTimeout(timer);
-  }, [lineDataForAnimation, disableAnimation]);
+  }, [lineDataForAnimation, disableAnimation, disableLineDrawAnimation]);
 
   const isLoaded = useMemo(
     () => !loading && chartData.length > 0,
@@ -587,6 +601,7 @@ const BaseChartWrapperContent = forwardRef<
         S.root,
         !showLegend && S.noLegend,
         !showChartAxesLegend && S.hideChartAxesLegend,
+        disableLineDrawAnimation && S.noLineDrawAnimation,
         isLoaded && S.loaded,
         className,
       )}
@@ -605,7 +620,11 @@ const BaseChartWrapperContent = forwardRef<
           className={cn(S.gridLayer, chartClassName)}
           style={height ? { height: `${height}px` } : undefined}
         >
-          <ChartComponent data={chartData} margin={margin}>
+          <ChartComponent
+            data={chartData}
+            margin={margin}
+            isAnimationActive={!disableAnimation}
+          >
             <ChartGrid />
             {showAxes && (
               <ChartAxes
@@ -633,7 +652,11 @@ const BaseChartWrapperContent = forwardRef<
         style={height ? { height: `${height}px` } : undefined}
         {...containerProps}
       >
-        <ChartComponent data={chartData} margin={margin}>
+        <ChartComponent
+          data={chartData}
+          margin={margin}
+          isAnimationActive={!disableAnimation}
+        >
           {/* Render invisible axes for coordinate system, but hide labels */}
           {showAxes && (
             <ChartAxes
@@ -671,9 +694,10 @@ const BaseChartWrapperContent = forwardRef<
             hiddenSeries={hiddenSeries}
             isDarkTheme={isDarkTheme}
             shouldAnimate={shouldAnimate}
+            disableAnimation={disableAnimation}
+            disableHistoricalAnimation={disableHistoricalAnimation}
             showLegend={showLegend}
             forecastLineStyle={forecastLineStyle}
-            // disableHistoricalAnimation={disableHistoricalAnimation}
           />
 
           {showTooltip && (

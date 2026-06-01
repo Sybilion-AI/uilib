@@ -73,6 +73,7 @@ export const ChartLines = memo(
     historicalLineColor = isDarkTheme ? '#ffffff' : '#000000',
     showLegend = true,
     forecastLineStyle = 'dashed',
+    disableAnimation = false,
     disableHistoricalAnimation = false,
   }: {
     chartData: ChartDataPoint[];
@@ -83,6 +84,7 @@ export const ChartLines = memo(
     historicalLineColor?: string;
     showLegend?: boolean;
     forecastLineStyle?: 'dashed' | 'solid';
+    disableAnimation?: boolean;
     disableHistoricalAnimation?: boolean;
   }) => {
     const dotStroke = isDarkTheme ? '#000000' : '#FFFFFF';
@@ -152,6 +154,14 @@ export const ChartLines = memo(
 
     const renderForecastDot = (props: any, id: number, color: string) =>
       renderDot(props, lastForecastIndices[id] ?? -1, `forecast_${id}`, color);
+
+    const animationActive = Boolean(shouldAnimate) && !disableAnimation;
+    const historicalAnimationActive =
+      animationActive && !disableHistoricalAnimation;
+    const forecastAnimationActive = animationActive;
+    const animationDuration = disableAnimation ? 0 : ANIMATION_DURATION;
+    const valueAnimationEnabled = !disableAnimation;
+
     return (
       <>
         {/* Historical Data Line */}
@@ -167,10 +177,9 @@ export const ChartLines = memo(
           legendType={showLegend === false ? 'none' : undefined}
           strokeDasharray="0"
           hide={hiddenSeries?.has('historical')}
-          isAnimationActive={shouldAnimate && !disableHistoricalAnimation}
-          animationDuration={
-            disableHistoricalAnimation ? 0 : ANIMATION_DURATION
-          }
+          isAnimationActive={historicalAnimationActive}
+          animationDuration={animationDuration}
+          animateNewValues={valueAnimationEnabled}
           animationBegin={0}
           animationEasing="ease-out"
         />
@@ -197,12 +206,14 @@ export const ChartLines = memo(
               name={`${name || `${id}`}`}
               legendType={showLegend === false ? 'none' : undefined}
               hide={hiddenSeries?.has(dataKey)}
-              isAnimationActive={shouldAnimate}
-              animationDuration={ANIMATION_DURATION}
+              isAnimationActive={forecastAnimationActive}
+              animationDuration={animationDuration}
+              animateNewValues={valueAnimationEnabled}
               animationBegin={0}
               animationEasing="ease-out"
-              className="chart-line-blinking"
-              // className={pending ? 'chart-line-blinking' : undefined}
+              className={
+                data.status === 'pending' ? 'chart-line-blinking' : undefined
+              }
             />
           );
         })}

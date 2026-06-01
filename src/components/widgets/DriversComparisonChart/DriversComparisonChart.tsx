@@ -238,8 +238,8 @@ export function DriversComparisonChart({
               )}
             >
               <ChartAreaInteractive
-                key={viewTab}
-                chartRenderId={`drivers-comparison-${viewTab}`}
+                chartRenderId="drivers-comparison"
+                disableLineDrawAnimation
                 disableHistoricalAnimation
                 disableTimeRangeSelector
                 enableTimeRangeBrush

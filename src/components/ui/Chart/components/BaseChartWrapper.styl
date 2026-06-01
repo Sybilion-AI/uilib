@@ -89,6 +89,11 @@
 .errorMessage
   color var(--destructive)
 
+.noLineDrawAnimation
+  :global
+    .recharts-line-curve
+      stroke-dasharray unset !important
+
 .footer
   display flex
   align-items center

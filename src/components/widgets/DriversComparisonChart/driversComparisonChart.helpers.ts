@@ -23,12 +23,13 @@ export function formatSeriesImportance(value: number | null): string {
 
 export function resolveDriverLagLabel(driver: {
   lag?: string | null;
+  overall_lag?: string | null;
+  overallLag?: string | null;
 }): string | null {
   if (typeof driver.lag === 'string' && driver.lag.trim()) {
     return driver.lag;
   }
-  const raw = driver as Record<string, unknown>;
-  const overallLag = raw.overall_lag ?? raw.overallLag;
+  const overallLag = driver.overall_lag ?? driver.overallLag;
   if (typeof overallLag === 'string' && overallLag.trim()) {
     return overallLag;
   }
