@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.59](https://github.com/Mir-Insight/uilib/compare/v1.3.58...v1.3.59) (2026-06-01)
+
+
+### Bug Fixes
+
+* Sidebar - Shell-aware dual-panel layout ([b06aca8](https://github.com/Mir-Insight/uilib/commit/b06aca8713bdf0dd03128ee3045e7e53185f941e))
+
 ### [1.3.58](https://github.com/Mir-Insight/uilib/compare/v1.3.57...v1.3.58) (2026-06-01)
 
 
