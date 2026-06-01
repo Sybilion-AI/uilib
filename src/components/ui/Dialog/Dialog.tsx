@@ -31,6 +31,7 @@ export function Dialog({
   icon,
   content,
   contentClassName,
+  contentScrollbarClassName,
   footer,
   footerClassName,
   footerAlignment = 'center',
@@ -215,6 +216,7 @@ export function Dialog({
         {content && (
           <CardContent
             className={contentClassName}
+            yScrollbarClassName={contentScrollbarClassName}
             noScroll={noScroll}
             autoScrollBottom={autoScrollBottom}
           >

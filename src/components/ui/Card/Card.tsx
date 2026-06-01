@@ -129,9 +129,10 @@ function CardContent({
   noScroll,
   children,
   autoScrollBottom,
+  yScrollbarClassName,
   ...props
 }: CardContentProps) {
-  const contentRef = useRef<HTMLDivElement>(null);
+  const scrollInnerRef = useRef<HTMLDivElement | null>(null);
 
   const contentDiv = (
     <div
@@ -149,7 +150,7 @@ function CardContent({
 
   useEffect(() => {
     if (!noScroll && autoScrollBottom) {
-      const inner = contentRef.current?.firstChild as HTMLDivElement;
+      const inner = scrollInnerRef.current;
 
       if (!inner) return;
 
@@ -170,8 +171,16 @@ function CardContent({
   if (noScroll) return contentDiv;
 
   return (
-    // @ts-ignore
-    <Scroll y autoHide fadeSize="m" className={S.scroll} ref={contentRef}>
+    <Scroll
+      y
+      autoHide
+      fadeSize="m"
+      className={S.scroll}
+      yScrollbarClassName={yScrollbarClassName}
+      onInnerRef={el => {
+        scrollInnerRef.current = el;
+      }}
+    >
       {contentDiv}
     </Scroll>
   );

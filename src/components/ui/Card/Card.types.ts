@@ -30,6 +30,7 @@ export interface CardContentProps extends React.ComponentProps<'div'> {
   fullHeight?: boolean;
   noScroll?: boolean;
   autoScrollBottom?: boolean;
+  yScrollbarClassName?: string;
 }
 
 export interface CardFooterProps extends React.ComponentProps<'div'> {}

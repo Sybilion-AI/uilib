@@ -15,6 +15,7 @@ export interface DialogProps {
   icon?: ReactNode;
   content?: ReactNode;
   contentClassName?: string;
+  contentScrollbarClassName?: string;
   footer?: ReactNode;
   footerClassName?: string;
   footerAlignment?: 'left' | 'center' | 'right' | 'between';
