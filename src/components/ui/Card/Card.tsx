@@ -107,6 +107,7 @@ function CardDescription({ className, ...props }: CardDescriptionProps) {
       maxWidth={400}
       data-slot="card-description"
       className={cn(S.description, className)}
+      overTrigger
       {...props}
     />
   );

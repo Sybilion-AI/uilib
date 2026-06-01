@@ -620,11 +620,7 @@ const BaseChartWrapperContent = forwardRef<
           className={cn(S.gridLayer, chartClassName)}
           style={height ? { height: `${height}px` } : undefined}
         >
-          <ChartComponent
-            data={chartData}
-            margin={margin}
-            isAnimationActive={!disableAnimation}
-          >
+          <ChartComponent data={chartData} margin={margin}>
             <ChartGrid />
             {showAxes && (
               <ChartAxes
@@ -652,11 +648,7 @@ const BaseChartWrapperContent = forwardRef<
         style={height ? { height: `${height}px` } : undefined}
         {...containerProps}
       >
-        <ChartComponent
-          data={chartData}
-          margin={margin}
-          isAnimationActive={!disableAnimation}
-        >
+        <ChartComponent data={chartData} margin={margin}>
           {/* Render invisible axes for coordinate system, but hide labels */}
           {showAxes && (
             <ChartAxes
