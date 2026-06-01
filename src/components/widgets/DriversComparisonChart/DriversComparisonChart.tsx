@@ -13,13 +13,20 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableCellValue,
   TableHead,
   TableHeader,
   TableRow,
 } from '#uilib/components/ui/Table';
 import { TextShimmer } from '#uilib/components/ui/TextShimmer/TextShimmer';
 import { TIME_RANGES } from '#uilib/components/ui/TimeRangeControls/TimeRangeControls.constants';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '#uilib/components/ui/Tooltip';
 import type { BacktestsComponentPayload } from '@sybilion/platform-sdk';
+import { InfoIcon } from 'lucide-react';
 
 import S from './DriversComparisonChart.styl';
 import {
@@ -282,8 +289,42 @@ export function DriversComparisonChart({
                     <TableHead className={S.seriesColSeries}>
                       Driver name
                     </TableHead>
-                    <TableHead>Importance</TableHead>
-                    <TableHead>Lag</TableHead>
+                    <TableHead>
+                      <TableCellValue>
+                        Importance
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span>
+                              <InfoIcon size={16} style={{ cursor: 'help' }} />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" maxWidth={300}>
+                            How much this driver contributes to price movements
+                            in the forecast model. Higher = stronger influence.
+                            Reflects relative weight of each driver, scored from
+                            0% to 100%.
+                          </TooltipContent>
+                        </Tooltip>
+                      </TableCellValue>
+                    </TableHead>
+                    <TableHead>
+                      <TableCellValue>
+                        Lag
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span>
+                              <InfoIcon size={16} style={{ cursor: 'help' }} />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" maxWidth={300}>
+                            Lag shows how far ahead this driver predicts price
+                            movement. A range (e.g. 9–12 months) means the
+                            predictive signal is strongest somewhere in that
+                            window — not at a single fixed point.
+                          </TooltipContent>
+                        </Tooltip>
+                      </TableCellValue>
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
