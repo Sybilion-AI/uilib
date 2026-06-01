@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.60](https://github.com/Mir-Insight/uilib/compare/v1.3.59...v1.3.60) (2026-06-01)
+
+
+### Bug Fixes
+
+* Sidebar - Dual-panel toggle and URL sync ([9fd57e8](https://github.com/Mir-Insight/uilib/commit/9fd57e8ddddf26f3a893aeb0cd45cf5ca664b385))
+
 ### [1.3.59](https://github.com/Mir-Insight/uilib/compare/v1.3.58...v1.3.59) (2026-06-01)
 
 
