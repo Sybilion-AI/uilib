@@ -78,3 +78,31 @@ export function defaultChatWidthPx(shellWidth: number): number {
     SIDEBAR_WIDTH_DEFAULT_PX,
   );
 }
+
+export type SidebarsLayoutWidths = {
+  mainSidebarOpen: boolean;
+  chatPanelOpen: boolean;
+  sidebarWidthPx: number;
+  chatWidthPx: number;
+};
+
+/** Minimum shell width when nav and/or chat panels are open (main column at least `CENTRAL_AREA_MIN_PX`). */
+export function requiredShellWidthForSidebars(
+  widths: SidebarsLayoutWidths,
+): number {
+  const sidebarW = widths.mainSidebarOpen
+    ? widths.sidebarWidthPx || SIDEBAR_WIDTH_MIN_PX
+    : 0;
+  const chatW = widths.chatPanelOpen
+    ? widths.chatWidthPx || CHAT_WIDTH_MIN_PX
+    : 0;
+  return sidebarW + CENTRAL_AREA_MIN_PX + chatW;
+}
+
+export function shellFitsSidebarsLayout(
+  shellWidth: number,
+  widths: SidebarsLayoutWidths,
+): boolean {
+  if (shellWidth <= 0) return true;
+  return shellWidth >= requiredShellWidthForSidebars(widths);
+}

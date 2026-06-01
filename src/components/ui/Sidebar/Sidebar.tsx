@@ -34,6 +34,7 @@ import {
   clampChatWidthPx,
   clampSidebarWidthPx,
   defaultChatWidthPx,
+  shellFitsSidebarsLayout,
 } from '#uilib/hooks/panelWidth';
 import useElemDrag, { Delta } from '#uilib/hooks/useDragElem';
 import useEvent from '#uilib/hooks/useEvent';
@@ -171,7 +172,7 @@ function SidebarProvider({
     readInitialSidebarWidthPx(sidebarLsKey),
   );
   const [chatWidthPx, _setChatWidthPx] = useState(readInitialChatWidthPx);
-  const [chatPanelOpen, setChatPanelOpen] = useState(false);
+  const [chatPanelOpen, _setChatPanelOpen] = useState(false);
   const sidebarWidthRef = useRef(sidebarWidthPx);
   const chatWidthRef = useRef(chatWidthPx);
   sidebarWidthRef.current = sidebarWidthPx;
@@ -311,8 +312,53 @@ function SidebarProvider({
 
   useShellWidthObserver(shellEl, handleShellResize);
 
+  const closeOppositeSidebarIfNoSpace = useCallback(
+    (openingMain: boolean, openingChat: boolean) => {
+      if (isSidebarSheetLayout) return;
+      const shellW = getShellWidth();
+      const layoutAfterOpen = {
+        mainSidebarOpen: openingMain || isOpen,
+        chatPanelOpen: openingChat || chatPanelOpen,
+        sidebarWidthPx,
+        chatWidthPx,
+      };
+      if (shellFitsSidebarsLayout(shellW, layoutAfterOpen)) return;
+      if (openingMain && chatPanelOpen) {
+        _setChatPanelOpen(false);
+      } else if (openingChat && isOpen) {
+        setIsOpen(false);
+        if (getCookiePreferences(userId)?.functional) {
+          setCookie('isSidebarOpen', 'false', 60 * 60 * 24 * 7);
+        }
+      }
+    },
+    [
+      isSidebarSheetLayout,
+      getShellWidth,
+      isOpen,
+      chatPanelOpen,
+      sidebarWidthPx,
+      chatWidthPx,
+      userId,
+    ],
+  );
+
+  const setChatPanelOpen = useCallback(
+    (open: boolean) => {
+      if (open) {
+        closeOppositeSidebarIfNoSpace(false, true);
+      }
+      _setChatPanelOpen(open);
+    },
+    [closeOppositeSidebarIfNoSpace],
+  );
+
   const setOpen = useCallback(
     (value: boolean, options?: SetSidebarOpenOptions) => {
+      if (value) {
+        closeOppositeSidebarIfNoSpace(true, false);
+      }
+
       const useViewTransition =
         options?.viewTransition !== false &&
         !isSidebarSheetLayout &&
@@ -331,7 +377,7 @@ function SidebarProvider({
         setCookie('isSidebarOpen', value.toString(), 60 * 60 * 24 * 7);
       }
     },
-    [isSidebarSheetLayout, userId],
+    [isSidebarSheetLayout, userId, closeOppositeSidebarIfNoSpace],
   );
 
   const toggleSidebar = useCallback(() => setOpen(!isOpen), [isOpen, setOpen]);

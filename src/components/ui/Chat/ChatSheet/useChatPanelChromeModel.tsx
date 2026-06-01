@@ -31,6 +31,7 @@ import {
   useChatsForScopeId,
   useSyncChatPanelBusy,
 } from '#uilib/contexts/chat-context';
+import { shellFitsSidebarsLayout } from '#uilib/hooks/panelWidth';
 import useEvent from '#uilib/hooks/useEvent';
 import { useIsMobile } from '#uilib/hooks/useIsMobile';
 import { useQueryParams } from '#uilib/hooks/useQueryParams';
@@ -114,8 +115,6 @@ type PresetScriptState = {
 
 const SCRIPT_STEP_DELAY_MS = 1200;
 const CHAT_NEW_SHORTCUT_KEY = 'o';
-/** When chat panel is open, collapse left nav below this width so both don't crowd the viewport. */
-const CHAT_NAV_COLLAPSE_BREAKPOINT_PX = 1400;
 
 const CHAT_QUERY_PARAM = 'chat';
 const CHAT_OPEN_VALUE = 'open';
@@ -142,9 +141,11 @@ export function useChatPanelChromeModel({
     chatPanelContainer,
     isOpen: sidebarNavOpen,
     setOpen: setSidebarNavOpen,
+    sidebarWidthPx,
     chatWidthPx,
     setChatWidthPx,
     getShellWidth,
+    chatPanelOpen: shellChatPanelOpen,
     setChatPanelOpen,
   } = useSidebar();
   const [localUiBusy, setLocalUiBusy] = useState(false);
@@ -859,6 +860,15 @@ export function useChatPanelChromeModel({
     setChatPanelOpen(chatOpen);
   }, [embedAsPage, chatOpen, setChatPanelOpen]);
 
+  /** Shell closed chat for space (e.g. nav opened); keep UI and URL in sync. */
+  useEffect(() => {
+    if (embedAsPage || shellChatPanelOpen || !isOpen) {
+      return;
+    }
+    setIsOpen(false);
+    removeSearchParams(CHAT_QUERY_PARAM);
+  }, [embedAsPage, shellChatPanelOpen, isOpen, removeSearchParams]);
+
   /** When this instance unmounts (e.g. route hides ChatSheet), release shell layout — URL sync alone does not run. */
   useEffect(() => {
     return () => {
@@ -874,17 +884,33 @@ export function useChatPanelChromeModel({
     }
     if (!isOpen || !sidebarNavOpen) return;
 
-    const collapseNavIfNarrow = () => {
-      if (window.innerWidth < CHAT_NAV_COLLAPSE_BREAKPOINT_PX) {
+    const collapseNavIfNoSpace = () => {
+      const shellW = getShellWidth();
+      if (
+        !shellFitsSidebarsLayout(shellW, {
+          mainSidebarOpen: true,
+          chatPanelOpen: true,
+          sidebarWidthPx,
+          chatWidthPx,
+        })
+      ) {
         // Chat open uses `startViewTransition`; nested transition here aborts first → AbortError overlay.
         setSidebarNavOpen(false, { viewTransition: false });
       }
     };
 
-    collapseNavIfNarrow();
-    window.addEventListener('resize', collapseNavIfNarrow);
-    return () => window.removeEventListener('resize', collapseNavIfNarrow);
-  }, [embedAsPage, isOpen, sidebarNavOpen, setSidebarNavOpen]);
+    collapseNavIfNoSpace();
+    window.addEventListener('resize', collapseNavIfNoSpace);
+    return () => window.removeEventListener('resize', collapseNavIfNoSpace);
+  }, [
+    embedAsPage,
+    isOpen,
+    sidebarNavOpen,
+    setSidebarNavOpen,
+    getShellWidth,
+    sidebarWidthPx,
+    chatWidthPx,
+  ]);
 
   const renderPresets = (layout: ChatPresetsLayout = 'fixed') => {
     if (!presetsWithFreeform?.length) return null;
