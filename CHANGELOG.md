@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.54](https://github.com/Mir-Insight/uilib/compare/v1.3.53...v1.3.54) (2026-06-01)
+
+
+### Features
+
+* Card - Add yScrollbarClassName prop ([1278898](https://github.com/Mir-Insight/uilib/commit/1278898caffcb5b36551c6e175f7d120de4687c0))
+* DriversComparisonChart - Importance and Lag header tooltips ([7fba28c](https://github.com/Mir-Insight/uilib/commit/7fba28cb625512fdb52d403985f3f65e8933b03c))
+
 ### [1.3.53](https://github.com/Mir-Insight/uilib/compare/v1.3.52...v1.3.53) (2026-06-01)
 
 
