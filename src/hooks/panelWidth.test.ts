@@ -37,6 +37,28 @@ describe('requiredShellWidthForSidebars', () => {
       }),
     ).toBe(SIDEBAR_WIDTH_MIN_PX + CENTRAL_AREA_MIN_PX + CHAT_WIDTH_MIN_PX);
   });
+
+  it('uses panel mins for sub-min stored widths when both panels are open', () => {
+    expect(
+      requiredShellWidthForSidebars({
+        mainSidebarOpen: true,
+        chatPanelOpen: true,
+        sidebarWidthPx: 300,
+        chatWidthPx: 37,
+      }),
+    ).toBe(300 + CENTRAL_AREA_MIN_PX + CHAT_WIDTH_MIN_PX);
+  });
+
+  it('keeps actual chat width when only chat is open', () => {
+    expect(
+      requiredShellWidthForSidebars({
+        mainSidebarOpen: false,
+        chatPanelOpen: true,
+        sidebarWidthPx: 300,
+        chatWidthPx: 337,
+      }),
+    ).toBe(CENTRAL_AREA_MIN_PX + 337);
+  });
 });
 
 describe('shellFitsSidebarsLayout', () => {
@@ -58,6 +80,17 @@ describe('shellFitsSidebarsLayout', () => {
         chatPanelOpen: true,
         sidebarWidthPx: 300,
         chatWidthPx: 500,
+      }),
+    ).toBe(false);
+  });
+
+  it('returns false when sub-min chat width would falsely fit at shell edge', () => {
+    expect(
+      shellFitsSidebarsLayout(1137, {
+        mainSidebarOpen: true,
+        chatPanelOpen: true,
+        sidebarWidthPx: 300,
+        chatWidthPx: 37,
       }),
     ).toBe(false);
   });

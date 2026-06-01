@@ -86,15 +86,40 @@ export type SidebarsLayoutWidths = {
   chatWidthPx: number;
 };
 
+/**
+ * Stored width can fall below panel min when the shell was narrow (clamp cap < min).
+ * For dual-panel fit checks, treat open panels as at least their min width.
+ */
+function effectiveOpenPanelWidthPx(
+  px: number,
+  minPx: number,
+  bothPanelsOpen: boolean,
+): number {
+  if (bothPanelsOpen) {
+    return Math.max(px, minPx);
+  }
+  return px > 0 ? px : minPx;
+}
+
 /** Minimum shell width when nav and/or chat panels are open (main column at least `CENTRAL_AREA_MIN_PX`). */
 export function requiredShellWidthForSidebars(
   widths: SidebarsLayoutWidths,
 ): number {
+  const bothPanelsOpen =
+    widths.mainSidebarOpen && widths.chatPanelOpen;
   const sidebarW = widths.mainSidebarOpen
-    ? widths.sidebarWidthPx || SIDEBAR_WIDTH_MIN_PX
+    ? effectiveOpenPanelWidthPx(
+        widths.sidebarWidthPx,
+        SIDEBAR_WIDTH_MIN_PX,
+        bothPanelsOpen,
+      )
     : 0;
   const chatW = widths.chatPanelOpen
-    ? widths.chatWidthPx || CHAT_WIDTH_MIN_PX
+    ? effectiveOpenPanelWidthPx(
+        widths.chatWidthPx,
+        CHAT_WIDTH_MIN_PX,
+        bothPanelsOpen,
+      )
     : 0;
   return sidebarW + CENTRAL_AREA_MIN_PX + chatW;
 }

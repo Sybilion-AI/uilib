@@ -287,30 +287,29 @@ export function useChatPanelChromeModel({
     if (embedAsPage) {
       return;
     }
-    const run = () => {
-      setIsOpen(open);
-      setChatPanelOpen(open);
+    if (open) {
+      setIsOpen(true);
+      setChatPanelOpen(true);
+      if (!searchParams.has(CHAT_QUERY_PARAM)) {
+        addSearchParams({ [CHAT_QUERY_PARAM]: CHAT_OPEN_VALUE });
+      }
+      return;
+    }
+
+    const applyClose = () => {
+      setIsOpen(false);
+      setChatPanelOpen(false);
     };
     if (
       !isMobile &&
       'startViewTransition' in document &&
       document.startViewTransition
     ) {
-      document.startViewTransition(run);
+      document.startViewTransition(applyClose);
     } else {
-      run();
+      applyClose();
     }
-
-    if (open) {
-      // Avoid a second setSearchParams when `chat` is already set (e.g. Reports merges
-      // reportId + chat in one update). A redundant add can merge from a stale `prev`
-      // and drop other query keys.
-      if (!searchParams.has(CHAT_QUERY_PARAM)) {
-        addSearchParams({ [CHAT_QUERY_PARAM]: CHAT_OPEN_VALUE });
-      }
-    } else {
-      removeSearchParams(CHAT_QUERY_PARAM);
-    }
+    removeSearchParams(CHAT_QUERY_PARAM);
   };
 
   const isEmpty = isChatEmpty(chat) && !isLoading;
@@ -856,9 +855,25 @@ export function useChatPanelChromeModel({
     if (embedAsPage) {
       return;
     }
-    setIsOpen(chatOpen);
-    setChatPanelOpen(chatOpen);
-  }, [embedAsPage, chatOpen, setChatPanelOpen]);
+    if (!chatOpen) {
+      setIsOpen(false);
+      setChatPanelOpen(false);
+      return;
+    }
+    if (!shellChatPanelOpen && sidebarNavOpen) {
+      removeSearchParams(CHAT_QUERY_PARAM);
+      return;
+    }
+    setIsOpen(true);
+    setChatPanelOpen(true);
+  }, [
+    embedAsPage,
+    chatOpen,
+    setChatPanelOpen,
+    sidebarNavOpen,
+    shellChatPanelOpen,
+    removeSearchParams,
+  ]);
 
   /** Shell closed chat for space (e.g. nav opened); keep UI and URL in sync. */
   useEffect(() => {
