@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.55](https://github.com/Mir-Insight/uilib/compare/v1.3.54...v1.3.55) (2026-06-01)
+
+
+### Features
+
+* DriversComparisonChart - Lagged/Overlapped view tabs ([8a50a00](https://github.com/Mir-Insight/uilib/commit/8a50a003dc7bbab00c88b7d110d918ea6e264da3))
+
 ### [1.3.54](https://github.com/Mir-Insight/uilib/compare/v1.3.53...v1.3.54) (2026-06-01)
 
 
