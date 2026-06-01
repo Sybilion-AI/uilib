@@ -20,4 +20,6 @@ Requires: `payload` — target + driver normalized_series; `loading` / `chartLoa
 
 Lag column: **Overlapped** shows API `lag` string (may be a range). **Lagged** shows single `N month(s)` from `parseLagMonthsFromLabel` (range uses max month).
 
+Historical window: lead-in is anchored to the **overlapped** view (`computeDriversComparisonHistoricalWindowFloor`); lagged tab shifts driver lines only — switching tabs does not change historical extent.
+
 Empty/loading: loading props shimmer chart; null `payload` with `runAnalysisHint` prompts to run analysis.

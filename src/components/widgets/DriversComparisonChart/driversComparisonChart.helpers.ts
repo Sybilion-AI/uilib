@@ -290,22 +290,41 @@ export function prependHistoricalLeadFromDataset(
   return [...lead, ...points];
 }
 
-export function buildDriversComparisonChartData(
+/** Overlapped (unshifted) anchor minus lead months — stable xMin across lagged/overlapped tabs. */
+export function computeDriversComparisonHistoricalWindowFloor(
   mergedWithHistorical: ChartDataPoint[],
-  datasetHistorical: ChartDataPoint[],
   forecastIds: number[],
-): ChartDataPoint[] {
-  if (mergedWithHistorical.length === 0) return mergedWithHistorical;
-  if (forecastIds.length === 0) return mergedWithHistorical;
+): string | null {
+  if (mergedWithHistorical.length === 0 || forecastIds.length === 0)
+    return null;
   const { anchor: anchorMonth } = getZoomAnchorMonthFromDriverMaterialStarts(
     mergedWithHistorical,
     forecastIds,
   );
-  if (anchorMonth === null) return mergedWithHistorical;
-  const xMin = subtractMonthsFromMonthStart(
+  if (anchorMonth === null) return null;
+  return subtractMonthsFromMonthStart(
     anchorMonth,
     DRIVER_COMPARISON_CHART_LEAD_MONTHS,
   );
+}
+
+export function buildDriversComparisonChartData(
+  mergedWithHistorical: ChartDataPoint[],
+  datasetHistorical: ChartDataPoint[],
+  forecastIds: number[],
+  historicalWindowFloor?: string | null,
+): ChartDataPoint[] {
+  if (mergedWithHistorical.length === 0) return mergedWithHistorical;
+  if (forecastIds.length === 0) return mergedWithHistorical;
+
+  const xMin =
+    historicalWindowFloor ??
+    computeDriversComparisonHistoricalWindowFloor(
+      mergedWithHistorical,
+      forecastIds,
+    );
+  if (xMin === null) return mergedWithHistorical;
+
   const withLead = prependHistoricalLeadFromDataset(
     mergedWithHistorical,
     datasetHistorical,

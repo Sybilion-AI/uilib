@@ -35,6 +35,7 @@ import {
   INITIAL_VISIBLE_SERIES_COUNT,
   applyDriversComparisonViewToPayload,
   buildDriversComparisonChartData,
+  computeDriversComparisonHistoricalWindowFloor,
   formatSeriesImportance,
   getLagDisplayForView,
   mergeBacktestsChartData,
@@ -158,6 +159,27 @@ export function DriversComparisonChart({
     [datasetHistorical, mergedChartData],
   );
 
+  const historicalWindowFloor = useMemo(() => {
+    const overlappedMerged = mergeBacktestsChartData(payload);
+    const merged = mergeDatasetHistoricalWithBacktestsChartData(
+      datasetHistorical,
+      overlappedMerged,
+    );
+    const sortedDrivers = [...(payload?.drivers ?? [])]
+      .filter(
+        d =>
+          d.normalized_series &&
+          Object.keys(d.normalized_series).some(
+            key => d.normalized_series![key] != null,
+          ),
+      )
+      .sort((a, b) => String(a.id).localeCompare(String(b.id)));
+    const forecastIds = sortedDrivers.map(
+      (_, idx) => DRIVER_FORECAST_ID_BASE + idx,
+    );
+    return computeDriversComparisonHistoricalWindowFloor(merged, forecastIds);
+  }, [payload, datasetHistorical]);
+
   const chartForecastData = useMemo((): ForecastItemData[] => {
     if (!payloadForView?.target?.normalized_series) return [];
     return sortedDriversWithData.map((driver, idx) => ({
@@ -193,8 +215,7 @@ export function DriversComparisonChart({
   }, [originalDriversById, sortedDriversWithData, viewTab]);
 
   const seriesInitKeyResolved =
-    seriesInitKey ??
-    `${tableSeriesRows.map(r => r.id).join(',') || 'none'}`;
+    seriesInitKey ?? `${tableSeriesRows.map(r => r.id).join(',') || 'none'}`;
 
   const backtestsSeriesInitKeyRef = useRef<string>('');
 
@@ -222,8 +243,14 @@ export function DriversComparisonChart({
         mergedWithHistorical,
         datasetHistorical,
         chartForecastData.map(f => f.id),
+        historicalWindowFloor,
       ),
-    [chartForecastData, datasetHistorical, mergedWithHistorical],
+    [
+      chartForecastData,
+      datasetHistorical,
+      historicalWindowFloor,
+      mergedWithHistorical,
+    ],
   );
 
   const showEmptyOverlay = (runAnalysisHint || Boolean(statusHint)) && !loading;
