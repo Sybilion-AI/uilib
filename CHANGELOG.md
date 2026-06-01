@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.61](https://github.com/Mir-Insight/uilib/compare/v1.3.60...v1.3.61) (2026-06-01)
+
+
+### Bug Fixes
+
+* ChatPresets - Outline button chip styling ([dd644d4](https://github.com/Mir-Insight/uilib/commit/dd644d490c6c7e2f7de3cccbc0073e8e75464336))
+
 ### [1.3.60](https://github.com/Mir-Insight/uilib/compare/v1.3.59...v1.3.60) (2026-06-01)
 
 
