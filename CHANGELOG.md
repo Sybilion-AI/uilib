@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.58](https://github.com/Mir-Insight/uilib/compare/v1.3.57...v1.3.58) (2026-06-01)
+
+
+### Bug Fixes
+
+* DriversComparisonChart - Stable historical window on lagged/overlapped ([19091f2](https://github.com/Mir-Insight/uilib/commit/19091f2a2aa0b2b7dd7f4fdf2448bd7b5c71212e))
+
 ### [1.3.57](https://github.com/Mir-Insight/uilib/compare/v1.3.56...v1.3.57) (2026-06-01)
 
 ### [1.3.56](https://github.com/Mir-Insight/uilib/compare/v1.3.55...v1.3.56) (2026-06-01)
