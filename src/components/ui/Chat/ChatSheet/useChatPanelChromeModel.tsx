@@ -91,6 +91,8 @@ export type UseChatPanelChromeModelResult = {
   onOpenChange: (open: boolean) => void;
   toggleOpen: () => void;
   newChat: () => void;
+  /** New session + open panel + one-shot composer pre-fill (does not send). */
+  openNewChatWithPrefill: (prompt: string) => void;
   chatPanelContainer: HTMLElement | null;
 };
 
@@ -311,6 +313,21 @@ export function useChatPanelChromeModel({
   };
 
   const isEmpty = isChatEmpty(chat) && !isLoading;
+
+  const openNewChatWithPrefill = useCallback(
+    (prompt: string) => {
+      const sessionId = newChat();
+      if (sessionId == null) {
+        logger.warn('Chat prefill: sign in to use the assistant.');
+        return;
+      }
+
+      const trimmed = prompt.trim();
+      setPromptLinkPrefill(trimmed || null);
+      onOpenChange(true);
+    },
+    [newChat, onOpenChange],
+  );
 
   /**
    * App link: `?prompt=…` — open panel, pre-fill composer, strip param (read once on mount
@@ -605,6 +622,8 @@ export function useChatPanelChromeModel({
           }
         }
       }
+
+      setPromptLinkPrefill(null);
 
       try {
         if (chatId) endLocalDemoFlow(chatId);
@@ -1044,6 +1063,7 @@ export function useChatPanelChromeModel({
     onOpenChange,
     toggleOpen,
     newChat,
+    openNewChatWithPrefill,
     chatPanelContainer,
   };
 }
