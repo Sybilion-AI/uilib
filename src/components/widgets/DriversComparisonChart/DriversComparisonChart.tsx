@@ -31,11 +31,15 @@ import { InfoIcon } from 'lucide-react';
 import S from './DriversComparisonChart.styl';
 import {
   DRIVER_FORECAST_ID_BASE,
+  type DriversComparisonViewTab,
   INITIAL_VISIBLE_SERIES_COUNT,
+  applyDriversComparisonViewToPayload,
   buildDriversComparisonChartData,
   formatSeriesImportance,
+  getLagDisplayForView,
   mergeBacktestsChartData,
   mergeDatasetHistoricalWithBacktestsChartData,
+  resolveDriverLagLabel,
 } from './driversComparisonChart.helpers';
 
 const ALL_TIME_RANGE = TIME_RANGES[TIME_RANGES.length - 1];
@@ -59,7 +63,11 @@ export type DriversComparisonChartProps = {
   className?: string;
   /** Resets visible series when this key changes (e.g. selected analysis id). */
   seriesInitKey?: string;
+  viewTab?: DriversComparisonViewTab;
+  onViewTabChange?: (tab: DriversComparisonViewTab) => void;
 };
+
+export type { DriversComparisonViewTab } from './driversComparisonChart.helpers';
 
 export function DriversComparisonChart({
   payload,
@@ -74,10 +82,16 @@ export function DriversComparisonChart({
   isDarkTheme = false,
   className,
   seriesInitKey,
+  viewTab: viewTabProp,
+  onViewTabChange,
 }: DriversComparisonChartProps) {
   const [internalTimeRange, setInternalTimeRange] =
     useState<string>(ALL_TIME_RANGE);
+  const [internalViewTab, setInternalViewTab] =
+    useState<DriversComparisonViewTab>('overlapped');
   const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(new Set());
+
+  const viewTab = viewTabProp ?? internalViewTab;
 
   const timeRange = timeRangeProp ?? internalTimeRange;
   const handleTimeRangeChange = useCallback(
@@ -111,8 +125,13 @@ export function DriversComparisonChart({
     });
   }, []);
 
+  const payloadForView = useMemo(
+    () => applyDriversComparisonViewToPayload(payload, viewTab),
+    [payload, viewTab],
+  );
+
   const sortedDriversWithData = useMemo(() => {
-    const driversList = payload?.drivers ?? [];
+    const driversList = payloadForView?.drivers ?? [];
     if (!driversList.length) return [];
     return [...driversList]
       .filter(
@@ -123,11 +142,11 @@ export function DriversComparisonChart({
           ),
       )
       .sort((a, b) => String(a.id).localeCompare(String(b.id)));
-  }, [payload?.drivers]);
+  }, [payloadForView?.drivers]);
 
   const mergedChartData = useMemo(
-    () => mergeBacktestsChartData(payload),
-    [payload],
+    () => mergeBacktestsChartData(payloadForView),
+    [payloadForView],
   );
 
   const mergedWithHistorical = useMemo(
@@ -140,13 +159,21 @@ export function DriversComparisonChart({
   );
 
   const chartForecastData = useMemo((): ForecastItemData[] => {
-    if (!payload?.target?.normalized_series) return [];
+    if (!payloadForView?.target?.normalized_series) return [];
     return sortedDriversWithData.map((driver, idx) => ({
       id: DRIVER_FORECAST_ID_BASE + idx,
       name: driver.name || String(driver.id),
       color: getForecastColor(idx + 1),
     }));
-  }, [payload?.target?.normalized_series, sortedDriversWithData]);
+  }, [payloadForView?.target?.normalized_series, sortedDriversWithData]);
+
+  const originalDriversById = useMemo(() => {
+    const map = new Map<string, (typeof sortedDriversWithData)[number]>();
+    for (const driver of payload?.drivers ?? []) {
+      map.set(String(driver.id), driver);
+    }
+    return map;
+  }, [payload?.drivers]);
 
   const tableSeriesRows = useMemo(() => {
     if (sortedDriversWithData.length === 0) return [];
@@ -154,18 +181,18 @@ export function DriversComparisonChart({
       const raw = driver.importance;
       const importance =
         typeof raw === 'number' && Number.isFinite(raw) ? raw : null;
+      const lagSource = originalDriversById.get(String(driver.id)) ?? driver;
       return {
         id: DRIVER_FORECAST_ID_BASE + idx,
         name: driver.name || String(driver.id),
         color: getForecastColor(idx + 1),
         importance,
-        lag: driver.lag,
+        lag: getLagDisplayForView(resolveDriverLagLabel(lagSource), viewTab),
       };
     });
-  }, [sortedDriversWithData]);
+  }, [originalDriversById, sortedDriversWithData, viewTab]);
 
-  const seriesInitKeyResolved =
-    seriesInitKey ?? `${tableSeriesRows.map(r => r.id).join(',') || 'none'}`;
+  const seriesInitKeyResolved = `${seriesInitKey ?? `${tableSeriesRows.map(r => r.id).join(',') || 'none'}`}:${viewTab}`;
 
   const backtestsSeriesInitKeyRef = useRef<string>('');
 
@@ -211,6 +238,8 @@ export function DriversComparisonChart({
               )}
             >
               <ChartAreaInteractive
+                key={viewTab}
+                chartRenderId={`drivers-comparison-${viewTab}`}
                 disableHistoricalAnimation
                 disableTimeRangeSelector
                 enableTimeRangeBrush
@@ -351,7 +380,7 @@ export function DriversComparisonChart({
                         <TableCell>
                           {formatSeriesImportance(row.importance)}
                         </TableCell>
-                        <TableCell>{row.lag ?? '—'}</TableCell>
+                        <TableCell>{row.lag}</TableCell>
                       </TableRow>
                     );
                   })}

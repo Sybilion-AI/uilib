@@ -3,8 +3,12 @@ import { useMemo, useState } from 'react';
 import type { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Switch } from '#uilib/components/ui/Switch';
+import { Tabs, TabsList, TabsTrigger } from '#uilib/components/ui/Tabs';
 import { TIME_RANGES } from '#uilib/components/ui/TimeRangeControls/TimeRangeControls.constants';
-import { DriversComparisonChart } from '#uilib/components/widgets/DriversComparisonChart';
+import {
+  DriversComparisonChart,
+  type DriversComparisonViewTab,
+} from '#uilib/components/widgets/DriversComparisonChart';
 import { useTheme } from '#uilib/contexts/theme-context';
 import type { BacktestsComponentPayload } from '@sybilion/platform-sdk';
 
@@ -82,7 +86,7 @@ const MOCK_PAYLOAD: BacktestsComponentPayload = {
       id: 'driver-china-credit',
       name: 'China aggregate financing impulse',
       importance: 58.3,
-      lag: '3 month(s)',
+      lag: '9 to 12 month(s)',
       normalized_series: buildMonthlySeries(2020, 1, 36, 0.29, 0.018, 4.2),
     },
   ],
@@ -102,6 +106,8 @@ export default function DriversComparisonChartPage() {
   const [runAnalysisHint, setRunAnalysisHint] = useState(false);
   const [emptyPayload, setEmptyPayload] = useState(false);
   const [timeRange, setTimeRange] = useState<string>(ALL_TIME_RANGE);
+  const [viewTab, setViewTab] =
+    useState<DriversComparisonViewTab>('overlapped');
 
   const payload = useMemo(
     () => (emptyPayload ? null : MOCK_PAYLOAD),
@@ -114,7 +120,7 @@ export default function DriversComparisonChartPage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'Drivers comparison chart' }]}
         title="DriversComparisonChart"
-        subheader="Normalized target line with driver series; table rows toggle chart visibility."
+        subheader="Normalized target line with driver series; Lagged/Overlapped tabs shift driver alignment; table rows toggle chart visibility."
         actions={<DocsHeaderActions />}
       />
       <PageContentSection>
@@ -152,6 +158,28 @@ export default function DriversComparisonChartPage() {
             <label htmlFor="empty-payload">Empty payload</label>
           </div>
         </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginBottom: 16,
+          }}
+        >
+          <Tabs
+            variant="button"
+            value={viewTab}
+            onValueChange={v => {
+              if (v === 'lagged' || v === 'overlapped') {
+                setViewTab(v);
+              }
+            }}
+          >
+            <TabsList>
+              <TabsTrigger value="lagged">Lagged</TabsTrigger>
+              <TabsTrigger value="overlapped">Overlapped</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
         <DriversComparisonChart
           payload={payload}
           datasetHistorical={datasetHistorical}
@@ -167,6 +195,8 @@ export default function DriversComparisonChartPage() {
           onTimeRangeChange={setTimeRange}
           isDarkTheme={isDarkMode}
           seriesInitKey={emptyPayload ? 'empty' : 'mock'}
+          viewTab={viewTab}
+          onViewTabChange={setViewTab}
         />
       </PageContentSection>
     </>

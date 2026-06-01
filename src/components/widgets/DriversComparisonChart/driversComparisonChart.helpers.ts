@@ -11,12 +11,120 @@ export const INITIAL_VISIBLE_SERIES_COUNT = 3;
 /** Months of historical context before the earliest forecast month (inclusive). */
 export const DRIVER_COMPARISON_CHART_LEAD_MONTHS = 6;
 
+export type DriversComparisonViewTab = 'overlapped' | 'lagged';
+
 /** Ignore leading months where drivers are numerically zero (API often fills 0; lines look empty until real signal). */
 const DRIVER_FORECAST_NONZERO_EPS = 1e-9;
 
 export function formatSeriesImportance(value: number | null): string {
   if (value === null) return '—';
   return `${value.toFixed(1)}%`;
+}
+
+export function resolveDriverLagLabel(driver: {
+  lag?: string | null;
+}): string | null {
+  if (typeof driver.lag === 'string' && driver.lag.trim()) {
+    return driver.lag;
+  }
+  const raw = driver as Record<string, unknown>;
+  const overallLag = raw.overall_lag ?? raw.overallLag;
+  if (typeof overallLag === 'string' && overallLag.trim()) {
+    return overallLag;
+  }
+  return null;
+}
+
+/** Parse lag label to month count; ranges use the upper bound. */
+export function parseLagMonthsFromLabel(
+  lag: string | null | undefined,
+): number | null {
+  if (lag == null) return null;
+  const trimmed = lag.trim();
+  if (!trimmed) return null;
+  const lower = trimmed.toLowerCase().replace(/\u2013|\u2014/g, '-');
+  if (lower === 'unknown' || lower === 'no lag' || lower.includes('no lag')) {
+    return null;
+  }
+
+  const rangeMatch = lower.match(/(\d+)\s*(?:to|-)\s*(\d+)\s*months?/);
+  if (rangeMatch) {
+    const a = parseInt(rangeMatch[1], 10);
+    const b = parseInt(rangeMatch[2], 10);
+    if (Number.isFinite(a) && Number.isFinite(b)) return Math.max(a, b);
+  }
+
+  const quarterMatch = lower.match(/~?\s*(\d+)\s*quarter/);
+  if (quarterMatch) {
+    const q = parseInt(quarterMatch[1], 10);
+    if (Number.isFinite(q) && q > 0) return q * 3;
+  }
+
+  const monthMatch = lower.match(/~?\s*(\d+)\s*months?/);
+  if (monthMatch) {
+    const m = parseInt(monthMatch[1], 10);
+    if (Number.isFinite(m) && m > 0) return m;
+  }
+
+  return null;
+}
+
+export function formatLagMonthsLabel(months: number): string {
+  return `${months} month(s)`;
+}
+
+export function getLagDisplayForView(
+  lag: string | null | undefined,
+  tab: DriversComparisonViewTab,
+): string {
+  if (tab === 'overlapped') {
+    return lag?.trim() ? lag : '—';
+  }
+  const months = parseLagMonthsFromLabel(lag);
+  return months != null ? formatLagMonthsLabel(months) : '—';
+}
+
+export function shiftNormalizedSeriesForward(
+  series: Record<string, number | null>,
+  lagMonths: number,
+): Record<string, number | null> {
+  if (lagMonths <= 0) return { ...series };
+  const out: Record<string, number | null> = {};
+  for (const [dateStr, val] of Object.entries(series)) {
+    if (val === null || val === undefined) continue;
+    let shifted = normalizeToMonthStart(dateStr);
+    for (let i = 0; i < lagMonths; i++) {
+      shifted = getNextMonth(shifted);
+    }
+    out[shifted] = val;
+  }
+  return out;
+}
+
+export function applyDriversComparisonViewToPayload(
+  payload: BacktestsComponentPayload | null,
+  tab: DriversComparisonViewTab,
+): BacktestsComponentPayload | null {
+  if (!payload || tab === 'overlapped') return payload;
+
+  return {
+    target: {
+      ...payload.target,
+      normalized_series: { ...payload.target.normalized_series },
+    },
+    drivers: payload.drivers.map(driver => {
+      const lagMonths = parseLagMonthsFromLabel(resolveDriverLagLabel(driver));
+      const series = driver.normalized_series ?? {};
+      const normalized_series =
+        lagMonths != null && lagMonths > 0
+          ? shiftNormalizedSeriesForward(series, lagMonths)
+          : { ...series };
+      return {
+        ...driver,
+        normalized_series,
+      };
+    }),
+  };
 }
 
 export function mergeBacktestsChartData(
