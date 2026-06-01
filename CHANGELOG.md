@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.53](https://github.com/Mir-Insight/uilib/compare/v1.3.52...v1.3.53) (2026-06-01)
+
+
+### Features
+
+* ChatSheet - openNewChatWithPrefill draft prompt ([8bf6b68](https://github.com/Mir-Insight/uilib/commit/8bf6b68e72d9385389a2ac0093b7e77ae4136261))
+
 ### [1.3.52](https://github.com/Mir-Insight/uilib/compare/v1.3.51...v1.3.52) (2026-05-29)
 
 
