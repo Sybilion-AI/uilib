@@ -43,12 +43,22 @@ import type {
 import { mergePresetFreeformDefaults } from '#uilib/utils/chatPresetMerge';
 import { ScrollRef } from '@homecode/ui';
 
-import { useSidebar } from '../../Sidebar/Sidebar';
+import {
+  DISMISS_CHAT_FOR_LAYOUT_EVENT,
+  useSidebar,
+} from '../../Sidebar/Sidebar';
 import { Chat } from '../Chat';
 import type { ChatChromeProps } from '../ChatChrome';
 import type { ChatAttachmentDropItem } from '../ChatChrome/ChatChrome.types';
 import type { ChatEmptyStateConfig } from '../ChatEmptyState/ChatEmptyState.types';
 import type { ChatEmptyStateProps } from '../ChatEmptyState/ChatEmptyState.types';
+import {
+  isChatPanelVisible,
+  shouldCloseStaleLocalChatOpen,
+  shouldDismissChatAfterShellClosed,
+  shouldHealChatShellDesync,
+  shouldOpenChatFromUrl,
+} from './chatPanelOpenSync';
 
 export type UseChatPanelChromeModelInput = {
   /** When true, skip sidebar chat slot, URL `?chat=`, and portal behavior (e.g. page main content). */
@@ -173,13 +183,18 @@ export function useChatPanelChromeModel({
     mutateSearchParams,
   } = useQueryParams();
   const chatOpen = searchParams.has(CHAT_QUERY_PARAM);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(() => !embedAsPage && chatOpen);
   /** `?prompt=` deep link text for one-shot composer pre-fill (see ChatPrompt). */
   const [promptLinkPrefill, setPromptLinkPrefill] = useState<string | null>(
     null,
   );
   /** Deduplicate Strict Mode double `useEffect` on the same mount. */
   const promptParamHandledInEffectRef = useRef(false);
+  const prevShellChatPanelOpenRef = useRef(shellChatPanelOpen);
+  /** This instance requested shell chat width (ignore other ChatSheet instances on the page). */
+  const openedShellChatRef = useRef(false);
+  /** Nav-forced chat close; blocks URL sync from reopening chat in the same tick. */
+  const layoutDismissedRef = useRef(false);
   const panelActive = embedAsPage || isOpen;
 
   // Ensure valid currentChatId when chat opens
@@ -288,14 +303,18 @@ export function useChatPanelChromeModel({
       return;
     }
     if (open) {
-      setIsOpen(true);
+      layoutDismissedRef.current = false;
+      openedShellChatRef.current = true;
       setChatPanelOpen(true);
+      setIsOpen(true);
       if (!searchParams.has(CHAT_QUERY_PARAM)) {
         addSearchParams({ [CHAT_QUERY_PARAM]: CHAT_OPEN_VALUE });
       }
       return;
     }
 
+    openedShellChatRef.current = false;
+    removeSearchParams(CHAT_QUERY_PARAM);
     const applyClose = () => {
       setIsOpen(false);
       setChatPanelOpen(false);
@@ -309,7 +328,6 @@ export function useChatPanelChromeModel({
     } else {
       applyClose();
     }
-    removeSearchParams(CHAT_QUERY_PARAM);
   };
 
   const isEmpty = isChatEmpty(chat) && !isLoading;
@@ -851,53 +869,109 @@ export function useChatPanelChromeModel({
     })();
   }, [currentChatId, scriptByChatId, addMessage, onScriptComplete]);
 
+  const dismissChatForLayout = useCallback(() => {
+    if (embedAsPage) {
+      return;
+    }
+    layoutDismissedRef.current = true;
+    openedShellChatRef.current = false;
+    setIsOpen(false);
+    setChatPanelOpen(false);
+    removeSearchParams(CHAT_QUERY_PARAM);
+  }, [embedAsPage, removeSearchParams, setChatPanelOpen]);
+
+  useEvent({
+    event: DISMISS_CHAT_FOR_LAYOUT_EVENT,
+    callback: dismissChatForLayout,
+  });
+
+  /** `?chat=open` in URL — open local UI + shell (skip right after nav evicted chat). */
   useEffect(() => {
     if (embedAsPage) {
       return;
     }
     if (!chatOpen) {
-      setIsOpen(false);
-      setChatPanelOpen(false);
+      layoutDismissedRef.current = false;
       return;
     }
-    if (!shellChatPanelOpen && sidebarNavOpen) {
-      removeSearchParams(CHAT_QUERY_PARAM);
+    if (!shouldOpenChatFromUrl(chatOpen, layoutDismissedRef.current)) {
       return;
     }
     setIsOpen(true);
+    openedShellChatRef.current = true;
     setChatPanelOpen(true);
-  }, [
-    embedAsPage,
-    chatOpen,
-    setChatPanelOpen,
-    sidebarNavOpen,
-    shellChatPanelOpen,
-    removeSearchParams,
-  ]);
+  }, [embedAsPage, chatOpen, setChatPanelOpen]);
 
-  /** Shell closed chat for space (e.g. nav opened); keep UI and URL in sync. */
+  /** Heal desync: `?chat=open` but shell collapsed while this instance still wants panel open. */
   useEffect(() => {
-    if (embedAsPage || shellChatPanelOpen || !isOpen) {
+    if (embedAsPage) {
+      return;
+    }
+    if (
+      !shouldHealChatShellDesync(
+        chatOpen,
+        shellChatPanelOpen,
+        layoutDismissedRef.current,
+        isOpen,
+      )
+    ) {
+      return;
+    }
+    layoutDismissedRef.current = false;
+    if (!isOpen) {
+      setIsOpen(true);
+    }
+    openedShellChatRef.current = true;
+    setChatPanelOpen(true);
+  }, [embedAsPage, chatOpen, isOpen, shellChatPanelOpen, setChatPanelOpen]);
+
+  /** Stale local open after shell closed without `?chat=` (e.g. another instance or aborted open). */
+  useEffect(() => {
+    if (embedAsPage) {
+      return;
+    }
+    if (!shouldCloseStaleLocalChatOpen(shellChatPanelOpen, chatOpen, isOpen)) {
       return;
     }
     setIsOpen(false);
-    removeSearchParams(CHAT_QUERY_PARAM);
-  }, [embedAsPage, shellChatPanelOpen, isOpen, removeSearchParams]);
+  }, [embedAsPage, shellChatPanelOpen, chatOpen, isOpen]);
 
-  /** When this instance unmounts (e.g. route hides ChatSheet), release shell layout — URL sync alone does not run. */
+  /** Shell chat closed while `?chat=` still set (fallback if layout event was missed). */
+  useEffect(() => {
+    if (embedAsPage) {
+      return;
+    }
+    const wasShellChatOpen = prevShellChatPanelOpenRef.current;
+    prevShellChatPanelOpenRef.current = shellChatPanelOpen;
+    if (
+      !shouldDismissChatAfterShellClosed({
+        shellChatPanelOpen,
+        wasShellChatPanelOpen: wasShellChatOpen,
+        chatOpen,
+        isOpen,
+        openedShellChat: openedShellChatRef.current,
+      })
+    ) {
+      return;
+    }
+    dismissChatForLayout();
+  }, [embedAsPage, shellChatPanelOpen, chatOpen, dismissChatForLayout, isOpen]);
+
+  /** Route change: release shell slot only if this instance opened it (not Strict Mode remount). */
   useEffect(() => {
     return () => {
-      if (!embedAsPage) {
+      if (!embedAsPage && openedShellChatRef.current && !chatOpen) {
+        openedShellChatRef.current = false;
         setChatPanelOpen(false);
       }
     };
-  }, [embedAsPage, setChatPanelOpen]);
+  }, [embedAsPage, chatOpen, setChatPanelOpen]);
 
   useEffect(() => {
     if (embedAsPage) {
       return;
     }
-    if (!isOpen || !sidebarNavOpen) return;
+    if (!shellChatPanelOpen || !sidebarNavOpen) return;
 
     const collapseNavIfNoSpace = () => {
       const shellW = getShellWidth();
@@ -919,7 +993,7 @@ export function useChatPanelChromeModel({
     return () => window.removeEventListener('resize', collapseNavIfNoSpace);
   }, [
     embedAsPage,
-    isOpen,
+    shellChatPanelOpen,
     sidebarNavOpen,
     setSidebarNavOpen,
     getShellWidth,
@@ -1096,7 +1170,13 @@ export function useChatPanelChromeModel({
     onSlashItemCommand,
   };
 
-  const toggleOpen = () => onOpenChange(!isOpen);
+  const toggleOpen = () => {
+    if (!isChatPanelVisible(isOpen, shellChatPanelOpen)) {
+      onOpenChange(true);
+      return;
+    }
+    onOpenChange(false);
+  };
 
   return {
     chromeProps,

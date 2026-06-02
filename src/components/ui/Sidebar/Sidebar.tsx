@@ -52,6 +52,9 @@ const SIDEBAR_WIDTH_MOBILE = '18rem';
 const SIDEBAR_WIDTH_ICON = '3rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 
+/** Fired when nav open closes chat for layout; ChatSheet clears `?chat=` so URL sync does not reopen chat. */
+export const DISMISS_CHAT_FOR_LAYOUT_EVENT = 'sybilion:dismiss-chat-for-layout';
+
 function isEditableKeyboardTarget(el: Element | null): boolean {
   if (!el) return false;
   if (el instanceof HTMLElement && el.isContentEditable) return true;
@@ -325,6 +328,9 @@ function SidebarProvider({
       if (shellFitsSidebarsLayout(shellW, layoutAfterOpen)) return;
       if (openingMain && chatPanelOpen) {
         _setChatPanelOpen(false);
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent(DISMISS_CHAT_FOR_LAYOUT_EVENT));
+        }
       } else if (openingChat && isOpen) {
         setIsOpen(false);
         if (getCookiePreferences(userId)?.functional) {
