@@ -78,7 +78,7 @@ export function getLagDisplayForView(
   lag: string | null | undefined,
   tab: DriversComparisonViewTab,
 ): string {
-  if (tab === 'overlapped') {
+  if (tab === 'lagged') {
     return lag?.trim() ? lag : '—';
   }
   const months = parseLagMonthsFromLabel(lag);
@@ -102,11 +102,29 @@ export function shiftNormalizedSeriesForward(
   return out;
 }
 
+/** Shift driver points left (earlier months) by lag — overlapped alignment vs target. */
+export function shiftNormalizedSeriesBackward(
+  series: Record<string, number | null>,
+  lagMonths: number,
+): Record<string, number | null> {
+  if (lagMonths <= 0) return { ...series };
+  const out: Record<string, number | null> = {};
+  for (const [dateStr, val] of Object.entries(series)) {
+    if (val === null || val === undefined) continue;
+    let shifted = normalizeToMonthStart(dateStr);
+    for (let i = 0; i < lagMonths; i++) {
+      shifted = getPreviousMonth(shifted);
+    }
+    out[shifted] = val;
+  }
+  return out;
+}
+
 export function applyDriversComparisonViewToPayload(
   payload: BacktestsComponentPayload | null,
   tab: DriversComparisonViewTab,
 ): BacktestsComponentPayload | null {
-  if (!payload || tab === 'overlapped') return payload;
+  if (!payload || tab === 'lagged') return payload;
 
   return {
     target: {
@@ -118,7 +136,7 @@ export function applyDriversComparisonViewToPayload(
       const series = driver.normalized_series ?? {};
       const normalized_series =
         lagMonths != null && lagMonths > 0
-          ? shiftNormalizedSeriesForward(series, lagMonths)
+          ? shiftNormalizedSeriesBackward(series, lagMonths)
           : { ...series };
       return {
         ...driver,
@@ -290,7 +308,7 @@ export function prependHistoricalLeadFromDataset(
   return [...lead, ...points];
 }
 
-/** Overlapped (unshifted) anchor minus lead months — stable xMin across lagged/overlapped tabs. */
+/** Lagged (unshifted) anchor minus lead months — stable xMin across lagged/overlapped tabs. */
 export function computeDriversComparisonHistoricalWindowFloor(
   mergedWithHistorical: ChartDataPoint[],
   forecastIds: number[],

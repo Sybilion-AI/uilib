@@ -12,6 +12,7 @@ import {
   mergeDatasetHistoricalWithBacktestsChartData,
   parseLagMonthsFromLabel,
   resolveDriverLagLabel,
+  shiftNormalizedSeriesBackward,
   shiftNormalizedSeriesForward,
   subtractMonthsFromMonthStart,
 } from './driversComparisonChart.helpers';
@@ -58,17 +59,17 @@ describe('formatLagMonthsLabel', () => {
 });
 
 describe('getLagDisplayForView', () => {
-  it('shows API lag on overlapped tab', () => {
-    expect(getLagDisplayForView('9 to 12 month(s)', 'overlapped')).toBe(
+  it('shows API lag on lagged tab', () => {
+    expect(getLagDisplayForView('9 to 12 month(s)', 'lagged')).toBe(
       '9 to 12 month(s)',
     );
   });
 
-  it('shows parsed month on lagged tab', () => {
-    expect(getLagDisplayForView('9 to 12 month(s)', 'lagged')).toBe(
+  it('shows parsed month on overlapped tab', () => {
+    expect(getLagDisplayForView('9 to 12 month(s)', 'overlapped')).toBe(
       '12 month(s)',
     );
-    expect(getLagDisplayForView('Unknown', 'lagged')).toBe('—');
+    expect(getLagDisplayForView('Unknown', 'overlapped')).toBe('—');
   });
 });
 
@@ -85,6 +86,24 @@ describe('shiftNormalizedSeriesForward', () => {
   it('returns a shallow copy when lag is zero', () => {
     const series = { '2015-01-01': 1 };
     const shifted = shiftNormalizedSeriesForward(series, 0);
+    expect(shifted).toEqual(series);
+    expect(shifted).not.toBe(series);
+  });
+});
+
+describe('shiftNormalizedSeriesBackward', () => {
+  it('moves points backward by lag months', () => {
+    const shifted = shiftNormalizedSeriesBackward(
+      { '2015-03-01': 1.2, '2015-04-01': 1.4 },
+      2,
+    );
+    expect(shifted['2015-01-01']).toBe(1.2);
+    expect(shifted['2015-02-01']).toBe(1.4);
+  });
+
+  it('returns a shallow copy when lag is zero', () => {
+    const series = { '2015-01-01': 1 };
+    const shifted = shiftNormalizedSeriesBackward(series, 0);
     expect(shifted).toEqual(series);
     expect(shifted).not.toBe(series);
   });
@@ -107,18 +126,19 @@ describe('applyDriversComparisonViewToPayload', () => {
     ],
   };
 
-  it('returns original payload for overlapped tab', () => {
-    expect(applyDriversComparisonViewToPayload(payload, 'overlapped')).toBe(
-      payload,
-    );
+  it('returns original payload for lagged tab', () => {
+    expect(applyDriversComparisonViewToPayload(payload, 'lagged')).toBe(payload);
   });
 
-  it('shifts driver series for lagged tab without mutating source', () => {
-    const lagged = applyDriversComparisonViewToPayload(payload, 'lagged');
-    expect(lagged).not.toBe(payload);
+  it('shifts driver series backward for overlapped tab without mutating source', () => {
+    const overlapped = applyDriversComparisonViewToPayload(
+      payload,
+      'overlapped',
+    );
+    expect(overlapped).not.toBe(payload);
     expect(payload.drivers[0].normalized_series['2015-01-01']).toBe(0.5);
-    expect(lagged?.drivers[0].normalized_series['2015-03-01']).toBe(0.5);
-    expect(lagged?.target.normalized_series).toEqual(
+    expect(overlapped?.drivers[0].normalized_series['2014-11-01']).toBe(0.5);
+    expect(overlapped?.target.normalized_series).toEqual(
       payload.target.normalized_series,
     );
   });
@@ -135,11 +155,11 @@ describe('applyDriversComparisonViewToPayload', () => {
         },
       ],
     };
-    const lagged = applyDriversComparisonViewToPayload(
+    const overlapped = applyDriversComparisonViewToPayload(
       withOverallLag,
-      'lagged',
+      'overlapped',
     );
-    expect(lagged?.drivers[0].normalized_series['2015-07-01']).toBe(0.8);
+    expect(overlapped?.drivers[0].normalized_series['2015-05-01']).toBe(0.8);
   });
 });
 
@@ -184,7 +204,7 @@ describe('computeDriversComparisonHistoricalWindowFloor', () => {
 
   const forecastIds = [DRIVER_FORECAST_ID_BASE];
 
-  it('returns anchor minus lead months from overlapped merged data', () => {
+  it('returns anchor minus lead months from lagged (unshifted) merged data', () => {
     const merged = mergeDatasetHistoricalWithBacktestsChartData(
       datasetHistorical,
       mergeBacktestsChartData(laggedDriverPayload),
@@ -245,70 +265,70 @@ describe('buildDriversComparisonChartData historical window floor', () => {
   const forecastIds = [DRIVER_FORECAST_ID_BASE];
 
   it('keeps same xMin for lagged and overlapped when floor is pinned', () => {
-    const overlappedMerged = mergeDatasetHistoricalWithBacktestsChartData(
+    const laggedMerged = mergeDatasetHistoricalWithBacktestsChartData(
       datasetHistorical,
       mergeBacktestsChartData(laggedDriverPayload),
     );
-    const laggedPayload = applyDriversComparisonViewToPayload(
+    const overlappedPayload = applyDriversComparisonViewToPayload(
       laggedDriverPayload,
-      'lagged',
+      'overlapped',
     );
-    const laggedMerged = mergeDatasetHistoricalWithBacktestsChartData(
+    const overlappedMerged = mergeDatasetHistoricalWithBacktestsChartData(
       datasetHistorical,
-      mergeBacktestsChartData(laggedPayload),
+      mergeBacktestsChartData(overlappedPayload),
     );
     const floor = computeDriversComparisonHistoricalWindowFloor(
-      overlappedMerged,
+      laggedMerged,
       forecastIds,
     )!;
 
-    const overlappedChart = buildDriversComparisonChartData(
-      overlappedMerged,
-      datasetHistorical,
-      forecastIds,
-      floor,
-    );
     const laggedChart = buildDriversComparisonChartData(
       laggedMerged,
       datasetHistorical,
       forecastIds,
       floor,
     );
+    const overlappedChart = buildDriversComparisonChartData(
+      overlappedMerged,
+      datasetHistorical,
+      forecastIds,
+      floor,
+    );
 
-    expect(overlappedChart[0]?.date).toBe('2014-10-01');
     expect(laggedChart[0]?.date).toBe('2014-10-01');
-    expect(laggedChart[0]?.date).toBe(overlappedChart[0]?.date);
+    expect(overlappedChart[0]?.date).toBe('2014-10-01');
+    expect(overlappedChart[0]?.date).toBe(laggedChart[0]?.date);
   });
 
-  it('without floor override lagged chart starts later than overlapped', () => {
-    const overlappedMerged = mergeDatasetHistoricalWithBacktestsChartData(
+  it('without floor override overlapped chart starts earlier than lagged', () => {
+    const laggedMerged = mergeDatasetHistoricalWithBacktestsChartData(
       datasetHistorical,
       mergeBacktestsChartData(laggedDriverPayload),
     );
-    const laggedPayload = applyDriversComparisonViewToPayload(
+    const overlappedPayload = applyDriversComparisonViewToPayload(
       laggedDriverPayload,
-      'lagged',
+      'overlapped',
     );
-    const laggedMerged = mergeDatasetHistoricalWithBacktestsChartData(
+    const overlappedMerged = mergeDatasetHistoricalWithBacktestsChartData(
       datasetHistorical,
-      mergeBacktestsChartData(laggedPayload),
+      mergeBacktestsChartData(overlappedPayload),
     );
 
-    const overlappedChart = buildDriversComparisonChartData(
-      overlappedMerged,
-      datasetHistorical,
-      forecastIds,
-    );
     const laggedChart = buildDriversComparisonChartData(
       laggedMerged,
       datasetHistorical,
       forecastIds,
     );
-
-    expect(overlappedChart[0]?.date).toBe('2014-10-01');
-    expect(laggedChart[0]?.date).toBe('2015-01-01');
-    expect(laggedChart[0]?.date!.localeCompare(overlappedChart[0]?.date!)).toBe(
-      1,
+    const overlappedChart = buildDriversComparisonChartData(
+      overlappedMerged,
+      datasetHistorical,
+      forecastIds,
     );
+
+    expect(laggedChart[0]?.date).toBe('2014-10-01');
+    expect(overlappedChart[0]?.date).toBe('2014-07-01');
+    expect(
+      overlappedChart[0]?.date!.localeCompare(laggedChart[0]?.date!),
+    ).toBe(-1);
   });
 });

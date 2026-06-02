@@ -160,10 +160,10 @@ export function DriversComparisonChart({
   );
 
   const historicalWindowFloor = useMemo(() => {
-    const overlappedMerged = mergeBacktestsChartData(payload);
+    const laggedMerged = mergeBacktestsChartData(payload);
     const merged = mergeDatasetHistoricalWithBacktestsChartData(
       datasetHistorical,
-      overlappedMerged,
+      laggedMerged,
     );
     const sortedDrivers = [...(payload?.drivers ?? [])]
       .filter(

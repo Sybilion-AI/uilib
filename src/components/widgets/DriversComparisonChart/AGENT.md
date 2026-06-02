@@ -10,7 +10,7 @@ Host provides:
 - `payload`: BacktestsComponentPayload from platform SDK (host fetch per analysis)
 - Optional `datasetHistorical` overlay
 - `seriesInitKey` when selected analysis changes
-- `viewTab` / `onViewTabChange`: `overlapped` (calendar-aligned) or `lagged` (driver series shifted forward by parsed lag months)
+- `viewTab` / `onViewTabChange`: `lagged` (calendar-aligned, raw dates) or `overlapped` (driver series shifted backward by parsed lag months)
 
 View tabs: host should render uilib `Tabs variant="button"` with **Lagged** / **Overlapped** in the toolbar (analysis selector left, tabs right). Chart applies `applyDriversComparisonViewToPayload` internally.
 
@@ -18,8 +18,8 @@ Report tile: `drivers_comparison_chart` — host loads normalized backtests payl
 
 Requires: `payload` — target + driver normalized_series; `loading` / `chartLoading` — spinners; `seriesInitKey` — reset visible series on analysis or view tab change; `runAnalysisHint` / `statusHint` — empty/error text.
 
-Lag column: **Overlapped** shows API `lag` string (may be a range). **Lagged** shows single `N month(s)` from `parseLagMonthsFromLabel` (range uses max month).
+Lag column: **Lagged** shows API `lag` string (may be a range). **Overlapped** shows single `N month(s)` from `parseLagMonthsFromLabel` (range uses max month).
 
-Historical window: lead-in is anchored to the **overlapped** view (`computeDriversComparisonHistoricalWindowFloor`); lagged tab shifts driver lines only — switching tabs does not change historical extent.
+Historical window: lead-in is anchored to the **lagged** (unshifted) view (`computeDriversComparisonHistoricalWindowFloor`); overlapped tab shifts driver lines backward only — switching tabs does not change historical extent when floor is pinned.
 
 Empty/loading: loading props shimmer chart; null `payload` with `runAnalysisHint` prompts to run analysis.
