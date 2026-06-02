@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.63](https://github.com/Mir-Insight/uilib/compare/v1.3.62...v1.3.63) (2026-06-02)
+
+
+### Bug Fixes
+
+* DriversComparisonChart - Invert lagged/overlapped shift ([b6309b0](https://github.com/Mir-Insight/uilib/commit/b6309b05d7a76603684ea842dce1b2a5743cddb2))
+
 ### [1.3.62](https://github.com/Mir-Insight/uilib/compare/v1.3.61...v1.3.62) (2026-06-02)
 
 
