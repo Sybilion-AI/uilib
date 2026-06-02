@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.64](https://github.com/Mir-Insight/uilib/compare/v1.3.63...v1.3.64) (2026-06-02)
+
+
+### Features
+
+* ChartAreaInteractive - includeHiddenInYScale prop ([de92dad](https://github.com/Mir-Insight/uilib/commit/de92dadac45c084568cad7f5befee0a23ad6c821))
+
 ### [1.3.63](https://github.com/Mir-Insight/uilib/compare/v1.3.62...v1.3.63) (2026-06-02)
 
 
