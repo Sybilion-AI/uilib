@@ -121,6 +121,8 @@ export interface BaseChartWrapperProps {
   showActiveDots?: boolean;
   overlayElements?: ReactNode;
   hiddenSeries?: Set<string>;
+  /** When false (default), hidden series values are excluded from Y-axis domain calculation. */
+  includeHiddenInYScale?: boolean;
   excludeLegendIds?: number[];
   onAnalysisSelect?: (analysisId: number | string) => void;
   onFailedAnalysisClick?: (analysisId?: number | string) => void;
@@ -225,6 +227,7 @@ const BaseChartWrapperContent = forwardRef<
     showActiveDots = true,
     overlayElements,
     hiddenSeries,
+    includeHiddenInYScale = false,
     excludeLegendIds,
     onAnalysisSelect,
     onFailedAnalysisClick,
@@ -567,12 +570,19 @@ const BaseChartWrapperContent = forwardRef<
   let effectiveAutoScale = autoScaleYAxis;
   if (autoScaleYAxis !== false && yMin !== undefined && yMax !== undefined) {
     const dataKeys = chartData.length > 0 ? Object.keys(chartData[0]) : [];
-    const historicalValues = chartData
-      .map(p => p.historical)
-      .filter(v => v !== null && v !== undefined);
+    const historicalValues =
+      !includeHiddenInYScale && hiddenSeries?.has('historical')
+        ? []
+        : chartData
+            .map(p => p.historical)
+            .filter(v => v !== null && v !== undefined);
     const forecastKeys = dataKeys.filter(k => k.startsWith('forecast_'));
+    const visibleForecastKeys =
+      !includeHiddenInYScale && hiddenSeries
+        ? forecastKeys.filter(k => !hiddenSeries.has(k))
+        : forecastKeys;
     const forecastValues = chartData
-      .flatMap(p => forecastKeys.map(k => p[k]))
+      .flatMap(p => visibleForecastKeys.map(k => p[k]))
       .filter(v => v !== null && v !== undefined);
     const allLineValues = [...historicalValues, ...forecastValues];
 

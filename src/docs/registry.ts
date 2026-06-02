@@ -98,6 +98,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/ChartAreaInteractivePage'),
   },
   {
+    slug: 'include-hidden-in-y-scale',
+    title: 'includeHiddenInYScale',
+    section: 'Charts',
+    load: () => import('./pages/IncludeHiddenInYScalePage'),
+  },
+  {
     slug: 'lightweight-forecast-chart',
     title: 'LightweightForecastChart',
     section: 'Charts',
