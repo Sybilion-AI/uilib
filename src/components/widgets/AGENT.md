@@ -6,7 +6,7 @@ Each component file ≤18 lines. Signal for LLM prompts — no noise.
 
 **Include:** Renders (1 sentence); Use when / Not when; Host provides (3–5 bullets); Report tile (one line or "Not used"); Requires (prop names + role); Empty/loading (one line).
 
-**Do not include:** import examples; type/doc/demo/glossary links; page-shell boilerplate; related-components lists unless choosing between exports; implementation/styling/keyboard notes unless binding-relevant; secrets, env vars, API URLs.
+**Do not include:** import examples; type/doc/demo/glossary links; page-shell boilerplate; related-components lists unless choosing between exports; implementation/styling/keyboard notes unless binding-relevant; secrets, env vars, API URLs; inline style examples (`style={{…}}`).
 
 ```markdown
 # Name

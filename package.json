@@ -42,6 +42,7 @@
     "docs",
     "src",
     "dist",
+    "dist/agent-glossary",
     "package.json"
   ],
   "directories": {
@@ -53,7 +54,8 @@
     "ts": "tsc --noEmit",
     "dev": "NODE_OPTIONS='--loader ts-node/esm' NODE_ENV=development webpack-dev-server --mode=development --config ./src/docs/config/webpack.config.js --progress",
     "prebuild": "cp src/components/ui/Logo/logo.svg assets/logo.svg",
-    "build": "rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
+    "build:agent-glossary": "node scripts/build-agent-glossary.mjs --all",
+    "build": "yarn build:agent-glossary && rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "build:watch": "yarn build --watch",
     "build:compress": "COMPRESS=true yarn build",
     "publish:npm": "yarn build && npm publish --access public",
