@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.62](https://github.com/Mir-Insight/uilib/compare/v1.3.61...v1.3.62) (2026-06-02)
+
+
+### Bug Fixes
+
+* ChatSheet - URL and layout chat sync ([7c51532](https://github.com/Mir-Insight/uilib/commit/7c51532892827d16a933da1ed705d362c5a9b35e))
+
 ### [1.3.61](https://github.com/Mir-Insight/uilib/compare/v1.3.60...v1.3.61) (2026-06-01)
 
 
