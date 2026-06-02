@@ -258,3 +258,7 @@ export const isAnalysisFailed = (
 export const isAnalysisNotFailed = (
   analysis: Analysis | { status?: string },
 ): boolean => !isAnalysisFailed(analysis);
+
+export const isAnalysisDone = (
+  analysis: Analysis | { status?: string },
+): boolean => analysis.status?.toLowerCase() === 'done';
