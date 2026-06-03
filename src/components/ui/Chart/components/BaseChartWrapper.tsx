@@ -21,6 +21,7 @@ import { chartRenderQueue } from '#uilib/utils/chartRenderQueue';
 import { Tooltip as ChartTooltip, ComposedChart, LineChart } from 'recharts';
 import { LegendPayload } from 'recharts/types/component/DefaultLegendContent';
 
+import { normalizeTooltipPayload } from '../Chart.helpers';
 import type { ChartConfig } from '../Chart.types';
 import { getPlotViewBox, resolveChartMargin } from '../tools/chartPlotGeometry';
 import { formatDate } from '../tools/formatters';
@@ -390,10 +391,7 @@ const BaseChartWrapperContent = forwardRef<
   const renderTooltipContent = (props: any) => {
     // Filter payload to exclude items with null/undefined values
     // This prevents showing stale data when hovering on dates without data points
-    const filteredPayload = props.payload?.filter(
-      (item: any) =>
-        item.value !== null && item.value !== undefined && item.type !== 'none',
-    );
+    const filteredPayload = normalizeTooltipPayload(props.payload);
 
     // If no valid payload items, render ChartTooltipContent with active=false and empty payload
     // This allows ChartTooltipContent to clear its lastTooltipData state

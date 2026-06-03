@@ -2,20 +2,16 @@ import cn from 'classnames';
 import { useEffect, useMemo, useState } from 'react';
 
 import { useChart } from '#uilib/components/ui/Chart/Chart.context';
-import { getPayloadConfigFromPayload } from '#uilib/components/ui/Chart/Chart.helpers';
+import {
+  type TooltipItem,
+  type TooltipPayloadEntry,
+  getPayloadConfigFromPayload,
+  normalizeTooltipPayload,
+} from '#uilib/components/ui/Chart/Chart.helpers';
 import { ChartTooltipContentProps } from '#uilib/components/ui/Chart/Chart.types';
 
 import S from '../Chart.styl';
 import { ChartTooltipItem } from './ChartTooltipItem';
-
-type TooltipItem = {
-  type: string;
-  name: string;
-  value: number | [number, number];
-  payload: unknown;
-  color: string;
-  dataKey?: string;
-};
 
 export function ChartTooltipContent({
   active,
@@ -41,32 +37,41 @@ export function ChartTooltipContent({
     label: string | number | undefined;
   } | null>(null);
 
+  const normalizedPayload = useMemo(
+    () => normalizeTooltipPayload(payload as TooltipPayloadEntry[] | undefined),
+    [payload],
+  );
+
   // Update last tooltip data when active
   useEffect(() => {
-    // Clear lastTooltipData immediately if label changed (prevents stale data)
-    // Only clear if label is explicitly provided and different (not undefined)
-    if (lastTooltipData && label && lastTooltipData.label !== label) {
-      setLastTooltipData(null);
-    }
+    setLastTooltipData(prev => {
+      // Clear when label changed (prevents stale data)
+      let next = prev;
+      if (prev && label && prev.label !== label) {
+        next = null;
+      }
 
-    if (active && payload?.length) {
-      setLastTooltipData({
-        active,
-        payload: payload as TooltipItem[],
-        label,
-      });
-    }
-    // Don't clear lastTooltipData when mouse moves out - keep it for position maintenance
-    // It will be cleared when label changes (above) or when new active data arrives
-  }, [active, payload, label]);
+      if (active && normalizedPayload?.length) {
+        return {
+          active: true,
+          payload: normalizedPayload as TooltipItem[],
+          label,
+        };
+      }
 
-  // Use last tooltip data if current is inactive, otherwise use current
-  // lastTooltipData is already cleared in useEffect if label changed, so safe to use here
-  const displayActive = active || (lastTooltipData?.active ?? false);
+      // Keep frozen snapshot when inactive (position maintenance in BaseChartWrapper)
+      if (!active && next) {
+        return { ...next, active: false };
+      }
+
+      return next;
+    });
+  }, [active, normalizedPayload, label]);
+
   const displayPayload: TooltipItem[] | undefined =
-    active && payload?.length
-      ? (payload as TooltipItem[])
-      : lastTooltipData?.payload;
+    active && normalizedPayload?.length
+      ? (normalizedPayload as TooltipItem[])
+      : (lastTooltipData?.payload as TooltipItem[] | undefined);
   const displayLabel = active ? label : lastTooltipData?.label;
 
   const tooltipLabel = useMemo(() => {
