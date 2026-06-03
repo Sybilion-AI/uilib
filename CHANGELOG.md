@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.65](https://github.com/Mir-Insight/uilib/compare/v1.3.64...v1.3.65) (2026-06-03)
+
+
+### Bug Fixes
+
+* ChartAreaInteractive - export isAnalysisDone and helpers ([e96e5d4](https://github.com/Mir-Insight/uilib/commit/e96e5d48dfd45a50605961e3c9926ffef19c497d))
+* ChartAreaInteractive - Remove duplicate TimeRange export ([8c74c16](https://github.com/Mir-Insight/uilib/commit/8c74c1679de4749fddd51a17197457a62ee9c981))
+* PerformanceChart - Custom perf seed to historical end ([88559e5](https://github.com/Mir-Insight/uilib/commit/88559e5888688533750a14e3b12f7b6d0ab691be))
+
 ### [1.3.64](https://github.com/Mir-Insight/uilib/compare/v1.3.63...v1.3.64) (2026-06-02)
 
 
