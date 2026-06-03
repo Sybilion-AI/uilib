@@ -69,10 +69,8 @@ export function SybilionAppHeader({
         appsStorageKey={appsStorageKey}
       />
       <Gap />
-      <div
-        id={actionsAnchorId}
-        className={cn(S.actionsAnchor, actionsAnchorClassName)}
-      >
+      <div className={cn(S.actionsAnchor, actionsAnchorClassName)}>
+        <div id={actionsAnchorId} className={S.pageActionsPortal} />
         {actionsStart}
         <NavUserHeader {...navUserHeaderProps} />
         {actionsEnd}
