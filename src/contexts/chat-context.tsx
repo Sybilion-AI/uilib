@@ -67,6 +67,12 @@ export interface ChatContextType {
     messageId: string,
     patch: UpdateChatMessagePatch,
   ) => void;
+  /** Replaces all messages on a session (e.g. seeding from another chat). */
+  setChatMessages: (
+    scopeId: string,
+    chatId: string,
+    messages: Message[],
+  ) => void;
   sendMessage: (
     scopeId: string,
     message: string | ChatSendMessagePayload,
@@ -425,6 +431,28 @@ export function ChatProvider({
     [userSwitchKey],
   );
 
+  const setChatMessages = useCallback(
+    (scopeId: string, chatId: string, messages: Message[]) => {
+      if (userSwitchKey === null) return;
+      addScopeIdToRegistry(scopeId);
+      const cloned = messages.map(message => ({ ...message }));
+
+      setChats(prev => {
+        const scopeChats = prev[scopeId] ?? [];
+        const updatedChats = scopeChats.map(chat => {
+          if (chat.session_id !== chatId) return chat;
+          return { ...chat, messages: cloned };
+        });
+
+        const chatsKey = getChatsKey(scopeId);
+        LS.set(chatsKey, updatedChats);
+
+        return { ...prev, [scopeId]: updatedChats };
+      });
+    },
+    [userSwitchKey],
+  );
+
   const sendMessage = useCallback(
     async (
       scopeId: string,
@@ -543,6 +571,7 @@ export function ChatProvider({
         addMessage,
         removeMessageById,
         updateMessageById,
+        setChatMessages,
         sendMessage,
         getChatsForScopeId,
         getCurrentChatId,
