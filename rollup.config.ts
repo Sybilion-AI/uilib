@@ -51,7 +51,7 @@ export default [
       '@sybilion/platform-sdk',
     ],
     plugins: [
-      del({ targets: './dist/*' }),
+      del({ targets: './dist/esm' }),
       alias({
         entries: [
           {
