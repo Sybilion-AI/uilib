@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.66](https://github.com/Mir-Insight/uilib/compare/v1.3.65...v1.3.66) (2026-06-03)
+
+
+### Bug Fixes
+
+* Rollup - Keep agent-glossary on build ([e17f3a0](https://github.com/Mir-Insight/uilib/commit/e17f3a0b4250fec820f347eef285a42f83399e51))
+
 ### [1.3.65](https://github.com/Mir-Insight/uilib/compare/v1.3.64...v1.3.65) (2026-06-03)
 
 
