@@ -30,6 +30,22 @@ export function shouldCloseStaleLocalChatOpen(
   return !shellChatPanelOpen && !chatOpen && isOpen;
 }
 
+/** Shell still reserves width but no instance is showing chat (e.g. route change dropped `?chat=`). */
+export function shouldCloseOrphanShellChat(
+  shellChatPanelOpen: boolean,
+  chatOpen: boolean,
+  isOpen: boolean,
+): boolean {
+  return shellChatPanelOpen && !chatOpen && !isOpen;
+}
+
+/** App shell: collapse chat column when URL has no `?chat=` (no mounted ChatSheet required). */
+export function shouldCollapseShellChatWithoutUrlParam(
+  hasChatUrlParam: boolean,
+): boolean {
+  return !hasChatUrlParam;
+}
+
 export function shouldDismissChatAfterShellClosed(params: {
   shellChatPanelOpen: boolean;
   wasShellChatPanelOpen: boolean;

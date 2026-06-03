@@ -1,6 +1,8 @@
 import {
   isChatPanelVisible,
+  shouldCloseOrphanShellChat,
   shouldCloseStaleLocalChatOpen,
+  shouldCollapseShellChatWithoutUrlParam,
   shouldDismissChatAfterShellClosed,
   shouldHealChatShellDesync,
   shouldOpenChatFromUrl,
@@ -33,6 +35,30 @@ describe('shouldCloseStaleLocalChatOpen', () => {
 
   it('keeps local open while ?chat= remains', () => {
     expect(shouldCloseStaleLocalChatOpen(false, true, true)).toBe(false);
+  });
+});
+
+describe('shouldCollapseShellChatWithoutUrlParam', () => {
+  it('collapses when chat param absent', () => {
+    expect(shouldCollapseShellChatWithoutUrlParam(false)).toBe(true);
+  });
+
+  it('keeps shell when chat param present', () => {
+    expect(shouldCollapseShellChatWithoutUrlParam(true)).toBe(false);
+  });
+});
+
+describe('shouldCloseOrphanShellChat', () => {
+  it('closes shell slot when URL and local UI are both closed', () => {
+    expect(shouldCloseOrphanShellChat(true, false, false)).toBe(true);
+  });
+
+  it('keeps shell while ?chat= requests panel', () => {
+    expect(shouldCloseOrphanShellChat(true, true, false)).toBe(false);
+  });
+
+  it('keeps shell while this instance still renders chat', () => {
+    expect(shouldCloseOrphanShellChat(true, false, true)).toBe(false);
   });
 });
 

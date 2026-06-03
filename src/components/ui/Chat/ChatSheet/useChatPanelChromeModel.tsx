@@ -54,6 +54,7 @@ import type { ChatEmptyStateConfig } from '../ChatEmptyState/ChatEmptyState.type
 import type { ChatEmptyStateProps } from '../ChatEmptyState/ChatEmptyState.types';
 import {
   isChatPanelVisible,
+  shouldCloseOrphanShellChat,
   shouldCloseStaleLocalChatOpen,
   shouldDismissChatAfterShellClosed,
   shouldHealChatShellDesync,
@@ -197,16 +198,20 @@ export function useChatPanelChromeModel({
   const layoutDismissedRef = useRef(false);
   const panelActive = embedAsPage || isOpen;
 
-  // Ensure valid currentChatId when chat opens
+  // Ensure a renderable session when the panel is active (pick existing or create).
   useEffect(() => {
-    if (panelActive && (!currentChatId || currentChatId === '')) {
-      if (chats.length > 0) {
-        // Select the first available chat
-        setCurrentChatId(chats[0].session_id);
-      } else {
-        // Create a new chat if none exists
-        newChat();
-      }
+    if (!panelActive) return;
+
+    const currentValid =
+      currentChatId != null &&
+      currentChatId !== '' &&
+      chats.some(chat => chat.session_id === currentChatId);
+    if (currentValid) return;
+
+    if (chats.length > 0) {
+      setCurrentChatId(chats[0].session_id);
+    } else {
+      newChat();
     }
   }, [panelActive, currentChatId, chats, setCurrentChatId, newChat]);
   const [scriptByChatId, setScriptByChatId] = useState<
@@ -945,6 +950,17 @@ export function useChatPanelChromeModel({
     setIsOpen(false);
   }, [embedAsPage, shellChatPanelOpen, chatOpen, isOpen]);
 
+  /** Shell width reserved but no chat UI (e.g. nav dropped `?chat=` while old page still had it). */
+  useEffect(() => {
+    if (embedAsPage) {
+      return;
+    }
+    if (!shouldCloseOrphanShellChat(shellChatPanelOpen, chatOpen, isOpen)) {
+      return;
+    }
+    setChatPanelOpen(false);
+  }, [embedAsPage, shellChatPanelOpen, chatOpen, isOpen, setChatPanelOpen]);
+
   /** Shell chat closed while `?chat=` still set (fallback if layout event was missed). */
   useEffect(() => {
     if (embedAsPage) {
@@ -966,15 +982,21 @@ export function useChatPanelChromeModel({
     dismissChatForLayout();
   }, [embedAsPage, shellChatPanelOpen, chatOpen, dismissChatForLayout, isOpen]);
 
-  /** Route change: release shell slot only if this instance opened it (not Strict Mode remount). */
+  /** Route change: release shell unless destination URL still has `?chat=` (read live search, not stale closure). */
   useEffect(() => {
     return () => {
-      if (!embedAsPage && openedShellChatRef.current && !chatOpen) {
-        openedShellChatRef.current = false;
+      if (embedAsPage || !openedShellChatRef.current) {
+        return;
+      }
+      openedShellChatRef.current = false;
+      const chatStillInUrl =
+        typeof window !== 'undefined' &&
+        new URLSearchParams(window.location.search).has(CHAT_QUERY_PARAM);
+      if (!chatStillInUrl) {
         setChatPanelOpen(false);
       }
     };
-  }, [embedAsPage, chatOpen, setChatPanelOpen]);
+  }, [embedAsPage, setChatPanelOpen]);
 
   useEffect(() => {
     if (embedAsPage) {
