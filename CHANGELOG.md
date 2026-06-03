@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.67](https://github.com/Mir-Insight/uilib/compare/v1.3.66...v1.3.67) (2026-06-03)
+
+
+### Bug Fixes
+
+* Chart - Dedupe tooltip payload on hover ([8ecf21f](https://github.com/Mir-Insight/uilib/commit/8ecf21f6813eabcfcfd91b3a458a012dcbd568cf))
+
 ### [1.3.66](https://github.com/Mir-Insight/uilib/compare/v1.3.65...v1.3.66) (2026-06-03)
 
 
