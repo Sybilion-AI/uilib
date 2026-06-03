@@ -67,9 +67,6 @@ const timeRangeToMonths = {
 
 export type TimeRangePreset = keyof typeof timeRangeToMonths;
 
-/** @deprecated Use `TimeRangePreset` or `string` for brush-encoded ranges. */
-export type TimeRange = TimeRangePreset;
-
 export const DRAG_TIME_RANGE_PREFIX = '__drag:' as const;
 
 export function encodeDragTimeRange(a: Date, b: Date): string {
