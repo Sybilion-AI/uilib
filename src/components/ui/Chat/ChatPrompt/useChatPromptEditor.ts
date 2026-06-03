@@ -208,8 +208,11 @@ export function useChatPromptEditor({
     queueMicrotask(() => {
       const dom = chatPromptSafeEditorDom(editor);
       if (dom) syncChatPromptComposerHeight(dom, t);
+      if (!disabled && !editor.isDestroyed) {
+        editor.chain().focus('end').run();
+      }
     });
-  }, [editor, prefillMessage]);
+  }, [editor, prefillMessage, disabled]);
 
   useLayoutEffect(() => {
     if (!editor) return;

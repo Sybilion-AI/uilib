@@ -140,6 +140,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/ChatAttachmentsDropzonePage'),
   },
   {
+    slug: 'chat-composer-prefill',
+    title: 'Chat composer prefill',
+    section: 'Chat',
+    load: () => import('./pages/ChatComposerPrefillPage'),
+  },
+  {
     slug: 'checkbox',
     title: 'Checkbox',
     section: 'Forms',
