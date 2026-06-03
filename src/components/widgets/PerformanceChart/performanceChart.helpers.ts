@@ -5,6 +5,7 @@
 import type { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
 import type { ForecastData } from '#uilib/types/forecast-data';
 import {
+  getNextMonth,
   getPreviousMonth,
   normalizeToMonthStart,
 } from '#uilib/utils/chartConnectionPoint';
@@ -67,19 +68,16 @@ function addSpaghettiHistoricalBridgeForSeries(
   map.set(connectionDate, row);
 }
 
-/**
- * Converts `performance.model` / `performance.drift` per-horizon forecasts into synthetic
- * backtest-shaped entries: each line is [horizon_1[i], …, horizon_n[i]] as date→value points
- * (aligned by sorted key index per horizon).
- */
-export function buildPerHorizonSpaghettiEntries(
-  forecastRoot:
-    | { forecasts?: Record<string, Record<string, number>> }
-    | null
-    | undefined,
+type PerHorizonForecastRoot = {
+  forecasts?: Record<string, Record<string, number>>;
+};
+
+/** When horizons have different lengths, align on the latest `n` months (suffix), not the oldest. */
+function perHorizonSortedKeyLists(
+  forecastRoot: PerHorizonForecastRoot,
   horizonKeys: string[],
-): RealBacktestsEntry[] {
-  if (!forecastRoot?.forecasts || horizonKeys.length === 0) return [];
+): { sortedHorizons: string[]; perHorizonKeyLists: string[][] } | null {
+  if (!forecastRoot.forecasts || horizonKeys.length === 0) return null;
 
   const forecasts = forecastRoot.forecasts;
   const sortedHorizons = [...horizonKeys].sort((a, b) => {
@@ -99,16 +97,57 @@ export function buildPerHorizonSpaghettiEntries(
   });
 
   const lengths = perHorizonKeyLists.map(l => l.length).filter(l => l > 0);
-  if (lengths.length === 0) return [];
-  const n = Math.min(...lengths);
+  if (lengths.length === 0) return null;
+
+  return { sortedHorizons, perHorizonKeyLists };
+}
+
+function alignedHorizonRowCount(perHorizonKeyLists: string[][]): number {
+  const lengths = perHorizonKeyLists.map(l => l.length).filter(l => l > 0);
+  if (lengths.length === 0) return 0;
+  return Math.min(...lengths);
+}
+
+function horizonDateKeyAtRow(
+  perHorizonKeyLists: string[][],
+  horizonIndex: number,
+  rowIndex: number,
+  rowCount: number,
+): string | undefined {
+  const keys = perHorizonKeyLists[horizonIndex];
+  if (!keys?.length) return undefined;
+  const offset = keys.length - rowCount;
+  return keys[offset + rowIndex];
+}
+
+/**
+ * Converts `performance.model` / `performance.drift` per-horizon forecasts into synthetic
+ * backtest-shaped entries: each line is [horizon_1[i], …, horizon_n[i]] as date→value points
+ * (aligned on the latest shared months per horizon).
+ */
+export function buildPerHorizonSpaghettiEntries(
+  forecastRoot:
+    | { forecasts?: Record<string, Record<string, number>> }
+    | null
+    | undefined,
+  horizonKeys: string[],
+): RealBacktestsEntry[] {
+  const aligned = perHorizonSortedKeyLists(forecastRoot ?? {}, horizonKeys);
+  if (!aligned) return [];
+
+  const { sortedHorizons, perHorizonKeyLists } = aligned;
+  const forecasts = forecastRoot!.forecasts!;
+  const normalizeDateKey = (d: string) => d.split(' ')[0];
+  const n = alignedHorizonRowCount(perHorizonKeyLists);
+  if (n === 0) return [];
 
   const entries: RealBacktestsEntry[] = [];
   for (let i = 0; i < n; i++) {
     const forecast_series: Record<string, number> = {};
     for (let hi = 0; hi < sortedHorizons.length; hi++) {
       const h = sortedHorizons[hi];
-      const keys = perHorizonKeyLists[hi];
-      const dateKey = keys[i];
+      const dateKey = horizonDateKeyAtRow(perHorizonKeyLists, hi, i, n);
+      if (!dateKey) continue;
       const rawVal = forecasts[h]?.[dateKey];
       if (typeof rawVal !== 'number' || !Number.isFinite(rawVal)) continue;
       const norm = normalizeToMonthStart(normalizeDateKey(dateKey));
@@ -127,7 +166,7 @@ export function buildPerHorizonSpaghettiEntries(
 
 /**
  * Same row alignment as {@link buildPerHorizonSpaghettiEntries}: row `i` uses each horizon's
- * i-th sorted forecast month; `dates[i]` is horizon_1's month at that row (Date column).
+ * latest-aligned forecast month; `dates[i]` is horizon_1's month at that row (Date column).
  * Use this for custom dialog seed + “copy statistical baseline (drift)” prefill.
  */
 export function buildDriftSpaghettiMatrixForCustomDialog(
@@ -141,28 +180,14 @@ export function buildDriftSpaghettiMatrixForCustomDialog(
   grid: number[][];
   perHorizonDates: string[][];
 } | null {
-  if (!driftRoot?.forecasts || horizonKeys.length === 0) return null;
+  const aligned = perHorizonSortedKeyLists(driftRoot ?? {}, horizonKeys);
+  if (!aligned) return null;
 
-  const forecasts = driftRoot.forecasts;
-  const sortedHorizons = [...horizonKeys].sort((a, b) => {
-    const na = parseInt(a.replace(/\D/g, ''), 10) || 0;
-    const nb = parseInt(b.replace(/\D/g, ''), 10) || 0;
-    return na - nb;
-  });
-
+  const { sortedHorizons, perHorizonKeyLists } = aligned;
+  const forecasts = driftRoot!.forecasts!;
   const normalizeDateKey = (d: string) => d.split(' ')[0];
-
-  const perHorizonKeyLists: string[][] = sortedHorizons.map(h => {
-    const m = forecasts[h];
-    if (!m || typeof m !== 'object') return [];
-    return Object.keys(m).sort((a, b) =>
-      normalizeDateKey(a).localeCompare(normalizeDateKey(b)),
-    );
-  });
-
-  const lengths = perHorizonKeyLists.map(l => l.length).filter(l => l > 0);
-  if (lengths.length === 0) return null;
-  const n = Math.min(...lengths);
+  const n = alignedHorizonRowCount(perHorizonKeyLists);
+  if (n === 0) return null;
 
   const dates: string[] = [];
   const grid: number[][] = [];
@@ -173,22 +198,153 @@ export function buildDriftSpaghettiMatrixForCustomDialog(
     const dateRow: string[] = [];
     for (let hi = 0; hi < sortedHorizons.length; hi++) {
       const h = sortedHorizons[hi];
-      const keys = perHorizonKeyLists[hi];
-      const dateKey = keys[i];
+      const dateKey = horizonDateKeyAtRow(perHorizonKeyLists, hi, i, n);
+      if (!dateKey) {
+        row.push(0);
+        dateRow.push('');
+        continue;
+      }
       dateRow.push(normalizeToMonthStart(normalizeDateKey(dateKey)));
       const rawVal = forecasts[h]?.[dateKey];
       const v =
         typeof rawVal === 'number' && Number.isFinite(rawVal) ? rawVal : NaN;
       row.push(v);
     }
-    const d0 = perHorizonKeyLists[0][i];
-    dates.push(normalizeToMonthStart(normalizeDateKey(d0)));
+    const d0 = horizonDateKeyAtRow(perHorizonKeyLists, 0, i, n);
+    dates.push(d0 ? normalizeToMonthStart(normalizeDateKey(d0)) : '');
     perHorizonDates.push(dateRow);
     grid.push(row.map(c => (Number.isFinite(c) ? c : 0)));
   }
 
   return {
     dates,
+    grid,
+    perHorizonDates,
+  };
+}
+
+export function latestHistoricalMonthKey(
+  historicalByDate: Map<string, number>,
+): string | null {
+  let latest: string | null = null;
+  historicalByDate.forEach((_, d) => {
+    if (!latest || d.localeCompare(latest) > 0) latest = d;
+  });
+  return latest;
+}
+
+/**
+ * Append monthly spaghetti rows after drift backtests so the dialog (and chart) reach the latest
+ * historical month (e.g. Apr 2026), not only the last drift origin (e.g. Nov 2025).
+ */
+export function extendCustomPerformanceDriftSeedToHistoricalEnd(
+  seed: {
+    dates: string[];
+    grid: number[][];
+    perHorizonDates: string[][];
+  },
+  historicalByDate: Map<string, number>,
+): {
+  dates: string[];
+  grid: number[][];
+  perHorizonDates: string[][];
+} {
+  const latest = latestHistoricalMonthKey(historicalByDate);
+  if (!latest || seed.dates.length === 0) return seed;
+
+  const norm = (d: string) =>
+    normalizeToMonthStart(String(d).split(' ')[0] ?? d);
+
+  const dates = seed.dates.map(d => norm(d));
+  const grid = seed.grid.map(r => [...r]);
+  const perHorizonDates = seed.perHorizonDates.map(row =>
+    row.map(d => norm(String(d))),
+  );
+  const horizonCount = grid[0]?.length ?? perHorizonDates[0]?.length ?? 0;
+  if (horizonCount === 0) return seed;
+
+  let lastOrigin = dates[dates.length - 1];
+  if (!lastOrigin) return seed;
+
+  while (lastOrigin.localeCompare(latest) < 0) {
+    const nextOrigin = norm(getNextMonth(lastOrigin));
+    const prevPh = perHorizonDates[perHorizonDates.length - 1];
+    const newPh =
+      prevPh.length === horizonCount
+        ? prevPh.map(d => norm(getNextMonth(norm(d))))
+        : Array.from({ length: horizonCount }, () => nextOrigin);
+
+    perHorizonDates.push(newPh);
+    dates.push(nextOrigin);
+
+    const baselineRow = spaghettiGridFromHistoricalPreviousMonth(
+      [newPh],
+      horizonCount,
+      historicalByDate,
+    );
+    grid.push(baselineRow[0] ?? Array.from({ length: horizonCount }, () => 0));
+
+    lastOrigin = nextOrigin;
+  }
+
+  return { dates, grid, perHorizonDates };
+}
+
+/** Pad a saved custom matrix with drift/baseline rows so edit + chart cover latest backtest months. */
+export function extendCustomPerformanceMatrixWithDriftSeed(
+  saved: SpaghettiPerformanceMatrixPayload,
+  driftSeed: {
+    dates: string[];
+    grid: number[][];
+    perHorizonDates: string[][];
+  },
+  baselineGrid?: number[][],
+): SpaghettiPerformanceMatrixPayload {
+  const norm = (d: string) =>
+    normalizeToMonthStart(String(d).split(' ')[0] ?? d);
+  const horizonCount = saved.horizonKeys.length;
+
+  const savedByDate = new Map<
+    string,
+    { grid: number[]; perHorizon?: string[] }
+  >();
+  for (let r = 0; r < saved.dates.length; r++) {
+    savedByDate.set(norm(saved.dates[r]), {
+      grid: saved.grid[r],
+      perHorizon: saved.perHorizonDates?.[r],
+    });
+  }
+
+  const dates: string[] = [];
+  const grid: number[][] = [];
+  const perHorizonDates: string[][] = [];
+
+  for (let i = 0; i < driftSeed.dates.length; i++) {
+    const d = norm(driftSeed.dates[i]);
+    if (!d) continue;
+    dates.push(d);
+    const existing = savedByDate.get(d);
+    if (existing) {
+      grid.push([...existing.grid]);
+      const ph =
+        existing.perHorizon && existing.perHorizon.length === horizonCount
+          ? existing.perHorizon.map(c => norm(String(c)))
+          : (driftSeed.perHorizonDates[i]?.map(c => norm(String(c))) ?? []);
+      perHorizonDates.push(ph);
+      continue;
+    }
+    grid.push(
+      baselineGrid?.[i] ? [...baselineGrid[i]] : [...driftSeed.grid[i]],
+    );
+    perHorizonDates.push(
+      (driftSeed.perHorizonDates[i] ?? []).map(c => norm(String(c))),
+    );
+  }
+
+  return {
+    v: saved.v,
+    dates,
+    horizonKeys: [...saved.horizonKeys],
     grid,
     perHorizonDates,
   };
