@@ -496,8 +496,16 @@ export function useChatPanelChromeModel({
       endLocalDemoFlow(chatId);
       void (async () => {
         try {
-          await sendMessage(displayLabel);
-          onMessage?.(displayLabel);
+          let payload: string | ChatSendMessagePayload = displayLabel;
+          if (transformSendPayload) {
+            payload = await transformSendPayload(
+              displayLabel,
+              undefined,
+              displayLabel,
+            );
+          }
+          const assistantResponse = await sendMessage(payload);
+          onMessage?.(displayTextFromSendPayload(payload), assistantResponse);
         } catch (error) {
           logger.error('Error sending chat message:', error);
         }
@@ -514,6 +522,7 @@ export function useChatPanelChromeModel({
       sendMessage,
       onMessage,
       onScriptComplete,
+      transformSendPayload,
     ],
   );
 
