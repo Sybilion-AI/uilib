@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.68](https://github.com/Mir-Insight/uilib/compare/v1.3.66...v1.3.68) (2026-06-03)
+
+
+### Features
+
+* ChatContext - setChatMessages for report handoff ([ac69949](https://github.com/Mir-Insight/uilib/commit/ac699491432a573224db6b6deb4d4bae98acdba8))
+
+
+### Bug Fixes
+
+* Chart - Dedupe tooltip payload on hover ([1022d8f](https://github.com/Mir-Insight/uilib/commit/1022d8f68246a10552e1d1c6f6922687cb500ee8))
+* ChatPanelChrome - Quick-reply send payload ([427044b](https://github.com/Mir-Insight/uilib/commit/427044bea233a22887a3498c4639f3327ba19a3c))
+* ChatSheet - Orphan shell and session heal on panel open ([9b42942](https://github.com/Mir-Insight/uilib/commit/9b429425d0edd76b261daed5c54ef41a309edbae))
+
 ### [1.3.66](https://github.com/Mir-Insight/uilib/compare/v1.3.65...v1.3.66) (2026-06-03)
 
 
