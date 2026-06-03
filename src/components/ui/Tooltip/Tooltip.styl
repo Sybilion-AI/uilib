@@ -59,6 +59,10 @@
     animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
 
   &.tooltipContentOverTrigger
+    box-sizing border-box
+    height auto
+    text-wrap initial
+
     &[data-state="open"],
     &[data-state="instant-open"],
     &[data-state="delayed-open"]
@@ -66,10 +70,6 @@
 
     &[data-state="closed"]
       animation fade-out 0.1s ease-in
-
-.tooltipContentOverTrigger
-  box-sizing border-box
-  height auto
 
 .tooltipArrow
   z-index 50

@@ -1,18 +1,9 @@
 import cn from 'classnames';
 import { CSSProperties, ReactNode } from 'react';
 
-import { getPayloadConfigFromPayload } from '../Chart.helpers';
+import { getPayloadConfigFromPayload, type TooltipItem } from '../Chart.helpers';
 import S from '../Chart.styl';
 import { ChartConfig } from '../Chart.types';
-
-type TooltipItem = {
-  type: string;
-  name: string;
-  value: number | [number, number];
-  payload: unknown;
-  color: string;
-  dataKey?: string;
-};
 
 type ChartTooltipItemProps = {
   item: TooltipItem;
