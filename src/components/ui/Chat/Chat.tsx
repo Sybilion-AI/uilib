@@ -15,13 +15,18 @@ export function Chat({
   isEmpty,
   scopeId,
   onChatDeleted,
+  onNewChat,
   ...props
 }: ChatProps) {
   return (
     <div className={cn(S.root, className, isEmpty && S.isEmpty)} {...props}>
       {scopeId ? (
         <div className={S.header}>
-          <ChatSelector id={scopeId} onChatDeleted={onChatDeleted} />
+          <ChatSelector
+            id={scopeId}
+            onChatDeleted={onChatDeleted}
+            onNewChat={onNewChat}
+          />
         </div>
       ) : null}
       {children}

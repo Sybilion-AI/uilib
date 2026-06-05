@@ -18,19 +18,26 @@ export interface ChatSelectorProps {
   id: string;
   className?: string;
   onChatDeleted?: (sessionId: string) => void;
+  /** When set, used for "+ New Chat" instead of the default empty `newChat()`. */
+  onNewChat?: () => void;
 }
 
 export function ChatSelector({
   id,
   className,
   onChatDeleted,
+  onNewChat,
 }: ChatSelectorProps) {
   const { chats, currentChatId, setCurrentChatId, newChat, deleteChat } =
     useChatsForScopeId(id);
 
   const handleValueChange = (value: string) => {
     if (value === 'new') {
-      newChat();
+      if (onNewChat) {
+        onNewChat();
+      } else {
+        newChat();
+      }
     } else if (value) {
       setCurrentChatId(value);
     }

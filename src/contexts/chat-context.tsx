@@ -45,9 +45,14 @@ export type UpdateChatMessagePatch = {
   inProgress?: boolean;
 };
 
+export type NewChatOptions = {
+  /** When set, seeds the new session's messages (e.g. continue dialog in reports). */
+  seedMessages?: readonly Message[];
+};
+
 export interface ChatContextType {
   /** Returns the new session id, or undefined if no user / not created. */
-  newChat: (scopeId: string) => string | undefined;
+  newChat: (scopeId: string, options?: NewChatOptions) => string | undefined;
   setCurrentChatId: (currScopeId: string, sessionId: string) => void;
   addMessage: (
     scopeId: string,
@@ -173,6 +178,22 @@ function addScopeIdToRegistry(scopeId: string) {
   }
 }
 
+/** Shallow-clone messages for seeding another session; drops in-progress rows. */
+function cloneMessagesForNewSession(messages: readonly Message[]): Message[] {
+  return messages
+    .filter(message => !message.inProgress)
+    .map(message => ({
+      ...message,
+      ...(message.userTextFileAttachments
+        ? {
+            userTextFileAttachments: message.userTextFileAttachments.map(
+              attachment => ({ ...attachment }),
+            ),
+          }
+        : {}),
+    }));
+}
+
 export interface ChatProviderProps {
   children: ReactNode;
   /** When null, chat state is cleared (logged out). When set, only LS rows for scopes starting with `${userId}-` are loaded. */
@@ -249,15 +270,19 @@ export function ChatProvider({
   );
 
   const newChat = useCallback(
-    (scopeId: string): string | undefined => {
+    (scopeId: string, options?: NewChatOptions): string | undefined => {
       if (userSwitchKey === null) return undefined;
       addScopeIdToRegistry(scopeId);
 
       const sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const seededMessages =
+        options?.seedMessages && options.seedMessages.length > 0
+          ? cloneMessagesForNewSession(options.seedMessages)
+          : [];
       const newChat: Chat = {
         session_id: sessionId,
         name: '',
-        messages: [],
+        messages: seededMessages,
       };
 
       setChats(prev => {
@@ -672,7 +697,7 @@ export function useChatsForScopeId(scopeId: string) {
     currentChatId,
     isOutboundPending,
     setCurrentChatId: (targetId: string) => setCurrentChatId(scopeId, targetId),
-    newChat: () => newChat(scopeId),
+    newChat: (options?: NewChatOptions) => newChat(scopeId, options),
     addMessage: (
       chatId: string,
       role: MessageRole,

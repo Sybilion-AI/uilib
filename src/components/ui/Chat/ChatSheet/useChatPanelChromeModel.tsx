@@ -86,6 +86,11 @@ export type UseChatPanelChromeModelInput = {
   slashCommandItems?: SlashCommandItem[];
   /** Custom slash command handler (palette pick or Enter on `/id`). */
   onSlashItemCommand?: SlashOnItemCommand;
+  /**
+   * When true, "+ New Chat" in the selector seeds from the current session.
+   * Keyboard shortcut and other new-chat entry points always start empty.
+   */
+  copyHistoryOnNewChat?: boolean;
   /** Override or extend the default send payload (e.g. api vs display text split). */
   transformSendPayload?: (
     message: string,
@@ -125,7 +130,7 @@ type PresetScriptState = {
 };
 
 const SCRIPT_STEP_DELAY_MS = 1200;
-const CHAT_NEW_SHORTCUT_KEY = 'o';
+const CHAT_NEW_SHORTCUT_KEY = '0';
 
 const CHAT_QUERY_PARAM = 'chat';
 const CHAT_OPEN_VALUE = 'open';
@@ -144,6 +149,7 @@ export function useChatPanelChromeModel({
   onAttachmentsDropped,
   slashCommandItems,
   onSlashItemCommand,
+  copyHistoryOnNewChat = false,
   transformSendPayload,
 }: UseChatPanelChromeModelInput): UseChatPanelChromeModelResult {
   const effectiveScopeId = scopeId ?? NO_SCOPE_FALLBACK;
@@ -337,9 +343,44 @@ export function useChatPanelChromeModel({
 
   const isEmpty = isChatEmpty(chat) && !isLoading;
 
+  const startEmptyNewChat = useCallback(() => {
+    const priorChatId = currentChatId;
+    const sessionId = newChat();
+    if (sessionId && priorChatId) {
+      endLocalDemoFlow(priorChatId);
+    }
+    if (sessionId) {
+      setPromptLinkPrefill(null);
+    }
+    return sessionId;
+  }, [newChat, currentChatId, endLocalDemoFlow]);
+
+  const startNewChatFromSelector = useCallback(() => {
+    const priorChatId = currentChatId;
+    const messages = chat?.messages ?? [];
+    const sessionId = newChat(
+      copyHistoryOnNewChat && messages.length > 0
+        ? { seedMessages: messages }
+        : undefined,
+    );
+    if (sessionId && priorChatId) {
+      endLocalDemoFlow(priorChatId);
+    }
+    if (sessionId) {
+      setPromptLinkPrefill(null);
+    }
+    return sessionId;
+  }, [
+    newChat,
+    copyHistoryOnNewChat,
+    chat?.messages,
+    currentChatId,
+    endLocalDemoFlow,
+  ]);
+
   const openNewChatWithPrefill = useCallback(
     (prompt: string) => {
-      const sessionId = newChat();
+      const sessionId = startEmptyNewChat();
       if (sessionId == null) {
         logger.warn('Chat prefill: sign in to use the assistant.');
         return;
@@ -349,7 +390,7 @@ export function useChatPanelChromeModel({
       setPromptLinkPrefill(trimmed || null);
       onOpenChange(true);
     },
-    [newChat, onOpenChange],
+    [startEmptyNewChat, onOpenChange],
   );
 
   /**
@@ -381,7 +422,7 @@ export function useChatPanelChromeModel({
     const needsFirstSession = chats.length === 0;
 
     if (!isEmpty || needsFirstSession) {
-      const sessionId = newChat();
+      const sessionId = startEmptyNewChat();
       if (sessionId == null) {
         logger.warn('Chat prompt link: sign in to use the assistant.');
         mutateSearchParams(n => {
@@ -408,15 +449,15 @@ export function useChatPanelChromeModel({
     callback: (e: Event) => {
       const ke = e as KeyboardEvent;
       if (
-        ke.key.toLowerCase() !== CHAT_NEW_SHORTCUT_KEY ||
+        ke.key !== CHAT_NEW_SHORTCUT_KEY ||
         !(ke.metaKey || ke.ctrlKey) ||
-        !ke.shiftKey ||
+        ke.shiftKey ||
         ke.altKey
       ) {
         return;
       }
       ke.preventDefault();
-      newChat();
+      startEmptyNewChat();
       onOpenChange(true);
     },
   });
@@ -1192,6 +1233,7 @@ export function useChatPanelChromeModel({
     effectiveScopeId,
     onPromptSubmit: onPromptSubmitWithSlashCommands,
     onChatDeleted: endLocalDemoFlow,
+    onNewChat: startNewChatFromSelector,
     promptPrefill: promptLinkPrefill,
     emptyState: resolvedEmptyState,
     allowedAttachments,
@@ -1214,7 +1256,7 @@ export function useChatPanelChromeModel({
     isOpen,
     onOpenChange,
     toggleOpen,
-    newChat,
+    newChat: startEmptyNewChat,
     openNewChatWithPrefill,
     chatPanelContainer,
   };

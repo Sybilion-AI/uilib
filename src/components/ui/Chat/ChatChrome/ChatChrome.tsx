@@ -45,6 +45,7 @@ export function ChatChrome({
   effectiveScopeId,
   onPromptSubmit,
   onChatDeleted,
+  onNewChat,
   promptPrefill,
   footerClassName,
   emptyState,
@@ -174,6 +175,7 @@ export function ChatChrome({
           isEmpty={isEmpty}
           scopeId={effectiveScopeId}
           onChatDeleted={onChatDeleted}
+          onNewChat={onNewChat}
         >
           {isEmpty ? (
             <>

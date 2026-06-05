@@ -9,7 +9,7 @@ import {
 
 export type ChatSheetActions = {
   open: () => void;
-  /** Starts a new chat session and opens the panel (same as the new-chat keyboard shortcut). */
+  /** Starts an empty chat session and opens the panel (same as Cmd/Ctrl+0). */
   openNewChat: () => void;
   /** Starts a new chat, opens the panel, and pre-fills the composer (user sends manually). */
   openNewChatWithPrefill: (prompt: string) => void;

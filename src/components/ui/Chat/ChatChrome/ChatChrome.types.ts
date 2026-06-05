@@ -47,6 +47,8 @@ export interface ChatChromeProps {
     attachments?: ChatAttachmentDropItem[],
   ) => void | Promise<void>;
   onChatDeleted: (sessionId: string) => void;
+  /** "+ New Chat" in the header selector; omit for default empty session. */
+  onNewChat?: () => void;
   /** `?prompt=` deep link text for one-shot composer pre-fill. */
   promptPrefill?: string | null;
   footerClassName?: string;

@@ -127,4 +127,6 @@ export interface ChatProps extends HTMLAttributes<HTMLDivElement> {
   /** Chat context scope; when set, header shows chat selector + delete. */
   scopeId?: string;
   onChatDeleted?: (sessionId: string) => void;
+  /** "+ New Chat" in the selector; when omitted, starts an empty session. */
+  onNewChat?: () => void;
 }
