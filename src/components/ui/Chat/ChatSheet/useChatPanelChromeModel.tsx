@@ -131,7 +131,7 @@ type PresetScriptState = {
 };
 
 const SCRIPT_STEP_DELAY_MS = 1200;
-const CHAT_NEW_SHORTCUT_KEY = '0';
+const CHAT_NEW_SHORTCUT_KEY = 'o';
 
 const CHAT_QUERY_PARAM = 'chat';
 const CHAT_OPEN_VALUE = 'open';
@@ -450,12 +450,13 @@ export function useChatPanelChromeModel({
 
   useEvent({
     event: 'keydown',
+    isCapture: true,
     callback: (e: Event) => {
       const ke = e as KeyboardEvent;
       if (
-        ke.key !== CHAT_NEW_SHORTCUT_KEY ||
+        ke.key.toLowerCase() !== CHAT_NEW_SHORTCUT_KEY ||
         !(ke.metaKey || ke.ctrlKey) ||
-        ke.shiftKey ||
+        !ke.shiftKey ||
         ke.altKey
       ) {
         return;
