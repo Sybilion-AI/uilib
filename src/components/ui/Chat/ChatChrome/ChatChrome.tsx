@@ -118,19 +118,28 @@ export function ChatChrome({
   useEffect(() => {
     if (isEmpty) return;
 
-    const scrollToBottom = () => {
+    const scrollToBottom = (behavior: ScrollBehavior) => {
       const inner = scrollRef.current?.innerElem as HTMLDivElement | undefined;
-      if (inner) {
-        inner.scrollTo({
-          top: inner.scrollHeight + 1000,
-          behavior: 'smooth',
-        });
-      }
+      if (!inner) return;
+      inner.scrollTo({
+        top: inner.scrollHeight + 1000,
+        behavior,
+      });
     };
 
-    const inner = scrollRef.current?.innerElem as HTMLDivElement | undefined;
-    if (inner) setTimeout(scrollToBottom, 100);
-  }, [isEmpty, messages.length]);
+    const behavior: ScrollBehavior = loadingLabel ? 'instant' : 'smooth';
+    const frameId = requestAnimationFrame(() => {
+      requestAnimationFrame(() => scrollToBottom(behavior));
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [
+    isEmpty,
+    messages.length,
+    loadingLabel,
+    showInlinePresets,
+    showSyntheticBranchButtons,
+  ]);
 
   return (
     <div className={S.root}>
@@ -207,6 +216,7 @@ export function ChatChrome({
                       onQuickReply={onQuickReply}
                       suppressedQuickReplyKeys={suppressedQuickReplyKeys}
                       quickReplyDisabled={isLoading}
+                      quickReplyHidden={Boolean(loadingLabel)}
                       isLastMessage={isLast}
                       scriptContinue={
                         isLast && scriptContinueLabel

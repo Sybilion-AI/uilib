@@ -554,8 +554,13 @@ export function useChatPanelChromeModel({
               displayLabel,
             );
           }
-          const assistantResponse = await sendMessage(payload);
-          onMessage?.(displayTextFromSendPayload(payload), assistantResponse);
+          setOutboundLoadingLabel(loadingLabelFromSendPayload(payload));
+          try {
+            const assistantResponse = await sendMessage(payload);
+            onMessage?.(displayTextFromSendPayload(payload), assistantResponse);
+          } finally {
+            setOutboundLoadingLabel(undefined);
+          }
         } catch (error) {
           logger.error('Error sending chat message:', error);
         }
@@ -1176,7 +1181,10 @@ export function useChatPanelChromeModel({
     [lastAssistantQuickPairs, suppressedQuickReplyKeys],
   );
 
+  const hideChatChromeDuringOutboundAction = Boolean(outboundLoadingLabel);
+
   const showSyntheticBranchButtons =
+    !hideChatChromeDuringOutboundAction &&
     lastMsg?.role === MessageRole.ASSISTANT &&
     !linearScriptActive &&
     graphActive &&
@@ -1184,6 +1192,7 @@ export function useChatPanelChromeModel({
     unusedBranchKeys.length > 0;
 
   const showInlinePresets =
+    !hideChatChromeDuringOutboundAction &&
     Boolean(presetsWithFreeform?.length) &&
     lastMsg?.role === MessageRole.ASSISTANT &&
     !linearScriptActive &&

@@ -115,6 +115,8 @@ export interface ChatMessageProps {
   /** Branch keys already taken (e.g. from chat history); hide quick-reply buttons for these. */
   suppressedQuickReplyKeys?: ReadonlySet<string>;
   quickReplyDisabled?: boolean;
+  /** Hide bracket quick-reply buttons (e.g. while a custom outbound status is shown). */
+  quickReplyHidden?: boolean;
   /** When false, bracket quick-replies render as plain text (no button). */
   isLastMessage?: boolean;
   /** Preset script continuation (last message only); not sent to LLM. */

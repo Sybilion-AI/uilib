@@ -17,6 +17,7 @@ export function ChatMessage({
   onQuickReply,
   suppressedQuickReplyKeys,
   quickReplyDisabled,
+  quickReplyHidden,
   isLastMessage = true,
   scriptContinue,
   onScriptContinue,
@@ -40,6 +41,7 @@ export function ChatMessage({
           onQuickReply={onQuickReply}
           suppressedQuickReplyKeys={suppressedQuickReplyKeys}
           quickReplyDisabled={quickReplyDisabled}
+          quickReplyHidden={quickReplyHidden}
           isLastMessage={isLastMessage}
           scriptContinue={scriptContinue}
           onScriptContinue={onScriptContinue}

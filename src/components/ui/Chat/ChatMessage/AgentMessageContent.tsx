@@ -18,6 +18,7 @@ export function AgentMessageContent({
   onQuickReply,
   suppressedQuickReplyKeys,
   quickReplyDisabled,
+  quickReplyHidden,
   isLastMessage = true,
   scriptContinue,
   onScriptContinue,
@@ -27,6 +28,7 @@ export function AgentMessageContent({
   onQuickReply?: (branchKey: string, displayLabel: string) => void;
   suppressedQuickReplyKeys?: ReadonlySet<string>;
   quickReplyDisabled?: boolean;
+  quickReplyHidden?: boolean;
   isLastMessage?: boolean;
   scriptContinue?: { label: string };
   onScriptContinue?: () => void;
@@ -156,7 +158,8 @@ export function AgentMessageContent({
         const branchKey =
           pipeIdx >= 0 ? inner.slice(pipeIdx + 1).trim() : inner;
         if (branchKey && displayLabel) {
-          const suppressed = suppressedQuickReplyKeys?.has(branchKey);
+          const suppressed =
+            quickReplyHidden || suppressedQuickReplyKeys?.has(branchKey);
           if (!suppressed && onQuickReply) {
             result.push(
               <span key={`quick-${match.index}`} className={S.quickReplyWrap}>
@@ -201,6 +204,7 @@ export function AgentMessageContent({
     onQuickReply,
     suppressedQuickReplyKeys,
     quickReplyDisabled,
+    quickReplyHidden,
     isLastMessage,
     renderMessageChart,
   ]);
@@ -212,6 +216,7 @@ export function AgentMessageContent({
     >
       {showRaw ? text : parts}
       {!showRaw &&
+        !quickReplyHidden &&
         isLastMessage &&
         scriptContinue &&
         onScriptContinue &&
