@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.72](https://github.com/Mir-Insight/uilib/compare/v1.3.71...v1.3.72) (2026-06-05)
+
+
+### Bug Fixes
+
+* ChatChrome - bottom gap - count max prompt height ([188bba9](https://github.com/Mir-Insight/uilib/commit/188bba9c699fd9a4bf9cb494d06da14d2bcd4048))
+
 ### [1.3.71](https://github.com/Mir-Insight/uilib/compare/v1.3.70...v1.3.71) (2026-06-05)
 
 
