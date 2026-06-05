@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.76](https://github.com/Mir-Insight/uilib/compare/v1.3.75...v1.3.76) (2026-06-05)
+
+
+### Bug Fixes
+
+* AppShell - header sticky ([b640a46](https://github.com/Mir-Insight/uilib/commit/b640a4659d15ccc1997ce8ad77a767f3db9f8637))
+
 ### [1.3.75](https://github.com/Mir-Insight/uilib/compare/v1.3.74...v1.3.75) (2026-06-05)
 
 
