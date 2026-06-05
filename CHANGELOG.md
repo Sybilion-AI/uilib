@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.74](https://github.com/Mir-Insight/uilib/compare/v1.3.73...v1.3.74) (2026-06-05)
+
+
+### Features
+
+* Chat - Omit user bubble and loading label ([577a078](https://github.com/Mir-Insight/uilib/commit/577a07858d3429fa88fb2f81b51884c1ff9fbc1c))
+
+
+### Bug Fixes
+
+* SybilionAppHeader - Nested app-shell logo positioning ([99777c5](https://github.com/Mir-Insight/uilib/commit/99777c50579a0f8c52ca0150a32e6b50661e7a4d))
+
 ### [1.3.73](https://github.com/Mir-Insight/uilib/compare/v1.3.72...v1.3.73) (2026-06-05)
 
 
