@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.75](https://github.com/Mir-Insight/uilib/compare/v1.3.74...v1.3.75) (2026-06-05)
+
+
+### Bug Fixes
+
+* AppHeader - gap ([c1a4c7e](https://github.com/Mir-Insight/uilib/commit/c1a4c7e2921ba995ab38f7cf5679696ed71c9685))
+
 ### [1.3.74](https://github.com/Mir-Insight/uilib/compare/v1.3.73...v1.3.74) (2026-06-05)
 
 
