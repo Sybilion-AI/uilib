@@ -80,3 +80,10 @@ export function displayTextFromSendPayload(
 ): string {
   return typeof message === 'string' ? message : message.displayText;
 }
+
+/** Optional loading shimmer label from a structured send payload. */
+export function loadingLabelFromSendPayload(
+  message: string | ChatSendMessagePayload,
+): string | undefined {
+  return typeof message === 'string' ? undefined : message.loadingLabel;
+}

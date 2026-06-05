@@ -30,10 +30,22 @@ export function DocsShell() {
             onNavigate={href => {
               void navigate(href);
             }}
-            authenticated={false}
+            authenticated
             isAuthenticated={false}
             onLogout={() => undefined}
             signInSlot={<ThemeToggle />}
+            defaultApps={[
+              {
+                id: 'docs-home',
+                displayName: 'Home',
+                subtitle: 'Home',
+                iconKey: 'grid-four',
+                accent: '#0d9488',
+                accentMuted: 'rgba(13, 148, 136, 0.12)',
+                href: '/',
+                matchPathPrefixes: ['/'],
+              },
+            ]}
           />
           <Outlet />
         </AppShellMainContent>

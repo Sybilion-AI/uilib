@@ -22,6 +22,7 @@ import type { ChatPresetsLayout } from '#uilib/components/ui/Chat/ChatPresets';
 import {
   buildChatSendMessagePayload,
   displayTextFromSendPayload,
+  loadingLabelFromSendPayload,
 } from '#uilib/components/ui/Chat/buildChatSendMessagePayload';
 import { usedPresetIdsFromMessages } from '#uilib/components/ui/Chat/chat-preset-utils';
 import {
@@ -166,6 +167,9 @@ export function useChatPanelChromeModel({
     setChatPanelOpen,
   } = useSidebar();
   const [localUiBusy, setLocalUiBusy] = useState(false);
+  const [outboundLoadingLabel, setOutboundLoadingLabel] = useState<
+    string | undefined
+  >();
   const {
     chats,
     currentChatId,
@@ -708,8 +712,13 @@ export function useChatPanelChromeModel({
             payload,
           );
         }
-        const assistantResponse = await sendMessage(payload);
-        onMessage?.(displayTextFromSendPayload(payload), assistantResponse);
+        setOutboundLoadingLabel(loadingLabelFromSendPayload(payload));
+        try {
+          const assistantResponse = await sendMessage(payload);
+          onMessage?.(displayTextFromSendPayload(payload), assistantResponse);
+        } finally {
+          setOutboundLoadingLabel(undefined);
+        }
       } catch (error) {
         logger.error('Error sending chat message:', error);
       }
@@ -1222,6 +1231,7 @@ export function useChatPanelChromeModel({
     onQuickReply,
     suppressedQuickReplyKeys,
     isLoading,
+    loadingLabel: outboundLoadingLabel,
     scriptContinueLabel,
     onScriptContinue,
     renderMessageChart,

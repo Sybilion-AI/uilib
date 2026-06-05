@@ -25,6 +25,10 @@ export type ChatSendMessagePayload = {
   apiMessage: string;
   displayText: string;
   userTextFileAttachments?: UserTextFileAttachment[];
+  /** When true, skip adding a USER bubble before the API call (e.g. slash-command actions). */
+  omitUserMessage?: boolean;
+  /** Shimmer label while waiting on the API; defaults to "Thinking...". */
+  loadingLabel?: string;
 };
 
 export interface Message {

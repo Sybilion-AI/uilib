@@ -33,6 +33,8 @@ export interface ChatChromeProps {
   onQuickReply: (branchKey: string, displayLabel: string) => void;
   suppressedQuickReplyKeys: ReadonlySet<string>;
   isLoading: boolean;
+  /** Overrides default "Thinking..." shimmer while waiting on the API. */
+  loadingLabel?: string;
   scriptContinueLabel: string | undefined;
   onScriptContinue: (() => void) | undefined;
   renderMessageChart?: () => React.ReactNode;

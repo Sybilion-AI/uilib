@@ -34,6 +34,7 @@ export function ChatChrome({
   onQuickReply,
   suppressedQuickReplyKeys,
   isLoading,
+  loadingLabel,
   scriptContinueLabel,
   onScriptContinue,
   renderMessageChart,
@@ -248,9 +249,9 @@ export function ChatChrome({
 
                 {showInlinePresets && renderPresets('inline')}
 
-                {isLoading && isLastMessageFromUser && (
+                {isLoading && (isLastMessageFromUser || loadingLabel) && (
                   <TextShimmer duration={1} spread={5} className={S.loader}>
-                    Thinking...
+                    {loadingLabel ?? 'Thinking...'}
                   </TextShimmer>
                 )}
               </Scroll>

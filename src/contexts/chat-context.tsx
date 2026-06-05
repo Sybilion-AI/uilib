@@ -494,7 +494,7 @@ export function ChatProvider({
 
       if (typeof message === 'string') {
         addMessage(scopeId, targetChatId, MessageRole.USER, message);
-      } else {
+      } else if (!message.omitUserMessage) {
         addMessage(
           scopeId,
           targetChatId,

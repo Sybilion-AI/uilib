@@ -135,11 +135,8 @@ function StandaloneLayoutPreview() {
         sidebarWidthStorageKey="uilib.docs.standaloneLayout.sidebarWidthPx"
         persistSidebarWidthWithoutConsent
       >
-        <PageScroll
-          rootClassName={S.previewScrollRoot}
-          className={S.previewScrollInner}
-        >
-          <AppShell className={S.previewShell}>
+        <PageScroll rootClassName={S.previewScrollRoot}>
+          <AppShell>
             <DemoAppSidebar
               panel={panel}
               onSelectPanel={setPanel}
@@ -148,14 +145,7 @@ function StandaloneLayoutPreview() {
             />
 
             <AppShellMainContent
-              className={S.previewMainColumn}
-              header={
-                <AppHeaderHost
-                  sticky
-                  anchorId={TEST_HEADER_ID}
-                  className={S.previewHeaderHost}
-                />
-              }
+              header={<AppHeaderHost sticky anchorId={TEST_HEADER_ID} />}
               footer={
                 <PageFooter
                   versionLink="#standalone-layout-preview"
@@ -170,7 +160,6 @@ function StandaloneLayoutPreview() {
                 authenticated
                 appsStorageKey={DOCS_WORKSPACE_APPS_LS_KEY}
                 defaultApps={DOCS_PREVIEW_APPS}
-                logoAreaClassName={S.previewLogoArea}
                 user={{
                   name: 'Example User',
                   email: 'user@example.com',
