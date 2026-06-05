@@ -9,13 +9,25 @@ export type AppHeaderProps = {
   className?: string;
   /** Override default anchor id when multiple headers exist (e.g. docs demos). */
   anchorId?: string;
+  /**
+   * Pins the host to the top of its scroll container (`position: sticky; top: 0`).
+   * Use with `PageScroll` or any ancestor that scrolls; portaled header content
+   * from `AppHeaderPortal` / `SybilionAppHeader` stays inside this element.
+   */
+  sticky?: boolean;
 };
 
 export function AppHeaderHost({
   className,
   anchorId = PAGE_HEADER_ID,
+  sticky,
 }: AppHeaderProps) {
-  return <header className={cn(S.root, className)} id={anchorId} />;
+  return (
+    <header
+      className={cn(S.root, sticky && S.sticky, className)}
+      id={anchorId}
+    />
+  );
 }
 
 export type AppHeaderPortalProps = {

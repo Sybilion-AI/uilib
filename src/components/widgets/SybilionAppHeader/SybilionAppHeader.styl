@@ -27,15 +27,27 @@
 
   @media (max-width MOBILE)
     left 32px
+
+  // Top-level shell: offset logo into sidebar column (same math as nested embed, but absolute — not fixed).
   @media (min-width MOBILE)
-    :global([data-slot='sidebar-wrapper'][data-state='expanded']) &
-      position fixed
+    :global([data-slot='sidebar-wrapper'][data-state='expanded']:not([data-slot='app-shell'] [data-slot='sidebar-wrapper']) [data-slot='app-shell']:not([data-slot='app-shell'] [data-slot='app-shell'])) &:global(:not([data-slot='app-shell'] [data-slot='app-shell'] *))
+      position absolute
+      left calc(-1 * var(--sidebar-width) + 52px)
+
+    // Nested shell (e.g. docs embed): absolute within header; offset into sidebar when expanded.
+    :global([data-slot='app-shell'] [data-slot='sidebar-wrapper'][data-state='expanded'] [data-slot='app-shell']) &
+      position absolute
+      left calc(-1 * var(--sidebar-width) + 44px)
+
+    :global([data-slot='app-shell'] [data-slot='sidebar-wrapper'][data-state='collapsed'] [data-slot='app-shell']) &
+      position absolute
+      left var(--p-8)
 
 .logoAreaWithBanner
   top calc(22px + var(--welcome-banner-height, 0px))
 
   @media (min-width MOBILE)
-    :global([data-slot='sidebar-wrapper'][data-state='collapsed']) &
+    :global([data-slot='sidebar-wrapper'][data-state='collapsed']:not([data-slot='app-shell'] [data-slot='sidebar-wrapper']) [data-slot='app-shell']:not([data-slot='app-shell'] [data-slot='app-shell'])) &
       top 22px
 
 .logoLink

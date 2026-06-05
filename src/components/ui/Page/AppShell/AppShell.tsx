@@ -33,6 +33,13 @@ export function AppShellMainContent({
 
 export const AppShell = forwardRef<HTMLDivElement, AppShellProps>(
   function AppShell({ className, ...props }, ref) {
-    return <div ref={ref} className={cn(S.root, className)} {...props} />;
+    return (
+      <div
+        ref={ref}
+        data-slot="app-shell"
+        className={cn(S.root, className)}
+        {...props}
+      />
+    );
   },
 );

@@ -113,7 +113,7 @@ function DemoMainBody({ panel }: { panel: PreviewPanel }) {
         </PageContentSection>
         <PageContentSection title="Scroll test">
           <div className={S.scrollTestBlock}>
-            Placeholder region with <code>min-height: 100vh</code> — scroll the
+            Placeholder region with <code>min-height: 160vh</code> — scroll the
             main column to verify PageScroll / AppShell behavior.
           </div>
         </PageContentSection>
@@ -130,55 +130,71 @@ function StandaloneLayoutPreview() {
   >();
 
   return (
-    <div className={S.preview}>
-      <PageScroll rootClassName={S.previewScrollRoot}>
-        <AppShell>
-          <DemoAppSidebar
-            panel={panel}
-            onSelectPanel={setPanel}
-            selectedDatasetId={selectedDatasetId}
-            onSelectDatasetId={setSelectedDatasetId}
-          />
-
-          <AppShellMainContent
-            header={<AppHeaderHost anchorId={TEST_HEADER_ID} />}
-            footer={
-              <PageFooter
-                versionLink="#standalone-layout-preview"
-                versionLabel="0.0.0-preview"
-              />
-            }
-          >
-            <SybilionAppHeader
-              pageHeaderId={TEST_HEADER_ID}
-              pathname={previewPath}
-              onNavigate={setPreviewPath}
-              authenticated
-              appsStorageKey={DOCS_WORKSPACE_APPS_LS_KEY}
-              defaultApps={DOCS_PREVIEW_APPS}
-              user={{
-                name: 'Example User',
-                email: 'user@example.com',
-                avatar: '',
-              }}
-              onLogout={() => undefined}
-              menuItems={
-                <>
-                  <DropdownMenuItem>
-                    <UserCircleIcon />
-                    Account (preview)
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <GearSixIcon />
-                    Settings (preview)
-                  </DropdownMenuItem>
-                </>
-              }
+    <div className={S.preview} data-standalone-layout-preview>
+      <SidebarProvider
+        sidebarWidthStorageKey="uilib.docs.standaloneLayout.sidebarWidthPx"
+        persistSidebarWidthWithoutConsent
+      >
+        <PageScroll
+          rootClassName={S.previewScrollRoot}
+          className={S.previewScrollInner}
+        >
+          <AppShell className={S.previewShell}>
+            <DemoAppSidebar
+              panel={panel}
+              onSelectPanel={setPanel}
+              selectedDatasetId={selectedDatasetId}
+              onSelectDatasetId={setSelectedDatasetId}
             />
-            <DemoMainBody panel={panel} />
-          </AppShellMainContent>
-        </AppShell>
-      </PageScroll>
+
+            <AppShellMainContent
+              className={S.previewMainColumn}
+              header={
+                <AppHeaderHost
+                  sticky
+                  anchorId={TEST_HEADER_ID}
+                  className={S.previewHeaderHost}
+                />
+              }
+              footer={
+                <PageFooter
+                  versionLink="#standalone-layout-preview"
+                  versionLabel="0.0.0-preview"
+                />
+              }
+            >
+              <SybilionAppHeader
+                pageHeaderId={TEST_HEADER_ID}
+                pathname={previewPath}
+                onNavigate={setPreviewPath}
+                authenticated
+                appsStorageKey={DOCS_WORKSPACE_APPS_LS_KEY}
+                defaultApps={DOCS_PREVIEW_APPS}
+                logoAreaClassName={S.previewLogoArea}
+                user={{
+                  name: 'Example User',
+                  email: 'user@example.com',
+                  avatar: '',
+                }}
+                onLogout={() => undefined}
+                menuItems={
+                  <>
+                    <DropdownMenuItem>
+                      <UserCircleIcon />
+                      Account (preview)
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <GearSixIcon />
+                      Settings (preview)
+                    </DropdownMenuItem>
+                  </>
+                }
+              />
+              <DemoMainBody panel={panel} />
+            </AppShellMainContent>
+          </AppShell>
+        </PageScroll>
+      </SidebarProvider>
     </div>
   );
 }
@@ -199,12 +215,7 @@ export default function StandaloneAppLayoutPage() {
         actions={<DocsHeaderActions />}
       />
       <PageContentSection title="Embedded mini-app (layout preview)">
-        <SidebarProvider
-          sidebarWidthStorageKey="uilib.docs.standaloneLayout.sidebarWidthPx"
-          persistSidebarWidthWithoutConsent
-        >
-          <StandaloneLayoutPreview />
-        </SidebarProvider>
+        <StandaloneLayoutPreview />
       </PageContentSection>
     </>
   );

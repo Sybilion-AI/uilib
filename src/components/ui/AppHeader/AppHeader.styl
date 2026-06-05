@@ -1,6 +1,7 @@
 @import '../../../lib/theme.styl'
 
 .root
+  position relative
   display flex
   align-items center
   align-self flex-end
@@ -19,6 +20,14 @@
     :global([data-slot='sidebar-wrapper'][data-state='collapsed']) &
       padding-left 200px
       max-width 100%
+
+.sticky
+  z-index 100
+  position sticky
+  top 0
+  background-color unquote('color-mix(in srgb, var(--background) 80%, transparent)')
+  backdrop-filter blur(10px)
+  box-shadow inset 0 40px 50px 20px var(--background)
 
 .content
   display flex
