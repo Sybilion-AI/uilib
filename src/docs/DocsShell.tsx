@@ -20,7 +20,7 @@ export function DocsShell() {
         <DocsSidebar />
 
         <AppShellMainContent
-          header={<AppHeaderHost />}
+          header={<AppHeaderHost sticky />}
           footer={
             <PageFooter versionLink="/releases" versionLabel="1.0.0-docs" />
           }
