@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.70](https://github.com/Mir-Insight/uilib/compare/v1.3.68...v1.3.70) (2026-06-05)
+
+
+### Features
+
+* ChatPrompt - Prefill focus + docs ([4d3efdb](https://github.com/Mir-Insight/uilib/commit/4d3efdbab4f76b125e54a7d5a3b7d5ef6a5fa791))
+
+
+### Bug Fixes
+
+* SybilionAppHeader - split page actions portal ([3b6bc2d](https://github.com/Mir-Insight/uilib/commit/3b6bc2d92a59dd08123588e5fa11978974b54f51))
+
 ### [1.3.68](https://github.com/Mir-Insight/uilib/compare/v1.3.66...v1.3.68) (2026-06-03)
 
 
