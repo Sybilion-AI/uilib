@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.73](https://github.com/Mir-Insight/uilib/compare/v1.3.72...v1.3.73) (2026-06-05)
+
+
+### Features
+
+* ChatSelector - Custom new-chat flow ([7fd84b8](https://github.com/Mir-Insight/uilib/commit/7fd84b845fa22b8c9d495ee6e28cb4cf90bf99a9))
+
 ### [1.3.72](https://github.com/Mir-Insight/uilib/compare/v1.3.71...v1.3.72) (2026-06-05)
 
 
