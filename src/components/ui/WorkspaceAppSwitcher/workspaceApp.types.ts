@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { WorkspaceAppIconKey } from './workspaceAppIcons';
 
 /** Path segment for slug apps: pathname matches `/apps/{id}` */
@@ -9,7 +11,10 @@ export type WorkspaceAppEntry = {
   id: string;
   displayName: string;
   subtitle: string;
-  iconKey: WorkspaceAppIconKey;
+  /** Custom icon for display; not persisted to localStorage. */
+  icon?: ReactNode;
+  /** Built-in icon lookup when `icon` is omitted (required for localStorage entries). */
+  iconKey?: WorkspaceAppIconKey;
   accent: string;
   accentMuted: string;
   href: string;

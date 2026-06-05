@@ -74,10 +74,11 @@ export function Renamer({
     setIsRenaming(true);
   }, [value]);
 
-  const sizeMap = {
+  const inputSizeMap = {
     sm: 'sm' as const,
     md: 'md' as const,
-    lg: 'lg' as const,
+    // lg typography comes from Renamer `.size-lg`; avoid Input size-lg (text-base).
+    lg: 'md' as const,
   };
 
   const buttonSizeMap = {
@@ -88,7 +89,7 @@ export function Renamer({
 
   return (
     <div
-      className={cn(S.root, !value && S.empty, className)}
+      className={cn(S.root, S[`size-${size}`], !value && S.empty, className)}
       onKeyDown={onKeyDown}
     >
       {isRenaming ? (
@@ -96,7 +97,7 @@ export function Renamer({
           className={S.input}
           autoFocus={!isMobile}
           variant="clean"
-          size={sizeMap[size]}
+          size={inputSizeMap[size]}
           placeholder={placeholder}
           value={name}
           onChange={handleInputChange}

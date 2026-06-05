@@ -59,9 +59,17 @@
 
 .icon
   z-index 1
+  display flex
+  align-items center
+  justify-content center
   width 22px !important
   height 22px !important
   color var(--fg-color) !important
+
+  :global(svg)
+    width 22px !important
+    height 22px !important
+    color var(--fg-color) !important
 
 .textCol
   display flex

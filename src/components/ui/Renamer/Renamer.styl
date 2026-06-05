@@ -5,12 +5,28 @@
 .value
   padding-right var(--p-2)
 
-.input
-  label
-    font-size 18px !important
-    border-radius var(--p-2) !important
+// Matches PageHeader .title h1 typography (page title context).
+.size-lg.root
+  .value
+    font-family var(--font-family-heading)
+    font-weight 300
+    font-size var(--text-2xl)
+    line-height var(--text-2xl)
+    color var(--foreground)
 
-.empty .input label
+  .input
+    font-family var(--font-family-heading)
+    font-weight 300
+    font-size var(--text-2xl)
+    line-height var(--text-2xl)
+    color var(--foreground)
+    height auto
+    min-height var(--text-2xl)
+    padding 4px 12px 4px 0
+    border-radius var(--p-4)
+    box-shadow 0 0 0 1px var(--border)
+
+.empty.size-lg.root .input
   background-color var(--accent) / 0.1
 
 .button

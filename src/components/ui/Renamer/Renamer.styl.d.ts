@@ -5,6 +5,7 @@ interface CssExports {
   'empty': string;
   'input': string;
   'root': string;
+  'size-lg': string;
   'value': string;
 }
 export const cssExports: CssExports;

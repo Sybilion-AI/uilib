@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 
 import { Button } from '#uilib/components/ui/Button/Button';
@@ -32,16 +32,37 @@ function entryKey(entry: WorkspaceAppEntry): string {
   return entry.id;
 }
 
+function renderIconContent(
+  icon: ReactNode | undefined,
+  iconKey: WorkspaceAppEntry['iconKey'],
+): ReactNode {
+  if (icon != null) {
+    return (
+      <span className={S.icon} aria-hidden>
+        {icon}
+      </span>
+    );
+  }
+  if (iconKey != null) {
+    const IconComponent = WORKSPACE_APP_ICONS[iconKey];
+    if (IconComponent) {
+      return <IconComponent className={S.icon} aria-hidden />;
+    }
+  }
+  return null;
+}
+
 function IconTile({
+  icon,
   iconKey,
   accentMuted,
   accent,
 }: {
-  iconKey: WorkspaceAppEntry['iconKey'];
+  icon?: ReactNode;
+  iconKey?: WorkspaceAppEntry['iconKey'];
   accentMuted: string;
   accent: string;
 }) {
-  const IconComponent = WORKSPACE_APP_ICONS[iconKey];
   return (
     <span
       className={S.iconTile}
@@ -52,7 +73,7 @@ function IconTile({
         } as CSSProperties
       }
     >
-      <IconComponent className={S.icon} aria-hidden />
+      {renderIconContent(icon, iconKey)}
     </span>
   );
 }
@@ -116,6 +137,7 @@ export function WorkspaceAppSwitcher({
           aria-label="Select workspace app"
         >
           <IconTile
+            icon={displayApp.icon}
             iconKey={displayApp.iconKey}
             accentMuted={displayApp.accentMuted}
             accent={displayApp.accent}
@@ -146,6 +168,7 @@ export function WorkspaceAppSwitcher({
               }}
             >
               <IconTile
+                icon={entry.icon}
                 iconKey={entry.iconKey}
                 accentMuted={entry.accentMuted}
                 accent={entry.accent}
