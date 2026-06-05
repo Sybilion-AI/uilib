@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.77](https://github.com/Mir-Insight/uilib/compare/v1.3.76...v1.3.77) (2026-06-05)
+
+
+### Bug Fixes
+
+* ChatChrome - Generate dashboard loading UX ([c91ac44](https://github.com/Mir-Insight/uilib/commit/c91ac444358f4f7ff61e378a31e362d56754d1db))
+* ChatSheet - Cmd+Shift+O new chat shortcut ([c24ed63](https://github.com/Mir-Insight/uilib/commit/c24ed63e6c8bd0d37dfc61b83f24083165fbb4a7))
+
 ### [1.3.76](https://github.com/Mir-Insight/uilib/compare/v1.3.75...v1.3.76) (2026-06-05)
 
 
