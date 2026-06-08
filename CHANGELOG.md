@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.78](https://github.com/Mir-Insight/uilib/compare/v1.3.77...v1.3.78) (2026-06-08)
+
+
+### Bug Fixes
+
+* ChatMessage - quickReplyWrap on new line ([493f2a1](https://github.com/Mir-Insight/uilib/commit/493f2a17a1c06084aafe998e06a521e42ba67ee6))
+
 ### [1.3.77](https://github.com/Mir-Insight/uilib/compare/v1.3.76...v1.3.77) (2026-06-05)
 
 
