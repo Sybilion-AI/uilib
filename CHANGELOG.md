@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.81](https://github.com/Mir-Insight/uilib/compare/v1.3.80...v1.3.81) (2026-06-08)
+
+
+### Bug Fixes
+
+* Chat - Safe localStorage chat persistence ([f7a2e2e](https://github.com/Mir-Insight/uilib/commit/f7a2e2e5cdbb8854e98cc1b2eff2e94ecd2b1a18))
+
 ### [1.3.80](https://github.com/Mir-Insight/uilib/compare/v1.3.79...v1.3.80) (2026-06-08)
 
 
