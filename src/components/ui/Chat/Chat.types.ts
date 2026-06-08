@@ -29,6 +29,8 @@ export type ChatSendMessagePayload = {
   omitUserMessage?: boolean;
   /** Shimmer label while waiting on the API; defaults to "Thinking...". */
   loadingLabel?: string;
+  /** When set, show as a SYSTEM inProgress bubble instead of the footer shimmer. */
+  systemProgressLabel?: string;
 };
 
 export type ChatMetaValue = string | number | boolean | null;

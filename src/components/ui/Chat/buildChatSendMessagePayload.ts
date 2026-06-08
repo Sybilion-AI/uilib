@@ -85,5 +85,6 @@ export function displayTextFromSendPayload(
 export function loadingLabelFromSendPayload(
   message: string | ChatSendMessagePayload,
 ): string | undefined {
-  return typeof message === 'string' ? undefined : message.loadingLabel;
+  if (typeof message === 'string') return undefined;
+  return message.loadingLabel ?? message.systemProgressLabel;
 }

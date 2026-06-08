@@ -546,12 +546,24 @@ export function ChatProvider({
         );
       }
 
+      let progressMessageId: string | undefined;
+      if (typeof message !== 'string' && message.systemProgressLabel) {
+        progressMessageId = addMessage(
+          scopeId,
+          targetChatId,
+          MessageRole.SYSTEM,
+          message.systemProgressLabel,
+          { inProgress: true },
+        );
+      }
+
       const pendingChatSessionId = targetChatId;
       beginOutboundPending(scopeId, pendingChatSessionId);
+      let effectiveSessionId = pendingChatSessionId;
       try {
         const data = await sendChatMessageFn(apiPayload, pendingChatSessionId);
 
-        const effectiveSessionId =
+        effectiveSessionId =
           data.session_id && data.session_id !== pendingChatSessionId
             ? data.session_id
             : pendingChatSessionId;
@@ -573,6 +585,11 @@ export function ChatProvider({
           setCurrentChatId(scopeId, data.session_id);
         }
 
+        if (progressMessageId) {
+          removeMessageById(scopeId, effectiveSessionId, progressMessageId);
+          progressMessageId = undefined;
+        }
+
         addMessage(
           scopeId,
           effectiveSessionId,
@@ -582,6 +599,10 @@ export function ChatProvider({
 
         return { response: data.response, sessionId: effectiveSessionId };
       } catch (error) {
+        if (progressMessageId) {
+          removeMessageById(scopeId, effectiveSessionId, progressMessageId);
+        }
+
         const errorMessage =
           error instanceof Error
             ? error.message
@@ -589,7 +610,7 @@ export function ChatProvider({
 
         addMessage(
           scopeId,
-          pendingChatSessionId,
+          effectiveSessionId,
           MessageRole.ASSISTANT,
           errorMessage,
         );
@@ -600,6 +621,7 @@ export function ChatProvider({
     },
     [
       addMessage,
+      removeMessageById,
       beginOutboundPending,
       endOutboundPending,
       getCurrentChatId,

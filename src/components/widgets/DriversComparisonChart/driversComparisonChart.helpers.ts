@@ -125,13 +125,14 @@ export function applyDriversComparisonViewToPayload(
   tab: DriversComparisonViewTab,
 ): BacktestsComponentPayload | null {
   if (!payload || tab === 'lagged') return payload;
+  if (!payload.target?.normalized_series) return payload;
 
   return {
     target: {
       ...payload.target,
       normalized_series: { ...payload.target.normalized_series },
     },
-    drivers: payload.drivers.map(driver => {
+    drivers: (payload.drivers ?? []).map(driver => {
       const lagMonths = parseLagMonthsFromLabel(resolveDriverLagLabel(driver));
       const series = driver.normalized_series ?? {};
       const normalized_series =

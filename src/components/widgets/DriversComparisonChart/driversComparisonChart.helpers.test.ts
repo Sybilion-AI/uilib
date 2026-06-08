@@ -127,7 +127,16 @@ describe('applyDriversComparisonViewToPayload', () => {
   };
 
   it('returns original payload for lagged tab', () => {
-    expect(applyDriversComparisonViewToPayload(payload, 'lagged')).toBe(payload);
+    expect(applyDriversComparisonViewToPayload(payload, 'lagged')).toBe(
+      payload,
+    );
+  });
+
+  it('returns original payload for overlapped tab when target series missing', () => {
+    const incomplete = { drivers: payload.drivers } as typeof payload;
+    expect(applyDriversComparisonViewToPayload(incomplete, 'overlapped')).toBe(
+      incomplete,
+    );
   });
 
   it('shifts driver series backward for overlapped tab without mutating source', () => {
@@ -327,8 +336,8 @@ describe('buildDriversComparisonChartData historical window floor', () => {
 
     expect(laggedChart[0]?.date).toBe('2014-10-01');
     expect(overlappedChart[0]?.date).toBe('2014-07-01');
-    expect(
-      overlappedChart[0]?.date!.localeCompare(laggedChart[0]?.date!),
-    ).toBe(-1);
+    expect(overlappedChart[0]?.date!.localeCompare(laggedChart[0]?.date!)).toBe(
+      -1,
+    );
   });
 });

@@ -14,7 +14,7 @@ import { DropZone } from '../../DropZone/DropZone';
 import { PanelResizeHandle } from '../../Sidebar/Sidebar';
 import SidebarStem from '../../Sidebar/Sidebar.styl';
 import { Chat } from '../Chat';
-import type { ChatAttachmentDropItem } from '../Chat.types';
+import { type ChatAttachmentDropItem, MessageRole } from '../Chat.types';
 import {
   buildAcceptAttr,
   filterToTextAttachments,
@@ -76,6 +76,13 @@ export function ChatChrome({
   >([]);
   const [isExtractingAttachments, setIsExtractingAttachments] = useState(false);
   const promptDisabled = isExtractingAttachments;
+  const hasInProgressSystemMessage = useMemo(
+    () =>
+      messages.some(
+        msg => msg.role === MessageRole.SYSTEM && msg.inProgress === true,
+      ),
+    [messages],
+  );
 
   const handleAttachmentFiles = useCallback(
     (files: File[]) => {
@@ -263,11 +270,13 @@ export function ChatChrome({
 
                 {showInlinePresets && renderPresets('inline')}
 
-                {isLoading && (isLastMessageFromUser || loadingLabel) && (
-                  <TextShimmer duration={1} spread={5} className={S.loader}>
-                    {loadingLabel ?? 'Thinking...'}
-                  </TextShimmer>
-                )}
+                {isLoading &&
+                  !hasInProgressSystemMessage &&
+                  (isLastMessageFromUser || loadingLabel) && (
+                    <TextShimmer duration={1} spread={5} className={S.loader}>
+                      {loadingLabel ?? 'Thinking...'}
+                    </TextShimmer>
+                  )}
               </Scroll>
             </div>
           )}
