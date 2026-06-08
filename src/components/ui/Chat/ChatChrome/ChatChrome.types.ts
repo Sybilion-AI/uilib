@@ -2,6 +2,8 @@ import type { RefObject } from 'react';
 
 import type {
   ChatAttachmentDropItem,
+  ChatMessageClassNames,
+  ChatMessageTextClassNames,
   Message,
 } from '#uilib/components/ui/Chat/Chat.types';
 import type { ChatEmptyStateProps } from '#uilib/components/ui/Chat/ChatEmptyState/ChatEmptyState.types';
@@ -66,6 +68,10 @@ export interface ChatChromeProps {
   /** `?prompt=` deep link text for one-shot composer pre-fill. */
   promptPrefill?: string | null;
   footerClassName?: string;
+  /** Per-role extra classes on message root wrappers (merged with built-in role styles). */
+  messageClassNames?: ChatMessageClassNames;
+  /** Per-role extra classes on inner text bubbles (merged with built-in `.text` styles). */
+  messageTextClassNames?: ChatMessageTextClassNames;
   emptyState?: ChatEmptyStateProps;
   /** MIME types / extensions (filtered to text-only allowlist). Enables dropzone when non-empty. */
   allowedAttachments?: readonly string[];

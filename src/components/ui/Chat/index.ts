@@ -48,9 +48,12 @@ export type {
 export type {
   Chat as ChatType,
   ChatAttachmentDropItem,
+  ChatMessageClassNames,
+  ChatMessageTextClassNames,
   ChatMeta,
   ChatMetaValue,
   ChatSendMessagePayload,
+  ChatMessageProps,
   ChatProps,
   ChatPreset as ChatPresetType,
   Message,

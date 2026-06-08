@@ -51,6 +51,8 @@ export function ChatChrome({
   onNewChat,
   promptPrefill,
   footerClassName,
+  messageClassNames,
+  messageTextClassNames,
   emptyState,
   allowedAttachments,
   allowPdfAttachments = false,
@@ -219,10 +221,27 @@ export function ChatChrome({
               >
                 {messages.map((msg, index, arr) => {
                   const isLast = index === arr.length - 1;
+                  const messageClassName = messageClassNames
+                    ? {
+                        [MessageRole.USER]: messageClassNames.user,
+                        [MessageRole.ASSISTANT]: messageClassNames.assistant,
+                        [MessageRole.SYSTEM]: messageClassNames.system,
+                      }[msg.role]
+                    : undefined;
+                  const messageTextClassName = messageTextClassNames
+                    ? {
+                        [MessageRole.USER]: messageTextClassNames.user,
+                        [MessageRole.ASSISTANT]:
+                          messageTextClassNames.assistant,
+                        [MessageRole.SYSTEM]: messageTextClassNames.system,
+                      }[msg.role]
+                    : undefined;
                   return (
                     <Chat.Message
                       key={msg.id}
                       message={msg}
+                      className={messageClassName}
+                      textClassName={messageTextClassName}
                       role={msg.role}
                       text={msg.text}
                       inProgress={msg.inProgress}
@@ -272,8 +291,7 @@ export function ChatChrome({
                   </div>
                 ) : null}
 
-                {showInlinePresets &&
-                  renderPresets('inline', { variant })}
+                {showInlinePresets && renderPresets('inline', { variant })}
 
                 {isLoading &&
                   !hasInProgressSystemMessage &&
@@ -298,7 +316,9 @@ export function ChatChrome({
             </div>
           ) : null}
 
-          <div className={cn(S.footer, isClean && S.footerClean, footerClassName)}>
+          <div
+            className={cn(S.footer, isClean && S.footerClean, footerClassName)}
+          >
             <Chat.Prompt
               className={isClean ? S.promptClean : undefined}
               onSubmit={handlePromptSubmitWithAttachments}

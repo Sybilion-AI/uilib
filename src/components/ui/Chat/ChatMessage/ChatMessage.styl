@@ -39,7 +39,6 @@
   .text
     padding var(--p-3) var(--p-4)
 
-    background-color var(--sb-slate-100)
     border-radius var(--p-4)
     border-bottom-right-radius 0
 
@@ -47,8 +46,11 @@
     overflow hidden
     box-sizing border-box
 
-    :global(.dark) &
-      background-color var(--sb-gray-900)
+    &:not(.textCustom)
+      background-color var(--sb-slate-100)
+
+      :global(.dark) &
+        background-color var(--sb-gray-900)
 
 .role-system
   align-items center

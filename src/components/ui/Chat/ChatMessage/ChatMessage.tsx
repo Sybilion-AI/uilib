@@ -24,6 +24,8 @@ export function ChatMessage({
   renderMessageChart,
   message,
   renderSystemMessage,
+  className,
+  textClassName,
 }: ChatMessageProps) {
   const fileAttachments = userTextFileAttachmentsFromMessage({
     userTextFileAttachments,
@@ -32,9 +34,9 @@ export function ChatMessage({
   const isSystem = role === MessageRole.SYSTEM;
 
   return (
-    <div className={cn(S.root, S[`role-${role}`])}>
+    <div className={cn(S.root, S[`role-${role}`], className)}>
       {isSystem ? (
-        <div className={S.text}>
+        <div className={cn(S.text, textClassName)}>
           {inProgress ? (
             <TextShimmer as="span">{text}</TextShimmer>
           ) : renderSystemMessage && message ? (
@@ -46,6 +48,7 @@ export function ChatMessage({
       ) : isAssistant ? (
         <AgentMessageContent
           text={text}
+          textClassName={textClassName}
           onQuickReply={onQuickReply}
           suppressedQuickReplyKeys={suppressedQuickReplyKeys}
           quickReplyDisabled={quickReplyDisabled}
@@ -57,7 +60,9 @@ export function ChatMessage({
         />
       ) : (
         <div className={S.userColumn}>
-          <div className={S.text}>
+          <div
+            className={cn(S.text, textClassName && S.textCustom, textClassName)}
+          >
             <InteractiveContent text={text} />
           </div>
           {fileAttachments.map(attachment => (

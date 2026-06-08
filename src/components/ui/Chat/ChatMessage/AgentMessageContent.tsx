@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import { type ReactNode, useMemo, useState } from 'react';
 
 import { Button } from '#uilib/components/ui/Button';
@@ -15,6 +16,7 @@ import { XlsIcon } from './icons/XlsIcon';
 
 export function AgentMessageContent({
   text,
+  textClassName,
   onQuickReply,
   suppressedQuickReplyKeys,
   quickReplyDisabled,
@@ -25,6 +27,7 @@ export function AgentMessageContent({
   renderMessageChart,
 }: {
   text: string;
+  textClassName?: string;
   onQuickReply?: (branchKey: string, displayLabel: string) => void;
   suppressedQuickReplyKeys?: ReadonlySet<string>;
   quickReplyDisabled?: boolean;
@@ -211,7 +214,7 @@ export function AgentMessageContent({
 
   return (
     <div
-      className={S.text}
+      className={cn(S.text, textClassName)}
       // onClick={() => setShowRaw(!showRaw)}
     >
       {showRaw ? text : parts}

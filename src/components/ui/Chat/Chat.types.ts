@@ -114,9 +114,25 @@ export interface ChatPromptProps {
   onSlashItemCommand?: SlashOnItemCommand;
 }
 
+export type ChatMessageClassNames = {
+  user?: string;
+  assistant?: string;
+  system?: string;
+};
+
+export type ChatMessageTextClassNames = {
+  user?: string;
+  assistant?: string;
+  system?: string;
+};
+
 export interface ChatMessageProps {
   role: MessageRole;
   text: string;
+  /** Extra class on the message root wrapper (role layout + defaults still apply). */
+  className?: string;
+  /** Extra class on the inner text bubble (merged with built-in `.text` styles). */
+  textClassName?: string;
   inProgress?: boolean;
   userTextFileAttachments?: UserTextFileAttachment[];
   onQuickReply?: (branchKey: string, displayLabel: string) => void;

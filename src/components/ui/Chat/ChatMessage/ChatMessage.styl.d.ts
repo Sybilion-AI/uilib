@@ -17,6 +17,7 @@ interface CssExports {
   'root': string;
   'scrollHorizontal': string;
   'text': string;
+  'textCustom': string;
   'userColumn': string;
 }
 export const cssExports: CssExports;
