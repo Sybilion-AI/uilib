@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.80](https://github.com/Mir-Insight/uilib/compare/v1.3.79...v1.3.80) (2026-06-08)
+
+
+### Bug Fixes
+
+* Chat - Report generate progress and chart crash ([c917d7c](https://github.com/Mir-Insight/uilib/commit/c917d7c963b4ee794fb70e520242dbdcdf6b2dee))
+
 ### [1.3.79](https://github.com/Mir-Insight/uilib/compare/v1.3.78...v1.3.79) (2026-06-08)
 
 
