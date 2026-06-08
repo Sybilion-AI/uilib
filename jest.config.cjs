@@ -5,6 +5,7 @@ module.exports = {
     '\\.(css|less|sass|scss|styl)$': 'identity-obj-proxy',
     '^#uilib/(.*)$': '<rootDir>/src/$1',
     '^uilib(.*)$': '<rootDir>/src$1',
+    '^@homecode/ui$': '<rootDir>/tests/mocks/homecodeUiMock.ts',
     '\\.svg$': '<rootDir>/tests/mocks/svgMock.js',
   },
   transform: {

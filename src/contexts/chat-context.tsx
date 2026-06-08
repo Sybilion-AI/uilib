@@ -21,6 +21,8 @@ import { stripJsonDashboardFences } from '#uilib/lib/dashboard-spec/stripJsonDas
 import type { ChatResponse } from '#uilib/types/chat-api.types';
 import { LS } from '@homecode/ui';
 
+import { persistChatsToLS, safeLsSet } from './chatPersistence';
+
 export type SendChatMessageFn = (
   message: string,
   targetChatId: string,
@@ -184,7 +186,7 @@ function addScopeIdToRegistry(scopeId: string) {
   const raw = LS.get(CHAT_SCOPE_IDS_REGISTRY_KEY);
   const registry = Array.isArray(raw) ? [...raw] : [];
   if (!registry.includes(scopeId)) {
-    LS.set(CHAT_SCOPE_IDS_REGISTRY_KEY, [...registry, scopeId]);
+    safeLsSet(CHAT_SCOPE_IDS_REGISTRY_KEY, [...registry, scopeId]);
   }
 }
 
@@ -300,8 +302,7 @@ export function ChatProvider({
         const currentChats = prev[scopeId] ?? [];
         const updatedChats = [newChat, ...currentChats];
 
-        const chatsKey = getChatsKey(scopeId);
-        LS.set(chatsKey, updatedChats);
+        persistChatsToLS(scopeId, updatedChats);
 
         return {
           ...prev,
@@ -309,7 +310,7 @@ export function ChatProvider({
         };
       });
       setCurrentChatIdState(prev => ({ ...prev, [scopeId]: sessionId }));
-      LS.set(getCurrentChatIdKey(scopeId), sessionId);
+      safeLsSet(getCurrentChatIdKey(scopeId), sessionId);
       return sessionId;
     },
     [userSwitchKey],
@@ -319,13 +320,12 @@ export function ChatProvider({
     (currScopeId: string, sessionId: string) => {
       if (!sessionId) return;
       setCurrentChatIdState(prev => ({ ...prev, [currScopeId]: sessionId }));
-      LS.set(getCurrentChatIdKey(currScopeId), sessionId);
+      safeLsSet(getCurrentChatIdKey(currScopeId), sessionId);
     },
     [],
   );
 
   const deleteChat = useCallback((scopeId: string, sessionId: string) => {
-    const chatsKey = getChatsKey(scopeId);
     const currentKey = getCurrentChatIdKey(scopeId);
 
     setChats(prev => {
@@ -337,7 +337,7 @@ export function ChatProvider({
         return prev;
       }
       const updatedChats = scopeChats.filter(c => c.session_id !== sessionId);
-      LS.set(chatsKey, updatedChats);
+      persistChatsToLS(scopeId, updatedChats);
 
       setCurrentChatIdState(prevCurr => {
         if (prevCurr[scopeId] !== sessionId) {
@@ -348,7 +348,7 @@ export function ChatProvider({
             ? scopeChats[deletedIndex - 1].session_id
             : (updatedChats[0]?.session_id ?? null);
         if (nextId) {
-          LS.set(currentKey, nextId);
+          safeLsSet(currentKey, nextId);
         } else {
           LS.remove(currentKey);
         }
@@ -395,8 +395,7 @@ export function ChatProvider({
           return chat;
         });
 
-        const chatsKey = getChatsKey(scopeId);
-        LS.set(chatsKey, updatedChats);
+        persistChatsToLS(scopeId, updatedChats);
 
         return { ...prev, [scopeId]: updatedChats };
       });
@@ -417,8 +416,7 @@ export function ChatProvider({
             messages: chat.messages.filter(m => m.id !== messageId),
           };
         });
-        const chatsKey = getChatsKey(scopeId);
-        LS.set(chatsKey, updatedChats);
+        persistChatsToLS(scopeId, updatedChats);
         return { ...prev, [scopeId]: updatedChats };
       });
     },
@@ -463,8 +461,7 @@ export function ChatProvider({
             }),
           };
         });
-        const chatsKey = getChatsKey(scopeId);
-        LS.set(chatsKey, updatedChats);
+        persistChatsToLS(scopeId, updatedChats);
         return { ...prev, [scopeId]: updatedChats };
       });
     },
@@ -487,8 +484,7 @@ export function ChatProvider({
           return { ...chat, messages: cloned };
         });
 
-        const chatsKey = getChatsKey(scopeId);
-        LS.set(chatsKey, updatedChats);
+        persistChatsToLS(scopeId, updatedChats);
 
         return { ...prev, [scopeId]: updatedChats };
       });
@@ -509,8 +505,7 @@ export function ChatProvider({
           };
         });
 
-        const chatsKey = getChatsKey(scopeId);
-        LS.set(chatsKey, updatedChats);
+        persistChatsToLS(scopeId, updatedChats);
 
         return { ...prev, [scopeId]: updatedChats };
       });
@@ -577,8 +572,7 @@ export function ChatProvider({
                 : chat,
             );
 
-            const chatsKey = getChatsKey(scopeId);
-            LS.set(chatsKey, updatedChats);
+            persistChatsToLS(scopeId, updatedChats);
 
             return { ...prev, [scopeId]: updatedChats };
           });
