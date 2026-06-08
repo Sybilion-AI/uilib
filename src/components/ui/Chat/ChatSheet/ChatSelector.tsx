@@ -16,6 +16,7 @@ import S from './ChatSelector.styl';
 
 export interface ChatSelectorProps {
   id: string;
+  wrapperClassName?: string;
   className?: string;
   onChatDeleted?: (sessionId: string) => void;
   /** When set, used for "+ New Chat" instead of the default empty `newChat()`. */
@@ -24,6 +25,7 @@ export interface ChatSelectorProps {
 
 export function ChatSelector({
   id,
+  wrapperClassName,
   className,
   onChatDeleted,
   onNewChat,
@@ -65,7 +67,7 @@ export function ChatSelector({
   };
 
   return (
-    <div className={S.wrapper}>
+    <div className={cn(S.wrapper, wrapperClassName)}>
       <div className={S.selectGrow}>
         <Select
           variant="clear"

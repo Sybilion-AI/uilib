@@ -18,6 +18,8 @@ export {
   normalizeUserTextFileAttachments,
 } from './buildChatSendMessagePayload';
 export { sanitizeAttachmentFilename } from './sanitizeAttachmentFilename';
+export { ChatSelector } from './ChatSheet/ChatSelector';
+export type { ChatSelectorProps } from './ChatSheet/ChatSelector';
 export { ChatSheet } from './ChatSheet/ChatSheet';
 export { useChatPanelChromeModel } from './ChatSheet/useChatPanelChromeModel';
 export type { ChatSheetActions, ChatSheetProps } from './ChatSheet/ChatSheet';

@@ -57,6 +57,7 @@ export function ChatChrome({
   slashCommandItems,
   onSlashItemCommand,
   promptPlaceholder,
+  hideChatSelector = false,
 }: ChatChromeProps) {
   const filteredAllowedAttachments = useMemo(
     () => filterToTextAttachments(allowedAttachments),
@@ -187,6 +188,7 @@ export function ChatChrome({
           scopeId={effectiveScopeId}
           onChatDeleted={onChatDeleted}
           onNewChat={onNewChat}
+          hideChatSelector={hideChatSelector}
         >
           {isEmpty ? (
             <div className={S.emptyBody}>

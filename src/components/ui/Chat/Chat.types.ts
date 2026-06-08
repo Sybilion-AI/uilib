@@ -145,4 +145,6 @@ export interface ChatProps extends HTMLAttributes<HTMLDivElement> {
   onChatDeleted?: (sessionId: string) => void;
   /** "+ New Chat" in the selector; when omitted, starts an empty session. */
   onNewChat?: () => void;
+  /** When true, skip built-in header ChatSelector (e.g. external page-header slot). */
+  hideChatSelector?: boolean;
 }

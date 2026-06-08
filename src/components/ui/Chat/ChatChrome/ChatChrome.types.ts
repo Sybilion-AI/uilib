@@ -71,4 +71,6 @@ export interface ChatChromeProps {
   onSlashItemCommand?: SlashOnItemCommand;
   /** Composer placeholder forwarded to `Chat.Prompt`. */
   promptPlaceholder?: string;
+  /** When true, skip built-in header ChatSelector (e.g. external page-header slot). */
+  hideChatSelector?: boolean;
 }

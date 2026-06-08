@@ -16,11 +16,12 @@ export function Chat({
   scopeId,
   onChatDeleted,
   onNewChat,
+  hideChatSelector = false,
   ...props
 }: ChatProps) {
   return (
     <div className={cn(S.root, className, isEmpty && S.isEmpty)} {...props}>
-      {scopeId ? (
+      {scopeId && !hideChatSelector ? (
         <div className={S.header}>
           <ChatSelector
             id={scopeId}
