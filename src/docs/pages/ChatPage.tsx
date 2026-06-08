@@ -42,7 +42,7 @@ export default function ChatPage() {
           used chips hide for the session.
         </p>
         <div className={S.chatDemoHost}>
-          <ChatChrome {...chromeProps} />
+          <ChatChrome {...chromeProps} variant="clean" />
         </div>
       </PageContentSection>
     </>

@@ -22,12 +22,22 @@ export type ChatChromeResizeHandleConfig = {
 
 export type { ChatAttachmentDropItem };
 
+export type ChatChromeVariant = 'default' | 'clean';
+
+export type ChatPresetsRenderOptions = {
+  variant?: ChatChromeVariant;
+};
+
 export interface ChatChromeProps {
+  variant?: ChatChromeVariant;
   showResizeHandle: boolean;
   resizeHandle: ChatChromeResizeHandleConfig | undefined;
   onClose: (() => void) | undefined;
   isEmpty: boolean;
-  renderPresets: (layout: ChatPresetsLayout) => React.ReactNode;
+  renderPresets: (
+    layout: ChatPresetsLayout,
+    options?: ChatPresetsRenderOptions,
+  ) => React.ReactNode;
   /** Message list for the scroll area; use `[]` when empty. */
   messages: Message[];
   onQuickReply: (branchKey: string, displayLabel: string) => void;

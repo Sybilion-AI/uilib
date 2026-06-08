@@ -3,6 +3,7 @@
 interface CssExports {
   'inlineRoot': string;
   'inner': string;
+  'innerClean': string;
   'innerInline': string;
   'item': string;
   'root': string;

@@ -115,6 +115,7 @@ export default function ChatSlashCommandsPage() {
           }
         `}</style>
         <ChatChrome
+          variant="clean"
           showResizeHandle={false}
           resizeHandle={undefined}
           onClose={undefined}

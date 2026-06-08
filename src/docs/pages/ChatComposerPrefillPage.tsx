@@ -170,6 +170,7 @@ export default function ChatComposerPrefillPage() {
           </li>
         </ul>
         <ChatChrome
+          variant="clean"
           showResizeHandle={false}
           resizeHandle={undefined}
           onClose={undefined}

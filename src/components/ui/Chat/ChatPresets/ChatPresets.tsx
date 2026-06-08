@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 import { Button } from '#uilib/components/ui/Button';
 
+import type { ChatChromeVariant } from '../ChatChrome/ChatChrome.types';
 import type { ChatPreset } from '../Chat.types';
 import S from './ChatPresets.styl';
 
@@ -13,6 +14,7 @@ export interface ChatPresetsProps {
   items: ChatPreset[];
   usedItemIds?: string[];
   layout?: ChatPresetsLayout;
+  variant?: ChatChromeVariant;
   onSelect?: (preset: ChatPreset) => void;
   onItemUsed?: (id: string) => void;
 }
@@ -22,6 +24,7 @@ export function ChatPresets({
   items,
   usedItemIds = [],
   layout = 'fixed',
+  variant = 'default',
   onSelect,
   onItemUsed,
 }: ChatPresetsProps) {
@@ -38,7 +41,13 @@ export function ChatPresets({
 
   return (
     <div className={layout === 'inline' ? S.inlineRoot : S.root}>
-      <div className={cn(S.inner, layout === 'inline' && S.innerInline)}>
+      <div
+        className={cn(
+          S.inner,
+          layout === 'inline' && S.innerInline,
+          variant === 'clean' && S.innerClean,
+        )}
+      >
         {availableItems.map(preset => (
           <Button
             key={preset.id}

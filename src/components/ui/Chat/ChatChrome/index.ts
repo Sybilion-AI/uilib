@@ -3,4 +3,5 @@ export type {
   ChatAttachmentDropItem,
   ChatChromeProps,
   ChatChromeResizeHandleConfig,
+  ChatChromeVariant,
 } from './ChatChrome.types';

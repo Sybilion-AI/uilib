@@ -7,6 +7,7 @@ export { ChatChrome } from './ChatChrome';
 export type {
   ChatChromeProps,
   ChatChromeResizeHandleConfig,
+  ChatChromeVariant,
 } from './ChatChrome';
 export {
   TEXT_ATTACHMENT_ACCEPT_PARTS,

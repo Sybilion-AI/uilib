@@ -9,6 +9,9 @@
   overflow hidden
   border-radius var(--p-4)
 
+.rootClean
+  border-radius 0
+
 .chatResizeHandle
   position: absolute;
   // top 0 !important
@@ -56,6 +59,9 @@
   display flex
   flex-direction column
   position relative
+
+.chatClean
+  background-color transparent
 
 .attachmentDropzone
   position absolute
@@ -111,6 +117,18 @@
   border-top 1px solid var(--border)
   box-shadow 0 8px 24px 0 var(--background)
 
+.footerClean
+  backdrop-filter none
+  background-color transparent
+  border-top none
+  box-shadow none
+  border 1px solid var(--border)
+  border-radius var(--p-4)
+
+.promptClean
+  background-color var(--background)
+  border-radius inherit
+
 .fixedPresets
   position relative
   z-index 10
@@ -118,10 +136,10 @@
   width 100%
 
 .notice
-  position absolute
-  top calc(-1 * var(--p-7))
-  left 0
-  right 0
+  position relative
+  z-index 10
+  flex-shrink 0
+  width 100%
   margin-bottom var(--p-1)
 
   font-size var(--text-xs)

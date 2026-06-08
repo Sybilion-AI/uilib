@@ -1,20 +1,19 @@
-import { useCallback, useMemo, useState } from 'react';
-
-import { ChartAreaInteractive } from '#uilib/components/ui/ChartAreaInteractive';
 import type {
   ChartDataPoint,
   OverlayMode,
 } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
+import { Tabs, TabsList, TabsTrigger } from '#uilib/components/ui/Tabs';
+import { useCallback, useMemo, useState } from 'react';
+
+import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
+import { ChartAreaInteractive } from '#uilib/components/ui/ChartAreaInteractive';
+import { DocsHeaderActions } from '../docsHeaderActions';
+import type { ForecastData } from '#uilib/types/forecast-data';
 import { ForecastItemData } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
 import { Label } from '#uilib/components/ui/Label';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Switch } from '#uilib/components/ui/Switch';
-import { Tabs, TabsList, TabsTrigger } from '#uilib/components/ui/Tabs';
 import { useTheme } from '#uilib/contexts/theme-context';
-import type { ForecastData } from '#uilib/types/forecast-data';
-
-import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
-import { DocsHeaderActions } from '../docsHeaderActions';
 
 const DEMO_FORECAST_ID = 1;
 

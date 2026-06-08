@@ -109,6 +109,7 @@ export default function ChatAttachmentsDropzonePage() {
           those types; PDF also requires <code>allowPdfAttachments</code>.
         </p>
         <ChatChrome
+          variant="clean"
           showResizeHandle={false}
           resizeHandle={undefined}
           onClose={undefined}

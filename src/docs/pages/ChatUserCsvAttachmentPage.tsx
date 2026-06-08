@@ -137,6 +137,7 @@ export default function ChatUserCsvAttachmentPage() {
           </Button>
         </p>
         <ChatChrome
+          variant="clean"
           showResizeHandle={false}
           resizeHandle={undefined}
           onClose={undefined}

@@ -51,7 +51,7 @@ import {
 } from '../../Sidebar/Sidebar';
 import { Chat } from '../Chat';
 import type { ChatChromeProps } from '../ChatChrome';
-import type { ChatAttachmentDropItem } from '../ChatChrome/ChatChrome.types';
+import type { ChatAttachmentDropItem, ChatPresetsRenderOptions } from '../ChatChrome/ChatChrome.types';
 import type { ChatEmptyStateConfig } from '../ChatEmptyState/ChatEmptyState.types';
 import type { ChatEmptyStateProps } from '../ChatEmptyState/ChatEmptyState.types';
 import {
@@ -1106,7 +1106,10 @@ export function useChatPanelChromeModel({
     chatWidthPx,
   ]);
 
-  const renderPresets = (layout: ChatPresetsLayout = 'fixed') => {
+  const renderPresets = (
+    layout: ChatPresetsLayout = 'fixed',
+    options?: ChatPresetsRenderOptions,
+  ) => {
     if (!presetsWithFreeform?.length) return null;
 
     return (
@@ -1114,6 +1117,7 @@ export function useChatPanelChromeModel({
         chatId={currentChatId ?? ''}
         items={presetsWithFreeform}
         layout={layout}
+        variant={options?.variant}
         usedItemIds={usedPresetIds}
         onSelect={preset => {
           void submitPreset(preset);

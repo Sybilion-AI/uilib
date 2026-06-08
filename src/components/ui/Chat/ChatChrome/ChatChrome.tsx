@@ -25,6 +25,7 @@ import S from './ChatChrome.styl';
 import type { ChatChromeProps } from './ChatChrome.types';
 
 export function ChatChrome({
+  variant = 'default',
   showResizeHandle,
   resizeHandle,
   onClose,
@@ -150,8 +151,10 @@ export function ChatChrome({
     showSyntheticBranchButtons,
   ]);
 
+  const isClean = variant === 'clean';
+
   return (
-    <div className={S.root}>
+    <div className={cn(S.root, isClean && S.rootClean)}>
       {showResizeHandle && resizeHandle ? (
         <PanelResizeHandle
           edge="leading"
@@ -191,6 +194,7 @@ export function ChatChrome({
           />
         ) : null}
         <Chat
+          className={isClean ? S.chatClean : undefined}
           isEmpty={isEmpty}
           scopeId={effectiveScopeId}
           onChatDeleted={onChatDeleted}
@@ -268,7 +272,8 @@ export function ChatChrome({
                   </div>
                 ) : null}
 
-                {showInlinePresets && renderPresets('inline')}
+                {showInlinePresets &&
+                  renderPresets('inline', { variant })}
 
                 {isLoading &&
                   !hasInProgressSystemMessage &&
@@ -282,16 +287,20 @@ export function ChatChrome({
           )}
 
           {isEmpty ? (
-            <div className={S.fixedPresets}>{renderPresets('fixed')}</div>
+            <div className={S.fixedPresets}>
+              {renderPresets('fixed', { variant })}
+            </div>
           ) : null}
 
-          <div className={cn(S.footer, footerClassName)}>
-            {isEmpty ? (
-              <div className={S.notice}>
-                Forecast Assistant can make mistakes.
-              </div>
-            ) : null}
+          {isEmpty ? (
+            <div className={S.notice}>
+              Forecast Assistant can make mistakes.
+            </div>
+          ) : null}
+
+          <div className={cn(S.footer, isClean && S.footerClean, footerClassName)}>
             <Chat.Prompt
+              className={isClean ? S.promptClean : undefined}
               onSubmit={handlePromptSubmitWithAttachments}
               disabled={promptDisabled}
               attachments={pendingAttachments}
