@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.83](https://github.com/Mir-Insight/uilib/compare/v1.3.82...v1.3.83) (2026-06-08)
+
+
+### Features
+
+* ChatChrome - Add clean variant and message styling hooks ([8032fec](https://github.com/Mir-Insight/uilib/commit/8032fec1ab32155acae1d61eaba8c1d0754a154e))
+
 ### [1.3.82](https://github.com/Mir-Insight/uilib/compare/v1.3.81...v1.3.82) (2026-06-08)
 
 
