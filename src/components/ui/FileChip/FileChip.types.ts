@@ -1,4 +1,4 @@
-export type FileChipFormat = 'csv' | 'pdf' | 'text';
+export type FileChipFormat = 'csv' | 'pdf' | 'text' | 'dashboard';
 
 export type FileChipProps = {
   name: string;

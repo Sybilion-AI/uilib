@@ -3,6 +3,7 @@ import cn from 'classnames';
 import { CsvIcon } from '#uilib/components/icons/CsvIcon/CsvIcon';
 import { CardAction, CardHeader } from '#uilib/components/ui/Card';
 import { FileTextIcon, XIcon } from '@phosphor-icons/react';
+import { LayoutDashboard } from 'lucide-react';
 
 import S from './FileChip.styl';
 import type { FileChipFormat, FileChipProps } from './FileChip.types';
@@ -12,6 +13,16 @@ const FORMAT_ICON_SIZE = 32;
 function FormatIcon({ format }: { format: FileChipFormat }) {
   if (format === 'csv') {
     return <CsvIcon size={FORMAT_ICON_SIZE} />;
+  }
+
+  if (format === 'dashboard') {
+    return (
+      <LayoutDashboard
+        size={FORMAT_ICON_SIZE}
+        aria-hidden
+        style={{ color: 'var(--muted-foreground)' }}
+      />
+    );
   }
 
   return (
