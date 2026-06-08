@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.79](https://github.com/Mir-Insight/uilib/compare/v1.3.78...v1.3.79) (2026-06-08)
+
+
+### Features
+
+* Chat - Meta, system message render, sendMessage sessionId ([d6afc0d](https://github.com/Mir-Insight/uilib/commit/d6afc0dedeb32da4a93e3a6107f0061ca7819b27))
+* ChatSelector - export and hideChatSelector ([9838435](https://github.com/Mir-Insight/uilib/commit/983843539742c441485ada27eb5ebb64c7c33b58))
+* FileChip - Dashboard format and icon ([02305a9](https://github.com/Mir-Insight/uilib/commit/02305a9df250dd2bb757498ea211996e1022e86d))
+
 ### [1.3.78](https://github.com/Mir-Insight/uilib/compare/v1.3.77...v1.3.78) (2026-06-08)
 
 
