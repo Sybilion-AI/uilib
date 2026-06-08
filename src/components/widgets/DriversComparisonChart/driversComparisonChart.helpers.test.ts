@@ -262,6 +262,9 @@ describe('buildDriversComparisonChartData historical window floor', () => {
   };
 
   const datasetHistorical: ChartDataPoint[] = [
+    { date: '2014-07-01', historical: 97 },
+    { date: '2014-08-01', historical: 98 },
+    { date: '2014-09-01', historical: 99 },
     { date: '2014-10-01', historical: 100 },
     { date: '2014-11-01', historical: 101 },
     { date: '2014-12-01', historical: 102 },
