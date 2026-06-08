@@ -18,9 +18,9 @@ const NO_QUICK_REPLY_KEYS: ReadonlySet<string> = new Set();
 /** Sample items — default TipTap mention insert; optional `className` / `color` style the chip. */
 const DOCS_SLASH_ITEMS: SlashCommandItem[] = [
   {
-    id: 'generate-dashboard',
-    label: 'Generate dashboard',
-    description: 'Insert /generate-dashboard',
+    id: 'generate-report',
+    label: 'Generate report',
+    description: 'Insert /generate-report',
     color: 'var(--brand-color-600)',
   },
   {
@@ -48,7 +48,7 @@ function makeMessage(role: MessageRole, text: string): Message {
 }
 
 const ASSISTANT_REPLY_TEXT =
-  'Demo reply. Slash picks insert inline mention chips; plain text on send uses each item id (e.g. /generate-dashboard).';
+  'Demo reply. Slash picks insert inline mention chips; plain text on send uses each item id (e.g. /generate-report).';
 
 export default function ChatSlashCommandsPage() {
   const [messages, setMessages] = useState<Message[]>([]);
