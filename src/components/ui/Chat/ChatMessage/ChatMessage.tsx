@@ -22,6 +22,8 @@ export function ChatMessage({
   scriptContinue,
   onScriptContinue,
   renderMessageChart,
+  message,
+  renderSystemMessage,
 }: ChatMessageProps) {
   const fileAttachments = userTextFileAttachmentsFromMessage({
     userTextFileAttachments,
@@ -33,7 +35,13 @@ export function ChatMessage({
     <div className={cn(S.root, S[`role-${role}`])}>
       {isSystem ? (
         <div className={S.text}>
-          {inProgress ? <TextShimmer as="span">{text}</TextShimmer> : text}
+          {inProgress ? (
+            <TextShimmer as="span">{text}</TextShimmer>
+          ) : renderSystemMessage && message ? (
+            renderSystemMessage(message)
+          ) : (
+            text
+          )}
         </div>
       ) : isAssistant ? (
         <AgentMessageContent

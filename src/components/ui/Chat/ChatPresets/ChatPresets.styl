@@ -1,7 +1,7 @@
 .root
-  // position fixed
+  position relative
+  flex-shrink 0
   width 100%
-  bottom 160px
 
 .inlineRoot
   position relative
@@ -12,6 +12,7 @@
   display flex
   flex-wrap wrap
   gap 8px
+  min-width 0
   padding var(--p-2) var(--p-6) var(--p-3)
   background-color var(--background)
 
@@ -19,9 +20,9 @@
   background-color transparent
 
 .item
-  flex-shrink 0
+  flex 0 1 auto
   min-width 0
-  max-width 300px
+  max-width unquote('min(300px, 100%)')
   height auto
   min-height auto
   padding var(--p-3)

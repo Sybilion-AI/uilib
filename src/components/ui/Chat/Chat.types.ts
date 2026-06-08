@@ -31,6 +31,10 @@ export type ChatSendMessagePayload = {
   loadingLabel?: string;
 };
 
+export type ChatMetaValue = string | number | boolean | null;
+
+export type ChatMeta = Record<string, ChatMetaValue>;
+
 export interface Message {
   id: string;
   role: MessageRole;
@@ -39,12 +43,14 @@ export interface Message {
   userTextFileAttachments?: UserTextFileAttachment[];
   /** SYSTEM-only: transient progress placeholder while work is in flight. */
   inProgress?: boolean;
+  meta?: ChatMeta;
 }
 
 export interface Chat {
   session_id: string;
   name: string;
   messages: Message[];
+  meta?: ChatMeta;
 }
 
 export interface ChatPreset {
@@ -124,6 +130,10 @@ export interface ChatMessageProps {
   onScriptContinue?: () => void;
   /** Renders `[CHART]` placeholder in assistant messages (app supplies dataset chart). */
   renderMessageChart?: () => ReactNode;
+  /** Full message for system-role render delegation. */
+  message?: Message;
+  /** When set, SYSTEM messages render via this callback instead of plain text. */
+  renderSystemMessage?: (message: Message) => ReactNode;
 }
 
 export interface ChatProps extends HTMLAttributes<HTMLDivElement> {

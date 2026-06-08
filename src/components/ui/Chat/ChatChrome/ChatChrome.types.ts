@@ -38,6 +38,8 @@ export interface ChatChromeProps {
   scriptContinueLabel: string | undefined;
   onScriptContinue: (() => void) | undefined;
   renderMessageChart?: () => React.ReactNode;
+  /** When set, SYSTEM messages render via this callback instead of plain text. */
+  renderSystemMessage?: (message: Message) => React.ReactNode;
   showSyntheticBranchButtons: boolean;
   unusedBranchKeys: string[];
   showInlinePresets: boolean;

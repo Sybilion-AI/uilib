@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ChatPreset,
   type ChatSendMessagePayload,
+  type Message,
   MessageRole,
   type ScriptCompletePayload,
 } from '#uilib/components/ui/Chat/Chat.types';
@@ -69,11 +70,17 @@ export type UseChatPanelChromeModelInput = {
   /** Composite chat scope (e.g. `${userId}-${datasetId}`, `${userId}-dashboard`, `${userId}-report-${reportId}`). */
   scopeId?: string | null;
   /** Fires after send; second arg is the assistant reply when the API call succeeded. */
-  onMessage?: (displayText: string, assistantResponse?: string) => void;
+  onMessage?: (
+    displayText: string,
+    assistantResponse?: string,
+    chatSessionId?: string,
+  ) => void;
   /** Fires when a preset script has no further `[Label|branchKey]` steps (graph leaf or linear script end). */
   onScriptComplete?: (payload: ScriptCompletePayload) => void;
   /** Renders `[CHART]` tokens in assistant messages. */
   renderMessageChart?: () => React.ReactNode;
+  /** When set, SYSTEM messages render via this callback instead of plain text. */
+  renderSystemMessage?: (message: Message) => React.ReactNode;
   /** Forwarded to `ChatChrome` when the thread is empty. */
   emptyState?: ChatEmptyStateConfig;
   /** MIME types / extensions for text-only chat attachments (filtered by uilib allowlist). */
@@ -144,6 +151,7 @@ export function useChatPanelChromeModel({
   onMessage,
   onScriptComplete,
   renderMessageChart,
+  renderSystemMessage,
   emptyState,
   allowedAttachments,
   allowPdfAttachments,
@@ -557,8 +565,13 @@ export function useChatPanelChromeModel({
           }
           setOutboundLoadingLabel(loadingLabelFromSendPayload(payload));
           try {
-            const assistantResponse = await sendMessage(payload);
-            onMessage?.(displayTextFromSendPayload(payload), assistantResponse);
+            const { response: assistantResponse, sessionId } =
+              await sendMessage(payload);
+            onMessage?.(
+              displayTextFromSendPayload(payload),
+              assistantResponse,
+              sessionId,
+            );
           } finally {
             setOutboundLoadingLabel(undefined);
           }
@@ -720,8 +733,13 @@ export function useChatPanelChromeModel({
         }
         setOutboundLoadingLabel(loadingLabelFromSendPayload(payload));
         try {
-          const assistantResponse = await sendMessage(payload);
-          onMessage?.(displayTextFromSendPayload(payload), assistantResponse);
+          const { response: assistantResponse, sessionId } =
+            await sendMessage(payload);
+          onMessage?.(
+            displayTextFromSendPayload(payload),
+            assistantResponse,
+            sessionId,
+          );
         } finally {
           setOutboundLoadingLabel(undefined);
         }
@@ -1245,6 +1263,7 @@ export function useChatPanelChromeModel({
     scriptContinueLabel,
     onScriptContinue,
     renderMessageChart,
+    renderSystemMessage,
     showSyntheticBranchButtons,
     unusedBranchKeys,
     showInlinePresets,

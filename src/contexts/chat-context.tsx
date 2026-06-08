@@ -10,6 +10,7 @@ import {
 
 import {
   type Chat,
+  type ChatMeta,
   type ChatSendMessagePayload,
   type Message,
   MessageRole,
@@ -37,17 +38,24 @@ export type AddChatMessageOptions = {
   userTextFileAttachments?: UserTextFileAttachment[];
   /** SYSTEM-only: mark as transient progress placeholder (shimmer until removed). */
   inProgress?: boolean;
+  meta?: ChatMeta;
 };
 
 export type UpdateChatMessagePatch = {
   role?: MessageRole;
   text?: string;
   inProgress?: boolean;
+  meta?: ChatMeta;
 };
 
 export type NewChatOptions = {
   /** When set, seeds the new session's messages (e.g. continue dialog in reports). */
   seedMessages?: readonly Message[];
+};
+
+export type SendMessageResult = {
+  response: string;
+  sessionId: string;
 };
 
 export interface ChatContextType {
@@ -78,11 +86,13 @@ export interface ChatContextType {
     chatId: string,
     messages: Message[],
   ) => void;
+  /** Shallow-merge keys into `chat.meta` and persist. */
+  updateChatMeta: (scopeId: string, chatId: string, patch: ChatMeta) => void;
   sendMessage: (
     scopeId: string,
     message: string | ChatSendMessagePayload,
     chatId?: string,
-  ) => Promise<string>;
+  ) => Promise<SendMessageResult>;
   getChatsForScopeId: (scopeId: string) => Chat[];
   getCurrentChatId: (scopeId: string) => string | null;
   deleteChat: (scopeId: string, sessionId: string) => void;
@@ -184,6 +194,7 @@ function cloneMessagesForNewSession(messages: readonly Message[]): Message[] {
     .filter(message => !message.inProgress)
     .map(message => ({
       ...message,
+      ...(message.meta ? { meta: { ...message.meta } } : {}),
       ...(message.userTextFileAttachments
         ? {
             userTextFileAttachments: message.userTextFileAttachments.map(
@@ -372,6 +383,7 @@ export function ChatProvider({
           ? { userTextFileAttachments: attachments }
           : {}),
         ...(options?.inProgress ? { inProgress: true } : {}),
+        ...(options?.meta ? { meta: { ...options.meta } } : {}),
       };
 
       setChats(prev => {
@@ -444,6 +456,9 @@ export function ChatProvider({
               ) {
                 delete next.inProgress;
               }
+              if (patch.meta != null) {
+                next.meta = { ...next.meta, ...patch.meta };
+              }
               return next;
             }),
           };
@@ -460,7 +475,10 @@ export function ChatProvider({
     (scopeId: string, chatId: string, messages: Message[]) => {
       if (userSwitchKey === null) return;
       addScopeIdToRegistry(scopeId);
-      const cloned = messages.map(message => ({ ...message }));
+      const cloned = messages.map(message => ({
+        ...message,
+        ...(message.meta ? { meta: { ...message.meta } } : {}),
+      }));
 
       setChats(prev => {
         const scopeChats = prev[scopeId] ?? [];
@@ -478,12 +496,34 @@ export function ChatProvider({
     [userSwitchKey],
   );
 
+  const updateChatMeta = useCallback(
+    (scopeId: string, chatId: string, patch: ChatMeta) => {
+      if (userSwitchKey === null) return;
+      setChats(prev => {
+        const scopeChats = prev[scopeId] ?? [];
+        const updatedChats = scopeChats.map(chat => {
+          if (chat.session_id !== chatId) return chat;
+          return {
+            ...chat,
+            meta: { ...chat.meta, ...patch },
+          };
+        });
+
+        const chatsKey = getChatsKey(scopeId);
+        LS.set(chatsKey, updatedChats);
+
+        return { ...prev, [scopeId]: updatedChats };
+      });
+    },
+    [userSwitchKey],
+  );
+
   const sendMessage = useCallback(
     async (
       scopeId: string,
       message: string | ChatSendMessagePayload,
       chatId?: string,
-    ): Promise<string> => {
+    ): Promise<SendMessageResult> => {
       const targetChatId = chatId ?? getCurrentChatId(scopeId);
       if (targetChatId === null || targetChatId === '') {
         throw new Error('No chat selected');
@@ -511,6 +551,11 @@ export function ChatProvider({
       try {
         const data = await sendChatMessageFn(apiPayload, pendingChatSessionId);
 
+        const effectiveSessionId =
+          data.session_id && data.session_id !== pendingChatSessionId
+            ? data.session_id
+            : pendingChatSessionId;
+
         if (data.session_id && data.session_id !== pendingChatSessionId) {
           setChats(prev => {
             const scopeChats = prev[scopeId] ?? [];
@@ -530,12 +575,12 @@ export function ChatProvider({
 
         addMessage(
           scopeId,
-          data.session_id ? data.session_id : pendingChatSessionId,
+          effectiveSessionId,
           MessageRole.ASSISTANT,
           data.response,
         );
 
-        return data.response;
+        return { response: data.response, sessionId: effectiveSessionId };
       } catch (error) {
         const errorMessage =
           error instanceof Error
@@ -597,6 +642,7 @@ export function ChatProvider({
         removeMessageById,
         updateMessageById,
         setChatMessages,
+        updateChatMeta,
         sendMessage,
         getChatsForScopeId,
         getCurrentChatId,
@@ -683,6 +729,8 @@ export function useChatsForScopeId(scopeId: string) {
     addMessage,
     removeMessageById,
     updateMessageById,
+    updateChatMeta,
+    setChatMessages,
     sendMessage,
     deleteChat,
   } = useChats();
@@ -713,6 +761,10 @@ export function useChatsForScopeId(scopeId: string) {
     ) => updateMessageById(scopeId, chatId, messageId, patch),
     sendMessage: (message: string | ChatSendMessagePayload, chatId?: string) =>
       sendMessage(scopeId, message, chatId),
+    updateChatMeta: (chatId: string, patch: ChatMeta) =>
+      updateChatMeta(scopeId, chatId, patch),
+    setChatMessages: (chatId: string, messages: Message[]) =>
+      setChatMessages(scopeId, chatId, messages),
     deleteChat: (sessionId: string) => deleteChat(scopeId, sessionId),
   };
 }

@@ -1,6 +1,7 @@
 .root
   display flex
   flex-direction column
+  flex 1
   height 100%
   min-height 0
   // max-height 100vh
@@ -15,4 +16,6 @@
   padding-right var(--p-12) // to not overlap with ChatSheet close button
 
 .isEmpty
-  padding-bottom 170px // goes under prompt
+  flex 1
+  min-height 0
+  overflow hidden

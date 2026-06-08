@@ -38,6 +38,7 @@ export function ChatChrome({
   scriptContinueLabel,
   onScriptContinue,
   renderMessageChart,
+  renderSystemMessage,
   showSyntheticBranchButtons,
   unusedBranchKeys,
   showInlinePresets,
@@ -188,10 +189,9 @@ export function ChatChrome({
           onNewChat={onNewChat}
         >
           {isEmpty ? (
-            <>
+            <div className={S.emptyBody}>
               <Chat.EmptyState {...emptyState} />
-              {renderPresets('fixed')}
-            </>
+            </div>
           ) : (
             <div className={S.scrollWrapper}>
               <Scroll
@@ -199,7 +199,7 @@ export function ChatChrome({
                 yScrollbarClassName={S.scrollbar}
                 className={S.scroll}
                 innerClassName={S.scrollInner}
-                offset={{ y: { before: 56, after: 180 } }}
+                offset={{ y: { before: 56, after: 24 } }}
                 fadeSize="m"
                 autoHide
                 ref={scrollRef}
@@ -209,6 +209,7 @@ export function ChatChrome({
                   return (
                     <Chat.Message
                       key={msg.id}
+                      message={msg}
                       role={msg.role}
                       text={msg.text}
                       inProgress={msg.inProgress}
@@ -229,6 +230,7 @@ export function ChatChrome({
                           : undefined
                       }
                       renderMessageChart={renderMessageChart}
+                      renderSystemMessage={renderSystemMessage}
                     />
                   );
                 })}
@@ -267,6 +269,10 @@ export function ChatChrome({
               </Scroll>
             </div>
           )}
+
+          {isEmpty ? (
+            <div className={S.fixedPresets}>{renderPresets('fixed')}</div>
+          ) : null}
 
           <div className={cn(S.footer, footerClassName)}>
             {isEmpty ? (
