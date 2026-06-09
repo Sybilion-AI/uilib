@@ -8,10 +8,9 @@ Not when: simple forecast card or driver backtests — use ChartAreaInteractive 
 Host provides:
 
 - `performanceData` (PerformanceChartPayload) and `historicalData` from performance API
-- Analysis selection and fetch outside widget
 - Optional `forecastData`, `customPerformanceMatrix`, `userSeries` for spaghetti
 
-Report tile: `performance_chart` — host loads performance payload + dataset series; built-in analysis selector.
+Report tile: `performance_chart` — host loads performance payload + dataset series.
 
 Requires: `performanceData` — model/drift forecasts and metrics; `historicalData` — baseline series; `loading` / `chartLoading` / `performanceDataLoading` — spinners; `runAnalysisHint` / `statusHint` — empty states.
 

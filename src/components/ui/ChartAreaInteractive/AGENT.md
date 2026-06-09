@@ -10,7 +10,6 @@ Host provides:
 - `chartData`, `forecastData` built from API
 - `timeRange` / `onTimeRangeChange` or brush-only range
 - Optional `mode`: pin | intervals | thresholds + overlay state
-- Analysis selector and fetch outside widget
 
 Report tile: `dataset_card` — host loads dataset + analysis; chart inside dashboard card.
 

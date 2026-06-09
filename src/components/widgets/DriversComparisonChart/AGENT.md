@@ -12,9 +12,9 @@ Host provides:
 - `seriesInitKey` when selected analysis changes
 - `viewTab` / `onViewTabChange`: `lagged` (calendar-aligned, raw dates) or `overlapped` (driver series shifted backward by parsed lag months)
 
-View tabs: host should render uilib `Tabs variant="button"` with **Lagged** / **Overlapped** in the toolbar (analysis selector left, tabs right). Chart applies `applyDriversComparisonViewToPayload` internally.
+View tabs: host should render uilib `Tabs variant="button"` with **Lagged** / **Overlapped** in the toolbar. Chart applies `applyDriversComparisonViewToPayload` internally.
 
-Report tile: `drivers_comparison_chart` — host loads normalized backtests payload + dataset historical; built-in analysis selector.
+Report tile: `drivers_comparison_chart` — host loads normalized backtests payload + dataset historical.
 
 Requires: `payload` — target + driver normalized_series; `loading` / `chartLoading` — spinners; `seriesInitKey` — reset visible series on analysis or view tab change; `runAnalysisHint` / `statusHint` — empty/error text.
 

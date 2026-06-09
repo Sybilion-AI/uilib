@@ -11,7 +11,7 @@ Host provides:
 - Controlled `selectedDriver` + `setSelectedDriver`
 - `isLoading` while fetching drivers
 
-Report tile: `drivers_map` — tile resolves analysis id, fetches drivers, passes list + selection (see EmbeddedAnalysisSelector pattern).
+Report tile: `drivers_map` — tile resolves analysis id, fetches drivers, passes list + selection.
 
 Requires: `drivers`; `isLoading`; `selectedDriver`; `setSelectedDriver`.
 
