@@ -7,6 +7,7 @@ export type ChatEmptyStateContext = {
 export interface ChatEmptyStateProps {
   icon?: React.ReactNode;
   title?: string;
+  className?: string;
   description?: string;
   /** Extra block below description (resolved before render in `ChatEmptyState`). */
   additionalContent?: React.ReactNode;
