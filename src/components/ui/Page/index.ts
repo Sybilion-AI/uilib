@@ -1,3 +1,4 @@
+export { AppBanner, type AppBannerProps } from './AppBanner/AppBanner';
 export {
   AppShell,
   AppShellMainContent,

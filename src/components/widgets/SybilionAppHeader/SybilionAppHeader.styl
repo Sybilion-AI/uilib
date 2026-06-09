@@ -43,13 +43,6 @@
       position absolute
       left var(--p-8)
 
-.logoAreaWithBanner
-  top calc(22px + var(--welcome-banner-height, 0px))
-
-  @media (min-width MOBILE)
-    :global([data-slot='sidebar-wrapper'][data-state='collapsed']:not([data-slot='app-shell'] [data-slot='sidebar-wrapper']) [data-slot='app-shell']:not([data-slot='app-shell'] [data-slot='app-shell'])) &
-      top 22px
-
 .logoLink
   display flex
   align-items center

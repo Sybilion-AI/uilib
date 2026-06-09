@@ -27,8 +27,6 @@ export type SybilionAppHeaderProps = WorkspaceAppSwitcherProps &
     /** Branded markup; omit for default lucide tile + «Sybilion». */
     logo?: ReactNode;
     logoAreaClassName?: string;
-    /** Applies vertical offset when a welcome banner consumes top space (CSS `--welcome-banner-height` on shell). */
-    welcomeBannerOffset?: boolean;
   };
 
 export function SybilionAppHeader({
@@ -44,18 +42,11 @@ export function SybilionAppHeader({
   appsStorageKey,
   logo,
   logoAreaClassName,
-  welcomeBannerOffset,
   ...navUserHeaderProps
 }: SybilionAppHeaderProps) {
   return (
     <AppHeaderPortal pageHeaderId={pageHeaderId}>
-      <div
-        className={cn(
-          S.logoArea,
-          welcomeBannerOffset && S.logoAreaWithBanner,
-          logoAreaClassName,
-        )}
-      >
+      <div className={cn(S.logoArea, logoAreaClassName)}>
         <Link to="/" className={S.logoLink}>
           {logo ?? <Logo size="md" aria-hidden />}
         </Link>
