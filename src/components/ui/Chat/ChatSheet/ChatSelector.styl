@@ -3,8 +3,8 @@
 .wrapper
   display flex
   align-items center
-  gap var(--p-2)
-  min-width 200px
+  gap var(--p-1)
+  min-width 160px
   z-index 1000
 
 .selectGrow
@@ -24,3 +24,19 @@
 .wrapper:hover .deleteBtn
   opacity 1
   pointer-events auto
+
+// Variant styles
+.variantClear .selectTrigger
+  border none
+  background-color transparent
+  box-shadow none
+
+  &:hover
+    box-shadow none
+    background-color transparent
+
+.variantDefault .selectTrigger
+  background-color var(--background)
+
+  &:hover
+    box-shadow 0 0 0 2px var(--background)

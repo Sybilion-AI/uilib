@@ -4,6 +4,8 @@ interface CssExports {
   'deleteBtn': string;
   'selectGrow': string;
   'selectTrigger': string;
+  'variantClear': string;
+  'variantDefault': string;
   'wrapper': string;
 }
 export const cssExports: CssExports;

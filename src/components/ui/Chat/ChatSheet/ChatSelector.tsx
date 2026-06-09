@@ -1,6 +1,10 @@
 import cn from 'classnames';
 
 import { Chat } from '#uilib/components/ui/Chat/Chat.types';
+import type {
+  SelectProps,
+  SelectTriggerProps,
+} from '#uilib/components/ui/Select/Select.types.js';
 import { useChatsForScopeId } from '#uilib/contexts/chat-context';
 import { Trash2Icon } from 'lucide-react';
 
@@ -14,7 +18,8 @@ import {
 } from '../../Select/Select';
 import S from './ChatSelector.styl';
 
-export interface ChatSelectorProps {
+export interface ChatSelectorProps
+  extends SelectProps, Pick<SelectTriggerProps, 'size' | 'variant'> {
   id: string;
   wrapperClassName?: string;
   className?: string;
@@ -23,8 +28,13 @@ export interface ChatSelectorProps {
   onNewChat?: () => void;
 }
 
+const deleteIconSize = (s: NonNullable<SelectTriggerProps['size']>) =>
+  s === 'sm' ? 16 : s === 'md' ? 18 : 20;
+
 export function ChatSelector({
   id,
+  size = 'sm',
+  variant = 'clear',
   wrapperClassName,
   className,
   onChatDeleted,
@@ -67,15 +77,22 @@ export function ChatSelector({
   };
 
   return (
-    <div className={cn(S.wrapper, wrapperClassName)}>
+    <div
+      className={cn(
+        S.wrapper,
+        variant === 'clear' ? S.variantClear : S.variantDefault,
+        wrapperClassName,
+      )}
+    >
       <div className={S.selectGrow}>
         <Select
-          variant="clear"
+          variant={variant}
           value={currentChatId?.toString() ?? ''}
           onValueChange={handleValueChange}
         >
           <SelectTrigger
-            size="sm"
+            size={size}
+            variant={variant}
             className={
               className ? cn(S.selectTrigger, className) : S.selectTrigger
             }
@@ -100,12 +117,12 @@ export function ChatSelector({
         <Button
           type="button"
           variant="ghost"
-          size="sm"
+          size={size}
           className={S.deleteBtn}
           aria-label="Delete chat"
           onClick={handleDeleteChat}
         >
-          <Trash2Icon size={16} />
+          <Trash2Icon size={deleteIconSize(size)} />
         </Button>
       )}
     </div>

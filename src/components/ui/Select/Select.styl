@@ -46,15 +46,25 @@
     box-shadow 0 0 0 2px var(--background)
     // color var(--muted-foreground)
 
-  &[data-size="md"]
-    height 1.75rem
-
   &[data-size="sm"]
-    height 1.75rem
+    height auto
+    min-height 28px
+    padding 0 var(--p-4)
+    border-radius var(--p-4)
     font-size var(--text-xs)
 
+  &[data-size="md"]
+    height auto
+    min-height 40px
+    padding var(--p-3) var(--p-4)
+    border-radius var(--p-4)
+    font-size var(--text-sm)
+
   &[data-size="lg"]
-    height 2.25rem
+    height auto
+    min-height auto
+    padding var(--p-4) var(--p-6)
+    border-radius var(--p-4)
     font-size var(--text-sm)
 
   &[data-placeholder]
@@ -97,7 +107,6 @@
 
 
 .clear
-  padding 0
   border none
   background-color transparent
   box-shadow none
