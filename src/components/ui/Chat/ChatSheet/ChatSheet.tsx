@@ -22,7 +22,7 @@ export interface ChatSheetProps extends Omit<
   title?: string;
   /** Imperative open / new-chat for triggers outside `renderTrigger` (e.g. sidebar). */
   actionsRef?: React.MutableRefObject<ChatSheetActions | null>;
-  renderTrigger?: (toggleOpen: () => void) => React.ReactNode;
+  renderTrigger?: (toggleOpen: () => void, isOpen: boolean) => React.ReactNode;
   triggerLabel?: React.ReactNode;
   /** aria-label for icon-only trigger (required when trigger has no visible text) */
   triggerAriaLabel?: string;
@@ -88,7 +88,7 @@ export function ChatSheet({
 
   return (
     <>
-      {renderTrigger?.(model.toggleOpen) ?? (
+      {renderTrigger?.(model.toggleOpen, model.isOpen) ?? (
         <Button
           variant="outline"
           aria-label={triggerAriaLabel}
