@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.85](https://github.com/Mir-Insight/uilib/compare/v1.3.84...v1.3.85) (2026-06-09)
+
+
+### Bug Fixes
+
+* ChatPrompt - buttons alignment ([4931101](https://github.com/Mir-Insight/uilib/commit/49311019236199b7da58a4fddd80077d2a2d7c21))
+
 ### [1.3.84](https://github.com/Mir-Insight/uilib/compare/v1.3.83...v1.3.84) (2026-06-09)
 
 
