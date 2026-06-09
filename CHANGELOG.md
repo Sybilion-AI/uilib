@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.86](https://github.com/Mir-Insight/uilib/compare/v1.3.85...v1.3.86) (2026-06-09)
+
+
+### Features
+
+* ChatEmptyState - support className prop ([c4b9b8a](https://github.com/Mir-Insight/uilib/commit/c4b9b8a93f88e43c72919b2beebcd8a3441175df))
+* Select - Trigger sizes and ChatSelector props ([3672db6](https://github.com/Mir-Insight/uilib/commit/3672db6e45638acebd7aac98a03f29c9cdb34035))
+
+
+### Bug Fixes
+
+* ChatSheet - pass isOpen to renderTrigger ([6bcecbe](https://github.com/Mir-Insight/uilib/commit/6bcecbea40db5cffe88563b605c51eb59096a0af))
+
 ### [1.3.85](https://github.com/Mir-Insight/uilib/compare/v1.3.84...v1.3.85) (2026-06-09)
 
 
