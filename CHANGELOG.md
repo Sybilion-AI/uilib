@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.84](https://github.com/Mir-Insight/uilib/compare/v1.3.83...v1.3.84) (2026-06-09)
+
+
+### Features
+
+* AppBanner - Add viewport banner and shell layout ([6fc65dd](https://github.com/Mir-Insight/uilib/commit/6fc65dd7ff2ad23747134a4c3ee0da952dbd1a51))
+
+
+### Bug Fixes
+
+* ChatPrompt - paggings ([9a01216](https://github.com/Mir-Insight/uilib/commit/9a01216d673ce41281d72fdf2c7637e385f6a073))
+
 ### [1.3.83](https://github.com/Mir-Insight/uilib/compare/v1.3.82...v1.3.83) (2026-06-08)
 
 
