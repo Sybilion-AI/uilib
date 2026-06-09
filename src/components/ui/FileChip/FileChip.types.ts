@@ -1,9 +1,10 @@
-export type FileChipFormat = 'csv' | 'pdf' | 'text' | 'dashboard';
+export type FileChipFormat = 'csv' | 'pdf' | 'text';
 
 export type FileChipProps = {
   name: string;
   format: FileChipFormat;
   hint: string;
+  icon?: React.ReactNode;
   onClick?: () => void;
   onRemove?: () => void;
   disabled?: boolean;
