@@ -1,10 +1,8 @@
-import cn from 'classnames';
-import type { ReactNode } from 'react';
-
 import { Button } from '#uilib/components/ui/Button';
-import { XIcon } from 'lucide-react';
-
+import type { ReactNode } from 'react';
 import S from './AppBanner.styl';
+import { XIcon } from 'lucide-react';
+import cn from 'classnames';
 
 export interface AppBannerProps {
   children?: ReactNode;
@@ -19,7 +17,7 @@ export function AppBanner({ children, className, onDismiss }: AppBannerProps) {
       {onDismiss && (
         <Button
           variant="ghost"
-          size="icon"
+          icon
           type="button"
           onClick={onDismiss}
           className={S.dismiss}
