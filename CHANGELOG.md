@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.88](https://github.com/Mir-Insight/uilib/compare/v1.3.87...v1.3.88) (2026-06-09)
+
+
+### Features
+
+* Chat - openNewChatAndSubmit and preset message ([5e1319d](https://github.com/Mir-Insight/uilib/commit/5e1319d202d36d9ab34be6684ab1d95de2e0207c))
+
+
+### Bug Fixes
+
+* Sidebar - Restore nav after chat closes ([d491ece](https://github.com/Mir-Insight/uilib/commit/d491eceac07f0f4936a4552aea7eb9b8b359bb8c))
+
 ### [1.3.87](https://github.com/Mir-Insight/uilib/compare/v1.3.86...v1.3.87) (2026-06-09)
 
 ### [1.3.86](https://github.com/Mir-Insight/uilib/compare/v1.3.85...v1.3.86) (2026-06-09)
