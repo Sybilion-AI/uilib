@@ -1,7 +1,15 @@
 import type { ChatPreset } from '#uilib/components/ui/Chat/Chat.types';
 
+export type SubmitPresetOptions = {
+  /** Composer text when preset row includes addon context (e.g. live news URL). */
+  message?: string;
+};
+
 export type ChatEmptyStateContext = {
-  submitPreset: (preset: ChatPreset) => void | Promise<void>;
+  submitPreset: (
+    preset: ChatPreset,
+    options?: SubmitPresetOptions,
+  ) => void | Promise<void>;
 };
 
 export interface ChatEmptyStateProps {

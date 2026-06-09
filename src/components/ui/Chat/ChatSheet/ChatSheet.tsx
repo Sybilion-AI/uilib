@@ -13,6 +13,8 @@ export type ChatSheetActions = {
   openNewChat: () => void;
   /** Starts a new chat, opens the panel, and pre-fills the composer (user sends manually). */
   openNewChatWithPrefill: (prompt: string) => void;
+  /** Starts a new chat, opens panel, and sends prompt immediately. */
+  openNewChatAndSubmit: (prompt: string) => void;
 };
 
 export interface ChatSheetProps extends Omit<
@@ -79,6 +81,7 @@ export function ChatSheet({
         model.onOpenChange(true);
       },
       openNewChatWithPrefill: model.openNewChatWithPrefill,
+      openNewChatAndSubmit: model.openNewChatAndSubmit,
     };
   }
 

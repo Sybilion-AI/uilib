@@ -44,6 +44,7 @@ export type {
   ChatEmptyStateConfig,
   ChatEmptyStateContext,
   ChatEmptyStateProps,
+  SubmitPresetOptions,
 } from './ChatEmptyState/ChatEmptyState.types';
 export type {
   Chat as ChatType,

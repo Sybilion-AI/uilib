@@ -121,6 +121,8 @@ export type UseChatPanelChromeModelResult = {
   newChat: () => void;
   /** New session + open panel + one-shot composer pre-fill (does not send). */
   openNewChatWithPrefill: (prompt: string) => void;
+  /** New session + open panel + immediate send. */
+  openNewChatAndSubmit: (prompt: string) => void;
   chatPanelContainer: HTMLElement | null;
 };
 
@@ -212,6 +214,10 @@ export function useChatPanelChromeModel({
   );
   /** Deduplicate Strict Mode double `useEffect` on the same mount. */
   const promptParamHandledInEffectRef = useRef(false);
+  const pendingOpenChatAndSubmitRef = useRef<{
+    sessionId: string;
+    prompt: string;
+  } | null>(null);
   const prevShellChatPanelOpenRef = useRef(shellChatPanelOpen);
   /** This instance requested shell chat width (ignore other ChatSheet instances on the page). */
   const openedShellChatRef = useRef(false);
@@ -403,6 +409,23 @@ export function useChatPanelChromeModel({
 
       const trimmed = prompt.trim();
       setPromptLinkPrefill(trimmed || null);
+      onOpenChange(true);
+    },
+    [startEmptyNewChat, onOpenChange],
+  );
+
+  const openNewChatAndSubmit = useCallback(
+    (prompt: string) => {
+      const sessionId = startEmptyNewChat();
+      if (sessionId == null) {
+        logger.warn('Chat submit: sign in to use the assistant.');
+        return;
+      }
+
+      const trimmed = prompt.trim();
+      if (!trimmed) return;
+
+      pendingOpenChatAndSubmitRef.current = { sessionId, prompt: trimmed };
       onOpenChange(true);
     },
     [startEmptyNewChat, onOpenChange],
@@ -766,8 +789,15 @@ export function useChatPanelChromeModel({
     ],
   );
 
+  useEffect(() => {
+    const pending = pendingOpenChatAndSubmitRef.current;
+    if (!pending || currentChatId !== pending.sessionId) return;
+    pendingOpenChatAndSubmitRef.current = null;
+    void handlePromptSubmit(pending.prompt);
+  }, [currentChatId, handlePromptSubmit]);
+
   const submitPreset = useCallback(
-    async (preset: ChatPreset) => {
+    async (preset: ChatPreset, options?: { message?: string }) => {
       const script = preset.script;
       const scriptGraph = isPresetScriptGraph(script);
       const hasLinearScript = Array.isArray(script) && script.length > 0;
@@ -782,7 +812,7 @@ export function useChatPanelChromeModel({
       if (!isLocalDemo) {
         if (!currentChatId) return;
         endLocalDemoFlow(currentChatId);
-        await handlePromptSubmit(preset.text);
+        await handlePromptSubmit(options?.message ?? preset.text);
         return;
       }
 
@@ -1307,6 +1337,7 @@ export function useChatPanelChromeModel({
     toggleOpen,
     newChat: startEmptyNewChat,
     openNewChatWithPrefill,
+    openNewChatAndSubmit,
     chatPanelContainer,
   };
 }
