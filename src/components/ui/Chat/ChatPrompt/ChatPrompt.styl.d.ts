@@ -9,6 +9,7 @@ interface CssExports {
   'editorWrap': string;
   'fileInput': string;
   'root': string;
+  'submitButton': string;
   'submitColumn': string;
 }
 export const cssExports: CssExports;
