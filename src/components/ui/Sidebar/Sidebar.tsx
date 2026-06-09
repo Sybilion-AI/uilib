@@ -93,7 +93,11 @@ function readInitialChatWidthPx(): number {
 type SetPanelWidthOptions = { persist?: boolean };
 
 /** Pass `viewTransition: false` to avoid nesting `document.startViewTransition` (e.g. chat open already animating). */
-export type SetSidebarOpenOptions = { viewTransition?: boolean };
+export type SetSidebarOpenOptions = {
+  viewTransition?: boolean;
+  /** Nav closed for layout (chat/width); restore when chat closes — do not persist closed cookie. */
+  layoutAutoClose?: boolean;
+};
 
 type SidebarContextProps = {
   isOpen: boolean;
@@ -178,6 +182,8 @@ function SidebarProvider({
   const [chatPanelOpen, _setChatPanelOpen] = useState(false);
   const sidebarWidthRef = useRef(sidebarWidthPx);
   const chatWidthRef = useRef(chatWidthPx);
+  /** Left nav was auto-closed because chat opened on a narrow shell; reopen when chat closes. */
+  const sidebarAutoClosedForChatRef = useRef(false);
   sidebarWidthRef.current = sidebarWidthPx;
   chatWidthRef.current = chatWidthPx;
 
@@ -332,10 +338,8 @@ function SidebarProvider({
           window.dispatchEvent(new CustomEvent(DISMISS_CHAT_FOR_LAYOUT_EVENT));
         }
       } else if (openingChat && isOpen) {
+        sidebarAutoClosedForChatRef.current = true;
         setIsOpen(false);
-        if (getCookiePreferences(userId)?.functional) {
-          setCookie('isSidebarOpen', 'false', 60 * 60 * 24 * 7);
-        }
       }
     },
     [
@@ -345,7 +349,6 @@ function SidebarProvider({
       chatPanelOpen,
       sidebarWidthPx,
       chatWidthPx,
-      userId,
     ],
   );
 
@@ -353,16 +356,32 @@ function SidebarProvider({
     (open: boolean) => {
       if (open) {
         closeOppositeSidebarIfNoSpace(false, true);
+        _setChatPanelOpen(true);
+        return;
       }
-      _setChatPanelOpen(open);
+      _setChatPanelOpen(false);
+      if (sidebarAutoClosedForChatRef.current) {
+        sidebarAutoClosedForChatRef.current = false;
+        setIsOpen(true);
+        if (getCookiePreferences(userId)?.functional) {
+          setCookie('isSidebarOpen', 'true', 60 * 60 * 24 * 7);
+        }
+      }
     },
-    [closeOppositeSidebarIfNoSpace],
+    [closeOppositeSidebarIfNoSpace, userId],
   );
 
   const setOpen = useCallback(
     (value: boolean, options?: SetSidebarOpenOptions) => {
+      const layoutAutoClose = options?.layoutAutoClose === true;
+
       if (value) {
+        sidebarAutoClosedForChatRef.current = false;
         closeOppositeSidebarIfNoSpace(true, false);
+      } else if (layoutAutoClose) {
+        sidebarAutoClosedForChatRef.current = true;
+      } else {
+        sidebarAutoClosedForChatRef.current = false;
       }
 
       const useViewTransition =
@@ -379,7 +398,7 @@ function SidebarProvider({
         setIsOpen(value);
       }
 
-      if (getCookiePreferences(userId)?.functional) {
+      if (!layoutAutoClose && getCookiePreferences(userId)?.functional) {
         setCookie('isSidebarOpen', value.toString(), 60 * 60 * 24 * 7);
       }
     },

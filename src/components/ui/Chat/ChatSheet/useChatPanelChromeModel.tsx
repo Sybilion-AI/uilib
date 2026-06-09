@@ -51,7 +51,10 @@ import {
 } from '../../Sidebar/Sidebar';
 import { Chat } from '../Chat';
 import type { ChatChromeProps } from '../ChatChrome';
-import type { ChatAttachmentDropItem, ChatPresetsRenderOptions } from '../ChatChrome/ChatChrome.types';
+import type {
+  ChatAttachmentDropItem,
+  ChatPresetsRenderOptions,
+} from '../ChatChrome/ChatChrome.types';
 import type { ChatEmptyStateConfig } from '../ChatEmptyState/ChatEmptyState.types';
 import type { ChatEmptyStateProps } from '../ChatEmptyState/ChatEmptyState.types';
 import {
@@ -1089,7 +1092,10 @@ export function useChatPanelChromeModel({
         })
       ) {
         // Chat open uses `startViewTransition`; nested transition here aborts first → AbortError overlay.
-        setSidebarNavOpen(false, { viewTransition: false });
+        setSidebarNavOpen(false, {
+          viewTransition: false,
+          layoutAutoClose: true,
+        });
       }
     };
 
