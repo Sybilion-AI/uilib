@@ -19,6 +19,17 @@ describe('stripMessageForPersistence', () => {
     expect(message.text).toBe('Summary');
   });
 
+  it('strips from an unclosed json-dashboard fence', () => {
+    const message = stripMessageForPersistence({
+      id: '1b',
+      role: MessageRole.ASSISTANT,
+      text: 'Summary\n```json-dashboard\n{"tiles":[]}',
+      timestamp: 1,
+    });
+
+    expect(message.text).toBe('Summary');
+  });
+
   it('drops attachment content but keeps file metadata', () => {
     const message = stripMessageForPersistence({
       id: '2',

@@ -196,6 +196,7 @@ function cloneMessagesForNewSession(messages: readonly Message[]): Message[] {
     .filter(message => !message.inProgress)
     .map(message => ({
       ...message,
+      text: stripJsonDashboardFences(message.text),
       ...(message.meta ? { meta: { ...message.meta } } : {}),
       ...(message.userTextFileAttachments
         ? {
@@ -474,6 +475,7 @@ export function ChatProvider({
       addScopeIdToRegistry(scopeId);
       const cloned = messages.map(message => ({
         ...message,
+        text: stripJsonDashboardFences(message.text),
         ...(message.meta ? { meta: { ...message.meta } } : {}),
       }));
 
