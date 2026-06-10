@@ -9,32 +9,6 @@ import logger from '#uilib/lib/logger';
 
 import S from './ChatMessage.styl';
 
-const injectHeaders = (content: string) => {
-  // Match #, ##, ###, or #### headers at start of line
-  const regex = /(^|\n)(#{1,4})\s+(.+?)(?=\n|$)/m;
-  const matches = content.match(regex);
-
-  if (!matches) return null;
-
-  const level = matches[2].length;
-  const headerText = matches[3].replace(/^\*+|\*+$/g, '');
-  const Tag =
-    level === 1 ? 'h1' : level === 2 ? 'h2' : level === 3 ? 'h3' : 'h4';
-
-  // Calculate the actual match position and length
-  // matches[0] includes the leading \n if present, but we want to replace from the # position
-  const hasLeadingNewline = matches[1] === '\n';
-  const startIndex = matches.index! + (hasLeadingNewline ? 1 : 0);
-  // Length is: # markers + space + header text (excluding leading newline)
-  const length = matches[2].length + 1 + matches[3].length;
-
-  return {
-    elem: <Tag>{headerText}</Tag>,
-    index: startIndex,
-    length: length,
-  };
-};
-
 /** Match sits inside list/table HTML (those blocks use dangerouslySetInnerHTML elsewhere). */
 const isInsideHtmlListOrTable = (content: string, matchStartIndex: number) => {
   const before = content.substring(0, matchStartIndex);
@@ -537,6 +511,41 @@ const injectAnchor: Injector = (content: string) => {
     ),
     index: matches.index!,
     length: matches[0].length,
+  };
+};
+
+const headerTextInjectors: Injector[] = [
+  injectAnchor,
+  injectMarkdownLink,
+  injectHTMLTags,
+  injectBold,
+  injectItalic,
+  injectAutolinkUrl,
+];
+
+const injectHeaders: Injector = (content: string) => {
+  // Match #, ##, ###, or #### headers at start of line
+  const regex = /(^|\n)(#{1,4})\s+(.+?)(?=\n|$)/m;
+  const matches = content.match(regex);
+
+  if (!matches) return null;
+
+  const level = matches[2].length;
+  const headerText = matches[3].replace(/^\*+|\*+$/g, '');
+  const Tag =
+    level === 1 ? 'h1' : level === 2 ? 'h2' : level === 3 ? 'h3' : 'h4';
+
+  // Calculate the actual match position and length
+  // matches[0] includes the leading \n if present, but we want to replace from the # position
+  const hasLeadingNewline = matches[1] === '\n';
+  const startIndex = matches.index! + (hasLeadingNewline ? 1 : 0);
+  // Length is: # markers + space + header text (excluding leading newline)
+  const length = matches[2].length + 1 + matches[3].length;
+
+  return {
+    elem: <Tag>{runFormattingPipeline(headerText, headerTextInjectors)}</Tag>,
+    index: startIndex,
+    length: length,
   };
 };
 
