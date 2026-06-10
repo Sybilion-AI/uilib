@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.89](https://github.com/Mir-Insight/uilib/compare/v1.3.88...v1.3.89) (2026-06-10)
+
+
+### Features
+
+* ChatContext - Session-centric shared storage ([e74366f](https://github.com/Mir-Insight/uilib/commit/e74366f43e140ca903b8d8303260ebb11441a33d))
+
+
+### Bug Fixes
+
+* AgentMessageContent - Bold markdown in chat headers ([bff2156](https://github.com/Mir-Insight/uilib/commit/bff2156547133d0500167a2183da2ce03b6ea90a))
+* chat-context - Strip json-dashboard fences in chat state ([2ab37f7](https://github.com/Mir-Insight/uilib/commit/2ab37f78eab9e87ba4cb270bbbb70184023cd1d0))
+
 ### [1.3.88](https://github.com/Mir-Insight/uilib/compare/v1.3.87...v1.3.88) (2026-06-09)
 
 
