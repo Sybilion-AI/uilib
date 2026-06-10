@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import { useMemo } from 'react';
 
 import { InteractiveContent } from '#uilib/components/ui/InteractiveContent';
 import { TextShimmer } from '#uilib/components/ui/TextShimmer';
@@ -33,6 +34,10 @@ export function ChatMessage({
   });
   const isAssistant = role === MessageRole.ASSISTANT;
   const isSystem = role === MessageRole.SYSTEM;
+  const assistantDisplayText = useMemo(
+    () => (isAssistant ? stripJsonDashboardFences(text) : text),
+    [isAssistant, text],
+  );
 
   return (
     <div className={cn(S.root, S[`role-${role}`], className)}>
@@ -48,7 +53,7 @@ export function ChatMessage({
         </div>
       ) : isAssistant ? (
         <AgentMessageContent
-          text={stripJsonDashboardFences(text)}
+          text={assistantDisplayText}
           textClassName={textClassName}
           onQuickReply={onQuickReply}
           suppressedQuickReplyKeys={suppressedQuickReplyKeys}

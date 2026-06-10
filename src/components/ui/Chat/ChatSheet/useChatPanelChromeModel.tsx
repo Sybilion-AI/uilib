@@ -817,8 +817,12 @@ export function useChatPanelChromeModel({
           Boolean(hasReplies));
 
       if (!isLocalDemo) {
-        if (!currentChatId) return;
-        endLocalDemoFlow(currentChatId);
+        let chatId = currentChatId;
+        if (!chatId) {
+          chatId = startEmptyNewChat() ?? undefined;
+          if (!chatId) return;
+        }
+        endLocalDemoFlow(chatId);
         await handlePromptSubmit(options?.message ?? preset.text);
         return;
       }
@@ -898,6 +902,7 @@ export function useChatPanelChromeModel({
     },
     [
       currentChatId,
+      startEmptyNewChat,
       endLocalDemoFlow,
       handlePromptSubmit,
       addMessage,
