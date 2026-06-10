@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.90](https://github.com/Mir-Insight/uilib/compare/v1.3.89...v1.3.90) (2026-06-10)
+
+
+### Bug Fixes
+
+* ChatSheet - Quick reply and fence stripping ([6bff2f3](https://github.com/Mir-Insight/uilib/commit/6bff2f349c24591e332d44340a480f804b124d06))
+
 ### [1.3.89](https://github.com/Mir-Insight/uilib/compare/v1.3.88...v1.3.89) (2026-06-10)
 
 
