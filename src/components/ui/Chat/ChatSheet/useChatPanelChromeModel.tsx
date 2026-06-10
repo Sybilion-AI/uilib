@@ -111,6 +111,11 @@ export type UseChatPanelChromeModelInput = {
     | string
     | ChatSendMessagePayload
     | Promise<string | ChatSendMessagePayload>;
+  /**
+   * When true, preset clicks always use the API send path (skip local `answer` /
+   * script demo). Use on /reports/new where first message must hit transformSendPayload.
+   */
+  submitPresetsViaApi?: boolean;
 };
 
 export type UseChatPanelChromeModelResult = {
@@ -165,6 +170,7 @@ export function useChatPanelChromeModel({
   onSlashItemCommand,
   copyHistoryOnNewChat = false,
   transformSendPayload,
+  submitPresetsViaApi = false,
 }: UseChatPanelChromeModelInput): UseChatPanelChromeModelResult {
   const effectiveScopeId = scopeId ?? NO_SCOPE_FALLBACK;
   const isMobile = useIsMobile();
@@ -593,7 +599,7 @@ export function useChatPanelChromeModel({
           try {
             const { response: assistantResponse, sessionId } =
               await sendMessage(payload);
-            onMessage?.(
+            await onMessage?.(
               displayTextFromSendPayload(payload),
               assistantResponse,
               sessionId,
@@ -761,7 +767,7 @@ export function useChatPanelChromeModel({
         try {
           const { response: assistantResponse, sessionId } =
             await sendMessage(payload);
-          onMessage?.(
+          await onMessage?.(
             displayTextFromSendPayload(payload),
             assistantResponse,
             sessionId,
@@ -804,10 +810,11 @@ export function useChatPanelChromeModel({
       const hasReplies =
         preset.replies && Object.keys(preset.replies).length > 0;
       const isLocalDemo =
-        hasLinearScript ||
-        scriptGraph ||
-        Boolean(preset.answer?.trim()) ||
-        Boolean(hasReplies);
+        !submitPresetsViaApi &&
+        (hasLinearScript ||
+          scriptGraph ||
+          Boolean(preset.answer?.trim()) ||
+          Boolean(hasReplies));
 
       if (!isLocalDemo) {
         if (!currentChatId) return;
@@ -895,6 +902,7 @@ export function useChatPanelChromeModel({
       handlePromptSubmit,
       addMessage,
       presetsWithFreeform,
+      submitPresetsViaApi,
     ],
   );
 

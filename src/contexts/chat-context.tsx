@@ -17,11 +17,27 @@ import {
   type UserTextFileAttachment,
 } from '#uilib/components/ui/Chat/Chat.types';
 import { normalizeUserTextFileAttachments } from '#uilib/components/ui/Chat/buildChatSendMessagePayload';
-import { stripJsonDashboardFences } from '#uilib/lib/dashboard-spec/stripJsonDashboardFences';
+import {
+  normalizeJsonDashboardChatText,
+  stripJsonDashboardFences,
+} from '#uilib/lib/dashboard-spec/stripJsonDashboardFences';
 import type { ChatResponse } from '#uilib/types/chat-api.types';
-import { LS } from '@homecode/ui';
 
-import { persistChatsToLS, safeLsSet } from './chatPersistence';
+import { isEphemeralChatScope } from './chatPersistence';
+import {
+  addScopeIdToRegistry,
+  countSessionReferences,
+  deleteSessionBlob,
+  linkSessionToScope as linkSessionToScopeStorage,
+  loadChatsFromSessionStorage,
+  loadScopeIndex,
+  loadSession,
+  persistScopeIndex,
+  persistSession,
+  removeSessionFromScope,
+  renameSessionId,
+} from './chatSessionStorage';
+import type { LinkSessionToScopeOptions } from './chatSessionStorage';
 
 export type SendChatMessageFn = (
   message: string,
@@ -32,9 +48,6 @@ export type {
   ChatSendMessagePayload,
   UserTextFileAttachment,
 } from '#uilib/components/ui/Chat/Chat.types';
-
-const CHATS_PREFIX = 'chats-';
-const CHAT_SCOPE_IDS_REGISTRY_KEY = 'chat-scope-ids';
 
 export type AddChatMessageOptions = {
   userTextFileAttachments?: UserTextFileAttachment[];
@@ -55,6 +68,8 @@ export type NewChatOptions = {
   seedMessages?: readonly Message[];
 };
 
+export type { LinkSessionToScopeOptions } from './chatSessionStorage';
+
 export type SendMessageResult = {
   response: string;
   sessionId: string;
@@ -63,6 +78,12 @@ export type SendMessageResult = {
 export interface ChatContextType {
   /** Returns the new session id, or undefined if no user / not created. */
   newChat: (scopeId: string, options?: NewChatOptions) => string | undefined;
+  /** Attach an existing session to a scope without cloning messages. */
+  linkSessionToScope: (
+    scopeId: string,
+    sessionId: string,
+    options?: LinkSessionToScopeOptions,
+  ) => void;
   setCurrentChatId: (currScopeId: string, sessionId: string) => void;
   addMessage: (
     scopeId: string,
@@ -116,78 +137,43 @@ export function outboundPendingKey(scopeId: string, chatSessionId: string) {
   return `${scopeId}\0${chatSessionId}`;
 }
 
-function getCurrentChatIdKey(scopeId: string) {
-  return `chat-current-id-${scopeId}`;
-}
-
-function getChatsKey(scopeId: string) {
-  return `${CHATS_PREFIX}${scopeId}`;
-}
-
-function scopeIdsForUser(userId: number, all: Set<string>): Set<string> {
-  const prefix = `${userId}-`;
-  const out = new Set<string>();
-  for (const id of all) {
-    if (id.startsWith(prefix)) out.add(id);
-  }
-  return out;
-}
-
-function discoverScopeIdsFromLS(): Set<string> {
-  const scopeIds = new Set<string>();
-  const registryRaw = LS.get(CHAT_SCOPE_IDS_REGISTRY_KEY);
-  const registry = Array.isArray(registryRaw) ? registryRaw : [];
-  registry.forEach((id: unknown) => {
-    if (typeof id === 'string' && id) scopeIds.add(id);
-  });
-  try {
-    for (let i = 0; i < window.localStorage.length; i++) {
-      const key = window.localStorage.key(i);
-      if (key?.startsWith(CHATS_PREFIX)) {
-        const scopeId = key.slice(CHATS_PREFIX.length);
-        if (scopeId) scopeIds.add(scopeId);
-      }
+function applySessionUpdate(
+  prev: Record<string, Chat[]>,
+  sessionId: string,
+  updater: (chat: Chat) => Chat,
+): Record<string, Chat[]> {
+  let updatedChat: Chat | null = null;
+  const next: Record<string, Chat[]> = {};
+  for (const [scopeId, scopeChats] of Object.entries(prev)) {
+    const idx = scopeChats.findIndex(chat => chat.session_id === sessionId);
+    if (idx === -1) {
+      next[scopeId] = scopeChats;
+      continue;
     }
-  } catch {
-    // ignore
+    const chat = updater(scopeChats[idx]);
+    updatedChat = chat;
+    const scopeNext = [...scopeChats];
+    scopeNext[idx] = chat;
+    next[scopeId] = scopeNext;
   }
-  return scopeIds;
+  if (updatedChat) persistSession(updatedChat);
+  return next;
 }
 
-function loadChatsFromLS(userId: number | null): {
-  chats: Record<string, Chat[]>;
-  currentChatId: Record<string, string | null>;
-} {
-  if (typeof window === 'undefined' || userId === null) {
-    return { chats: {}, currentChatId: {} };
+function remapSessionIdInMemory(
+  prev: Record<string, Chat[]>,
+  oldSessionId: string,
+  newSessionId: string,
+): Record<string, Chat[]> {
+  const next: Record<string, Chat[]> = {};
+  for (const [scopeId, scopeChats] of Object.entries(prev)) {
+    next[scopeId] = scopeChats.map(chat =>
+      chat.session_id === oldSessionId
+        ? { ...chat, session_id: newSessionId }
+        : chat,
+    );
   }
-  const chats: Record<string, Chat[]> = {};
-  const currentChatId: Record<string, string | null> = {};
-  const scopeIds = scopeIdsForUser(userId, discoverScopeIdsFromLS());
-  for (const scopeId of scopeIds) {
-    const chatsKey = getChatsKey(scopeId);
-    const storedRaw = LS.get(chatsKey);
-    const stored = Array.isArray(storedRaw) ? storedRaw : undefined;
-    if (stored?.length) {
-      chats[scopeId] = stored;
-      const ck = getCurrentChatIdKey(scopeId);
-      const savedCurrentIdRaw = LS.get(ck);
-      const savedCurrentId =
-        typeof savedCurrentIdRaw === 'string' && savedCurrentIdRaw !== ''
-          ? savedCurrentIdRaw
-          : undefined;
-      currentChatId[scopeId] = savedCurrentId ?? stored[0]?.session_id ?? null;
-    }
-  }
-  return { chats, currentChatId };
-}
-
-function addScopeIdToRegistry(scopeId: string) {
-  const raw = LS.get(CHAT_SCOPE_IDS_REGISTRY_KEY);
-  const registry = Array.isArray(raw) ? [...raw] : [];
-  if (!registry.includes(scopeId)) {
-    safeLsSet(CHAT_SCOPE_IDS_REGISTRY_KEY, [...registry, scopeId]);
-  }
+  return next;
 }
 
 /** Shallow-clone messages for seeding another session; drops in-progress rows. */
@@ -221,14 +207,14 @@ export function ChatProvider({
   sendChatMessage: sendChatMessageFn,
 }: ChatProviderProps) {
   const [chats, setChats] = useState<Record<string, Chat[]>>(() => {
-    if (userSwitchKey === null) return {};
-    return loadChatsFromLS(userSwitchKey).chats;
+    if (userSwitchKey === null || typeof window === 'undefined') return {};
+    return loadChatsFromSessionStorage(userSwitchKey).chats;
   });
   const [currentChatId, setCurrentChatIdState] = useState<
     Record<string, string | null>
   >(() => {
-    if (userSwitchKey === null) return {};
-    return loadChatsFromLS(userSwitchKey).currentChatId;
+    if (userSwitchKey === null || typeof window === 'undefined') return {};
+    return loadChatsFromSessionStorage(userSwitchKey).currentChatId;
   });
 
   const [outboundPendingByKey, setOutboundPendingByKey] = useState<
@@ -283,6 +269,68 @@ export function ChatProvider({
     [currentChatId],
   );
 
+  const setCurrentChatId = useCallback(
+    (currScopeId: string, sessionId: string) => {
+      if (!sessionId) return;
+      setCurrentChatIdState(prev => ({ ...prev, [currScopeId]: sessionId }));
+      const index = loadScopeIndex(currScopeId);
+      if (index) {
+        persistScopeIndex(currScopeId, {
+          ...index,
+          currentSessionId: sessionId,
+        });
+      }
+    },
+    [],
+  );
+
+  const linkSessionToScope = useCallback(
+    (
+      scopeId: string,
+      sessionId: string,
+      options?: LinkSessionToScopeOptions,
+    ) => {
+      if (userSwitchKey === null) return;
+      linkSessionToScopeStorage(scopeId, sessionId, options);
+      setChats(prev => {
+        const sessionFromLs = loadSession(sessionId);
+        let sessionFromMemory: Chat | null = null;
+        for (const scopeChats of Object.values(prev)) {
+          const found = scopeChats.find(chat => chat.session_id === sessionId);
+          if (
+            found &&
+            (!sessionFromMemory ||
+              found.messages.length > sessionFromMemory.messages.length)
+          ) {
+            sessionFromMemory = found;
+          }
+        }
+        const session =
+          sessionFromMemory &&
+          (!sessionFromLs ||
+            sessionFromMemory.messages.length >= sessionFromLs.messages.length)
+            ? sessionFromMemory
+            : sessionFromLs;
+        if (!session) return prev;
+        if (session === sessionFromMemory) {
+          persistSession(sessionFromMemory);
+        }
+        const scopeChats = prev[scopeId] ?? [];
+        const exists = scopeChats.some(chat => chat.session_id === sessionId);
+        const updatedChats = exists
+          ? scopeChats.map(chat =>
+              chat.session_id === sessionId ? session : chat,
+            )
+          : [session, ...scopeChats];
+        return { ...prev, [scopeId]: updatedChats };
+      });
+      if (options?.makeCurrent !== false) {
+        setCurrentChatIdState(prev => ({ ...prev, [scopeId]: sessionId }));
+      }
+    },
+    [userSwitchKey],
+  );
+
   const newChat = useCallback(
     (scopeId: string, options?: NewChatOptions): string | undefined => {
       if (userSwitchKey === null) return undefined;
@@ -293,72 +341,74 @@ export function ChatProvider({
         options?.seedMessages && options.seedMessages.length > 0
           ? cloneMessagesForNewSession(options.seedMessages)
           : [];
-      const newChat: Chat = {
+      const created: Chat = {
         session_id: sessionId,
         name: '',
         messages: seededMessages,
       };
 
+      persistSession(created);
+      linkSessionToScopeStorage(scopeId, sessionId, { makeCurrent: true });
+
       setChats(prev => {
-        const currentChats = prev[scopeId] ?? [];
-        const updatedChats = [newChat, ...currentChats];
-
-        persistChatsToLS(scopeId, updatedChats);
-
-        return {
-          ...prev,
-          [scopeId]: updatedChats,
-        };
+        const scopeChats = prev[scopeId] ?? [];
+        const isEphemeral = isEphemeralChatScope(scopeId);
+        if (isEphemeral) {
+          for (const old of scopeChats) {
+            if (old.session_id !== sessionId) {
+              removeSessionFromScope(scopeId, old.session_id);
+              if (countSessionReferences(userSwitchKey, old.session_id) === 0) {
+                deleteSessionBlob(old.session_id);
+              }
+            }
+          }
+        }
+        const updatedChats = isEphemeral ? [created] : [created, ...scopeChats];
+        return { ...prev, [scopeId]: updatedChats };
       });
       setCurrentChatIdState(prev => ({ ...prev, [scopeId]: sessionId }));
-      safeLsSet(getCurrentChatIdKey(scopeId), sessionId);
       return sessionId;
     },
     [userSwitchKey],
   );
 
-  const setCurrentChatId = useCallback(
-    (currScopeId: string, sessionId: string) => {
-      if (!sessionId) return;
-      setCurrentChatIdState(prev => ({ ...prev, [currScopeId]: sessionId }));
-      safeLsSet(getCurrentChatIdKey(currScopeId), sessionId);
-    },
-    [],
-  );
-
-  const deleteChat = useCallback((scopeId: string, sessionId: string) => {
-    const currentKey = getCurrentChatIdKey(scopeId);
-
-    setChats(prev => {
-      const scopeChats = prev[scopeId] ?? [];
+  const deleteChat = useCallback(
+    (scopeId: string, sessionId: string) => {
+      const scopeChats = chats[scopeId] ?? [];
       const deletedIndex = scopeChats.findIndex(
-        c => c.session_id === sessionId,
+        chat => chat.session_id === sessionId,
       );
-      if (deletedIndex === -1) {
-        return prev;
-      }
-      const updatedChats = scopeChats.filter(c => c.session_id !== sessionId);
-      persistChatsToLS(scopeId, updatedChats);
+      if (deletedIndex === -1) return;
 
-      setCurrentChatIdState(prevCurr => {
-        if (prevCurr[scopeId] !== sessionId) {
-          return prevCurr;
-        }
-        const nextId =
-          deletedIndex > 0
-            ? scopeChats[deletedIndex - 1].session_id
-            : (updatedChats[0]?.session_id ?? null);
-        if (nextId) {
-          safeLsSet(currentKey, nextId);
-        } else {
-          LS.remove(currentKey);
-        }
-        return { ...prevCurr, [scopeId]: nextId };
+      removeSessionFromScope(scopeId, sessionId);
+      if (
+        userSwitchKey != null &&
+        countSessionReferences(userSwitchKey, sessionId) === 0
+      ) {
+        deleteSessionBlob(sessionId);
+      }
+
+      setChats(prev => {
+        const currentScopeChats = prev[scopeId] ?? [];
+        return {
+          ...prev,
+          [scopeId]: currentScopeChats.filter(
+            chat => chat.session_id !== sessionId,
+          ),
+        };
       });
 
-      return { ...prev, [scopeId]: updatedChats };
-    });
-  }, []);
+      setCurrentChatIdState(prevCurr => {
+        if (prevCurr[scopeId] !== sessionId) return prevCurr;
+        const index = loadScopeIndex(scopeId);
+        const nextId =
+          index?.currentSessionId ??
+          (deletedIndex > 0 ? scopeChats[deletedIndex - 1].session_id : null);
+        return { ...prevCurr, [scopeId]: nextId };
+      });
+    },
+    [chats, userSwitchKey],
+  );
 
   const addMessage = useCallback(
     (
@@ -370,7 +420,10 @@ export function ChatProvider({
     ) => {
       if (userSwitchKey === null) return undefined;
       addScopeIdToRegistry(scopeId);
-      const storedText = stripJsonDashboardFences(text);
+      const storedText =
+        role === MessageRole.ASSISTANT
+          ? normalizeJsonDashboardChatText(text)
+          : stripJsonDashboardFences(text);
       const attachments =
         role === MessageRole.USER
           ? options?.userTextFileAttachments
@@ -387,19 +440,12 @@ export function ChatProvider({
         ...(options?.meta ? { meta: { ...options.meta } } : {}),
       };
 
-      setChats(prev => {
-        const scopeChats = prev[scopeId] ?? [];
-        const updatedChats = scopeChats.map(chat => {
-          if (chat.session_id === chatId) {
-            return { ...chat, messages: [...chat.messages, newMessage] };
-          }
-          return chat;
-        });
-
-        persistChatsToLS(scopeId, updatedChats);
-
-        return { ...prev, [scopeId]: updatedChats };
-      });
+      setChats(prev =>
+        applySessionUpdate(prev, chatId, chat => ({
+          ...chat,
+          messages: [...chat.messages, newMessage],
+        })),
+      );
       return newMessage.id;
     },
     [userSwitchKey],
@@ -408,18 +454,12 @@ export function ChatProvider({
   const removeMessageById = useCallback(
     (scopeId: string, chatId: string, messageId: string) => {
       if (userSwitchKey === null) return;
-      setChats(prev => {
-        const scopeChats = prev[scopeId] ?? [];
-        const updatedChats = scopeChats.map(chat => {
-          if (chat.session_id !== chatId) return chat;
-          return {
-            ...chat,
-            messages: chat.messages.filter(m => m.id !== messageId),
-          };
-        });
-        persistChatsToLS(scopeId, updatedChats);
-        return { ...prev, [scopeId]: updatedChats };
-      });
+      setChats(prev =>
+        applySessionUpdate(prev, chatId, chat => ({
+          ...chat,
+          messages: chat.messages.filter(message => message.id !== messageId),
+        })),
+      );
     },
     [userSwitchKey],
   );
@@ -432,39 +472,37 @@ export function ChatProvider({
       patch: UpdateChatMessagePatch,
     ) => {
       if (userSwitchKey === null) return;
-      setChats(prev => {
-        const scopeChats = prev[scopeId] ?? [];
-        const updatedChats = scopeChats.map(chat => {
-          if (chat.session_id !== chatId) return chat;
-          return {
-            ...chat,
-            messages: chat.messages.map(message => {
-              if (message.id !== messageId) return message;
-              const next: Message = { ...message };
-              if (patch.role != null) {
-                next.role = patch.role;
-              }
-              if (patch.text != null) {
-                next.text = stripJsonDashboardFences(patch.text);
-              }
-              if (patch.inProgress === true) {
-                next.inProgress = true;
-              } else if (
-                patch.inProgress === false ||
-                (patch.role != null && patch.role !== MessageRole.SYSTEM)
-              ) {
-                delete next.inProgress;
-              }
-              if (patch.meta != null) {
-                next.meta = { ...next.meta, ...patch.meta };
-              }
-              return next;
-            }),
-          };
-        });
-        persistChatsToLS(scopeId, updatedChats);
-        return { ...prev, [scopeId]: updatedChats };
-      });
+      setChats(prev =>
+        applySessionUpdate(prev, chatId, chat => ({
+          ...chat,
+          messages: chat.messages.map(message => {
+            if (message.id !== messageId) return message;
+            const next: Message = { ...message };
+            if (patch.role != null) {
+              next.role = patch.role;
+            }
+            if (patch.text != null) {
+              const targetRole = patch.role ?? message.role;
+              next.text =
+                targetRole === MessageRole.ASSISTANT
+                  ? normalizeJsonDashboardChatText(patch.text)
+                  : stripJsonDashboardFences(patch.text);
+            }
+            if (patch.inProgress === true) {
+              next.inProgress = true;
+            } else if (
+              patch.inProgress === false ||
+              (patch.role != null && patch.role !== MessageRole.SYSTEM)
+            ) {
+              delete next.inProgress;
+            }
+            if (patch.meta != null) {
+              next.meta = { ...next.meta, ...patch.meta };
+            }
+            return next;
+          }),
+        })),
+      );
     },
     [userSwitchKey],
   );
@@ -475,21 +513,19 @@ export function ChatProvider({
       addScopeIdToRegistry(scopeId);
       const cloned = messages.map(message => ({
         ...message,
-        text: stripJsonDashboardFences(message.text),
+        text:
+          message.role === MessageRole.ASSISTANT
+            ? message.text
+            : stripJsonDashboardFences(message.text),
         ...(message.meta ? { meta: { ...message.meta } } : {}),
       }));
 
-      setChats(prev => {
-        const scopeChats = prev[scopeId] ?? [];
-        const updatedChats = scopeChats.map(chat => {
-          if (chat.session_id !== chatId) return chat;
-          return { ...chat, messages: cloned };
-        });
-
-        persistChatsToLS(scopeId, updatedChats);
-
-        return { ...prev, [scopeId]: updatedChats };
-      });
+      setChats(prev =>
+        applySessionUpdate(prev, chatId, chat => ({
+          ...chat,
+          messages: cloned,
+        })),
+      );
     },
     [userSwitchKey],
   );
@@ -497,20 +533,12 @@ export function ChatProvider({
   const updateChatMeta = useCallback(
     (scopeId: string, chatId: string, patch: ChatMeta) => {
       if (userSwitchKey === null) return;
-      setChats(prev => {
-        const scopeChats = prev[scopeId] ?? [];
-        const updatedChats = scopeChats.map(chat => {
-          if (chat.session_id !== chatId) return chat;
-          return {
-            ...chat,
-            meta: { ...chat.meta, ...patch },
-          };
-        });
-
-        persistChatsToLS(scopeId, updatedChats);
-
-        return { ...prev, [scopeId]: updatedChats };
-      });
+      setChats(prev =>
+        applySessionUpdate(prev, chatId, chat => ({
+          ...chat,
+          meta: { ...chat.meta, ...patch },
+        })),
+      );
     },
     [userSwitchKey],
   );
@@ -565,19 +593,15 @@ export function ChatProvider({
             ? data.session_id
             : pendingChatSessionId;
 
-        if (data.session_id && data.session_id !== pendingChatSessionId) {
-          setChats(prev => {
-            const scopeChats = prev[scopeId] ?? [];
-            const updatedChats = scopeChats.map(chat =>
-              chat.session_id === pendingChatSessionId
-                ? { ...chat, session_id: data.session_id! }
-                : chat,
-            );
-
-            persistChatsToLS(scopeId, updatedChats);
-
-            return { ...prev, [scopeId]: updatedChats };
-          });
+        if (
+          data.session_id &&
+          data.session_id !== pendingChatSessionId &&
+          userSwitchKey != null
+        ) {
+          renameSessionId(userSwitchKey, pendingChatSessionId, data.session_id);
+          setChats(prev =>
+            remapSessionIdInMemory(prev, pendingChatSessionId, data.session_id),
+          );
           setCurrentChatId(scopeId, data.session_id);
         }
 
@@ -623,6 +647,7 @@ export function ChatProvider({
       getCurrentChatId,
       sendChatMessageFn,
       setCurrentChatId,
+      userSwitchKey,
     ],
   );
 
@@ -635,7 +660,7 @@ export function ChatProvider({
       return;
     }
 
-    const loaded = loadChatsFromLS(userSwitchKey);
+    const loaded = loadChatsFromSessionStorage(userSwitchKey);
     const updatedCurrentChatId = { ...loaded.currentChatId };
     for (const [scopeId, scopeChats] of Object.entries(loaded.chats)) {
       if (
@@ -655,6 +680,7 @@ export function ChatProvider({
     <ChatContext.Provider
       value={{
         newChat,
+        linkSessionToScope,
         setCurrentChatId,
         addMessage,
         removeMessageById,
@@ -744,6 +770,7 @@ export function useChatsForScopeId(scopeId: string) {
     getCurrentChatId,
     setCurrentChatId,
     newChat,
+    linkSessionToScope,
     addMessage,
     removeMessageById,
     updateMessageById,
@@ -763,6 +790,10 @@ export function useChatsForScopeId(scopeId: string) {
     currentChatId,
     isOutboundPending,
     setCurrentChatId: (targetId: string) => setCurrentChatId(scopeId, targetId),
+    linkSessionToScope: (
+      sessionId: string,
+      options?: LinkSessionToScopeOptions,
+    ) => linkSessionToScope(scopeId, sessionId, options),
     newChat: (options?: NewChatOptions) => newChat(scopeId, options),
     addMessage: (
       chatId: string,

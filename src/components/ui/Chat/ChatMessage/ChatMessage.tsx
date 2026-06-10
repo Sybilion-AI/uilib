@@ -2,6 +2,7 @@ import cn from 'classnames';
 
 import { InteractiveContent } from '#uilib/components/ui/InteractiveContent';
 import { TextShimmer } from '#uilib/components/ui/TextShimmer';
+import { stripJsonDashboardFences } from '#uilib/lib/dashboard-spec/stripJsonDashboardFences';
 
 import { type ChatMessageProps, MessageRole } from '../Chat.types';
 import { userTextFileAttachmentsFromMessage } from '../userTextFileAttachments';
@@ -47,7 +48,7 @@ export function ChatMessage({
         </div>
       ) : isAssistant ? (
         <AgentMessageContent
-          text={text}
+          text={stripJsonDashboardFences(text)}
           textClassName={textClassName}
           onQuickReply={onQuickReply}
           suppressedQuickReplyKeys={suppressedQuickReplyKeys}
