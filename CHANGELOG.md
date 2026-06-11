@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.91](https://github.com/Mir-Insight/uilib/compare/v1.3.90...v1.3.91) (2026-06-11)
+
+
+### Features
+
+* Sidebar - Mobile logo at top ([585cb7e](https://github.com/Mir-Insight/uilib/commit/585cb7e3ac72de456e9ee92c9207128153b78ab6))
+
+
+### Bug Fixes
+
+* PageFooter - Hide logo text in footer ([2e8a5d7](https://github.com/Mir-Insight/uilib/commit/2e8a5d7366624b24e0e40fef33c30453439c13a1))
+* Sidebar - Mobile sheet toggle ([f003da7](https://github.com/Mir-Insight/uilib/commit/f003da75a504c0603c1390ba53c065abd50eb313))
+
 ### [1.3.90](https://github.com/Mir-Insight/uilib/compare/v1.3.89...v1.3.90) (2026-06-10)
 
 
