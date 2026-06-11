@@ -5,12 +5,16 @@ import type { WorkspaceAppIconKey } from './workspaceAppIcons';
 /** Path segment for slug apps: pathname matches `/apps/{id}` */
 export const WORKSPACE_APP_SLUG_BASE_PATH = '/apps';
 
+export type WorkspaceAppSubtitleTone = 'default' | 'experimental';
+
 /** One surface in the workspace app switcher (serializable for localStorage). */
 export type WorkspaceAppEntry = {
   /** Slug (e.g. `my-custom-app` → `https://sybilion.io/apps/my-custom-app` via `href`). */
   id: string;
   displayName: string;
   subtitle: string;
+  /** Optional subtitle color tone; defaults to muted foreground. */
+  subtitleTone?: WorkspaceAppSubtitleTone;
   /** Custom icon for display; not persisted to localStorage. */
   icon?: ReactNode;
   /** Built-in icon lookup when `icon` is omitted (required for localStorage entries). */

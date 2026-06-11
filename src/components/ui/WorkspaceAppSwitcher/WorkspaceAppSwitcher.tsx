@@ -32,6 +32,34 @@ function entryKey(entry: WorkspaceAppEntry): string {
   return entry.id;
 }
 
+function subtitleClassName(entry: WorkspaceAppEntry): string {
+  return cn(S.sub, entry.subtitleTone === 'experimental' && S.subExperimental);
+}
+
+/** Overlay native app labels from host registry onto cached localStorage entries. */
+function mergeDefaultAppsMetadata(
+  apps: WorkspaceAppEntry[],
+  defaultApps: WorkspaceAppEntry[] | undefined,
+): WorkspaceAppEntry[] {
+  if (!defaultApps?.length) {
+    return apps;
+  }
+  const defaultsById = new Map(defaultApps.map(entry => [entry.id, entry]));
+  return apps.map(entry => {
+    const defaults = defaultsById.get(entry.id);
+    if (!defaults) {
+      return entry;
+    }
+    return {
+      ...entry,
+      displayName: defaults.displayName,
+      subtitle: defaults.subtitle,
+      subtitleTone: defaults.subtitleTone,
+      icon: defaults.icon ?? entry.icon,
+    };
+  });
+}
+
 function renderIconContent(
   icon: ReactNode | undefined,
   iconKey: WorkspaceAppEntry['iconKey'],
@@ -90,7 +118,7 @@ function useResolvedApps(
     ) {
       const fromLs = readWorkspaceAppsFromLocalStorage(appsStorageKey);
       if (fromLs != null && fromLs.length > 0) {
-        return fromLs;
+        return mergeDefaultAppsMetadata(fromLs, defaultApps);
       }
     }
     return defaultApps ?? [];
@@ -102,7 +130,11 @@ function useResolvedApps(
       return;
     }
     const fromLs = readWorkspaceAppsFromLocalStorage(appsStorageKey);
-    setApps(fromLs != null && fromLs.length > 0 ? fromLs : (defaultApps ?? []));
+    setApps(
+      fromLs != null && fromLs.length > 0
+        ? mergeDefaultAppsMetadata(fromLs, defaultApps)
+        : (defaultApps ?? []),
+    );
   }, [appsStorageKey, defaultApps]);
 
   return apps;
@@ -144,7 +176,9 @@ export function WorkspaceAppSwitcher({
           />
           <span className={S.textCol}>
             <span className={S.name}>{displayApp.displayName}</span>
-            <span className={S.sub}>{displayApp.subtitle}</span>
+            <span className={subtitleClassName(displayApp)}>
+              {displayApp.subtitle}
+            </span>
           </span>
           <ChevronDown className={S.chevron} size={12} aria-hidden />
         </Button>
@@ -175,7 +209,9 @@ export function WorkspaceAppSwitcher({
               />
               <span className={S.textCol}>
                 <span className={S.name}>{entry.displayName}</span>
-                <span className={S.sub}>{entry.subtitle}</span>
+                <span className={subtitleClassName(entry)}>
+                  {entry.subtitle}
+                </span>
               </span>
             </DropdownMenuItem>
           );

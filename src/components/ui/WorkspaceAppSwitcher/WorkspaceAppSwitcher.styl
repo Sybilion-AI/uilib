@@ -95,6 +95,13 @@
   overflow hidden
   text-overflow ellipsis
 
+  &.subExperimental
+    opacity .8
+    color var(--sb-red-400)
+
+    :global(.dark) &
+      color var(--sb-red-400)
+
 .menuContent
   min-width 280px
   max-width 360px

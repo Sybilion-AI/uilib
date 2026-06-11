@@ -1,5 +1,12 @@
-import type { WorkspaceAppEntry } from './workspaceApp.types';
+import type {
+  WorkspaceAppEntry,
+  WorkspaceAppSubtitleTone,
+} from './workspaceApp.types';
 import { isWorkspaceAppIconKey } from './workspaceAppIcons';
+
+function isWorkspaceAppSubtitleTone(v: unknown): v is WorkspaceAppSubtitleTone {
+  return v === 'default' || v === 'experimental';
+}
 
 function parseEntry(raw: unknown): WorkspaceAppEntry | null {
   if (!raw || typeof raw !== 'object') {
@@ -13,6 +20,7 @@ function parseEntry(raw: unknown): WorkspaceAppEntry | null {
   const accent = o.accent;
   const accentMuted = o.accentMuted;
   const href = o.href;
+  const subtitleToneRaw = o.subtitleTone;
   const prefixesRaw = o.matchPathPrefixes;
 
   if (
@@ -43,7 +51,7 @@ function parseEntry(raw: unknown): WorkspaceAppEntry | null {
     }
   }
 
-  return {
+  const entry: WorkspaceAppEntry = {
     id: idRaw,
     displayName,
     subtitle,
@@ -53,6 +61,12 @@ function parseEntry(raw: unknown): WorkspaceAppEntry | null {
     href,
     matchPathPrefixes,
   };
+
+  if (subtitleToneRaw != null && isWorkspaceAppSubtitleTone(subtitleToneRaw)) {
+    entry.subtitleTone = subtitleToneRaw;
+  }
+
+  return entry;
 }
 
 /**
