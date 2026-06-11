@@ -15,6 +15,7 @@ import {
 
 import { Button } from '#uilib/components/ui/Button';
 import type { ButtonProps } from '#uilib/components/ui/Button/Button.types';
+import { Logo } from '#uilib/components/ui/Logo/Logo';
 import { Separator } from '#uilib/components/ui/Separator';
 import { Sheet, SheetContent, SheetTitle } from '#uilib/components/ui/Sheet';
 import {
@@ -124,6 +125,7 @@ type SidebarProps = ComponentProps<'div'> & {
   variant?: 'sidebar' | 'floating' | 'inset';
   collapsible?: 'offcanvas' | 'icon' | 'none';
   fullHeightResizer?: boolean;
+  brandText?: string;
 };
 
 const SidebarContext = createContext<SidebarContextProps | null>(null);
@@ -524,6 +526,7 @@ function Sidebar({
   collapsible = 'offcanvas',
   children,
   fullHeightResizer = false,
+  brandText = 'Sybilion',
   ...props
 }: SidebarProps) {
   const isSidebarSheetLayout = useIsSidebarSheetLayout();
@@ -566,8 +569,12 @@ function Sidebar({
           }
           side={side}
         >
-          <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-          <div className={cn(S.sheetSidebarInner)}>{children}</div>
+          <div className={cn(S.sheetSidebarInner)}>
+            <div className={S.sheetSidebarLogo}>
+              <Logo size="md" brandText={brandText} />
+            </div>
+            {children}
+          </div>
         </SheetContent>
       </Sheet>
     );

@@ -28,6 +28,9 @@ SIDEBAR_SHEET_SPLIT = 1100px
   [data-slot="sidebar-wrapper"][data-state="collapsed"] &
     margin-left var(--p-3)
 
+  @media (max-width MOBILE)
+    margin-left var(--p-3) !important
+
 .mainBody
   display flex
   flex-direction column

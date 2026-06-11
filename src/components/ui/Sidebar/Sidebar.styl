@@ -379,6 +379,12 @@
   @media (max-width: MOBILE)
     z-index 100
 
+// Mobile sheet: logo in document flow above sidebar content
+.sheetSidebarLogo
+  position relative
+  flex-shrink 0
+  padding var(--p-6) var(--p-8) var(--p-2)
+
 // Sheet sidebar inner
 .sheetSidebarInner
   display flex
@@ -386,6 +392,13 @@
   width 100%
   flex-direction column
   background-color var(--sidebar)
+
+  .sidebarContent
+    position relative
+    flex 1
+    min-height 0
+    height auto
+    max-height none
 
 // Sidebar none
 .sidebarNone

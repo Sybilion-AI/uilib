@@ -93,7 +93,11 @@ export function DocsSidebar() {
   };
 
   return (
-    <Sidebar variant="inset" collapsible="offcanvas">
+    <Sidebar
+      variant="inset"
+      collapsible="offcanvas"
+      brandText="Sybilion Design"
+    >
       <SidebarContent>
         <SidebarMenu className={S.sidebarSearch}>
           <Input
