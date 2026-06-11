@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.92](https://github.com/Mir-Insight/uilib/compare/v1.3.91...v1.3.92) (2026-06-11)
+
+
+### Features
+
+* WorkspaceAppSwitcher - Experimental subtitle tone ([0e1a2c4](https://github.com/Mir-Insight/uilib/commit/0e1a2c43439243d64848910b753e816fbf45c5a5))
+
 ### [1.3.91](https://github.com/Mir-Insight/uilib/compare/v1.3.90...v1.3.91) (2026-06-11)
 
 
