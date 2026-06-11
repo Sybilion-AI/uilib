@@ -1,16 +1,4 @@
-import {
-  CHAT_WIDTH_DEFAULT_PX,
-  CHAT_WIDTH_MIN_PX,
-  CHAT_WIDTH_STORAGE_KEY,
-  SIDEBAR_WIDTH_DEFAULT_PX,
-  SIDEBAR_WIDTH_MIN_PX,
-  SIDEBAR_WIDTH_STORAGE_KEY_PCT,
-  SIDEBAR_WIDTH_STORAGE_KEY_PX,
-  clampChatWidthPx,
-  clampSidebarWidthPx,
-  defaultChatWidthPx,
-  shellFitsSidebarsLayout,
-} from '#uilib/hooks/panelWidth';
+import cn from 'classnames';
 import {
   CSSProperties,
   ComponentProps,
@@ -24,7 +12,10 @@ import {
   useRef,
   useState,
 } from 'react';
-import { LS, Scroll } from '@homecode/ui';
+
+import { Button } from '#uilib/components/ui/Button';
+import type { ButtonProps } from '#uilib/components/ui/Button/Button.types';
+import { Separator } from '#uilib/components/ui/Separator';
 import { Sheet, SheetContent, SheetTitle } from '#uilib/components/ui/Sheet';
 import {
   Tooltip,
@@ -32,20 +23,30 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '#uilib/components/ui/Tooltip';
-import { getCookie, setCookie } from '#uilib/lib/cookie';
+import {
+  CHAT_WIDTH_DEFAULT_PX,
+  CHAT_WIDTH_MIN_PX,
+  CHAT_WIDTH_STORAGE_KEY,
+  SIDEBAR_WIDTH_DEFAULT_PX,
+  SIDEBAR_WIDTH_MIN_PX,
+  SIDEBAR_WIDTH_STORAGE_KEY_PCT,
+  SIDEBAR_WIDTH_STORAGE_KEY_PX,
+  clampChatWidthPx,
+  clampSidebarWidthPx,
+  defaultChatWidthPx,
+  shellFitsSidebarsLayout,
+} from '#uilib/hooks/panelWidth';
 import useElemDrag, { Delta } from '#uilib/hooks/useDragElem';
-
-import { Button } from '#uilib/components/ui/Button';
-import type { ButtonProps } from '#uilib/components/ui/Button/Button.types';
-import { PanelLeft } from 'lucide-react';
-import S from './Sidebar.styl';
-import { Separator } from '#uilib/components/ui/Separator';
-import { Slot } from '@radix-ui/react-slot';
-import cn from 'classnames';
-import { getCookiePreferences } from '#uilib/lib/cookie-consent/cookie-consent';
 import useEvent from '#uilib/hooks/useEvent';
 import { useIsSidebarSheetLayout } from '#uilib/hooks/useIsSidebarSheetLayout';
 import { useShellWidthObserver } from '#uilib/hooks/useShellWidthObserver';
+import { getCookie, setCookie } from '#uilib/lib/cookie';
+import { getCookiePreferences } from '#uilib/lib/cookie-consent/cookie-consent';
+import { LS, Scroll } from '@homecode/ui';
+import { Slot } from '@radix-ui/react-slot';
+import { PanelLeft } from 'lucide-react';
+
+import S from './Sidebar.styl';
 
 const SIDEBAR_WIDTH_MOBILE = '18rem';
 const SIDEBAR_WIDTH_ICON = '3rem';
@@ -528,9 +529,14 @@ function Sidebar({
   const isSidebarSheetLayout = useIsSidebarSheetLayout();
   const { isOpen, setOpen } = useSidebar();
 
-  /** Narrow shell: sidebar is a sheet; collapse when crossing into this mode (preserve cookie semantics elsewhere). */
+  const prevSheetLayoutRef = useRef(isSidebarSheetLayout);
+
+  /** Narrow shell: sidebar is a sheet; collapse only when crossing into this mode. */
   useEffect(() => {
-    if (isSidebarSheetLayout) setOpen(false);
+    const enteredSheetLayout =
+      isSidebarSheetLayout && !prevSheetLayoutRef.current;
+    prevSheetLayoutRef.current = isSidebarSheetLayout;
+    if (enteredSheetLayout) setOpen(false);
   }, [isSidebarSheetLayout, setOpen]);
 
   if (collapsible === 'none') {
