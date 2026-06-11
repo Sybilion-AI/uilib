@@ -1,28 +1,3 @@
-import cn from 'classnames';
-import {
-  CSSProperties,
-  ComponentProps,
-  RefObject,
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-
-import { Button } from '#uilib/components/ui/Button';
-import type { ButtonProps } from '#uilib/components/ui/Button/Button.types';
-import { Separator } from '#uilib/components/ui/Separator';
-import { Sheet, SheetContent, SheetTitle } from '#uilib/components/ui/Sheet';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '#uilib/components/ui/Tooltip';
 import {
   CHAT_WIDTH_DEFAULT_PX,
   CHAT_WIDTH_MIN_PX,
@@ -36,17 +11,41 @@ import {
   defaultChatWidthPx,
   shellFitsSidebarsLayout,
 } from '#uilib/hooks/panelWidth';
+import {
+  CSSProperties,
+  ComponentProps,
+  RefObject,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { LS, Scroll } from '@homecode/ui';
+import { Sheet, SheetContent, SheetTitle } from '#uilib/components/ui/Sheet';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '#uilib/components/ui/Tooltip';
+import { getCookie, setCookie } from '#uilib/lib/cookie';
 import useElemDrag, { Delta } from '#uilib/hooks/useDragElem';
+
+import { Button } from '#uilib/components/ui/Button';
+import type { ButtonProps } from '#uilib/components/ui/Button/Button.types';
+import { PanelLeft } from 'lucide-react';
+import S from './Sidebar.styl';
+import { Separator } from '#uilib/components/ui/Separator';
+import { Slot } from '@radix-ui/react-slot';
+import cn from 'classnames';
+import { getCookiePreferences } from '#uilib/lib/cookie-consent/cookie-consent';
 import useEvent from '#uilib/hooks/useEvent';
 import { useIsSidebarSheetLayout } from '#uilib/hooks/useIsSidebarSheetLayout';
 import { useShellWidthObserver } from '#uilib/hooks/useShellWidthObserver';
-import { getCookie, setCookie } from '#uilib/lib/cookie';
-import { getCookiePreferences } from '#uilib/lib/cookie-consent/cookie-consent';
-import { LS, Scroll } from '@homecode/ui';
-import { Slot } from '@radix-ui/react-slot';
-import { PanelLeft } from 'lucide-react';
-
-import S from './Sidebar.styl';
 
 const SIDEBAR_WIDTH_MOBILE = '18rem';
 const SIDEBAR_WIDTH_ICON = '3rem';

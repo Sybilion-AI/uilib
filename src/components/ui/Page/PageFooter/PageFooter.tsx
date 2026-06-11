@@ -83,8 +83,7 @@ export function PageFooter({
       <div className={S.line}>
         <div className={S.logo}>
           <Link to={homeTo}>
-            <Logo />
-            &nbsp;{brandText}
+            <Logo brandText={brandText} />
           </Link>
           {versionLink !== '' && (
             <div className={S.version}>
