@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.93](https://github.com/Mir-Insight/uilib/compare/v1.3.92...v1.3.93) (2026-06-12)
+
+
+### Features
+
+* PageTabs - pass scrollProps to PageXScroll ([d08e7c9](https://github.com/Mir-Insight/uilib/commit/d08e7c9fa08d7764fc524071adfc77bffde05b2a))
+
 ### [1.3.92](https://github.com/Mir-Insight/uilib/compare/v1.3.91...v1.3.92) (2026-06-11)
 
 
