@@ -1,9 +1,8 @@
-import cn from 'classnames';
 import { useEffect, useState } from 'react';
 
-import { Scroll } from '@homecode/ui';
-
 import S from './PageXScroll.styl';
+import { Scroll } from '@homecode/ui';
+import cn from 'classnames';
 
 const scrollSizeMap = {
   sm: 's',
@@ -11,7 +10,7 @@ const scrollSizeMap = {
   lg: 'l',
 } as const;
 
-interface PageXScrollProps extends Omit<
+export interface PageXScrollProps extends Omit<
   React.ComponentProps<typeof Scroll>,
   'size'
 > {
@@ -21,6 +20,12 @@ interface PageXScrollProps extends Omit<
   innerClassName?: string;
   scrollbarClassName?: string;
   fullWidth?: boolean;
+  scrollbarOffset?: {
+    x?: {
+      before?: number;
+      after?: number;
+    };
+  };
 }
 
 export function PageXScroll({
@@ -30,6 +35,7 @@ export function PageXScroll({
   scrollbarClassName,
   fullWidth = false,
   size = 'md',
+  scrollbarOffset,
   ...props
 }: PageXScrollProps) {
   const [pageXPadding, setPageXPadding] = useState(24); // Default fallback
@@ -57,8 +63,8 @@ export function PageXScroll({
       xScrollbarClassName={scrollbarClassName}
       offset={{
         x: {
-          before: pageXPadding,
-          after: pageXPadding,
+          before: pageXPadding + (scrollbarOffset?.x?.before ?? 0),
+          after: pageXPadding + (scrollbarOffset?.x?.after ?? 0),
         },
       }}
       autoHide

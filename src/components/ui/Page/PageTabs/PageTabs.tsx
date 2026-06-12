@@ -1,6 +1,9 @@
 import cn from 'classnames';
 
-import { PageXScroll } from '#uilib/components/ui/Page/PageXScroll/PageXScroll';
+import {
+  PageXScroll,
+  PageXScrollProps,
+} from '#uilib/components/ui/Page/PageXScroll/PageXScroll';
 import {
   Tabs,
   TabsContent,
@@ -37,6 +40,7 @@ export function PageTabs({
   items,
   tabsListProps,
   variant = 'link',
+  scrollProps,
   ...props
 }: {
   items: PageTabsItem[];
@@ -45,6 +49,7 @@ export function PageTabs({
     withPaddings?: boolean;
   };
   variant?: TabsVariant;
+  scrollProps?: Partial<PageXScrollProps>;
 } & TabsProps & {
     contentClassName?: string;
     innerClassName?: string;
@@ -62,8 +67,9 @@ export function PageTabs({
       >
         <PageXScroll
           size="sm"
+          {...scrollProps}
           scrollbarClassName={cn(S.scrollbar, scrollbarClassName)}
-          innerClassName={cn(innerClassName, S.listInner)}
+          innerClassName={cn(S.listInner, innerClassName)}
         >
           {items.map((item, index) => (
             <TabsTrigger
