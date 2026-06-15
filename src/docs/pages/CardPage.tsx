@@ -1,4 +1,3 @@
-import { Button } from '#uilib/components/ui/Button';
 import {
   Card,
   CardContent,
@@ -8,14 +7,16 @@ import {
   CardTitle,
   LinkCard,
 } from '#uilib/components/ui/Card';
-import { PageContentSection } from '#uilib/components/ui/Page';
-import { PackageIcon } from '@phosphor-icons/react';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
+import { Button } from '#uilib/components/ui/Button';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
+import { PackageIcon } from '@phosphor-icons/react';
+import { PageContentSection } from '#uilib/components/ui/Page';
 
 const PADDING_SIZES = ['s', 'm', 'l'] as const;
+const RADIUS_SIZES = ['s', 'm', 'l', 'xl'] as const;
 
 const CARD_WIDTH = 280;
 
@@ -25,7 +26,7 @@ export default function CardPage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'Card' }]}
         title="Card"
-        subheader="Padding sizes, slot compositions, and link card."
+        subheader="Padding and radius sizes, slot compositions, and link card."
         actions={<DocsHeaderActions />}
       />
       <DocsGuidance
@@ -57,11 +58,43 @@ export default function CardPage() {
             }}
           >
             {PADDING_SIZES.map(p => (
-              <Card key={p} paddingSize={p} style={{ width: CARD_WIDTH }}>
-                <CardHeader title={`padding-${p}`} />
+              <Card
+                key={p}
+                paddingSize={p}
+                radiusSize={p}
+                style={{ width: CARD_WIDTH }}
+              >
+                <CardHeader title={`Padding "${p}"`} />
                 <CardContent>
                   <p style={{ margin: 0 }}>
                     Inner padding via <code>paddingSize="{p}"</code>.
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+        <section>
+          <h3 style={{ marginBottom: '1rem' }}>Radius sizes</h3>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1rem',
+              alignItems: 'flex-start',
+            }}
+          >
+            {RADIUS_SIZES.map(r => (
+              <Card
+                key={r}
+                radiusSize={r}
+                paddingSize="s"
+                style={{ width: CARD_WIDTH }}
+              >
+                <CardHeader title={`Radius "${r}"`} />
+                <CardContent>
+                  <p style={{ margin: 0 }}>
+                    Corner radius via <code>radiusSize="{r}"</code>.
                   </p>
                 </CardContent>
               </Card>
@@ -93,7 +126,11 @@ export default function CardPage() {
                     header + content + footer
                   </td>
                   <td style={{ padding: '0.5rem' }}>
-                    <Card paddingSize="m" style={{ width: CARD_WIDTH }}>
+                    <Card
+                      paddingSize="m"
+                      radiusSize="xl"
+                      style={{ width: CARD_WIDTH }}
+                    >
                       <CardHeader
                         icon={<PackageIcon />}
                         title="Card title"
@@ -122,7 +159,11 @@ export default function CardPage() {
                     header + content
                   </td>
                   <td style={{ padding: '0.5rem' }}>
-                    <Card paddingSize="m" style={{ width: CARD_WIDTH }}>
+                    <Card
+                      paddingSize="m"
+                      radiusSize="xl"
+                      style={{ width: CARD_WIDTH }}
+                    >
                       <CardHeader
                         title="No footer"
                         description="Content only below the header."
@@ -145,7 +186,11 @@ export default function CardPage() {
                     content only
                   </td>
                   <td style={{ padding: '0.5rem' }}>
-                    <Card paddingSize="m" style={{ width: CARD_WIDTH }}>
+                    <Card
+                      paddingSize="m"
+                      radiusSize="xl"
+                      style={{ width: CARD_WIDTH }}
+                    >
                       <CardContent>
                         <CardTitle>Standalone title</CardTitle>
                         <div style={{ marginTop: '0.25rem' }}>
@@ -169,7 +214,11 @@ export default function CardPage() {
                     icon with background
                   </td>
                   <td style={{ padding: '0.5rem' }}>
-                    <Card paddingSize="m" style={{ width: CARD_WIDTH }}>
+                    <Card
+                      paddingSize="m"
+                      radiusSize="xl"
+                      style={{ width: CARD_WIDTH }}
+                    >
                       <CardHeader
                         icon={<PackageIcon />}
                         iconWithBackground

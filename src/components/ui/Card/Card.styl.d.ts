@@ -9,14 +9,15 @@ interface CssExports {
   'header': string;
   'headerText': string;
   'icon': string;
+  'padding-l': string;
+  'padding-m': string;
+  'padding-s': string;
   'radius-l': string;
   'radius-m': string;
   'radius-s': string;
+  'radius-xl': string;
   'root': string;
   'scroll': string;
-  'size-l': string;
-  'size-m': string;
-  'size-s': string;
   'title': string;
   'withBackground': string;
 }

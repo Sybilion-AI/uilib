@@ -2,7 +2,7 @@ import { TextWithDeferTooltipProps } from '#uilib/components/ui/TextWithDeferToo
 
 export interface CardProps extends React.ComponentProps<'div'> {
   paddingSize?: 's' | 'm' | 'l';
-  radiusSize?: 's' | 'm' | 'l';
+  radiusSize?: 's' | 'm' | 'l' | 'xl';
 }
 
 export interface CardHeaderProps extends Omit<
