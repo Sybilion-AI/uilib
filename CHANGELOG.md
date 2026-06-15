@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.98](https://github.com/Mir-Insight/uilib/compare/v1.3.97...v1.3.98) (2026-06-15)
+
+
+### Bug Fixes
+
+* Dialog,Select - adjust styles ([67dc6c6](https://github.com/Mir-Insight/uilib/commit/67dc6c6f8b72558e1da6cec938d654d91c2e458b))
+
 ### [1.3.97](https://github.com/Mir-Insight/uilib/compare/v1.3.96...v1.3.97) (2026-06-15)
 
 
