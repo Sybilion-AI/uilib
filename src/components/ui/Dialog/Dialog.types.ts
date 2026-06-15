@@ -1,8 +1,11 @@
 import { CSSProperties, ReactNode } from 'react';
 
+import { Card } from '../Card';
+
 export interface DialogProps {
   open: boolean;
   disabled?: boolean;
+  cardProps?: React.ComponentProps<typeof Card>;
   /** When true, the header close control is hidden. */
   disableCloseButton?: boolean;
   onOpenChange: (isOpen: boolean) => void;

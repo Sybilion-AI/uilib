@@ -1,4 +1,9 @@
-import cn from 'classnames';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from '#uilib/components/ui/Card/Card';
 import React, {
   useEffect,
   useId,
@@ -6,25 +11,20 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { createPortal } from 'react-dom';
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '#uilib/components/ui/Card/Card';
 import { APP_MODAL_ID } from '#uilib/constants/appMount';
-import { XIcon } from '@phosphor-icons/react';
-
-import S from './Dialog.styl';
 import type { DialogProps } from './Dialog.types';
+import S from './Dialog.styl';
+import { XIcon } from '@phosphor-icons/react';
+import cn from 'classnames';
+import { createPortal } from 'react-dom';
 
 export function Dialog({
   open,
   onOpenChange,
   disabled,
   trigger,
+  cardProps = {},
   title,
   subtitle,
   disableCloseButton,
@@ -191,7 +191,9 @@ export function Dialog({
           className,
         )}
         tabIndex={-1}
+        {...cardProps}
         style={{
+          ...cardProps.style,
           width,
           maxHeight: maxHeight
             ? `min(${maxHeight}, calc(100% - var(--p-4)))`

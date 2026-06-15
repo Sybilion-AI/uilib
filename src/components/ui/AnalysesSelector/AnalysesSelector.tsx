@@ -1,10 +1,8 @@
-import cn from 'classnames';
-import { useEffect, useMemo, useRef } from 'react';
-
-import { AnalysisLineIcon } from '#uilib/components/ui/AnalysisLineIcon';
-import { Badge } from '#uilib/components/ui/Badge';
-import { Button } from '#uilib/components/ui/Button';
-import { LabelWithId } from '#uilib/components/ui/LabelWithId';
+import type {
+  AnalysesSelectorItem,
+  AnalysesSelectorProps,
+} from './AnalysesSelector.types';
+import { EyeClosedIcon, EyeIcon } from '@phosphor-icons/react';
 import {
   Select,
   SelectContent,
@@ -12,15 +10,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#uilib/components/ui/Select';
-import { TextShimmer } from '#uilib/components/ui/TextShimmer/TextShimmer';
-import { getLatestByUpdatedAt } from '#uilib/utils/analysisDate';
-import { EyeClosedIcon, EyeIcon } from '@phosphor-icons/react';
+import { useEffect, useMemo, useRef } from 'react';
 
+import { AnalysisLineIcon } from '#uilib/components/ui/AnalysisLineIcon';
+import { Badge } from '#uilib/components/ui/Badge';
+import { Button } from '#uilib/components/ui/Button';
+import { LabelWithId } from '#uilib/components/ui/LabelWithId';
 import S from './AnalysesSelector.styl';
-import type {
-  AnalysesSelectorItem,
-  AnalysesSelectorProps,
-} from './AnalysesSelector.types';
+import { TextShimmer } from '#uilib/components/ui/TextShimmer/TextShimmer';
+import cn from 'classnames';
+import { getLatestByUpdatedAt } from '#uilib/utils/analysisDate';
 
 const isFailed = (item: AnalysesSelectorItem) =>
   item.status?.toLowerCase() === 'fail';

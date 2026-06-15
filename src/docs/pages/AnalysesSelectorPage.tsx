@@ -1,11 +1,9 @@
-import { useState } from 'react';
-
 import { AnalysesSelector } from '#uilib/components/ui/AnalysesSelector';
-import { PageContentSection } from '#uilib/components/ui/Page';
-
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
+import { PageContentSection } from '#uilib/components/ui/Page';
+import { useState } from 'react';
 
 const ITEMS = [
   { id: -1, label: 'Historical', color: 'var(--foreground)' },
@@ -55,6 +53,7 @@ export default function AnalysesSelectorPage() {
       />
       <PageContentSection style={{ maxWidth: 420 }}>
         <AnalysesSelector
+          size="sm"
           items={ITEMS}
           selectedIds={selectedIds}
           onItemToggle={id => {
