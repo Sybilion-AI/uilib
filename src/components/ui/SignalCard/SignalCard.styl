@@ -1,11 +1,7 @@
 .root
-  display flex
-  flex-direction column
   gap 14px
   padding var(--p-5)
-  background var(--card)
-  border 1px solid var(--border)
-  border-radius var(--radius-3)
+  box-shadow none
   transition border-color var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard)
 
   &:hover
@@ -13,28 +9,9 @@
     box-shadow var(--shadow-2)
 
 .head
-  display flex
   align-items center
   gap 12px
-
-.badge
-  width 40px
-  height 40px
-  border-radius var(--radius-3)
-  background var(--sb-slate-100)
-  display flex
-  align-items center
-  justify-content center
-  flex none
-  color var(--sb-slate-900)
-
-  :global(.dark) &
-    background var(--sb-slate-800)
-    color var(--sb-slate-100)
-
-  & > svg
-    width var(--icon-size-xl)
-    height var(--icon-size-xl)
+  justify-content flex-start
 
 .headText
   display flex
@@ -46,6 +23,7 @@
   font-family var(--font-family-body)
   font-size var(--text-base)
   font-weight 600
+  line-height normal
   color var(--sb-slate-900)
 
   :global(.dark) &
@@ -58,6 +36,11 @@
 
   :global(.dark) &
     color var(--sb-slate-400)
+
+.content
+  display flex
+  flex-direction column
+  gap 14px
 
 // Numeric block — Manrope only, weight carries the emphasis
 .figure
@@ -108,8 +91,8 @@
   min-width 0
 
 .foot
-  display flex
   align-items baseline
+  justify-content flex-start
   gap 12px
   font-family var(--font-family-body)
   font-size 13px

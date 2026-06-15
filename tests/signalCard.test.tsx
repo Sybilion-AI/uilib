@@ -44,20 +44,20 @@ describe('SignalCard', () => {
 
   it('omits the header block when icon, title and subtitle are absent', () => {
     const { container } = render(<SignalCard value="42" />);
-    expect(container.querySelector('.head')).toBeNull();
+    expect(container.querySelector('[data-slot="card-header"]')).toBeNull();
     expect(screen.getByText('42')).toBeInTheDocument();
   });
 
   it('omits the footer when there is no delta and no meta', () => {
     const { container } = render(<SignalCard title="Title" value="42" />);
-    expect(container.querySelector('.foot')).toBeNull();
+    expect(container.querySelector('[data-slot="card-footer"]')).toBeNull();
   });
 
   it('renders the footer when only meta is provided', () => {
     const { container } = render(
       <SignalCard value="42" meta={['6m horizon']} />,
     );
-    expect(container.querySelector('.foot')).not.toBeNull();
+    expect(container.querySelector('[data-slot="card-footer"]')).not.toBeNull();
     expect(screen.getByText('6m horizon')).toBeInTheDocument();
   });
 
