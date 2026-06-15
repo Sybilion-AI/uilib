@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.97](https://github.com/Mir-Insight/uilib/compare/v1.3.96...v1.3.97) (2026-06-15)
+
+
+### Features
+
+* Card - radiusSize ([5b47451](https://github.com/Mir-Insight/uilib/commit/5b4745170d5c1c1cf545b62f5d898ae6629dc12d))
+
+
+### Bug Fixes
+
+* Button, Card - fix sizes - radius,paddings ([b15a50b](https://github.com/Mir-Insight/uilib/commit/b15a50b746af19242443ebd7b7af2be663fb34f0))
+
 ### [1.3.96](https://github.com/Mir-Insight/uilib/compare/v1.3.95...v1.3.96) (2026-06-15)
 
 
