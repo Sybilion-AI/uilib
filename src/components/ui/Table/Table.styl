@@ -36,15 +36,15 @@
 
     .tableHead
     .tableCell
-      padding var(--p-4) var(--p-3)
-      height 65px
+      padding var(--p-3) var(--p-4)
+      height auto
 
   &[data-size="lg"]
     font-size var(--text-base)
 
     .tableHead
     .tableCell
-      padding var(--p-5) var(--p-4)
+      padding var(--p-5) var(--p-5)
       height auto
 
   &.withPaddings
@@ -55,26 +55,21 @@
     .tableCell:last-child
       padding-right var(--p-6)
 
-  .tableCell.compact
-    height auto
-    padding-top 0
-    padding-bottom 0
-
 .tableBody
   position relative
 
-  &:not(:first-child)::before
-    content ''
-    display block
-    height 1px
-    position absolute
-    left 0
-    right 0
-    background-color var(--border)
+  // &:not(:first-child)::before
+  //   content ''
+  //   display block
+  //   height 1px
+  //   position absolute
+  //   left 0
+  //   right 0
+  //   background-color var(--border)
 
-    .withBackground &
-      left var(--p-6)
-      right var(--p-6)
+  //   .withBackground &
+  //     left var(--p-6)
+  //     right var(--p-6)
 
   tr:last-child
     border-bottom 0

@@ -1,4 +1,4 @@
-import { PageContentSection } from '#uilib/components/ui/Page';
+import { PageContentSection, PageXScroll } from '#uilib/components/ui/Page';
 import {
   Table,
   TableBody,
@@ -25,12 +25,10 @@ function DemoTable({
   size,
   withBackground = false,
   withPaddings = false,
-  compactSecondRow = false,
 }: {
   size: TableSize;
   withBackground?: boolean;
   withPaddings?: boolean;
-  compactSecondRow?: boolean;
 }) {
   return (
     <Table
@@ -46,12 +44,10 @@ function DemoTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {SAMPLE_ROWS.map((row, index) => (
+        {SAMPLE_ROWS.map(row => (
           <TableRow key={row.name}>
             <TableCell>{row.name}</TableCell>
-            <TableCell compact={compactSecondRow && index === 1}>
-              {row.role}
-            </TableCell>
+            <TableCell>{row.role}</TableCell>
             <TableCell>{row.status}</TableCell>
           </TableRow>
         ))}
@@ -81,13 +77,13 @@ export default function TablePage() {
         ]}
         doNotes={[
           'Keep column headers short and use TableHead cells so the markup stays accessible.',
-          'Use the compact prop on TableCell when a row needs zero vertical padding inside a sized table.',
+          'Use size="sm" on Table when you need tighter row density.',
         ]}
       />
-      <PageContentSection
-        style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
-      >
-        <section>
+      <PageXScroll>
+        <section
+          style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
+        >
           <h3 style={{ marginBottom: '1rem' }}>Sizes</h3>
           <p
             style={{
@@ -155,20 +151,7 @@ export default function TablePage() {
             </table>
           </div>
         </section>
-        <section>
-          <h3 style={{ marginBottom: '1rem' }}>Compact cells</h3>
-          <p
-            style={{
-              marginBottom: '0.75rem',
-              color: 'var(--muted-foreground)',
-            }}
-          >
-            The middle row&apos;s Role cell uses <code>compact</code> to remove
-            vertical padding while keeping the table size ramp.
-          </p>
-          <DemoTable size="md" withBackground withPaddings compactSecondRow />
-        </section>
-      </PageContentSection>
+      </PageXScroll>
     </>
   );
 }

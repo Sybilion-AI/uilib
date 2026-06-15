@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'cellValue': string;
-  'compact': string;
   'scrollContainer': string;
   'scrollInner': string;
   'scrollbar': string;

@@ -84,11 +84,11 @@ function TableHead({ className, ...props }: TableHeadProps) {
   );
 }
 
-function TableCell({ className, compact, ...props }: TableCellProps) {
+function TableCell({ className, ...props }: TableCellProps) {
   return (
     <td
       data-slot="table-cell"
-      className={cn(S.tableCell, compact && S.compact, className)}
+      className={cn(S.tableCell, className)}
       {...props}
     />
   );

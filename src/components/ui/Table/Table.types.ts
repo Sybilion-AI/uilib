@@ -14,7 +14,5 @@ export interface TableBodyProps extends ComponentProps<'tbody'> {}
 export interface TableFooterProps extends ComponentProps<'tfoot'> {}
 export interface TableRowProps extends ComponentProps<'tr'> {}
 export interface TableHeadProps extends ComponentProps<'th'> {}
-export interface TableCellProps extends ComponentProps<'td'> {
-  compact?: boolean;
-}
+export interface TableCellProps extends ComponentProps<'td'> {}
 export interface TableCaptionProps extends ComponentProps<'caption'> {}
