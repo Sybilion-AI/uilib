@@ -1,9 +1,5 @@
-import cn from 'classnames';
+import { InfoIcon, Pencil, TableIcon } from 'lucide-react';
 import React, { useMemo, useRef } from 'react';
-
-import { Button } from '#uilib/components/ui/Button';
-import { FORECAST_LINE_COLORS } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
-import { PageXScroll } from '#uilib/components/ui/Page';
 import {
   Table,
   TableBody,
@@ -18,9 +14,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '#uilib/components/ui/Tooltip';
-import { InfoIcon, Pencil, TableIcon } from 'lucide-react';
-
-import S from './PerformanceChart.styl';
 import {
   calculateAccuracy,
   calculateBenefit,
@@ -30,6 +23,12 @@ import {
   formatROI,
   getForecastModelDisplayName,
 } from './performanceChart.helpers';
+
+import { Button } from '#uilib/components/ui/Button';
+import { FORECAST_LINE_COLORS } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
+import { PageXScroll } from '#uilib/components/ui/Page';
+import S from './PerformanceChart.styl';
+import cn from 'classnames';
 
 const DEFAULT_INVESTMENT_COST = 35000; // Investment Cost (IC) - annual cost of solution
 
@@ -333,6 +332,7 @@ export function PerformanceTable({
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
+                                className={S.editCustomPerformanceButton}
                                 type="button"
                                 variant="ghost"
                                 icon

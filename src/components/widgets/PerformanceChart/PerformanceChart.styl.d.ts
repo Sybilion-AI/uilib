@@ -4,6 +4,7 @@ interface CssExports {
   'chartContainer': string;
   'chartEmptyOverlay': string;
   'colorCircle': string;
+  'editCustomPerformanceButton': string;
   'emptyState': string;
   'forecastCell': string;
   'isEmpty': string;
