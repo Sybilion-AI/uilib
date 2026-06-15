@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.95](https://github.com/Mir-Insight/uilib/compare/v1.3.94...v1.3.95) (2026-06-15)
+
+
+### Bug Fixes
+
+* SignalCard - based on Card ([5e41e0b](https://github.com/Mir-Insight/uilib/commit/5e41e0b6be593adf42ed3a7a07dae3162ce21692))
+
 ### [1.3.94](https://github.com/Mir-Insight/uilib/compare/v1.3.93...v1.3.94) (2026-06-15)
 
 
