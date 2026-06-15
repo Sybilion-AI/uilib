@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.94](https://github.com/Mir-Insight/uilib/compare/v1.3.93...v1.3.94) (2026-06-15)
+
+
+### Features
+
+* DesignSystem - Expand tokens, components, and docs ([0318cf9](https://github.com/Mir-Insight/uilib/commit/0318cf992357481c976479c7d21a3533cc27c72c))
+
 ### [1.3.93](https://github.com/Mir-Insight/uilib/compare/v1.3.92...v1.3.93) (2026-06-12)
 
 
