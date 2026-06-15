@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.96](https://github.com/Mir-Insight/uilib/compare/v1.3.95...v1.3.96) (2026-06-15)
+
+
+### Bug Fixes
+
+* PerformanceChart - table action inline style ([1e87370](https://github.com/Mir-Insight/uilib/commit/1e8737042c39cec02a1bf93133d84c14f6fc473b))
+
 ### [1.3.95](https://github.com/Mir-Insight/uilib/compare/v1.3.94...v1.3.95) (2026-06-15)
 
 
