@@ -1,0 +1,121 @@
+.root
+  display flex
+  flex-direction column
+  gap 14px
+  padding var(--p-5)
+  background var(--card)
+  border 1px solid var(--border)
+  border-radius var(--radius-3)
+  transition border-color var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard)
+
+  &:hover
+    border-color var(--muted-border)
+    box-shadow var(--shadow-2)
+
+.head
+  display flex
+  align-items center
+  gap 12px
+
+.badge
+  width 40px
+  height 40px
+  border-radius var(--radius-3)
+  background var(--sb-slate-100)
+  display flex
+  align-items center
+  justify-content center
+  flex none
+  color var(--sb-slate-900)
+
+  :global(.dark) &
+    background var(--sb-slate-800)
+    color var(--sb-slate-100)
+
+  & > svg
+    width var(--icon-size-xl)
+    height var(--icon-size-xl)
+
+.headText
+  display flex
+  flex-direction column
+  gap 2px
+  min-width 0
+
+.title
+  font-family var(--font-family-body)
+  font-size var(--text-base)
+  font-weight 600
+  color var(--sb-slate-900)
+
+  :global(.dark) &
+    color var(--sb-slate-100)
+
+.subtitle
+  font-family var(--font-family-body)
+  font-size 13px
+  color var(--sb-slate-500)
+
+  :global(.dark) &
+    color var(--sb-slate-400)
+
+// Numeric block — Manrope only, weight carries the emphasis
+.figure
+  display flex
+  align-items baseline
+  gap 6px
+  font-family var(--font-family-body)
+  color var(--sb-slate-900)
+
+  :global(.dark) &
+    color var(--sb-slate-100)
+
+.value
+  font-size var(--text-4xl)
+  font-weight 500
+  letter-spacing -0.05em
+  line-height 42px
+
+.unit
+  font-size var(--text-base)
+  font-weight 500
+  letter-spacing var(--tracking-display)
+  color var(--sb-slate-800)
+
+  :global(.dark) &
+    color var(--sb-slate-300)
+
+.tolerance
+  font-size var(--text-base)
+  font-weight 400
+  letter-spacing var(--tracking-display)
+  color var(--sb-slate-700)
+
+  :global(.dark) &
+    color var(--sb-slate-400)
+
+.body
+  font-family var(--font-family-body)
+  font-size var(--text-sm)
+  line-height 1.5
+  color var(--sb-slate-800)
+
+  :global(.dark) &
+    color var(--sb-slate-300)
+
+.sparkline
+  display flex
+  min-width 0
+
+.foot
+  display flex
+  align-items baseline
+  gap 12px
+  font-family var(--font-family-body)
+  font-size 13px
+
+.dim
+  color var(--sb-slate-500)
+
+  :global(.dark) &
+    color var(--sb-slate-400)

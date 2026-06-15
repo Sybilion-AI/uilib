@@ -42,15 +42,29 @@ export function normalizeTooltipPayload(
   return result.length ? result : undefined;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
 export function getPayloadConfigFromPayload(
   config: ChartConfig,
   payload: unknown,
   key: string,
 ) {
-  if (typeof payload !== 'object' || payload === null) {
+  if (!isRecord(payload)) {
     return config[key];
   }
 
-  // Simple direct lookup first
-  return config[key] || undefined;
+  // When the item (or its inner datum) carries a string at `key` — e.g. a
+  // Pie slice with nameKey="key" — that string names the config entry.
+  const inner = isRecord(payload.payload) ? payload.payload : undefined;
+
+  let configLabelKey = key;
+  if (typeof payload[key] === 'string') {
+    configLabelKey = String(payload[key]);
+  } else if (inner && typeof inner[key] === 'string') {
+    configLabelKey = String(inner[key]);
+  }
+
+  return configLabelKey in config ? config[configLabelKey] : config[key];
 }

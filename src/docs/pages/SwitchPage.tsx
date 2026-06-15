@@ -1,28 +1,167 @@
-import { useState } from 'react';
-
 import { Label } from '#uilib/components/ui/Label';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Switch } from '#uilib/components/ui/Switch';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
+import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
-export default function SwitchPage() {
-  const [on, setOn] = useState(false);
+const SIZES = ['sm', 'md', 'lg'] as const;
 
+const STATES = [
+  { label: 'off', checked: false },
+  { label: 'on', checked: true },
+] as const;
+
+export default function SwitchPage() {
   return (
     <>
       <AppPageHeader
         breadcrumbs={[{ label: 'Switch' }]}
         title="Switch"
-        subheader="Toggle switch."
+        subheader="Sizes, on/off states, and disabled state."
         actions={<DocsHeaderActions />}
       />
+      <DocsGuidance
+        overview="Switch is a binary control for turning a setting on or off. Unlike a checkbox, a switch implies the change takes effect immediately, without a separate save step."
+        whenToUse={[
+          'For settings that apply instantly, such as enabling notifications or a feature flag.',
+          'When the two states are clearly opposites, such as on and off.',
+        ]}
+        whenNotToUse={[
+          'In forms where changes are committed by a submit action; use Checkbox instead.',
+          'For selecting one of several options; use RadioGroup, Toggle, or ToggleGroup.',
+        ]}
+        doNotes={[
+          'Pair the switch with a Label linked via htmlFor so the state being controlled is clear.',
+        ]}
+      />
       <PageContentSection
-        style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+        style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
       >
-        <Switch id="sw" checked={on} onCheckedChange={setOn} />
-        <Label htmlFor="sw">{on ? 'On' : 'Off'}</Label>
+        <section>
+          <h3 style={{ marginBottom: '1rem' }}>States × sizes</h3>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: 'left', padding: '0.5rem' }} />
+                  {SIZES.map(s => (
+                    <th key={s} style={{ padding: '0.5rem' }}>
+                      {s}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {STATES.map(st => (
+                  <tr key={st.label}>
+                    <td
+                      style={{
+                        padding: '0.5rem',
+                        fontWeight: 600,
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {st.label}
+                    </td>
+                    {SIZES.map(s => (
+                      <td key={s} style={{ padding: '0.5rem' }}>
+                        <Switch
+                          id={`sw-${st.label}-${s}`}
+                          size={s}
+                          checked={st.checked}
+                          aria-label={`${st.label} ${s}`}
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section>
+          <h3 style={{ marginBottom: '1rem' }}>With label</h3>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1.5rem',
+              alignItems: 'center',
+            }}
+          >
+            {SIZES.map(s => (
+              <div
+                key={s}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              >
+                <Switch id={`sw-label-${s}`} size={s} defaultChecked />
+                <Label htmlFor={`sw-label-${s}`}>{s}</Label>
+              </div>
+            ))}
+          </div>
+        </section>
+        <section>
+          <h3 style={{ marginBottom: '1rem' }}>Disabled</h3>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: 'left', padding: '0.5rem' }} />
+                  {SIZES.map(s => (
+                    <th key={s} style={{ padding: '0.5rem' }}>
+                      {s}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td
+                    style={{
+                      padding: '0.5rem',
+                      fontWeight: 600,
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    off
+                  </td>
+                  {SIZES.map(s => (
+                    <td key={s} style={{ padding: '0.5rem' }}>
+                      <Switch
+                        size={s}
+                        disabled
+                        aria-label={`Disabled off ${s}`}
+                      />
+                    </td>
+                  ))}
+                </tr>
+                <tr>
+                  <td
+                    style={{
+                      padding: '0.5rem',
+                      fontWeight: 600,
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    on
+                  </td>
+                  {SIZES.map(s => (
+                    <td key={s} style={{ padding: '0.5rem' }}>
+                      <Switch
+                        size={s}
+                        checked
+                        disabled
+                        aria-label={`Disabled on ${s}`}
+                      />
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
       </PageContentSection>
     </>
   );

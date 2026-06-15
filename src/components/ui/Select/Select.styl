@@ -10,8 +10,8 @@
   overflow hidden
 
   padding var(--p-1) var(--p-3)
-  // Match ToggleGroup_item styling
-  border-radius var(--p-4)
+  // Match Input styling
+  border-radius var(--radius-input)
   border none
   box-shadow none
   background-color var(--background)
@@ -46,26 +46,33 @@
     box-shadow 0 0 0 2px var(--background)
     // color var(--muted-foreground)
 
-  &[data-size="sm"]
+  &[data-size="xs"]
     height auto
     min-height 28px
-    padding 0 var(--p-4)
+    padding 0 10px
     border-radius var(--p-4)
     font-size var(--text-xs)
+
+  &[data-size="sm"]
+    height auto
+    min-height 32px
+    padding 0 14px
+    border-radius var(--radius-3)
+    font-size 13px
 
   &[data-size="md"]
     height auto
     min-height 40px
-    padding var(--p-3) var(--p-4)
-    border-radius var(--p-4)
+    padding 11px 14px
+    border-radius var(--radius-input)
     font-size var(--text-sm)
 
   &[data-size="lg"]
     height auto
-    min-height auto
+    min-height 48px
     padding var(--p-4) var(--p-6)
-    border-radius var(--p-4)
-    font-size var(--text-sm)
+    border-radius var(--radius-4)
+    font-size var(--text-base)
 
   &[data-placeholder]
     color var(--muted-foreground)
@@ -128,7 +135,7 @@
   max-height var(--radix-select-content-available-height)
   // Match Tooltip tooltipContent styling
   background-color var(--popover)
-  border-radius var(--p-4)
+  border-radius var(--radius-input)
   box-shadow 0 10px 15px -3px rgba(0, 0, 0, 0.1)
   border 1px solid var(--border)
   color var(--popover-foreground)
@@ -203,12 +210,12 @@
     background-color var(--accent)
 
   &:first-child
-    border-top-left-radius var(--p-3)
-    border-top-right-radius var(--p-3)
+    border-top-left-radius var(--radius-md)
+    border-top-right-radius var(--radius-md)
 
   &:last-child
-    border-bottom-left-radius var(--p-3)
-    border-bottom-right-radius var(--p-3)
+    border-bottom-left-radius var(--radius-md)
+    border-bottom-right-radius var(--radius-md)
 
   &:focus
     background-color var(--accent)

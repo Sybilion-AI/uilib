@@ -12,6 +12,7 @@ import { ScrollRef } from '@homecode/ui';
 import { MessageSquare } from 'lucide-react';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
+import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DOCS_CHAT_USER_KEY } from '../docsConstants';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
@@ -108,6 +109,20 @@ export default function ChatComposerPrefillPage() {
             }}
           />
         }
+      />
+      <DocsGuidance
+        overview="The chat composer can be prefilled without auto-sending: pass promptPrefill to ChatChrome, call ChatSheetActions.openNewChatWithPrefill for the portal sheet, or use a ?prompt= deep link. Focus lands at the end of the text so users can edit before submitting."
+        whenToUse={[
+          'To seed the composer from a call to action, such as a suggested question on a dataset page.',
+          'To deep link into the product with a prepared prompt via ?prompt=.',
+          'When opening a new chat session that should start from a template prompt.',
+        ]}
+        whenNotToUse={[
+          'To send a message automatically on behalf of the user; prefill never submits.',
+        ]}
+        doNotes={[
+          'Keep prefilled text short and editable; it is a starting point, not a command.',
+        ]}
       />
       <PageContentSection>
         <p style={{ marginBottom: 12, fontSize: 14, lineHeight: 1.5 }}>

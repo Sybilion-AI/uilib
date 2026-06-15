@@ -8,4 +8,4 @@ export {
   TableCell,
   TableCellValue,
 } from './Table';
-export type { TableProps } from './Table.types';
+export type { TableProps, TableSize } from './Table.types';

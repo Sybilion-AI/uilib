@@ -1,6 +1,12 @@
 import { type ComponentProps } from 'react';
 
-export interface TableProps extends ComponentProps<'table'> {}
+export type TableSize = 'sm' | 'md' | 'lg';
+
+export interface TableProps extends ComponentProps<'table'> {
+  size?: TableSize;
+  withBackground?: boolean;
+  withPaddings?: boolean;
+}
 export interface TableHeaderProps extends ComponentProps<'thead'> {
   withBorder?: boolean;
 }

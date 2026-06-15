@@ -24,7 +24,8 @@ function Button({
       className={cn(
         S.root,
         S[variant],
-        icon ? S.sizeIcon : sizeClass(size),
+        sizeClass(size),
+        icon && S.sizeIcon,
         className,
       )}
       {...props}

@@ -3,17 +3,17 @@
   display inline-flex
   align-items center
   justify-content center
-  gap 8px
+  gap 10px
   flex-shrink 0
   white-space nowrap
-  border-radius 14px
+  border-radius var(--radius-button)
   font-family 'Manrope', sans-serif
-  font-size 14px
+  font-size 15px
   font-weight 500
-  line-height 20px
+  line-height 1
   outline none
   cursor pointer
-  transition all 150ms
+  transition all var(--dur-base) var(--ease-standard)
   border 0
 
   &:disabled
@@ -99,33 +99,35 @@
 
 // Size styles
 .sizeMd
-  min-height 48px
-  padding 14px 16px
-
-  &:has(> svg)
-    padding-left 14px
-    padding-right 14px
+  padding var(--p-3) var(--p-5)
 
 .sizeSm
-  height 36px
-  gap 6px
-  padding 0 12px
-  border-radius 14px
-
-  &:has(> svg)
-    padding-left 10px
-    padding-right 10px
+  padding var(--p-2) 14px
+  font-size 13px
+  border-radius var(--radius-3)
 
 .sizeLg
-  height 40px
-  padding 0 24px
-  border-radius 14px
+  padding var(--p-4) var(--p-6)
+  font-size var(--text-base)
+  border-radius var(--radius-4)
 
-  &:has(> svg)
-    padding-left 16px
-    padding-right 16px
-
+// Icon buttons: square, sized per size variant, same radius as the size variant
 .sizeIcon
-  width 36px
-  height 36px
   padding 0
+  width 48px
+  height 48px
+
+  &.sizeSm
+    width 36px
+    height 36px
+    padding 0
+
+  &.sizeMd
+    width 48px
+    height 48px
+    padding 0
+
+  &.sizeLg
+    width 56px
+    height 56px
+    padding 0

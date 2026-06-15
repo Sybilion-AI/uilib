@@ -1,19 +1,21 @@
+import { useCallback, useMemo, useState } from 'react';
+
+import { ChartAreaInteractive } from '#uilib/components/ui/ChartAreaInteractive';
 import type {
   ChartDataPoint,
   OverlayMode,
 } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
-import { Tabs, TabsList, TabsTrigger } from '#uilib/components/ui/Tabs';
-import { useCallback, useMemo, useState } from 'react';
-
-import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
-import { ChartAreaInteractive } from '#uilib/components/ui/ChartAreaInteractive';
-import { DocsHeaderActions } from '../docsHeaderActions';
-import type { ForecastData } from '#uilib/types/forecast-data';
 import { ForecastItemData } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
 import { Label } from '#uilib/components/ui/Label';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Switch } from '#uilib/components/ui/Switch';
+import { Tabs, TabsList, TabsTrigger } from '#uilib/components/ui/Tabs';
 import { useTheme } from '#uilib/contexts/theme-context';
+import type { ForecastData } from '#uilib/types/forecast-data';
+
+import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
+import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
+import { DocsHeaderActions } from '../docsHeaderActions';
 
 const DEMO_FORECAST_ID = 1;
 
@@ -146,6 +148,21 @@ export default function ChartAreaInteractivePage() {
         title="ChartAreaInteractive"
         subheader="Interactive area chart shell with time range controls."
         actions={<DocsHeaderActions />}
+      />
+      <DocsGuidance
+        overview="ChartAreaInteractive is the full chart shell for time series data, combining an area chart with a time range selector, a legend with series toggles, and optional forecast overlays. Overlay modes add month pinning, quantile interval bands, or threshold controls on top of the base chart."
+        whenToUse={[
+          'To present historical and forecast series together with built-in time range filtering.',
+          'When users need to toggle series visibility, pin a month, or inspect quantile intervals and thresholds.',
+          'As the main visualisation on an analysis or dataset page.',
+        ]}
+        whenNotToUse={[
+          'For a simple static chart without controls; compose ChartContainer with Recharts directly.',
+          'For non-temporal data such as categorical comparisons.',
+        ]}
+        doNotes={[
+          'Pass loading while data is being fetched so the chart shows its skeleton state.',
+        ]}
       />
       <PageContentSection>
         <Tabs

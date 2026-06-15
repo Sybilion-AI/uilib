@@ -97,6 +97,37 @@
   --stroke-linejoin: miter;
   --stroke-absolute: true;
   --header-height: 3.5rem;
+  --color-status-positive: var(--status-positive);
+  --color-status-positive-bg: var(--status-positive-bg);
+  --color-status-negative: var(--status-negative);
+  --color-status-negative-bg: var(--status-negative-bg);
+  --radius-0: var(--radius-0);
+  --radius-1: var(--radius-1);
+  --radius-2: var(--radius-2);
+  --radius-3: var(--radius-3);
+  --radius-4: var(--radius-4);
+  --radius-pill: var(--radius-pill);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-button: var(--radius-button);
+  --radius-card: var(--radius-card);
+  --radius-input: var(--radius-input);
+  --shadow-0: var(--shadow-0);
+  --shadow-1: var(--shadow-1);
+  --shadow-2: var(--shadow-2);
+  --shadow-3: var(--shadow-3);
+  --ease-standard: var(--ease-standard);
+  --ease-exit: var(--ease-exit);
+  --text-display-xl: var(--text-display-xl);
+  --text-display-l: var(--text-display-l);
+  --text-display-m: var(--text-display-m);
+  --text-display-s: var(--text-display-s);
+  --text-2xs: var(--text-2xs);
+  --tracking-display: var(--tracking-display);
+  --tracking-heading: var(--tracking-heading);
+  --tracking-body: var(--tracking-body);
+  --tracking-label: var(--tracking-label);
 }
 
 :root {
@@ -212,6 +243,61 @@
   --spacing-xl: 20px;
   --spacing-2xl: 24px;
   --spacing-3xl: 32px;
+
+  /* design-system radii */
+  --radius-0: 0px;
+  --radius-1: 2px;
+  --radius-2: 4px;
+  --radius-3: 8px;
+  --radius-4: 12px;
+  --radius-pill: 999px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-button: 10px;
+  --radius-card: 12px;
+  --radius-input: 10px;
+
+  /* design-system shadows */
+  --shadow-0: none;
+  --shadow-1: 0 1px 0 rgba(36, 40, 41, 0.04);
+  --shadow-2: 0 2px 8px rgba(36, 40, 41, 0.06);
+  --shadow-3: 0 12px 32px rgba(36, 40, 41, 0.1);
+
+  /* design-system motion */
+  --ease-standard: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 400ms;
+
+  /* design-system icons */
+  --icon-stroke: 1.5;
+  --icon-size-sm: 14px;
+  --icon-size-md: 16px;
+  --icon-size-lg: 20px;
+  --icon-size-xl: 24px;
+
+  /* design-system typography */
+  --text-display-xl: 124px;
+  --text-display-l: 88px;
+  --text-display-m: 64px;
+  --text-display-s: 48px;
+  --text-2xs: 10px;
+  --lh-tight: 1.02;
+  --lh-snug: 1.15;
+  --lh-normal: 1.45;
+  --lh-loose: 1.6;
+  --tracking-display: -0.02em;
+  --tracking-heading: -0.01em;
+  --tracking-body: 0em;
+  --tracking-label: 0.04em;
+
+  /* design-system status colors (mapped onto --sb-* ramps) */
+  --status-positive: var(--sb-green-700);
+  --status-positive-bg: var(--sb-green-100);
+  --status-negative: var(--sb-red-600);
+  --status-negative-bg: var(--sb-red-100);
 
   --font-family-heading: 'KMR Apparat', sans-serif;
   --font-family-body: 'Manrope', sans-serif;
@@ -331,6 +417,10 @@
   --sidebar-ring: oklch(0.5 0 0);
   --sb-link-color: var(--brand-color-400);
   --sb-link-visited-color: var(--brand-color-600);
+  --status-positive: var(--sb-green-400);
+  --status-positive-bg: var(--sb-green-900);
+  --status-negative: var(--sb-red-400);
+  --status-negative-bg: var(--sb-red-900);
 }
 
 @layer base {
@@ -397,6 +487,14 @@
     font-weight: 500;
     font-size: var(--text-xl);
     line-height: 1.4;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 1em 0 0.5em !important;
   }
 
   label {

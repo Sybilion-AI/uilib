@@ -1,0 +1,78 @@
+.root
+  display inline-flex
+  align-items center
+  width fit-content
+  flex-shrink 0
+  white-space nowrap
+  gap 6px
+  padding 5px 10px
+  border-radius var(--radius-pill)
+  font-family var(--font-family-body)
+  font-size 11px
+  line-height 1rem
+  font-weight 400
+  letter-spacing var(--tracking-body)
+  transition background-color var(--dur-base) var(--ease-standard), color var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard)
+
+  .dot
+    width 6px
+    height 6px
+    border-radius 50%
+    background var(--sb-cyan-400)
+    flex none
+
+  .arrow
+    width 10px
+    height 10px
+    flex none
+    pointer-events none
+
+  // Neutral variant — slate wash with status dot
+  &.variant-neutral
+    background var(--sb-slate-100)
+    color var(--sb-slate-800)
+
+    :global(.dark) &
+      background var(--sb-slate-800)
+      color var(--sb-slate-200)
+
+  // Line variant — hairline outline on surface
+  &.variant-line
+    background var(--background)
+    border 1px solid var(--border)
+    color var(--sb-slate-900)
+
+    :global(.dark) &
+      color var(--sb-slate-100)
+
+  // Active variant — accent outline
+  &.variant-active
+    background transparent
+    border 1px solid var(--sb-cyan-400)
+    color var(--sb-slate-900)
+
+    :global(.dark) &
+      color var(--sb-slate-100)
+
+  // Filled variant — inverse
+  &.variant-filled
+    background var(--sb-slate-900)
+    color var(--sb-slate-50)
+
+    :global(.dark) &
+      background var(--sb-slate-100)
+      color var(--sb-slate-900)
+
+  // Accent variant — cyan wash
+  &.variant-accent
+    background var(--sb-cyan-100)
+    color var(--sb-slate-900)
+
+  // Status variants — quantitative delta / impact only
+  &.variant-positive
+    background var(--status-positive-bg)
+    color var(--status-positive)
+
+  &.variant-negative
+    background var(--status-negative-bg)
+    color var(--status-negative)

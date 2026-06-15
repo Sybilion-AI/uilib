@@ -1,0 +1,33 @@
+.root
+  display flex
+  flex-direction column
+  gap var(--p-3)
+  padding-top var(--p-1)
+  padding-bottom var(--p-10)
+
+.overview
+  margin 0
+  max-width 720px
+  line-height 1.6
+
+.block
+  display flex
+  flex-direction column
+  gap var(--p-1)
+
+.heading
+  margin 0
+  font-size var(--text-xs)
+  font-weight 600
+  letter-spacing 0.02em
+  text-transform uppercase
+  color var(--muted-foreground)
+
+.list
+  margin 0
+  padding-left var(--p-5)
+  max-width 720px
+  line-height 1.6
+
+  li + li
+    margin-top 2px

@@ -14,13 +14,15 @@ import type {
 
 function Table({
   className,
+  size = 'md',
   withBackground = false,
   withPaddings = false,
   ...props
-}: TableProps & { withBackground?: boolean; withPaddings?: boolean }) {
+}: TableProps) {
   return (
     <table
       data-slot="table"
+      data-size={size}
       className={cn(
         S.table,
         className,

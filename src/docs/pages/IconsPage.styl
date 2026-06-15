@@ -1,0 +1,74 @@
+.toolbar
+  display flex
+  align-items center
+  gap var(--p-3)
+  margin-bottom var(--p-4)
+
+  > :first-child
+    max-width 320px
+    flex 1
+
+.count
+  color var(--muted-foreground)
+  font-size var(--text-xs)
+  white-space nowrap
+
+.grid
+  display grid
+  grid-template-columns repeat(auto-fill, minmax(104px, 1fr))
+  gap var(--p-2)
+
+.cell
+  display flex
+  flex-direction column
+  align-items center
+  justify-content flex-start
+  gap var(--p-2)
+  padding var(--p-3) var(--p-1)
+  border 1px solid transparent
+  border-radius var(--radius-2)
+  cursor pointer
+  background none
+  color var(--foreground)
+  transition background var(--dur-fast) var(--ease-standard)
+
+  &:hover
+    border-color var(--border)
+    background var(--muted)
+
+.cellCopied
+  border-color var(--brand-color)
+
+.cellName
+  font-size var(--text-2xs)
+  line-height 1.2
+  color var(--muted-foreground)
+  word-break break-word
+  text-align center
+  user-select text
+
+.more
+  margin-top var(--p-4)
+  color var(--muted-foreground)
+  font-size var(--text-sm)
+
+.sizesRow
+  display flex
+  align-items flex-end
+  gap var(--p-8)
+
+.sizeItem
+  display flex
+  flex-direction column
+  align-items center
+  gap var(--p-2)
+
+.tokenName
+  font-family monospace
+  font-size var(--text-xs)
+  color var(--muted-foreground)
+  user-select text
+
+.sectionNote
+  margin-bottom var(--p-3)
+  color var(--muted-foreground)

@@ -6,7 +6,9 @@ module.exports = {
     '^#uilib/(.*)$': '<rootDir>/src/$1',
     '^uilib(.*)$': '<rootDir>/src$1',
     '^@homecode/ui$': '<rootDir>/tests/mocks/homecodeUiMock.ts',
+    '^lightweight-charts$': '<rootDir>/tests/mocks/lightweightChartsMock.ts',
     '\\.svg$': '<rootDir>/tests/mocks/svgMock.js',
+    '\\.(png|jpe?g|gif|webp|avif)$': '<rootDir>/tests/mocks/fileMock.js',
   },
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',

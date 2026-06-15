@@ -9,6 +9,7 @@ export type DocEntry = {
 
 /** Sidebar group order */
 export const DOC_SECTION_ORDER = [
+  'Foundations',
   'Forms',
   'Feedback',
   'Layout',
@@ -25,6 +26,42 @@ export const DOC_SECTION_ORDER = [
 export const DOC_DEFAULT_SLUG = 'button';
 
 export const DOC_REGISTRY: DocEntry[] = [
+  {
+    slug: 'icons',
+    title: 'Icons',
+    section: 'Foundations',
+    load: () => import('./pages/IconsPage'),
+  },
+  {
+    slug: 'colors',
+    title: 'Colors',
+    section: 'Foundations',
+    load: () => import('./pages/ColorsPage'),
+  },
+  {
+    slug: 'typography',
+    title: 'Typography',
+    section: 'Foundations',
+    load: () => import('./pages/TypographyPage'),
+  },
+  {
+    slug: 'radii-shadows',
+    title: 'Radii and shadows',
+    section: 'Foundations',
+    load: () => import('./pages/RadiiShadowsPage'),
+  },
+  {
+    slug: 'motion',
+    title: 'Motion',
+    section: 'Foundations',
+    load: () => import('./pages/MotionPage'),
+  },
+  {
+    slug: 'spacing',
+    title: 'Spacing',
+    section: 'Foundations',
+    load: () => import('./pages/SpacingPage'),
+  },
   {
     slug: 'button',
     title: 'Button',
@@ -54,6 +91,30 @@ export const DOC_REGISTRY: DocEntry[] = [
     title: 'Badge',
     section: 'Data display',
     load: () => import('./pages/BadgePage'),
+  },
+  {
+    slug: 'chip',
+    title: 'Chip',
+    section: 'Data display',
+    load: () => import('./pages/ChipPage'),
+  },
+  {
+    slug: 'signal-card',
+    title: 'SignalCard',
+    section: 'Widgets',
+    load: () => import('./pages/SignalCardPage'),
+  },
+  {
+    slug: 'pull-quote',
+    title: 'PullQuote',
+    section: 'Data display',
+    load: () => import('./pages/PullQuotePage'),
+  },
+  {
+    slug: 'kicker',
+    title: 'Kicker',
+    section: 'Data display',
+    load: () => import('./pages/KickerPage'),
   },
   {
     slug: 'file-chip',
@@ -102,6 +163,18 @@ export const DOC_REGISTRY: DocEntry[] = [
     title: 'LightweightForecastChart',
     section: 'Charts',
     load: () => import('./pages/LightweightChartPage'),
+  },
+  {
+    slug: 'donut-chart',
+    title: 'DonutChart',
+    section: 'Charts',
+    load: () => import('./pages/DonutChartPage'),
+  },
+  {
+    slug: 'bar-chart',
+    title: 'BarChart',
+    section: 'Charts',
+    load: () => import('./pages/BarChartPage'),
   },
   {
     slug: 'chat',
@@ -156,6 +229,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     title: 'Confirm',
     section: 'Overlays',
     load: () => import('./pages/ConfirmPage'),
+  },
+  {
+    slug: 'drawer',
+    title: 'Drawer',
+    section: 'Overlays',
+    load: () => import('./pages/DrawerPage'),
   },
   {
     slug: 'driver-map',

@@ -8,10 +8,21 @@ import {
 } from './chatPersistence';
 
 describe('stripMessageForPersistence', () => {
-  it('removes json-dashboard fences from message text', () => {
+  it('keeps json-dashboard fences in assistant message text', () => {
     const message = stripMessageForPersistence({
       id: '1',
       role: MessageRole.ASSISTANT,
+      text: 'Summary\n```json-dashboard\n{"tiles":[]}\n```',
+      timestamp: 1,
+    });
+
+    expect(message.text).toBe('Summary\n```json-dashboard\n{"tiles":[]}\n```');
+  });
+
+  it('removes json-dashboard fences from non-assistant message text', () => {
+    const message = stripMessageForPersistence({
+      id: '1a',
+      role: MessageRole.USER,
       text: 'Summary\n```json-dashboard\n{"tiles":[]}\n```',
       timestamp: 1,
     });
@@ -22,7 +33,7 @@ describe('stripMessageForPersistence', () => {
   it('strips from an unclosed json-dashboard fence', () => {
     const message = stripMessageForPersistence({
       id: '1b',
-      role: MessageRole.ASSISTANT,
+      role: MessageRole.USER,
       text: 'Summary\n```json-dashboard\n{"tiles":[]}',
       timestamp: 1,
     });

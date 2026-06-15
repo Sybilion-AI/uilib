@@ -6,6 +6,7 @@ import {
   DOCS_SAMPLE_DATASET_NAME,
 } from '../chatPresets.sample';
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
+import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DOCS_CHAT_USER_KEY } from '../docsConstants';
 import { DocsHeaderActions } from '../docsHeaderActions';
 import S from './ChatPage.styl';
@@ -34,6 +35,20 @@ export default function ChatPage() {
         title="Chat"
         subheader={`Chat shell with message list, prompt, and dataset-scoped preset bubbles for "${DOCS_SAMPLE_DATASET_NAME}".`}
         actions={<DocsHeaderActions presets={DOCS_DATASET_PRESETS} />}
+      />
+      <DocsGuidance
+        overview="ChatChrome is the complete chat shell: message list, prompt composer, empty state, and optional preset bubbles. Drive it with useChatPanelChromeModel for a self-contained session, or wire the props manually for full control."
+        whenToUse={[
+          'To embed an assistant conversation inline on a page or in a side panel.',
+          'When you want preset prompt chips scoped to the current dataset or context.',
+        ]}
+        whenNotToUse={[
+          'For a single one-off prompt without conversation history; a simple form may suffice.',
+          'For notification or activity feeds; the shell is designed for two-way conversation.',
+        ]}
+        doNotes={[
+          'Provide a meaningful emptyState title and description so the first-run view explains what the assistant can do.',
+        ]}
       />
       <PageContentSection>
         <p style={{ marginBottom: 16, fontSize: 14, lineHeight: 1.5 }}>

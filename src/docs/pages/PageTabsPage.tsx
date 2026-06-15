@@ -1,6 +1,7 @@
 import { PageContentSection, PageTabs } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
+import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
 const OUTLINE_ITEMS = [
@@ -32,6 +33,23 @@ export default function PageTabsPage() {
         title="PageTabs"
         subheader="Page-scoped tabs with horizontally scrollable tab strip."
         actions={<DocsHeaderActions />}
+      />
+      <DocsGuidance
+        overview="PageTabs renders a page-scoped tab bar with optional panels. The tab strip scrolls horizontally when triggers overflow the container, and an outline variant is available for muted surfaces."
+        whenToUse={[
+          'To divide a page into a few parallel views that share the same context.',
+          'When the tab row may overflow on narrow viewports and needs built-in horizontal scrolling.',
+        ]}
+        whenNotToUse={[
+          'Inside a PageContentSection; PageTabs is a page-structure primitive and must sit alongside sections.',
+          'For sequential steps in a flow; use a wizard or stepper pattern instead.',
+        ]}
+        doNotes={[
+          'Wrap each tab’s content in its own PageContentSection so padding stays consistent.',
+        ]}
+        dontNotes={[
+          'Don’t nest PageTabs inside another PageTabs or a PageContentSection.',
+        ]}
       />
       <PageContentSection
         style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}

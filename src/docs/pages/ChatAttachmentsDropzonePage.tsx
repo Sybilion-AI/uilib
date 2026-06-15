@@ -11,6 +11,7 @@ import { PageContentSection } from '#uilib/components/ui/Page';
 import { ScrollRef } from '@homecode/ui';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
+import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
 const NO_QUICK_REPLY_KEYS: ReadonlySet<string> = new Set();
@@ -99,6 +100,20 @@ export default function ChatAttachmentsDropzonePage() {
         title="Chat — attachments dropzone"
         subheader="Drop text, Office, or PDF files onto the chat shell; they appear on the prompt until you send."
         actions={<DocsHeaderActions />}
+      />
+      <DocsGuidance
+        overview="ChatChrome supports a file dropzone: users drag text, Office, or PDF files onto the chat panel and the parsed content attaches to the prompt until they send. Configure accepted types via allowedAttachments and enable PDFs with allowPdfAttachments."
+        whenToUse={[
+          'When users need to give the assistant file context, such as CSV data or documents.',
+          'When attached files should be reviewed alongside the typed prompt before sending.',
+        ]}
+        whenNotToUse={[
+          'For persistent file uploads to storage; use a dedicated upload flow.',
+          'When only plain text input is expected; omit the attachment props to disable the dropzone.',
+        ]}
+        doNotes={[
+          'Office and PDF parsers load on demand, so the first attachment of those types incurs a one-off load.',
+        ]}
       />
       <PageContentSection>
         <p style={{ marginBottom: 16, fontSize: 14, lineHeight: 1.5 }}>

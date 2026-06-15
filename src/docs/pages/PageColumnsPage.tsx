@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react';
 import { PageColumns, PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
+import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
 const demoBlockStyle: CSSProperties = {
@@ -25,6 +26,20 @@ export default function PageColumnsPage() {
         title="PageColumns"
         subheader="Responsive row of columns; fill prop controls which column(s) grow past the default width cap on wide viewports."
         actions={<DocsHeaderActions />}
+      />
+      <DocsGuidance
+        overview="PageColumns lays out a responsive row of columns inside a page section. The fill prop controls which columns grow past the default width cap on wide viewports: all, left, or right."
+        whenToUse={[
+          'To place two or more content blocks side by side within a PageContentSection.',
+          'For main-plus-aside layouts where one column should grow and the other stays at a fixed width.',
+        ]}
+        whenNotToUse={[
+          'For card or tile grids; use GridLayout instead.',
+          'For arbitrary flex layouts inside a component; PageColumns is a page-structure primitive.',
+        ]}
+        doNotes={[
+          'Use fill="left" or fill="right" to keep a sidebar column at the default fixed width on wide screens.',
+        ]}
       />
       <PageContentSection
         style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}

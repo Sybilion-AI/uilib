@@ -9,6 +9,7 @@ import {
 } from '#uilib/components/widgets/SidebarDatasetsItemsGrouped';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
+import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
 const MOCK_DATASETS: SidebarDatasetsItemsGroupedDataset[] = [
@@ -99,6 +100,17 @@ export default function SidebarDatasetsItemsGroupedPage() {
         title="SidebarDatasetsItemsGrouped"
         subheader="Datasets sidebar: collapsible groups and nested rows."
         actions={<DocsHeaderActions />}
+      />
+      <DocsGuidance
+        overview="SidebarDatasetsItemsGrouped renders a dataset list for the application sidebar, organised into collapsible groups with nested rows. The groupBy prop switches grouping between target type, regions, and categories, and selection is controlled through selectedDatasetId and onDatasetClick."
+        whenToUse={[
+          'In a sidebar that lists many datasets which benefit from grouping by a shared attribute.',
+          'When the user needs to switch between grouping dimensions without losing their selection.',
+        ]}
+        whenNotToUse={[
+          'For short, flat lists; plain Sidebar menu items are simpler.',
+          'Outside a sidebar surface; the widget assumes sidebar colours and spacing.',
+        ]}
       />
       <PageContentSection>
         <ToggleGroup

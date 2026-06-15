@@ -1,3 +1,44 @@
+import { Fragment, type ReactNode, createElement } from 'react';
+
+/** Minimal stand-in for @homecode/ui Theme root: renders children only. */
+function Theme({ children }: { children?: ReactNode }) {
+  return createElement(Fragment, null, children);
+}
+
+/** Minimal stand-in for @homecode/ui Shimmer placeholder. */
+function Shimmer({ className }: { className?: string }) {
+  return createElement('div', { className });
+}
+
+const ThemeDefaults = {
+  colors: { dark: '#000000', light: '#ffffff' },
+  getColors(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+    return { ...overrides };
+  },
+  getConfig(): Record<string, unknown> {
+    return {};
+  },
+};
+
+const ThemeHelpers = {
+  colorsConfigToVars(_config: Record<string, unknown>): Record<string, string> {
+    return {};
+  },
+};
+
+/** Minimal stand-in for @homecode/ui Scroll: a plain div wrapper. */
+function Scroll({
+  children,
+  className,
+  onInnerRef,
+}: {
+  children?: ReactNode;
+  className?: string;
+  onInnerRef?: (el: HTMLDivElement | null) => void;
+}) {
+  return createElement('div', { className, ref: onInnerRef }, children);
+}
+
 const LS = {
   get(key: string) {
     const raw = window.localStorage.getItem(key);
@@ -21,4 +62,4 @@ const LS = {
   },
 };
 
-export { LS };
+export { LS, Scroll, Shimmer, Theme, ThemeDefaults, ThemeHelpers };

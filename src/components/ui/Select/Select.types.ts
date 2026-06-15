@@ -3,7 +3,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 export interface SelectTriggerProps extends React.ComponentProps<
   typeof SelectPrimitive.Trigger
 > {
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   variant?: 'default' | 'clear';
   darker?: boolean;
   className?: string;

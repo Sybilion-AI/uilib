@@ -1,0 +1,27 @@
+.family
+  margin-bottom var(--p-6)
+
+.familyName
+  margin-bottom var(--p-3)
+
+.ramp
+  display grid
+  grid-template-columns repeat(auto-fill, minmax(96px, 1fr))
+  gap var(--p-2)
+
+.swatch
+  display flex
+  flex-direction column
+  gap var(--p-1)
+
+.chip
+  height 48px
+  border-radius var(--radius-2)
+  border 1px solid var(--border)
+
+.token
+  font-family monospace
+  font-size var(--text-2xs)
+  color var(--muted-foreground)
+  user-select text
+  word-break break-all

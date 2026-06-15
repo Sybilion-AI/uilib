@@ -7,6 +7,7 @@ import {
 } from '#uilib/components/ui/Sidebar/Sidebar';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
+import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
 export default function SidebarPage() {
@@ -17,6 +18,20 @@ export default function SidebarPage() {
         title="Sidebar"
         subheader="Sidebar menu primitives (isolated preview)."
         actions={<DocsHeaderActions />}
+      />
+      <DocsGuidance
+        overview="Sidebar provides the primitives for building application navigation rails: SidebarGroup, SidebarMenu, SidebarMenuItem, and SidebarMenuButton. Compose them to create grouped menus with active-state styling."
+        whenToUse={[
+          'To build the primary navigation of an application shell.',
+          'When menu items need consistent hover, focus, and active styling on a sidebar surface.',
+        ]}
+        whenNotToUse={[
+          'For in-page navigation such as tabs or table of contents; use PageTabs or links.',
+          'For contextual action menus; use DropdownMenu.',
+        ]}
+        doNotes={[
+          'Mark the current route’s item with isActive so users can orient themselves.',
+        ]}
       />
       <PageContentSection>
         <SidebarGroup

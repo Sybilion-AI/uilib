@@ -29,7 +29,7 @@ export interface ChatSelectorProps
 }
 
 const deleteIconSize = (s: NonNullable<SelectTriggerProps['size']>) =>
-  s === 'sm' ? 16 : s === 'md' ? 18 : 20;
+  s === 'xs' ? 14 : s === 'sm' ? 16 : s === 'md' ? 18 : 20;
 
 export function ChatSelector({
   id,
@@ -117,7 +117,7 @@ export function ChatSelector({
         <Button
           type="button"
           variant="ghost"
-          size={size}
+          size={size === 'xs' ? 'sm' : size}
           className={S.deleteBtn}
           aria-label="Delete chat"
           onClick={handleDeleteChat}

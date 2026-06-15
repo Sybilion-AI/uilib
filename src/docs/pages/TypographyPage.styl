@@ -1,0 +1,42 @@
+.table
+  width 100%
+  border-collapse collapse
+
+  th
+    text-align left
+    font-size var(--text-xs)
+    color var(--muted-foreground)
+    font-weight 500
+    padding var(--p-2) var(--p-4) var(--p-2) 0
+    border-bottom 1px solid var(--border)
+
+  td
+    padding var(--p-3) var(--p-4) var(--p-3) 0
+    border-bottom 1px solid var(--border)
+    vertical-align baseline
+
+.token
+  font-family monospace
+  font-size var(--text-xs)
+  color var(--muted-foreground)
+  white-space nowrap
+  user-select text
+
+.value
+  font-size var(--text-xs)
+  color var(--muted-foreground)
+  white-space nowrap
+
+.specimen
+  white-space nowrap
+  overflow hidden
+  text-overflow ellipsis
+  max-width 0
+  width 100%
+
+.paragraphSpecimen
+  max-width 52ch
+
+.sectionNote
+  margin-bottom var(--p-3)
+  color var(--muted-foreground)

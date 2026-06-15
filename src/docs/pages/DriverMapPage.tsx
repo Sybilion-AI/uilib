@@ -11,6 +11,7 @@ import {
 import { CaretLeft, CaretRight } from '@phosphor-icons/react';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
+import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
 
 /** ISO `YYYY-MM` keys, sorted ascending → series for DriverPerformanceChart. */
@@ -200,6 +201,22 @@ export default function DriverMapPage() {
         title="DriverMap & DriverCard"
         subheader="World map with driver badges and the driver detail card — map clicks and the selector sync selection; arrow keys navigate the map."
         actions={<DocsHeaderActions />}
+      />
+      <DocsGuidance
+        overview="DriverMap renders a world map with badges for each driver, and DriverCard shows the detail of the selected driver. The two share a selection: clicking a badge on the map, using arrow keys, or paging through an external selector all update the same selected driver."
+        whenToUse={[
+          'To give a geographic overview of where drivers originate and let users explore them by region.',
+          'Alongside DriverCard, so selecting a driver on the map reveals its importance, lag, and summary.',
+          'When drivers carry coordinates or region metadata that benefits from a spatial presentation.',
+        ]}
+        whenNotToUse={[
+          'When drivers have no meaningful geography; a table or list ranks them more clearly.',
+          'For comparing driver series over time; use DriversComparisonChart instead.',
+        ]}
+        doNotes={[
+          'Pass isLoading to both the map and the card so their loading states stay in sync.',
+          'Provide a driverSelector in DriverCard so users can page through drivers without using the map.',
+        ]}
       />
       <PageContentSection>
         <div
