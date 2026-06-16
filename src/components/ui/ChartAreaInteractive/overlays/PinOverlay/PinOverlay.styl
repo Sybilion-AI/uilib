@@ -1,6 +1,16 @@
 .root
   touch-action pan-y
 
+.pinDragging
+  .pinLineBase
+    opacity 0.8
+
+  .pinButton
+    transition none
+
+  .pinPlaceholder
+    transition none
+
 // Chart overlay and pin styles
 .pinContainer
   position absolute
@@ -64,7 +74,7 @@
   background-color var(--background)
   cursor pointer
   user-select none
-  pointer-events auto
+  pointer-events none
   touch-action none
 
   .pinHovered &
@@ -80,19 +90,20 @@
 
 
 // Hover placeholder for better pin access - rendered on top of all chart layers
+.pinPlaceholderHost
+  pointer-events none
+  z-index 20
+
 .pinPlaceholder
   position absolute
-  top var(--p-5)
+  top 0
   width 72px
   height 72px
-  margin-left -40px
-  margin-top -40px
-  z-index 20
+  margin-left -36px
+  margin-top -36px
   pointer-events auto
   cursor pointer
   touch-action none
-  // Debug: uncomment to visualize
-  // background-color rgba(255, 0, 0, 0.1)
 
   .pinAnimating &
     transition left 300ms ease-out

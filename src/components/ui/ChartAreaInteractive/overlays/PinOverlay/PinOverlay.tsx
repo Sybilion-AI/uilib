@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { BaseChartWrapper } from '#uilib/components/ui/Chart/components';
 import { BaseChartWrapperProps } from '#uilib/components/ui/Chart/components/BaseChartWrapper';
 import { useDebounceCallback } from '#uilib/hooks/useDebounceCallback';
+import useElemDrag from '#uilib/hooks/useDragElem';
 import { ChevronsLeftRight } from 'lucide-react';
 
 import CAS from '../../ChartAreaInteractive.styl';
@@ -22,7 +23,7 @@ export function PinOverlay({
   baseChartProps,
   pinMonth,
   onPinMonthChange,
-  onPreviewMonthChange: _onPreviewMonthChange,
+  onPreviewMonthChange,
   className,
 }: PinOverlayProps) {
   const { chartData } = baseChartProps;
@@ -30,8 +31,11 @@ export function PinOverlay({
   const pinRef = useRef<HTMLDivElement>(null);
   const pinPlaceholderRef = useRef<HTMLDivElement>(null);
   const pinContainerRef = useRef<HTMLDivElement>(null);
+  const containerRectRef = useRef<DOMRect | null>(null);
 
   const [isPinHovered, setIsPinHovered] = useState(false);
+  const [isDraggingPin, setIsDraggingPin] = useState(false);
+  const [isPinAnimating, setIsPinAnimating] = useState(true);
 
   const pinPosRef = useRef<number>(0);
   const currPinMonthRef = useRef<string | undefined>(pinMonth);
@@ -135,6 +139,60 @@ export function PinOverlay({
     }
   }, [pinMonth, chartData]);
 
+  const clearPinTransforms = () => {
+    if (pinRef.current) {
+      pinRef.current.style.transform = '';
+      pinRef.current.style.transition = '';
+    }
+    if (pinPlaceholderRef.current) {
+      pinPlaceholderRef.current.style.transform = '';
+      pinPlaceholderRef.current.style.transition = '';
+    }
+  };
+
+  useElemDrag({
+    elem: pinPlaceholderRef,
+    isActive: chartData.length > 0,
+    onDragStart: e => {
+      e.stopPropagation();
+      setIsDraggingPin(true);
+      setIsPinAnimating(false);
+      containerRectRef.current =
+        pinContainerRef.current?.getBoundingClientRect() ?? null;
+      if (pinRef.current) pinRef.current.style.transition = 'none';
+      if (pinPlaceholderRef.current) {
+        pinPlaceholderRef.current.style.transition = 'none';
+      }
+    },
+    onDrag: (_delta, e) => {
+      const containerRect = containerRectRef.current;
+      if (!containerRect) return;
+
+      const pinCurrentLeft = (pinPosRef.current / 100) * containerRect.width;
+      const relativeX = e.clientX - containerRect.left;
+      const clampedX = Math.max(0, Math.min(containerRect.width, relativeX));
+      const translateX = clampedX - pinCurrentLeft;
+      const transform = `translateX(${translateX}px)`;
+
+      if (pinRef.current) pinRef.current.style.transform = transform;
+      if (pinPlaceholderRef.current) {
+        pinPlaceholderRef.current.style.transform = transform;
+      }
+
+      const previewPercent =
+        containerRect.width > 0 ? (clampedX / containerRect.width) * 100 : 0;
+      onPreviewMonthChange?.(getPinMonthAndYear(previewPercent) ?? undefined);
+    },
+    onDragEnd: e => {
+      e.stopPropagation();
+      setIsDraggingPin(false);
+      setTimeout(() => setIsPinAnimating(true), 200);
+      containerRectRef.current = null;
+      clearPinTransforms();
+      snapPinToPosition(e.clientX, true, true);
+    },
+  });
+
   const onChartClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
     const target = e.target as HTMLElement;
@@ -159,13 +217,15 @@ export function PinOverlay({
           </div>
         </div>
       </div>
-      <div
-        className={S.pinPlaceholder}
-        style={{ left: `${pinPosRef.current}%` }}
-        ref={pinPlaceholderRef}
-        onPointerEnter={() => setIsPinHovered(true)}
-        onPointerLeave={() => setIsPinHovered(false)}
-      />
+      <div className={cn(CAS.overlay, S.pinPlaceholderHost)}>
+        <div
+          className={S.pinPlaceholder}
+          style={{ left: `${pinPosRef.current}%` }}
+          ref={pinPlaceholderRef}
+          onPointerEnter={() => setIsPinHovered(true)}
+          onPointerLeave={() => setIsPinHovered(false)}
+        />
+      </div>
     </>
   );
 
@@ -174,8 +234,9 @@ export function PinOverlay({
       className={cn(
         className,
         S.root,
-        S.pinAnimating,
+        isPinAnimating && S.pinAnimating,
         isPinHovered && S.pinHovered,
+        isDraggingPin && S.pinDragging,
       )}
       onClick={onChartClick}
       ref={chartRef}
@@ -185,6 +246,7 @@ export function PinOverlay({
         yMin={yMin}
         yMax={yMax}
         autoScaleYAxis={false}
+        showTooltip={!isDraggingPin}
         overlayElements={overlay}
       />
     </div>

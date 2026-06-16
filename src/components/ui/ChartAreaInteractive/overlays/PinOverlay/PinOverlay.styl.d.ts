@@ -4,10 +4,12 @@ interface CssExports {
   'pinAnimating': string;
   'pinButton': string;
   'pinContainer': string;
+  'pinDragging': string;
   'pinHovered': string;
   'pinIcon': string;
   'pinLineBase': string;
   'pinPlaceholder': string;
+  'pinPlaceholderHost': string;
   'root': string;
 }
 export const cssExports: CssExports;
