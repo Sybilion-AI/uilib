@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.99](https://github.com/Mir-Insight/uilib/compare/v1.3.98...v1.3.99) (2026-06-16)
+
+
+### Features
+
+* BaseChartWrapper,Button - sync from app & style updates ([804de6c](https://github.com/Mir-Insight/uilib/commit/804de6cddbe5bb2a5238ebc6a9e8eae9b8574ad1))
+
+
+### Bug Fixes
+
+* AgentMessageContent - Support asterisk italic ([9944fab](https://github.com/Mir-Insight/uilib/commit/9944fab60e7af729699eca051b6167905bebfb65))
+* DocsSidebar - Truncate long nav labels ([b023dd2](https://github.com/Mir-Insight/uilib/commit/b023dd25c6fcd337553c49d5c79803d89603a191))
+
 ### [1.3.98](https://github.com/Mir-Insight/uilib/compare/v1.3.97...v1.3.98) (2026-06-15)
 
 
