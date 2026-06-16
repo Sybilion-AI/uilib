@@ -1,16 +1,15 @@
-import React, { useMemo } from 'react';
-
+import { Card, CardContent } from '@sybilion/uilib';
 import { CoffeeIcon, TrendDownIcon, TrendUpIcon } from '@phosphor-icons/react';
+import React, { useMemo } from 'react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/Tooltip';
 
 import { Badge } from '../../ui/Badge';
-import { Card, CardContent } from '../../ui/Card';
-import { LabelWithId } from '../../ui/LabelWithId';
-import { Skeleton } from '../../ui/Skeleton';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/Tooltip';
-import { getCategoryIcon } from '../DriverMap/driverCategoryIcon';
 import type { DriverData } from '../DriverMap/driverMapGeography';
-import S from './DriverCard.styl';
 import { DriverPerformanceChart } from './DriverPerformanceChart';
+import { LabelWithId } from '../../ui/LabelWithId';
+import S from './DriverCard.styl';
+import { Skeleton } from '../../ui/Skeleton';
+import { getCategoryIcon } from '../DriverMap/driverCategoryIcon';
 
 export interface DriverCardProps {
   selectedDriver: DriverData | null;
@@ -114,7 +113,7 @@ export function DriverCard({
 
   if (isLoading) {
     return (
-      <Card className={S.root}>
+      <Card className={S.root} radiusSize="xl">
         <CardContent noScroll>
           <div className={S.skeletonContainer}>
             <Skeleton className={`${S.skeletonItem} ${S.hs} ${S.w75}`} />
