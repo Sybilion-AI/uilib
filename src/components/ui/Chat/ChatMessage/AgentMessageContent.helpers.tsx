@@ -56,20 +56,36 @@ const injectBold = (content: string) => {
   };
 };
 
-/** `_italic_` (underscore) — avoids clashing with `* ` bullet markers. */
+/** `*italic*` or `_italic_` — single `*` only (not `**` or `* ` bullets). */
 const injectItalic = (content: string) => {
-  const matches = content.match(/(?<![A-Za-z0-9])_([^_\n]+?)_(?![A-Za-z0-9])/);
+  const patterns = [
+    /(?<![*\\])\*(?!\*)([^*\n]+?)\*(?!\*)/,
+    /(?<![A-Za-z0-9])_([^_\n]+?)_(?![A-Za-z0-9])/,
+  ];
 
-  if (!matches || matches.index === undefined) return null;
+  let match: RegExpMatchArray | null = null;
 
-  if (isInsideHtmlListOrTable(content, matches.index)) {
+  for (const pattern of patterns) {
+    const candidate = content.match(pattern);
+    if (
+      candidate &&
+      candidate.index !== undefined &&
+      (match === null || candidate.index < match.index!)
+    ) {
+      match = candidate;
+    }
+  }
+
+  if (!match || match.index === undefined) return null;
+
+  if (isInsideHtmlListOrTable(content, match.index)) {
     return null;
   }
 
   return {
-    elem: <em>{matches[1]}</em>,
-    index: matches.index,
-    length: matches[0].length,
+    elem: <em>{match[1]}</em>,
+    index: match.index,
+    length: match[0].length,
   };
 };
 

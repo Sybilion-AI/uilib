@@ -7,6 +7,23 @@ function renderFormatting(text: string) {
   return render(<>{parts}</>);
 }
 
+describe('applyFormatting emphasis', () => {
+  it('renders asterisk italic and bold in the same line', () => {
+    const { container } = renderFormatting(
+      'Use **bold** and *italic* in formatted text.',
+    );
+
+    expect(container.querySelector('strong')?.textContent).toBe('bold');
+    expect(container.querySelector('em')?.textContent).toBe('italic');
+  });
+
+  it('renders underscore italic', () => {
+    const { container } = renderFormatting('Use _italic_ emphasis.');
+
+    expect(container.querySelector('em')?.textContent).toBe('italic');
+  });
+});
+
 describe('applyFormatting headers', () => {
   it('renders bold inside markdown headers', () => {
     const { container } = renderFormatting(
