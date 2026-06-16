@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.101](https://github.com/Mir-Insight/uilib/compare/v1.3.100...v1.3.101) (2026-06-16)
+
+
+### Features
+
+* Banner - add inline callout component ([2286d1a](https://github.com/Mir-Insight/uilib/commit/2286d1a10852ed3bd4731d1887d404c6d54fbe06))
+
 ### [1.3.100](https://github.com/Mir-Insight/uilib/compare/v1.3.99...v1.3.100) (2026-06-16)
 
 
