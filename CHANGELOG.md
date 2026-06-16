@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.103](https://github.com/Mir-Insight/uilib/compare/v1.3.102...v1.3.103) (2026-06-16)
+
+
+### Bug Fixes
+
+* DriverCard - radius ([b6d96e7](https://github.com/Mir-Insight/uilib/commit/b6d96e7e07343c4311d5898aba75618dbbbcbf9b))
+
 ### [1.3.102](https://github.com/Mir-Insight/uilib/compare/v1.3.101...v1.3.102) (2026-06-16)
 
 
