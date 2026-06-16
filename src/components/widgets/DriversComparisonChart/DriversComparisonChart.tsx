@@ -199,19 +199,21 @@ export function DriversComparisonChart({
 
   const tableSeriesRows = useMemo(() => {
     if (sortedDriversWithData.length === 0) return [];
-    return sortedDriversWithData.map((driver, idx) => {
-      const raw = driver.importance;
-      const importance =
-        typeof raw === 'number' && Number.isFinite(raw) ? raw : null;
-      const lagSource = originalDriversById.get(String(driver.id)) ?? driver;
-      return {
-        id: DRIVER_FORECAST_ID_BASE + idx,
-        name: driver.name || String(driver.id),
-        color: getForecastColor(idx + 1),
-        importance,
-        lag: getLagDisplayForView(resolveDriverLagLabel(lagSource), viewTab),
-      };
-    });
+    return sortedDriversWithData
+      .map((driver, idx) => {
+        const raw = driver.importance;
+        const importance =
+          typeof raw === 'number' && Number.isFinite(raw) ? raw : null;
+        const lagSource = originalDriversById.get(String(driver.id)) ?? driver;
+        return {
+          id: DRIVER_FORECAST_ID_BASE + idx,
+          name: driver.name || String(driver.id),
+          color: getForecastColor(idx + 1),
+          importance,
+          lag: getLagDisplayForView(resolveDriverLagLabel(lagSource), viewTab),
+        };
+      })
+      .sort((a, b) => b.importance - a.importance);
   }, [originalDriversById, sortedDriversWithData, viewTab]);
 
   const seriesInitKeyResolved =
