@@ -8,12 +8,20 @@ interface CssExports {
   'iconImage': string;
   'iconWrapper': string;
   'item': string;
+  'itemBadge': string;
   'itemLabelWithId': string;
   'label': string;
+  'renamerEditButton': string;
   'root': string;
+  'selectInlineRenamer': string;
+  'selectInlineRenamerInput': string;
   'selectItemContent': string;
   'selectTrigger': string;
+  'selectTriggerContent': string;
   'selectTriggerLabelWithId': string;
+  'selectTriggerRenamer': string;
+  'selectTriggerRenamerDisabled': string;
+  'selectTriggerRenaming': string;
   'single': string;
   'variant-default': string;
 }

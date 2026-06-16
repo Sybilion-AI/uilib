@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-
 import { SelectTriggerProps } from '#uilib/components/ui/Select/Select.types';
 
 export interface AnalysesSelectorItem {
@@ -19,7 +18,7 @@ export interface AnalysesSelectorProps {
   inlineMode?: boolean;
   placeholder?: string;
   disabled?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  size?: SelectTriggerProps['size'];
   variant?: 'default' | 'clear';
   darker?: boolean;
   className?: string;
@@ -38,4 +37,10 @@ export interface AnalysesSelectorProps {
   onToggleSeries?: (analysisId: number | string) => void;
   /** Override default pending/running/cancelling detection for labels. */
   isAnalysisInProgress?: (status?: string) => boolean;
+  rename?: {
+    value: string;
+    onChange: (value: string) => void | Promise<void>;
+    /** Only show Renamer when selected item id is in this set */
+    renameableItemIds: Set<number>;
+  };
 }

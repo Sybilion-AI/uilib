@@ -1,8 +1,16 @@
-import type {
-  AnalysesSelectorItem,
-  AnalysesSelectorProps,
-} from './AnalysesSelector.types';
-import { EyeClosedIcon, EyeIcon } from '@phosphor-icons/react';
+import cn from 'classnames';
+import {
+  type KeyboardEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+
+import { AnalysisLineIcon } from '#uilib/components/ui/AnalysisLineIcon';
+import { Badge } from '#uilib/components/ui/Badge';
+import { Button } from '#uilib/components/ui/Button';
+import { LabelWithId } from '#uilib/components/ui/LabelWithId';
 import {
   Select,
   SelectContent,
@@ -10,16 +18,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#uilib/components/ui/Select';
-import { useEffect, useMemo, useRef } from 'react';
-
-import { AnalysisLineIcon } from '#uilib/components/ui/AnalysisLineIcon';
-import { Badge } from '#uilib/components/ui/Badge';
-import { Button } from '#uilib/components/ui/Button';
-import { LabelWithId } from '#uilib/components/ui/LabelWithId';
-import S from './AnalysesSelector.styl';
 import { TextShimmer } from '#uilib/components/ui/TextShimmer/TextShimmer';
-import cn from 'classnames';
 import { getLatestByUpdatedAt } from '#uilib/utils/analysisDate';
+import { EyeClosedIcon, EyeIcon } from '@phosphor-icons/react';
+
+import S from './AnalysesSelector.styl';
+import type {
+  AnalysesSelectorItem,
+  AnalysesSelectorProps,
+} from './AnalysesSelector.types';
+import { SelectInlineRenamer } from './SelectInlineRenamer';
 
 const isFailed = (item: AnalysesSelectorItem) =>
   item.status?.toLowerCase() === 'fail';
@@ -29,12 +37,25 @@ const isDashedIcon = (item: AnalysesSelectorItem) => item.id !== -1;
 const defaultIsAnalysisInProgress = (status?: string) =>
   ['pending', 'running', 'cancelling'].includes(status?.toLowerCase() ?? '');
 
+const shouldBlockSelectKeydownWhileRenaming = (e: KeyboardEvent) => {
+  if (!(e.target instanceof HTMLInputElement)) {
+    return true;
+  }
+
+  return (
+    e.key === 'ArrowUp' ||
+    e.key === 'ArrowDown' ||
+    e.key === ' ' ||
+    e.key === 'Enter'
+  );
+};
+
 function renderItemContent(item: AnalysesSelectorItem) {
   const failed = isFailed(item);
 
   if (failed) {
     return (
-      <Badge variant="red" squared>
+      <Badge variant="red" className={S.itemBadge}>
         failed
       </Badge>
     );
@@ -91,6 +112,7 @@ export function AnalysesSelector({
   hiddenSeries: hiddenSeriesProp = new Set(),
   onToggleSeries = () => {},
   isAnalysisInProgress: isAnalysisInProgressProp = defaultIsAnalysisInProgress,
+  rename,
 }: AnalysesSelectorProps) {
   const historicalAutoSelectedRef = useRef(false);
   const hiddenSeries = hiddenSeriesProp;
@@ -215,6 +237,22 @@ export function AnalysesSelector({
     }
   }, [showHistorical, selectedIds, onItemToggle]);
 
+  const selectedItem = items.find(item => selectedSet.has(item.id)) ?? items[0];
+  const selectedId = selectedItem?.id;
+
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [selectOpen, setSelectOpen] = useState(false);
+
+  useEffect(() => {
+    setIsRenaming(false);
+  }, [selectedId, rename?.value]);
+
+  useEffect(() => {
+    if (isRenaming) {
+      setSelectOpen(false);
+    }
+  }, [isRenaming]);
+
   const handleSelectValue = (value: string) => {
     if (!value) return;
     const id = /^-?\d+$/.test(value) ? parseInt(value, 10) : value;
@@ -337,9 +375,48 @@ export function AnalysesSelector({
 
   if (items.length === 0) return null;
 
-  const selectedId =
-    items.find(item => selectedSet.has(item.id))?.id ?? items[0]?.id;
   const selectValue = selectedId != null ? String(selectedId) : '';
+  const showRenamer =
+    rename && selectedItem && rename.renameableItemIds.has(selectedItem.id);
+  const singleItemSelect = items.length < 2;
+
+  const { className: triggerClassName, ...restTriggerProps } =
+    triggerProps ?? {};
+
+  const triggerStyle = {
+    minWidth: 'auto',
+    height: 'auto',
+    fontSize: 'var(--text-xs)',
+    pointerEvents:
+      singleItemSelect && !showRenamer ? ('none' as const) : undefined,
+  };
+
+  const triggerClassNameMerged = cn(
+    S.selectTrigger,
+    isRenaming && S.selectTriggerRenaming,
+    triggerClassName,
+  );
+
+  const renamerTriggerContent = showRenamer ? (
+    <div
+      className={cn(
+        S.selectTriggerContent,
+        disabled && S.selectTriggerRenamerDisabled,
+      )}
+    >
+      {renderItemContent(selectedItem)}
+      {renderIcon(selectedItem.icon)}
+      <SelectInlineRenamer
+        value={rename.value}
+        displayLabel={selectedItem.label}
+        onChange={rename.onChange}
+        disabled={disabled}
+        className={S.selectTriggerRenamer}
+        isRenaming={isRenaming}
+        onEnterRenaming={() => setIsRenaming(prev => !prev)}
+      />
+    </div>
+  ) : null;
 
   return (
     <div className={cn(S.root, className)}>
@@ -347,29 +424,61 @@ export function AnalysesSelector({
         value={selectValue}
         onValueChange={handleSelectValue}
         disabled={disabled}
+        open={isRenaming || singleItemSelect ? false : selectOpen}
+        onOpenChange={open => {
+          if (!isRenaming && !singleItemSelect) {
+            setSelectOpen(open);
+          }
+        }}
       >
         <SelectTrigger
+          asChild={showRenamer}
           size={size}
           variant={variant}
           darker={darker}
-          className={S.selectTrigger}
-          hideChevron={items.length < 2}
-          style={{
-            minWidth: 'auto',
-            height: 'auto',
-            fontSize: 'var(--text-xs)',
-            pointerEvents: items.length < 2 ? 'none' : undefined,
-          }}
-          {...triggerProps}
+          hideChevron={singleItemSelect}
+          {...restTriggerProps}
+          {...(showRenamer
+            ? {}
+            : {
+                style: triggerStyle,
+                className: triggerClassNameMerged,
+                onKeyDown: (e: KeyboardEvent) => {
+                  if (isRenaming && shouldBlockSelectKeydownWhileRenaming(e)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                },
+              })}
         >
-          <SelectValue placeholder={selectPlaceholder} />
+          {showRenamer ? (
+            <div
+              className={triggerClassNameMerged}
+              style={triggerStyle}
+              onKeyDown={e => {
+                if (isRenaming && shouldBlockSelectKeydownWhileRenaming(e)) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+              }}
+            >
+              {renamerTriggerContent}
+            </div>
+          ) : (
+            <LabelWithId
+              className={S.selectTriggerLabelWithId}
+              id={selectValue}
+              label={<SelectValue placeholder={selectPlaceholder} />}
+            />
+          )}
         </SelectTrigger>
         <SelectContent>
           {items.map(item => (
             <SelectItem
               key={item.id}
               value={String(item.id)}
-              selected={String(item.id) === selectValue}
+              selected={selectedSet.has(item.id)}
+              textValue={item.label}
             >
               {renderSelectItem(item)}
             </SelectItem>

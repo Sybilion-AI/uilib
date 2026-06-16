@@ -1,9 +1,8 @@
-import cn from 'classnames';
 import { useCallback, useMemo } from 'react';
 
 import { AnalysesSelector } from '#uilib/components/ui/AnalysesSelector';
-
 import S from './CustomChartLegend.styl';
+import cn from 'classnames';
 
 interface CustomChartLegendPayloadItem {
   value: string;
@@ -138,7 +137,7 @@ export function CustomChartLegend({
         selectedIds={selectedIds}
         onItemToggle={handleItemToggle}
         inlineMode
-        size="sm"
+        size="xs"
         variant="clear"
         onFailedItemClick={onFailedAnalysisClick}
         enableToggleHidden
