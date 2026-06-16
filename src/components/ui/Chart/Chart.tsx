@@ -34,3 +34,19 @@ export {
   type ChartEmptyStateProps,
   type ChartEmptyStatusTone,
 } from './components/ChartEmptyState/ChartEmptyState';
+export { ConfidenceBands } from './components/ConfidenceBands';
+export { ForecastBoundaries } from './components/ForecastBoundaries';
+export { ForecastLine } from './components/ForecastLine';
+export { HistoricalLine } from './components/HistoricalLine';
+export {
+  DEFAULT_QUANTILE_BAND_COLOR,
+  QuantileBands,
+} from './components/QuantileBands';
+export {
+  formatCompactAxisNumber,
+  formatDate,
+  formatNumber,
+} from './tools/formatters';
+export { useChartAnimation } from './hooks/useChartAnimation';
+export { useChartColors } from './hooks/useChartColors';
+export { useLegendState } from './hooks/useLegendState';

@@ -1,11 +1,29 @@
 /**
- * Format number for display (with k/m abbreviations)
+ * Format number for display (with k/m/b abbreviations)
  */
 export const formatNumber = (value: number): string => {
+  if (Math.abs(value) >= 1000000000) {
+    return (value / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
+  }
   if (Math.abs(value) >= 1000000) {
     return (value / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-  } else if (Math.abs(value) >= 1000) {
+  }
+  if (Math.abs(value) >= 1000) {
     return (value / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+  }
+  return value.toFixed(0);
+};
+
+/** Shorter Y-axis style labels (integer B/M/K) for tight layouts. */
+export const formatCompactAxisNumber = (value: number): string => {
+  if (Math.abs(value) >= 1000000000) {
+    return `${Math.round(value / 1000000000)}B`;
+  }
+  if (Math.abs(value) >= 1000000) {
+    return `${Math.round(value / 1000000)}M`;
+  }
+  if (Math.abs(value) >= 1000) {
+    return `${Math.round(value / 1000)}K`;
   }
   return value.toFixed(0);
 };
