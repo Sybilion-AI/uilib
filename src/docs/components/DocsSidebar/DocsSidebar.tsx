@@ -13,6 +13,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '#uilib/components/ui/Sidebar/Sidebar';
+import { SmartTextTruncate } from '#uilib/components/ui/SmartTextTruncate';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
 import { DOC_REGISTRY, DOC_SECTION_ORDER } from '../../registry';
@@ -134,7 +135,9 @@ export function DocsSidebar() {
                     }}
                     isActive={sectionHasActive}
                   >
-                    <span>{section}</span>
+                    <span>
+                      <SmartTextTruncate>{section}</SmartTextTruncate>
+                    </span>
                     {isFiltering ? null : renderSectionChevron(isExpanded)}
                   </SidebarMenuButton>
                   {isExpanded ? (
@@ -149,7 +152,9 @@ export function DocsSidebar() {
                               isActive={isActive}
                               size="md"
                             >
-                              <Link to={to}>{e.title}</Link>
+                              <Link to={to}>
+                                <SmartTextTruncate>{e.title}</SmartTextTruncate>
+                              </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
                         );
