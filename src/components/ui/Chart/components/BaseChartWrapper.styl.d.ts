@@ -4,6 +4,7 @@ interface CssExports {
   'chartContainer': string;
   'chartLayer': string;
   'chartLoadingContainer': string;
+  'emptyChartSizer': string;
   'errorContainer': string;
   'errorMessage': string;
   'footer': string;
@@ -12,6 +13,7 @@ interface CssExports {
   'invisibleAxis': string;
   'legend': string;
   'loaded': string;
+  'loadingChartSlot': string;
   'loadingOverlay': string;
   'noLegend': string;
   'noLineDrawAnimation': string;

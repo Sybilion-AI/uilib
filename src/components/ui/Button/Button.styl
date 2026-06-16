@@ -44,19 +44,16 @@
     background-color var(--sb-gray-800)
 
 .destructive
-  background-color var(--destructive)
+  background-color var(--destructive-900)
   color white
 
   &:hover
-    background-color var(--destructive-900)
-
-  &:focus-visible
-    ring 3px var(--destructive-200)
-
-  :global(.dark) &
     background-color var(--destructive-600)
 
-    &:focus-visible
+  &:focus-visible
+    ring 3px var(--destructive-200) 
+
+    :global(.dark) &
       ring 3px var(--destructive-400)
 
 .outline
@@ -107,7 +104,7 @@
 
 .sizeMd
   height 44px
-  padding var(--p-3) var(--p-4)
+  padding 0 var(--p-4)
   border-radius var(--p-4)
 
 .sizeLg

@@ -28,6 +28,10 @@ import { formatDate } from '../tools/formatters';
 import S from './BaseChartWrapper.styl';
 import { ChartAxes } from './ChartAxes';
 import { ChartContainer } from './ChartContainer';
+import {
+  ChartEmptyState,
+  type ChartEmptyStatusTone,
+} from './ChartEmptyState/ChartEmptyState';
 import { ChartGrid } from './ChartGrid';
 import { ChartTooltipContent } from './ChartTooltipContent';
 import { CustomChartLegend } from './CustomChartLegend/CustomChartLegend';
@@ -138,7 +142,12 @@ export interface BaseChartWrapperProps {
   >;
   error?: string | null;
   loadingMessage?: ReactNode;
-  noDataMessage?: string;
+  /** Shown above `noDataMessage` when the chart has no series (muted). */
+  noDataHint?: ReactNode;
+  noDataMessage?: ReactNode;
+  noDataStatusTone?: ChartEmptyStatusTone;
+  /** When true, no placeholder UI for empty `chartData` (parent renders overlay). */
+  suppressNoDataState?: boolean;
   onGridHeightChange?: (height: number) => void;
   forecastLineStyle?: 'dashed' | 'solid';
   disableHistoricalAnimation?: boolean;
@@ -156,21 +165,24 @@ const BaseChartWrapperLoading = forwardRef<
   HTMLDivElement,
   {
     className?: string;
+    loadingComponentClassName?: string;
     height?: number;
     loadingMessage?: ReactNode;
   }
->(({ className, height, loadingMessage }, ref) => {
+>(({ className, loadingComponentClassName, height, loadingMessage }, ref) => {
   return (
     <div ref={ref} className={cn(S.root, className)}>
       <div
         className={S.chartLoadingContainer}
         style={height ? { height: `${height}px` } : undefined}
       >
-        {loadingMessage || (
-          <div className={S.loadingOverlay}>
-            <Skeleton style={{ width: '100%', height: '100%' }} />
-          </div>
-        )}
+        <div data-slot="chart" className={S.loadingChartSlot}>
+          {loadingMessage || (
+            <div className={cn(S.loadingOverlay, loadingComponentClassName)}>
+              <Skeleton style={{ width: '100%', height: '100%' }} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -235,7 +247,10 @@ const BaseChartWrapperContent = forwardRef<
     containerProps,
     error,
     loadingMessage,
+    noDataHint,
     noDataMessage = 'No data available',
+    noDataStatusTone = 'muted',
+    suppressNoDataState = false,
     onGridHeightChange,
     forecastLineStyle = 'dashed',
     disableHistoricalAnimation = false,
@@ -547,17 +562,48 @@ const BaseChartWrapperContent = forwardRef<
   if (!chartData.length) {
     // If hasCombinedData is true but chartData is empty, data is being processed - wait instead of showing "No data"
     if (hasCombinedData) {
-      // Return empty div to wait for chartData to be populated
-      return <div className={cn(S.root, className)}></div>;
+      return (
+        <div className={cn(S.root, className)}>
+          <div
+            className={S.emptyChartSizer}
+            style={height ? { minHeight: height } : undefined}
+            aria-hidden
+          />
+        </div>
+      );
     }
     // If renderId is undefined/null, we're still initializing - wait instead of showing "No data"
     if (!renderId) {
-      // Return empty div to wait for initialization to complete
-      return <div className={cn(S.root, className)}></div>;
+      return (
+        <div className={cn(S.root, className)}>
+          <div
+            className={S.emptyChartSizer}
+            style={height ? { minHeight: height } : undefined}
+            aria-hidden
+          />
+        </div>
+      );
+    }
+    if (suppressNoDataState) {
+      return (
+        <div className={cn(S.root, className)}>
+          <div
+            className={S.emptyChartSizer}
+            style={height ? { minHeight: height } : undefined}
+            aria-hidden
+          />
+        </div>
+      );
     }
     return (
       <div className={cn(S.root, className)}>
-        <div className={S.errorContainer}>{noDataMessage}</div>
+        <ChartEmptyState
+          variant="panel"
+          align="center"
+          hint={noDataHint}
+          status={noDataMessage}
+          statusTone={noDataStatusTone}
+        />
       </div>
     );
   }
@@ -837,7 +883,8 @@ export function BaseChartWrapper(props: BaseChartWrapperProps) {
     return (
       <BaseChartWrapperLoading
         ref={containerRef}
-        className={cn(props.className, props.loadingComponentClassName)}
+        className={props.className}
+        loadingComponentClassName={props.loadingComponentClassName}
         height={props.height}
         loadingMessage={props.loadingMessage}
       />
@@ -849,7 +896,8 @@ export function BaseChartWrapper(props: BaseChartWrapperProps) {
     return (
       <BaseChartWrapperLoading
         ref={containerRef}
-        className={cn(props.className, props.loadingComponentClassName)}
+        className={props.className}
+        loadingComponentClassName={props.loadingComponentClassName}
         height={props.height}
         loadingMessage={props.loadingMessage}
       />
