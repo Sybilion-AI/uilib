@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.100](https://github.com/Mir-Insight/uilib/compare/v1.3.99...v1.3.100) (2026-06-16)
+
+
+### Features
+
+* AnalysesSelector - Rename and inline renamer ([65fad94](https://github.com/Mir-Insight/uilib/commit/65fad94f26657a8a4cb2dd19ae581271f6750efb))
+
+
+### Bug Fixes
+
+* SelectTrigger - asChild chevron skip ([8e791bc](https://github.com/Mir-Insight/uilib/commit/8e791bc337d3b62a35099c04ab22a117187f6160))
+* use radiusSize=xl, port formatCompactAxisNumber from the app ([65ea79e](https://github.com/Mir-Insight/uilib/commit/65ea79e77b28292f643c7190736679b4fd91a8c1))
+
 ### [1.3.99](https://github.com/Mir-Insight/uilib/compare/v1.3.98...v1.3.99) (2026-06-16)
 
 
