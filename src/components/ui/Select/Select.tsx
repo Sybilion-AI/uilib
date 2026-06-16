@@ -45,6 +45,7 @@ function SelectTrigger({
   darker = false,
   children,
   hideChevron = false,
+  asChild = false,
   ...props
 }: SelectTriggerProps) {
   return (
@@ -53,13 +54,20 @@ function SelectTrigger({
       data-size={size}
       data-variant={variant}
       className={cn(S.selectTrigger, darker && S.darker, className)}
+      asChild={asChild}
       {...props}
     >
-      {children}
-      {!hideChevron && (
-        <SelectPrimitive.Icon asChild>
-          <ChevronDownIcon className={S.selectIcon} />
-        </SelectPrimitive.Icon>
+      {asChild ? (
+        children
+      ) : (
+        <>
+          {children}
+          {!hideChevron && (
+            <SelectPrimitive.Icon asChild>
+              <ChevronDownIcon className={S.selectIcon} />
+            </SelectPrimitive.Icon>
+          )}
+        </>
       )}
     </SelectPrimitive.Trigger>
   );

@@ -9,6 +9,7 @@ export interface SelectTriggerProps extends React.ComponentProps<
   className?: string;
   children?: React.ReactNode;
   hideChevron?: boolean;
+  asChild?: boolean;
 }
 
 export type SelectProps = React.ComponentProps<typeof SelectPrimitive.Root>;
