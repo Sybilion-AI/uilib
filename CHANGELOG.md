@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.102](https://github.com/Mir-Insight/uilib/compare/v1.3.101...v1.3.102) (2026-06-16)
+
+
+### Bug Fixes
+
+* DriversComparisonChart - table sorting by importance ([aa46cff](https://github.com/Mir-Insight/uilib/commit/aa46cff25d52c543b95265973a3b1598e9ea7384))
+
 ### [1.3.101](https://github.com/Mir-Insight/uilib/compare/v1.3.100...v1.3.101) (2026-06-16)
 
 
