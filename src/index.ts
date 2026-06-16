@@ -18,6 +18,7 @@ export * from './components/ui/AnalysisLineIcon';
 export * from './components/ui/AppHeader';
 export * from './components/ui/Avatar';
 export * from './components/ui/Badge';
+export * from './components/ui/Banner';
 export * from './components/ui/Chip';
 export * from './components/ui/Kicker';
 export * from './components/ui/PullQuote';

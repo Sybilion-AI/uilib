@@ -2,6 +2,7 @@ import type { ReactElement } from 'react';
 
 import { Avatar, AvatarFallback } from '#uilib/components/ui/Avatar';
 import { Badge } from '#uilib/components/ui/Badge';
+import { Banner } from '#uilib/components/ui/Banner';
 import { Button } from '#uilib/components/ui/Button';
 import {
   Card,
@@ -55,6 +56,7 @@ import { render } from '@testing-library/react';
 const CASES: [string, ReactElement][] = [
   ['Button', <Button key="b">Save</Button>],
   ['Badge', <Badge key="b">New</Badge>],
+  ['Banner', <Banner key="bn">Notice</Banner>],
   ['Chip', <Chip key="c">Stable</Chip>],
   ['Kicker', <Kicker key="k">Signal</Kicker>],
   [
