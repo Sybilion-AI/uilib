@@ -154,7 +154,7 @@ export function DriverCard({
   );
 
   return (
-    <Card className={S.root} paddingSize="l">
+    <Card className={S.root} paddingSize="l" radiusSize="xl">
       <CardContent noScroll>
         <div className={S.cardContent}>
           {/* Driver Header */}
