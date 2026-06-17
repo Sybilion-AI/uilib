@@ -43,6 +43,40 @@ const injectHTMLTags = (content: string) => {
   };
 };
 
+const injectHTMLCodeTags = (content: string) => {
+  const regex = /<(code)\s*>([\s\S]*?)<\/\1\s*>/i;
+  const matches = content.match(regex);
+
+  if (!matches) return null;
+
+  if (isInsideHtmlListOrTable(content, matches.index!)) {
+    return null;
+  }
+
+  return {
+    elem: <code>{matches[2]}</code>,
+    index: matches.index!,
+    length: matches[0].length,
+  };
+};
+
+const injectBacktickCode = (content: string) => {
+  const regex = /`([^`\n]+?)`/;
+  const matches = content.match(regex);
+
+  if (!matches) return null;
+
+  if (isInsideHtmlListOrTable(content, matches.index!)) {
+    return null;
+  }
+
+  return {
+    elem: <code>{matches[1]}</code>,
+    index: matches.index!,
+    length: matches[0].length,
+  };
+};
+
 const injectBold = (content: string) => {
   const regex = /\*\*([^*]+?)\*\*/;
   const matches = content.match(regex);
@@ -371,6 +405,8 @@ const runFormattingPipeline = (
 
 const linkLabelInjectors: Injector[] = [
   injectHTMLTags,
+  injectHTMLCodeTags,
+  injectBacktickCode,
   injectBold,
   injectItalic,
   injectNewlines,
@@ -571,6 +607,8 @@ const applyFormatting = (text: string): React.ReactNode[] =>
     injectAnchor,
     injectMarkdownLink,
     injectHTMLTags,
+    injectHTMLCodeTags,
+    injectBacktickCode,
     injectBullet,
     injectBold,
     injectItalic,
@@ -583,6 +621,8 @@ const applyFormattingInline = (text: string): React.ReactNode[] =>
     injectAnchor,
     injectMarkdownLink,
     injectHTMLTags,
+    injectHTMLCodeTags,
+    injectBacktickCode,
     injectBold,
     injectItalic,
     injectAutolinkUrl,

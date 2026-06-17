@@ -1,6 +1,9 @@
 import { render } from '@testing-library/react';
 
-import { applyFormatting } from './AgentMessageContent.helpers';
+import {
+  applyFormatting,
+  applyFormattingInline,
+} from './AgentMessageContent.helpers';
 
 function renderFormatting(text: string) {
   const parts = applyFormatting(text);
@@ -21,6 +24,24 @@ describe('applyFormatting emphasis', () => {
     const { container } = renderFormatting('Use _italic_ emphasis.');
 
     expect(container.querySelector('em')?.textContent).toBe('italic');
+  });
+});
+
+describe('applyFormattingInline code', () => {
+  it('renders HTML code tags', () => {
+    const parts = applyFormattingInline(
+      'Restored <code>?prompt=</code> URLs for deep links.',
+    );
+    const { container } = render(<>{parts}</>);
+
+    expect(container.querySelector('code')?.textContent).toBe('?prompt=');
+  });
+
+  it('renders backtick inline code', () => {
+    const parts = applyFormattingInline('Use `?prompt=` in the query string.');
+    const { container } = render(<>{parts}</>);
+
+    expect(container.querySelector('code')?.textContent).toBe('?prompt=');
   });
 });
 
