@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.105](https://github.com/Mir-Insight/uilib/compare/v1.3.104...v1.3.105) (2026-06-17)
+
+
+### Features
+
+* InteractiveContent - Add inline code formatting ([45b9261](https://github.com/Mir-Insight/uilib/commit/45b9261222d92b7a1e64889399ce88112c27c660))
+
 ### [1.3.104](https://github.com/Mir-Insight/uilib/compare/v1.3.103...v1.3.104) (2026-06-17)
 
 
