@@ -37,6 +37,46 @@ function hasForecastValue(point: ChartDataPoint, id: number): boolean {
 }
 
 /**
+ * First forecast month for bridge logic — skips synthetic connection rows already
+ * injected upstream (forecast equals historical on the month before the next forecast).
+ */
+function findFirstForecastDateForBridge(
+  rows: ChartDataPoint[],
+  id: number,
+): string | null {
+  const dataKey = forecastSeriesKey(id);
+  const withForecast = rows
+    .filter(row => hasForecastValue(row, id))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  for (let i = 0; i < withForecast.length; i++) {
+    const row = withForecast[i];
+    const next = withForecast[i + 1];
+    if (!next) {
+      return row.date;
+    }
+
+    const expectedBridgeDate = normalizeToMonthStart(
+      getPreviousMonth(next.date),
+    );
+    const forecastVal = row[dataKey];
+    const isSyntheticBridge =
+      normalizeToMonthStart(row.date) === expectedBridgeDate &&
+      row.historical != null &&
+      typeof forecastVal === 'number' &&
+      forecastVal === row.historical;
+
+    if (!isSyntheticBridge) {
+      return row.date;
+    }
+  }
+
+  return withForecast.length > 0
+    ? withForecast[withForecast.length - 1].date
+    : null;
+}
+
+/**
  * Injects `forecast_{id}` on the row before each series’ first forecast month (historical value)
  * so dashed forecast lines meet the historical line. Matches sybilion-client bridge behavior.
  * Never overwrites an existing forecast value on that row.
@@ -65,18 +105,11 @@ export function ensureChartForecastBridge(
 
   for (const id of seriesIds) {
     const dataKey = forecastSeriesKey(id);
-    let firstForecastDate: string | null = null;
-    for (const row of rows) {
-      if (hasForecastValue(row, id)) {
-        firstForecastDate = row.date;
-        break;
-      }
-    }
+    const firstForecastDate = findFirstForecastDateForBridge(rows, id);
     if (!firstForecastDate) continue;
 
-    const prevMonthNorm = normalizeToMonthStart(
-      getPreviousMonth(firstForecastDate),
-    );
+    const prevMonthRaw = getPreviousMonth(firstForecastDate);
+    const prevMonthNorm = normalizeToMonthStart(prevMonthRaw);
 
     const prevMonthIdx = rows.findIndex(
       row => normalizeToMonthStart(row.date) === prevMonthNorm,

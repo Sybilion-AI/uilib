@@ -55,4 +55,20 @@ describe('ensureChartForecastBridge', () => {
     const april = out.find(p => p.date === '2023-04-01');
     expect(april?.forecast_1).toBe(10);
   });
+
+  it('does not treat upstream connection point as first forecast (no double bridge)', () => {
+    const input: ChartDataPoint[] = [
+      { date: '2025-10-01', historical: 70 },
+      { date: '2025-11-01', historical: 74, forecast_11246: 74 },
+      { date: '2025-12-01', forecast_11246: 73.563 },
+    ];
+    const out = ensureChartForecastBridge(input, {
+      forecastSeriesIds: [11246],
+    });
+    expect(
+      out.find(p => p.date === '2025-10-01')?.forecast_11246,
+    ).toBeUndefined();
+    expect(out.find(p => p.date === '2025-11-01')?.forecast_11246).toBe(74);
+    expect(out.find(p => p.date === '2025-12-01')?.forecast_11246).toBe(73.563);
+  });
 });
