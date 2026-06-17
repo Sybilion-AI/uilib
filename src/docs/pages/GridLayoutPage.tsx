@@ -36,6 +36,7 @@ export default function GridLayoutPage() {
         ]}
         whenNotToUse={[
           'For two fixed page columns such as main content plus an aside; use PageColumns.',
+          'For a fixed 3–4 column content row with equal peers; use PageColumns without fill.',
           'For items of very different sizes that need manual placement; use custom CSS grid instead.',
         ]}
         doNotes={[

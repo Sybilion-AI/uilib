@@ -28,26 +28,26 @@ export default function PageColumnsPage() {
         actions={<DocsHeaderActions />}
       />
       <DocsGuidance
-        overview="PageColumns lays out a responsive row of columns inside a page section. The fill prop controls which columns grow past the default width cap on wide viewports: all, left, or right."
+        overview="PageColumns lays out a responsive row of columns inside a page section. Omit fill for equal columns; use left or right for main-plus-aside layouts on wide viewports."
         whenToUse={[
           'To place two or more content blocks side by side within a PageContentSection.',
           'For main-plus-aside layouts where one column should grow and the other stays at a fixed width.',
+          'For 3- or 4-column equal dashboards (metrics rows, panel groups) without fill.',
         ]}
         whenNotToUse={[
           'For card or tile grids; use GridLayout instead.',
           'For arbitrary flex layouts inside a component; PageColumns is a page-structure primitive.',
         ]}
         doNotes={[
-          'Use fill="left" or fill="right" to keep a sidebar column at the default fixed width on wide screens.',
+          'For 3 or 4 equal columns, omit fill (default); do not use left/right.',
+          'Use fill="left" or fill="right" to keep a sidebar column at the default fixed width on wide screens (2 columns only).',
         ]}
       />
       <PageContentSection
         style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
       >
         <section>
-          <h3 style={{ marginBottom: '0.75rem' }}>
-            fill=&quot;all&quot; (default)
-          </h3>
+          <h3 style={{ marginBottom: '0.75rem' }}>Equal columns (default)</h3>
           <p
             style={{
               marginBottom: '1rem',
@@ -98,6 +98,43 @@ export default function PageColumnsPage() {
             columns={[
               <ColumnDemo key="a" label="Fixed sidebar" />,
               <ColumnDemo key="b" label="Growing right column" />,
+            ]}
+          />
+        </section>
+        <section>
+          <h3 style={{ marginBottom: '0.75rem' }}>3 equal columns</h3>
+          <p
+            style={{
+              marginBottom: '1rem',
+              color: 'var(--muted-foreground)',
+            }}
+          >
+            Three peers share width evenly; use for metrics or panel rows.
+          </p>
+          <PageColumns
+            columns={[
+              <ColumnDemo key="a" label="Column A" />,
+              <ColumnDemo key="b" label="Column B" />,
+              <ColumnDemo key="c" label="Column C" />,
+            ]}
+          />
+        </section>
+        <section>
+          <h3 style={{ marginBottom: '0.75rem' }}>4 equal columns</h3>
+          <p
+            style={{
+              marginBottom: '1rem',
+              color: 'var(--muted-foreground)',
+            }}
+          >
+            Four peers share width evenly at desktop; stacks on mobile.
+          </p>
+          <PageColumns
+            columns={[
+              <ColumnDemo key="a" label="Column A" />,
+              <ColumnDemo key="b" label="Column B" />,
+              <ColumnDemo key="c" label="Column C" />,
+              <ColumnDemo key="d" label="Column D" />,
             ]}
           />
         </section>

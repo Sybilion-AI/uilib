@@ -93,17 +93,29 @@ Sticky-style page title row: breadcrumbs (optional sidebar trigger in full app),
 `PageContent`: column flex child, `max-width: var(--page-width)`.  
 `PageContentSection`: `grow` (default `true`) lets the section absorb remaining height in flex layouts.
 
+## Column layout recipes
+
+| Columns        | When                          | Recipe                                                                             |
+| -------------- | ----------------------------- | ---------------------------------------------------------------------------------- |
+| 1              | Single full-width body        | `PageHeader` → `PageContent` → `PageContentSection` — **do not** use `PageColumns` |
+| 2 equal        | Two peers                     | `PageColumns columns={[a, b]}` inside one `PageContentSection`                     |
+| 2 main + aside | Content + fixed sidebar       | `PageColumns fill="left"` or `fill="right"` — **2 columns only**                   |
+| 3 equal        | Three peers (metrics, panels) | `PageColumns columns={[a, b, c]}`                                                  |
+| 4 equal        | Four peers                    | `PageColumns columns={[a, b, c, d]}`                                               |
+
+Use **PageColumns** for a fixed column count content row. Use **GridLayout** for auto-wrapping card/tile grids (variable tile count, `minmax` columns).
+
 ### PageColumns
 
-Side-by-side columns with gap. **`fill`** controls which column(s) grow:
+Side-by-side columns with gap inside one `PageContentSection`. **`fill`** controls which column(s) grow:
 
-| `fill`          | Behavior                                                                                        |
-| --------------- | ----------------------------------------------------------------------------------------------- |
-| `all` (default) | Every column `flex-grow: 1`, `max-width` unset — use for equal split or fluid grids of columns. |
-| `left`          | First column grows; others stay at fixed min/max column width.                                  |
-| `right`         | Last column grows.                                                                              |
+| `fill`   | Behavior                                                                     |
+| -------- | ---------------------------------------------------------------------------- |
+| _(omit)_ | Equal flex columns (`flex: 1 1 0`) — default for **2, 3, or 4** equal peers. |
+| `left`   | **2-column only:** first column grows; second stays at fixed 360px width.    |
+| `right`  | **2-column only:** last column grows; first stays at fixed 360px width.      |
 
-Pass `columns={[node1, node2, …]}`. On mobile, stacks vertically. Typical pattern: main + aside inside one `PageContentSection`.
+Pass `columns={[node1, node2, …]}`. For 3–4 equal columns, omit `fill`; do not use `left`/`right`. On mobile, stacks vertically.
 
 ### PageXScroll
 
@@ -135,6 +147,7 @@ When generating **report** / dashboard specs (not workspace routes), map UI bloc
 | `SectionHeader` `title`         | `markdown` with `## …`                                            |
 | `SectionHeader` `description`   | markdown paragraph under that heading                             |
 | `PageContentSection` block      | group of tiles or one markdown section                            |
+| `PageColumns` (N equal columns) | group of N sibling tiles in one dashboard row                     |
 | `GridLayout` children           | grid row of widget tiles                                          |
 | `ChartAreaInteractive` / charts | `dataset_card`, `performance_chart`, etc. (see widget `AGENT.md`) |
 | `PageEmptyCanvas` copy          | `markdown` explanatory tile                                       |
