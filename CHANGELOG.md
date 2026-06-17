@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.104](https://github.com/Mir-Insight/uilib/compare/v1.3.103...v1.3.104) (2026-06-17)
+
+
+### Bug Fixes
+
+* ChartForecastBridge - Skip synthetic connection row when bridging ([8c48500](https://github.com/Mir-Insight/uilib/commit/8c48500e26a6ac891aff566922eae4122c7b412a))
+* PinOverlay - drag + placeholder centering ([225cd63](https://github.com/Mir-Insight/uilib/commit/225cd63460d12e34ca1dab9753e3146bb5d7df29))
+
 ### [1.3.103](https://github.com/Mir-Insight/uilib/compare/v1.3.102...v1.3.103) (2026-06-16)
 
 
