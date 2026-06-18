@@ -121,7 +121,7 @@ export function ChartTooltipContent({
   return (
     <div className={cn(S.tooltipContainer, className)}>
       {!nestLabel ? tooltipLabel : null}
-      <div className="grid gap-1.5">
+      <div className={S.tooltipContentGrid}>
         {(displayPayload as TooltipItem[])
           .filter(item => item.type !== 'none')
           .map((item, index) => (

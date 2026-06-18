@@ -13,6 +13,7 @@ interface CssExports {
   'nested': string;
   'tooltipContainer': string;
   'tooltipContent': string;
+  'tooltipContentGrid': string;
   'tooltipIndicator': string;
   'tooltipItem': string;
   'tooltipLabel': string;
