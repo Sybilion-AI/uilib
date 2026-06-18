@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/Mir-Insight/uilib/compare/v1.4.0...v1.4.1) (2026-06-18)
+
+
+### Features
+
+* Chart tooltip - add gap between the lines ([07665f5](https://github.com/Mir-Insight/uilib/commit/07665f5a295fb6f717790187cd9b6dfe378fc023))
+
+
+### Bug Fixes
+
+* DriverCard - imports ([82f7742](https://github.com/Mir-Insight/uilib/commit/82f77425cf61c993ab55aa8daab40c759b19f3b1))
+* remove dependency fromlodash; @homecode/ui 4.17.0 -> 5.3.9 ([cbd27d2](https://github.com/Mir-Insight/uilib/commit/cbd27d21d6f889bbfdf78235d707e43b45a85f9c))
+
 ## [1.4.0](https://github.com/Mir-Insight/uilib/compare/v1.3.105...v1.4.0) (2026-06-18)
 
 
