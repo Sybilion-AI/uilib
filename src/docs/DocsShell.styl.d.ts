@@ -5,6 +5,7 @@ interface CssExports {
   'loading': string;
   'mainContent': string;
   'mainHeaderBar': string;
+  'pageScrollRoot': string;
   'pageScrollSlot': string;
   'root': string;
   'viewport': string;
