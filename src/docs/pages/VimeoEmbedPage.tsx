@@ -1,5 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { VimeoEmbed } from '#uilib/components/ui/VimeoEmbed';
+import vimeoEmbedGuidance from '#uilib/docs/agent-guidance/vimeo-embed.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
@@ -14,17 +15,7 @@ export default function VimeoEmbedPage() {
         subheader="Vimeo player embed."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="VimeoEmbed renders a responsive Vimeo player from a video ID, handling the iframe markup and aspect ratio for you. Constrain its width with the surrounding container."
-        whenToUse={[
-          'To embed product videos, tutorials, or demos hosted on Vimeo.',
-          'When a consistent, responsive player is needed without writing iframe markup by hand.',
-        ]}
-        whenNotToUse={[
-          'For video hosted elsewhere or self-hosted files; use the appropriate player or a video element.',
-          'For decorative background video, which needs autoplay and loop control beyond an embedded player.',
-        ]}
-      />
+      <DocsGuidance source={vimeoEmbedGuidance} />
       <PageContentSection style={{ maxWidth: 560 }}>
         <VimeoEmbed videoId="148751763" />
       </PageContentSection>

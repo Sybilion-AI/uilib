@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { RegionSelector } from '#uilib/components/ui/RegionCoords';
+import regionCoordsGuidance from '#uilib/docs/agent-guidance/region-coords.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
@@ -23,17 +24,7 @@ export default function RegionCoordsPage() {
         subheader="RegionSelector — pick a region from map coordinates."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="RegionSelector lets the user pick a named region from a map of geographic coordinates. Pass a record of region names to longitude and latitude pairs, and receive the chosen name and coordinates in onSelect."
-        whenToUse={[
-          'To attach a geographic region to a dataset or record from a predefined list.',
-          'When the selection needs to resolve to concrete coordinates rather than just a label.',
-        ]}
-        whenNotToUse={[
-          'For free-form location search or address entry; use a geocoding input instead.',
-          'For plain single-choice lists without geographic meaning; use Select.',
-        ]}
-      />
+      <DocsGuidance source={regionCoordsGuidance} />
       <PageContentSection>
         <RegionSelector
           regions={REGIONS}

@@ -1,5 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { SmartTextTruncate } from '#uilib/components/ui/SmartTextTruncate';
+import smartTextTruncateGuidance from '#uilib/docs/agent-guidance/smart-text-truncate.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
@@ -18,17 +19,7 @@ export default function SmartTextTruncatePage() {
         subheader="Smart ellipsis for long strings."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="SmartTextTruncate shortens a long string in the middle so it fits its container, keeping the end of the string visible. This preserves distinguishing suffixes such as file extensions or trailing identifiers that a plain end ellipsis would hide."
-        whenToUse={[
-          'For long identifiers, file names, or paths where the ending carries meaning.',
-          'In narrow containers, such as table cells or sidebars, where strings of unpredictable length must fit on one line.',
-        ]}
-        whenNotToUse={[
-          'For prose or sentences; standard end truncation reads more naturally.',
-          'When the full value must always be visible; let the text wrap instead.',
-        ]}
-      />
+      <DocsGuidance source={smartTextTruncateGuidance} />
       <PageContentSection>
         <div className={S.resizableDemo}>
           <SmartTextTruncate className={S.demoText}>{LONG}</SmartTextTruncate>

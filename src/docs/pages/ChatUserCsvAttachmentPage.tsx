@@ -7,6 +7,7 @@ import {
   MessageRole,
 } from '#uilib/components/ui/Chat';
 import { PageContentSection } from '#uilib/components/ui/Page';
+import chatUserCsvAttachmentGuidance from '#uilib/docs/agent-guidance/chat-user-csv-attachment.md';
 import { ScrollRef } from '@homecode/ui';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -126,19 +127,7 @@ export default function ChatUserCsvAttachmentPage() {
         subheader="USER bubble with separate downloadable CSV row (dashboard preset pattern)."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="User messages can carry downloadable text file attachments via userTextFileAttachments: the bubble shows the message text with a separate file row beneath it, matching the dashboard preset pattern. Users can download the attached file from that row."
-        whenToUse={[
-          'When a preset or automated flow sends data, such as a CSV extract, on the user’s behalf.',
-          'To keep generated file context visible and retrievable in the conversation history.',
-        ]}
-        whenNotToUse={[
-          'For user-initiated uploads; use the attachments dropzone instead.',
-        ]}
-        doNotes={[
-          'Give each attachment a readable displayName so the file row makes sense out of context.',
-        ]}
-      />
+      <DocsGuidance source={chatUserCsvAttachmentGuidance} />
       <PageContentSection>
         <p style={{ marginBottom: 16 }}>
           <Button

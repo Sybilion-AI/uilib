@@ -1,4 +1,5 @@
 import { Input } from '#uilib/components/ui/Input';
+import InputGuidance from '#uilib/components/ui/Input/AGENT.md';
 import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -17,21 +18,7 @@ export default function InputPage() {
         subheader="Variants, sizes, textarea, placeholder, and disabled state."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="Input is the standard single-line text field. Pair it with a Label linked via htmlFor and id, and control the value through the onChange handler."
-        whenToUse={[
-          'To collect short, free-form text such as names, titles, or search terms.',
-          'In forms alongside Label, or use LabeledInput for the common label-plus-input row.',
-        ]}
-        whenNotToUse={[
-          'For multi-line text; use Textarea instead.',
-          'When the value must come from a fixed set of options; use Select or Combobox.',
-        ]}
-        doNotes={[
-          'Always associate a visible Label so the field is announced correctly by assistive technology.',
-          'Use placeholder text as a hint, not as a substitute for the label.',
-        ]}
-      />
+      <DocsGuidance source={InputGuidance} />
       <PageContentSection
         style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
       >

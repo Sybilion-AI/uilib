@@ -1,4 +1,5 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
+import spacingGuidance from '#uilib/docs/agent-guidance/spacing.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
@@ -19,16 +20,7 @@ export default function SpacingPage() {
         subheader="The --p-* scale — a 4px-based rhythm for padding, gaps, and margins."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="The --p-* tokens are the canonical spacing scale: each step is a multiple of 4px, from --p-1 (4px) up to --p-24 (96px). Use them for padding, gaps, and margins instead of raw pixel values, so layouts share the same rhythm everywhere."
-        whenToUse={[
-          'Gaps and padding inside components and page sections.',
-          'Vertical rhythm between sections, cards, and form fields.',
-        ]}
-        whenNotToUse={[
-          'One-off pixel values that sit between steps; pick the nearest token instead.',
-        ]}
-      />
+      <DocsGuidance source={spacingGuidance} />
       <PageContentSection>
         <h3>Scale</h3>
         <p className={S.sectionNote}>

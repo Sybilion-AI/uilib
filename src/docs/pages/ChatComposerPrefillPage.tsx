@@ -8,6 +8,7 @@ import {
   MessageRole,
 } from '#uilib/components/ui/Chat';
 import { PageContentSection } from '#uilib/components/ui/Page';
+import chatComposerPrefillGuidance from '#uilib/docs/agent-guidance/chat-composer-prefill.md';
 import { ScrollRef } from '@homecode/ui';
 import { MessageSquare } from 'lucide-react';
 
@@ -110,20 +111,7 @@ export default function ChatComposerPrefillPage() {
           />
         }
       />
-      <DocsGuidance
-        overview="The chat composer can be prefilled without auto-sending: pass promptPrefill to ChatChrome, call ChatSheetActions.openNewChatWithPrefill for the portal sheet, or use a ?prompt= deep link. Focus lands at the end of the text so users can edit before submitting."
-        whenToUse={[
-          'To seed the composer from a call to action, such as a suggested question on a dataset page.',
-          'To deep link into the product with a prepared prompt via ?prompt=.',
-          'When opening a new chat session that should start from a template prompt.',
-        ]}
-        whenNotToUse={[
-          'To send a message automatically on behalf of the user; prefill never submits.',
-        ]}
-        doNotes={[
-          'Keep prefilled text short and editable; it is a starting point, not a command.',
-        ]}
-      />
+      <DocsGuidance source={chatComposerPrefillGuidance} />
       <PageContentSection>
         <p style={{ marginBottom: 12, fontSize: 14, lineHeight: 1.5 }}>
           After prefill, the composer receives focus at the end of the text so

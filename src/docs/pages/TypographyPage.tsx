@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { PageContentSection } from '#uilib/components/ui/Page';
+import typographyGuidance from '#uilib/docs/agent-guidance/typography.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
@@ -86,16 +87,7 @@ export default function TypographyPage() {
         subheader="Type scale, weights, line heights, and tracking tokens."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="The system pairs KMR Apparat for display and headings with Manrope for body copy. Sizes come from the --text-* scale, display sizes from --text-display-*, and rhythm from the --lh-* and --tracking-* tokens. Set sizes through tokens rather than raw pixel values."
-        whenToUse={[
-          'The --text-* scale for UI text, labels, and headings.',
-          'The --text-display-* sizes for hero and editorial moments only.',
-        ]}
-        whenNotToUse={[
-          'Display sizes inside dense product UI; the largest heading there should be --text-3xl.',
-        ]}
-      />
+      <DocsGuidance source={typographyGuidance} />
       <PageContentSection>
         <h3>Type scale</h3>
         <SpecimenTable

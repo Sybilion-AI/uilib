@@ -1,6 +1,7 @@
 import { Chip } from '#uilib/components/ui/Chip';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { SignalCard } from '#uilib/components/ui/SignalCard';
+import SignalCardGuidance from '#uilib/components/ui/SignalCard/AGENT.md';
 import { Sparkline } from '#uilib/components/ui/Sparkline';
 import { Activity, BarChart3, Clock, TrendingUp } from 'lucide-react';
 
@@ -25,21 +26,7 @@ export default function SignalCardPage() {
         subheader="Metric card with kicker, figure, delta chip, and sparkline slot."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="SignalCard is the product primitive for a single metric: an optional kicker and icon header, a large Manrope figure with unit and tolerance suffixes, body copy, a sparkline slot, and a footer with a delta indicator and muted meta items. Weight carries the emphasis in the numeric block, not colour."
-        whenToUse={[
-          'To present a forecast, spot price, or index value with its direction and confidence.',
-          'In a dashboard grid where each card answers one quantitative question.',
-        ]}
-        whenNotToUse={[
-          'For general grouped content without a headline metric; use Card.',
-          'For dense tabular comparisons across many series; use Table.',
-        ]}
-        doNotes={[
-          'Keep the footer meta short, such as horizon and confidence.',
-          'Pass a Chip with a status variant as the delta so direction reads at a glance.',
-        ]}
-      />
+      <DocsGuidance source={SignalCardGuidance} />
       <PageContentSection
         style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
       >

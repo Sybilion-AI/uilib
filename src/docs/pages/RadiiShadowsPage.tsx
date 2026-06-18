@@ -1,4 +1,5 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
+import radiiShadowsGuidance from '#uilib/docs/agent-guidance/radii-shadows.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
@@ -51,16 +52,7 @@ export default function RadiiShadowsPage() {
         subheader="Square-biased corner radii and three restrained elevation levels."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="Corners are small and square-biased: the scale runs from 0 to 12px, with semantic aliases for buttons, cards, and inputs. Elevation is restrained — three slate-tinted shadows that separate surfaces without floating them."
-        whenToUse={[
-          'Semantic radii (--radius-button/card/input) on the controls they are named after.',
-          '--shadow-1 or --shadow-2 for cards and popovers; --shadow-3 only for dialogs and other top-level surfaces.',
-        ]}
-        whenNotToUse={[
-          'Heavy or coloured drop shadows; elevation stays subtle in this system.',
-        ]}
-      />
+      <DocsGuidance source={radiiShadowsGuidance} />
       <PageContentSection>
         <h3>Radius scale</h3>
         <div className={S.row}>

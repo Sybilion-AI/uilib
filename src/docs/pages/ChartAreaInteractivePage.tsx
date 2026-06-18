@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import { ChartAreaInteractive } from '#uilib/components/ui/ChartAreaInteractive';
+import ChartAreaInteractiveGuidance from '#uilib/components/ui/ChartAreaInteractive/AGENT.md';
 import type {
   ChartDataPoint,
   OverlayMode,
@@ -149,21 +150,7 @@ export default function ChartAreaInteractivePage() {
         subheader="Interactive area chart shell with time range controls."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="ChartAreaInteractive is the full chart shell for time series data, combining an area chart with a time range selector, a legend with series toggles, and optional forecast overlays. Overlay modes add month pinning, quantile interval bands, or threshold controls on top of the base chart."
-        whenToUse={[
-          'To present historical and forecast series together with built-in time range filtering.',
-          'When users need to toggle series visibility, pin a month, or inspect quantile intervals and thresholds.',
-          'As the main visualisation on an analysis or dataset page.',
-        ]}
-        whenNotToUse={[
-          'For a simple static chart without controls; compose ChartContainer with Recharts directly.',
-          'For non-temporal data such as categorical comparisons.',
-        ]}
-        doNotes={[
-          'Pass loading while data is being fetched so the chart shows its skeleton state.',
-        ]}
-      />
+      <DocsGuidance source={ChartAreaInteractiveGuidance} />
       <PageContentSection>
         <Tabs
           value={demoMode}

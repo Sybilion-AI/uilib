@@ -1,5 +1,6 @@
 import type { SlashCommandItem } from '#uilib/components/ui/Chat';
 import { PageContentSection } from '#uilib/components/ui/Page';
+import chatSheetGuidance from '#uilib/docs/agent-guidance/chat-sheet.md';
 import { MessageSquare } from 'lucide-react';
 
 import {
@@ -41,19 +42,7 @@ export default function ChatSheetPage() {
           />
         }
       />
-      <DocsGuidance
-        overview="ChatSheet places the chat panel behind a trigger in the page header and portals it into the shell chat slot, matching the app dataset page integration. Presets, slash commands, and the empty state are passed through to the underlying chat shell."
-        whenToUse={[
-          'When chat is a secondary tool on the page and should open on demand from the header.',
-          'To reuse one assistant entry point across pages with page-scoped presets.',
-        ]}
-        whenNotToUse={[
-          'When the conversation is the primary content of the page; embed ChatChrome inline instead.',
-        ]}
-        doNotes={[
-          'Give each page its own scopeId so chat sessions do not leak between contexts.',
-        ]}
-      />
+      <DocsGuidance source={chatSheetGuidance} />
       <PageContentSection>
         <p style={{ marginBottom: 16, fontSize: 14, lineHeight: 1.5 }}>
           Open <strong>AI Assistant</strong> in the header. Presets render below

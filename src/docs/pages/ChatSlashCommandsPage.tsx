@@ -8,6 +8,7 @@ import {
   type SlashCommandItem,
 } from '#uilib/components/ui/Chat';
 import { PageContentSection } from '#uilib/components/ui/Page';
+import chatSlashCommandsGuidance from '#uilib/docs/agent-guidance/chat-slash-commands.md';
 import { ScrollRef } from '@homecode/ui';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -98,20 +99,7 @@ export default function ChatSlashCommandsPage() {
         subheader={`Slash palette uses TipTap Mention with "/" as the trigger. Pass slashCommandItems from the app — each item inserts an inline mention chip by default. Optional className and color on SlashCommandItem style the chip in the composer.`}
         actions={<DocsHeaderActions slashCommandItems={DOCS_SLASH_ITEMS} />}
       />
-      <DocsGuidance
-        overview="The chat composer supports a slash command palette built on TipTap mentions: typing / at the start of a line or after a space opens a picker, and choosing an item inserts an inline mention chip. Supply items through slashCommandItems; optional className and color style each chip."
-        whenToUse={[
-          'To expose a small set of named commands users can invoke from the composer.',
-          'When commands should read as part of the message, such as /generate-report.',
-        ]}
-        whenNotToUse={[
-          'For long or hierarchical command sets; the palette works best with a handful of items.',
-          'For primary actions that deserve a visible button outside the composer.',
-        ]}
-        doNotes={[
-          'Keep command ids stable, since plain-text sends fall back to the item id.',
-        ]}
-      />
+      <DocsGuidance source={chatSlashCommandsGuidance} />
       <PageContentSection>
         <p style={{ marginBottom: 16, fontSize: 14, lineHeight: 1.5 }}>
           Same{' '}

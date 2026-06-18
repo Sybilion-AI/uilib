@@ -9,6 +9,7 @@ import {
   DriversComparisonChart,
   type DriversComparisonViewTab,
 } from '#uilib/components/widgets/DriversComparisonChart';
+import DriversComparisonChartGuidance from '#uilib/components/widgets/DriversComparisonChart/AGENT.md';
 import { useTheme } from '#uilib/contexts/theme-context';
 import type { BacktestsComponentPayload } from '@sybilion/platform-sdk';
 
@@ -124,22 +125,7 @@ export default function DriversComparisonChartPage() {
         subheader="Normalized target line with driver series; Lagged/Overlapped tabs shift driver alignment; table rows toggle chart visibility."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="DriversComparisonChart plots a normalized target line against the normalized series of its drivers, with a table of drivers underneath. The Lagged and Overlapped view tabs control whether driver series are shifted by their reported lag or aligned in time, and table rows toggle each series on the chart."
-        whenToUse={[
-          'To show how individual drivers move relative to a backtested target over time.',
-          'When users need to compare lagged and contemporaneous alignment of driver series.',
-          'When the driver table and the chart should stay linked, so hiding a row hides its line.',
-        ]}
-        whenNotToUse={[
-          'For a single series with no target to compare against; use ChartAreaInteractive directly.',
-          'When drivers lack normalized series data; the chart needs a populated payload to be useful.',
-        ]}
-        doNotes={[
-          'Provide a statusHint when the payload is empty so users understand why the chart is blank.',
-          'Control viewTab from the page when an external Lagged/Overlapped switcher should stay in sync.',
-        ]}
-      />
+      <DocsGuidance source={DriversComparisonChartGuidance} />
       <PageContentSection>
         <div
           style={{

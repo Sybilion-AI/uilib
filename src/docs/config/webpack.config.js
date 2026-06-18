@@ -83,7 +83,7 @@ export default (env, argv) => {
 
     resolve: {
       modules: [paths.src, paths.docs, 'node_modules'],
-      extensions: ['.js', '.ts', '.tsx', '.styl'],
+      extensions: ['.js', '.ts', '.tsx', '.styl', '.md'],
       alias,
     },
 
@@ -103,6 +103,11 @@ export default (env, argv) => {
               Boolean,
             ),
           },
+        },
+        {
+          test: /\.md$/,
+          include: [paths.src],
+          type: 'asset/source',
         },
         {
           test: /\.css$/,

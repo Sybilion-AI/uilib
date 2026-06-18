@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#uilib/components/ui/Select';
+import selectGuidance from '#uilib/docs/agent-guidance/select.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
@@ -66,20 +67,7 @@ export default function SelectPage() {
         subheader="Variants, sizes, placeholder, darker trigger, and disabled state."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="Select is a Radix-based dropdown for choosing a single option from a list. Compose it from Select, SelectTrigger, SelectValue, SelectContent, and SelectItem, and pick a trigger variant and size to match the surrounding controls."
-        whenToUse={[
-          'To choose one option from a list of roughly five or more items.',
-          'In forms, toolbars, and filters where space is limited and options collapse behind a trigger.',
-        ]}
-        whenNotToUse={[
-          'For two to four options that benefit from being visible at once; use ToggleGroup or radio buttons.',
-          'For multi-select or searchable lists; use a combobox or multi-select component.',
-        ]}
-        doNotes={[
-          'Use the clear variant for low-emphasis, inline selects embedded in text or toolbars.',
-        ]}
-      />
+      <DocsGuidance source={selectGuidance} />
       <PageContentSection
         style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
       >

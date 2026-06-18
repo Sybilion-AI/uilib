@@ -8,6 +8,7 @@ import {
 } from '#uilib/components/ui/Page';
 import type { PageFooterLinkItem } from '#uilib/components/ui/Page/PageFooter/PageFooter';
 import { Switch } from '#uilib/components/ui/Switch';
+import pageFooterGuidance from '#uilib/docs/agent-guidance/page-footer.md';
 import { GlobeIcon, Hash, MailIcon, MessageCircle } from 'lucide-react';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -69,20 +70,7 @@ export default function PageFooterPage() {
         subheader="Copyright + optional link row with gap and wrapping."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="PageFooter renders the page-level footer with copyright, a version label, and an optional row of links that wrap on narrow viewports. Links accept an icon and label and open external destinations."
-        whenToUse={[
-          'At the bottom of an application shell to show copyright, version, and support links.',
-          'When you need a consistent set of external links, such as website, email, or community channels.',
-        ]}
-        whenNotToUse={[
-          'For page actions or navigation within the app; keep those in the header or sidebar.',
-          'Inside individual sections or cards; the footer belongs to the page shell.',
-        ]}
-        doNotes={[
-          'Keep the link list short so it remains scannable when it wraps on mobile.',
-        ]}
-      />
+      <DocsGuidance source={pageFooterGuidance} />
       <PageContent>
         <PageContentSection title="With links prop">
           <div

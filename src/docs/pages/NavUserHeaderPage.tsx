@@ -1,5 +1,6 @@
 import { DropdownMenuItem } from '#uilib/components/ui/DropdownMenu';
 import { NavUserHeader } from '#uilib/components/ui/NavUserHeader';
+import NavUserHeaderGuidance from '#uilib/components/ui/NavUserHeader/AGENT.md';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { GearSixIcon, UserCircleIcon } from '@phosphor-icons/react';
 
@@ -29,20 +30,7 @@ export default function NavUserHeaderPage() {
         subheader="User menu with label, custom rows, theme toggle (docs ThemeProvider), and logout."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="NavUserHeader shows the signed-in user with their name, email, and avatar, and opens a dropdown menu containing custom rows, a theme toggle, and a logout action. Use the compact variant where horizontal space is limited."
-        whenToUse={[
-          'In application chrome, such as a sidebar footer or top bar, to expose account-level actions.',
-          'When the user needs quick access to profile, settings, theme, and logout from one place.',
-        ]}
-        whenNotToUse={[
-          'For general-purpose menus not tied to the signed-in user; use DropdownMenu directly.',
-          'On unauthenticated screens where there is no user to display.',
-        ]}
-        doNotes={[
-          'Pass bespoke rows through menuItems rather than recreating the trigger and menu yourself.',
-        ]}
-      />
+      <DocsGuidance source={NavUserHeaderGuidance} />
       <PageContentSection
         style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem' }}
       >

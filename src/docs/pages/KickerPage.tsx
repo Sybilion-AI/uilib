@@ -1,4 +1,5 @@
 import { Kicker } from '#uilib/components/ui/Kicker';
+import KickerGuidance from '#uilib/components/ui/Kicker/AGENT.md';
 import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -14,21 +15,7 @@ export default function KickerPage() {
         subheader="Small eyebrow label that introduces a section or card."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="Kicker is a small eyebrow label rendered above a heading, card, or section. It uses the 12px Manrope label style in sentence case with zero tracking; emphasis comes from weight, never from uppercase."
-        whenToUse={[
-          'Above a heading or card to name the topic or category at a glance.',
-          'As the eyebrow line of a SignalCard or editorial block.',
-        ]}
-        whenNotToUse={[
-          'As a heading in its own right; pair it with a real heading element.',
-          'For interactive labels such as filters or status pills; use Chip instead.',
-        ]}
-        dontNotes={[
-          'Do not set kicker text in uppercase or small caps; keep sentence case.',
-          'Do not add letter-spacing; small text keeps zero tracking.',
-        ]}
-      />
+      <DocsGuidance source={KickerGuidance} />
       <PageContentSection
         style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
       >

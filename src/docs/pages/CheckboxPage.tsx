@@ -1,4 +1,5 @@
 import { Checkbox } from '#uilib/components/ui/Checkbox';
+import CheckboxGuidance from '#uilib/components/ui/Checkbox/AGENT.md';
 import { Label } from '#uilib/components/ui/Label';
 import { PageContentSection } from '#uilib/components/ui/Page';
 
@@ -15,21 +16,7 @@ export default function CheckboxPage() {
         subheader="Binary control for selecting an option."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="Checkbox is a binary control for selecting or deselecting an option. Pair it with a Label linked via htmlFor so the text is clickable and announced by assistive technology."
-        whenToUse={[
-          'For independent on or off options in forms and settings.',
-          'To select multiple items from a list.',
-          'To record agreement, such as accepting terms.',
-        ]}
-        whenNotToUse={[
-          'For an action that takes effect immediately; use Switch instead.',
-          'For mutually exclusive choices; use RadioGroup.',
-        ]}
-        doNotes={[
-          'Write labels positively, such as “Send notifications” rather than “Do not send notifications”.',
-        ]}
-      />
+      <DocsGuidance source={CheckboxGuidance} />
       <PageContentSection
         style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
       >

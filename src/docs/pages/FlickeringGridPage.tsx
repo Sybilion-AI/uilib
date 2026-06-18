@@ -1,4 +1,5 @@
 import { FlickeringGrid } from '#uilib/components/ui/FlickeringGrid';
+import FlickeringGridGuidance from '#uilib/components/ui/FlickeringGrid/AGENT.md';
 import { PageContentSection } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -14,20 +15,7 @@ export default function FlickeringGridPage() {
         subheader="Decorative animated grid background."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="FlickeringGrid is a purely decorative animated grid of squares that flicker at random. Place it behind content in a positioned container to add subtle visual texture to hero areas or empty states."
-        whenToUse={[
-          'As a background flourish on landing, sign-in, or marketing-style surfaces.',
-          'To add ambient motion to an otherwise static empty state.',
-        ]}
-        whenNotToUse={[
-          'Behind dense data displays such as charts or tables, where motion competes with the content.',
-          'When users may prefer reduced motion; avoid relying on it to convey any meaning.',
-        ]}
-        dontNotes={[
-          'Do not attach interactive behaviour to the grid; it is decoration only.',
-        ]}
-      />
+      <DocsGuidance source={FlickeringGridGuidance} />
       <PageContentSection
         style={{ height: 200, position: 'relative', overflow: 'hidden' }}
       >

@@ -1,5 +1,6 @@
 import type { DonutChartDatum } from '#uilib/components/ui/DonutChart';
 import { DonutChart } from '#uilib/components/ui/DonutChart';
+import DonutChartGuidance from '#uilib/components/ui/DonutChart/AGENT.md';
 import { PageContentSection, SectionHeader } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -41,20 +42,7 @@ export default function DonutChartPage() {
         subheader="Part-to-whole donut chart with an optional centre figure."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="DonutChart shows how a small number of categories make up a whole. Each datum carries a key, value, and optional label and colour; the centre of the donut can display a headline figure with a caption. Tooltip and legend reuse the shared chart infrastructure."
-        whenToUse={[
-          'To show composition of a total across roughly two to six categories, such as portfolio allocation or sentiment share.',
-          'When a single headline figure (the total) deserves prominence in the centre.',
-        ]}
-        whenNotToUse={[
-          'For more than about six categories; slices become unreadable — use BarChart instead.',
-          'For comparing values across groups or over time; a donut only conveys part-to-whole.',
-        ]}
-        doNotes={[
-          'Order slices from largest to smallest so the chart reads clockwise.',
-        ]}
-      />
+      <DocsGuidance source={DonutChartGuidance} />
       <PageContentSection>
         <SectionHeader
           title="With centre label"

@@ -1,4 +1,5 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
+import colorsGuidance from '#uilib/docs/agent-guidance/colors.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
@@ -66,16 +67,7 @@ export default function ColorsPage() {
         subheader="Core --sb-* ramps and the semantic tokens built on top of them."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="Colour is defined as a set of core ramps (--sb-cyan/purple/red/green/yellow/gray/slate) plus semantic tokens that map those ramps onto roles such as background, border, brand, and status. Components should reference semantic tokens first and reach for a raw ramp step only when no role fits."
-        whenToUse={[
-          'Semantic tokens for surfaces, text, borders, and status colour in components.',
-          'Ramp steps for data visualisation or decorative accents where a specific hue is needed.',
-        ]}
-        whenNotToUse={[
-          'Hardcoded hex or oklch values in component styles; always go through a token.',
-        ]}
-      />
+      <DocsGuidance source={colorsGuidance} />
       <PageContentSection>
         <h3>Core ramps</h3>
         {RAMPS.map(({ family, tokens }) => (

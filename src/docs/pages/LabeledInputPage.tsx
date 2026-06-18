@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import LabeledInputGuidance from '#uilib/components/ui/LabeledInput/AGENT.md';
 import { LabeledInput } from '#uilib/components/ui/LabeledInput/LabeledInput';
 import { PageContentSection } from '#uilib/components/ui/Page';
 
@@ -18,17 +19,7 @@ export default function LabeledInputPage() {
         subheader="Label + input row."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="LabeledInput combines a Label and an Input into a single row, wiring the label to the field automatically via the id you provide. It accepts the usual input props such as name, value, onChange, and placeholder."
-        whenToUse={[
-          'For standard form fields where every input needs a visible, associated label.',
-          'To keep label and input markup consistent across forms without repeating the wiring.',
-        ]}
-        whenNotToUse={[
-          'When the field needs a custom layout, helper text, or validation message; compose Label and Input directly.',
-          'For non-text controls such as switches or selects, which have their own labelling patterns.',
-        ]}
-      />
+      <DocsGuidance source={LabeledInputGuidance} />
       <PageContentSection>
         <LabeledInput
           id="labeled-docs"

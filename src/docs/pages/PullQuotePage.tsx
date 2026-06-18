@@ -1,5 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { PullQuote } from '#uilib/components/ui/PullQuote';
+import pullQuoteGuidance from '#uilib/docs/agent-guidance/pull-quote.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
@@ -14,20 +15,7 @@ export default function PullQuotePage() {
         subheader="Editorial quote with accent rule and sentence-case attribution."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="PullQuote presents an editorial quote with a 2px accent rule on the left, display-face body text, and a small Manrope attribution line. Attribution stays in sentence case with zero tracking; the optional role renders muted after a middle dot."
-        whenToUse={[
-          'To highlight a customer or stakeholder quote in marketing or report content.',
-          'To lift a key sentence out of long-form copy as an editorial emphasis.',
-        ]}
-        whenNotToUse={[
-          'For inline quotations within body text; use standard quotation marks.',
-          'For callouts, warnings, or notes; use a card or alert pattern instead.',
-        ]}
-        dontNotes={[
-          'Do not set the attribution in uppercase; small text keeps sentence case.',
-        ]}
-      />
+      <DocsGuidance source={pullQuoteGuidance} />
       <PageContentSection
         style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
       >

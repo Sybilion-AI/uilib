@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import { ChartAreaInteractive } from '#uilib/components/ui/ChartAreaInteractive';
+import ChartAreaInteractiveGuidance from '#uilib/components/ui/ChartAreaInteractive/AGENT.md';
 import type { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
 import type { ForecastItemData } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
 import { calculateChartYRange } from '#uilib/components/ui/ChartAreaInteractive/overlays/useChartYRange';
@@ -102,19 +103,7 @@ export default function IncludeHiddenInYScalePage() {
         }
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="includeHiddenInYScale is a BaseChartWrapper and ChartAreaInteractive prop that controls whether series hidden via the legend still contribute to the Y-axis domain. With the default of false, hiding an outlier series lets the chart rescale to the remaining data; setting it to true preserves the legacy behaviour where hidden values keep expanding the scale."
-        whenToUse={[
-          'Leave it false so hiding an extreme series rescales the chart and reveals detail in the rest.',
-          'Set it true when the axis must stay stable while users toggle series, for example in side-by-side comparisons.',
-        ]}
-        whenNotToUse={[
-          'Do not combine it with a manually fixed yMin and yMax computed without the same setting, or the domain and the data will disagree.',
-        ]}
-        doNotes={[
-          'Pass the same includeHiddenInYScale and hiddenSeries values to calculateChartYRange so the computed domain matches the chart.',
-        ]}
-      />
+      <DocsGuidance source={ChartAreaInteractiveGuidance} />
       <PageContentSection>
         <div
           style={{

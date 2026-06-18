@@ -1,6 +1,7 @@
 import { Label } from '#uilib/components/ui/Label';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Switch } from '#uilib/components/ui/Switch';
+import SwitchGuidance from '#uilib/components/ui/Switch/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
@@ -22,20 +23,7 @@ export default function SwitchPage() {
         subheader="Sizes, on/off states, and disabled state."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="Switch is a binary control for turning a setting on or off. Unlike a checkbox, a switch implies the change takes effect immediately, without a separate save step."
-        whenToUse={[
-          'For settings that apply instantly, such as enabling notifications or a feature flag.',
-          'When the two states are clearly opposites, such as on and off.',
-        ]}
-        whenNotToUse={[
-          'In forms where changes are committed by a submit action; use Checkbox instead.',
-          'For selecting one of several options; use RadioGroup, Toggle, or ToggleGroup.',
-        ]}
-        doNotes={[
-          'Pair the switch with a Label linked via htmlFor so the state being controlled is clear.',
-        ]}
-      />
+      <DocsGuidance source={SwitchGuidance} />
       <PageContentSection
         style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
       >

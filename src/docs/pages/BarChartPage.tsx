@@ -3,6 +3,7 @@ import type {
   BarChartSeries,
 } from '#uilib/components/ui/BarChart';
 import { BarChart } from '#uilib/components/ui/BarChart';
+import BarChartGuidance from '#uilib/components/ui/BarChart/AGENT.md';
 import { PageContentSection, SectionHeader } from '#uilib/components/ui/Page';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -46,21 +47,7 @@ export default function BarChartPage() {
         subheader="Categorical bar chart with grouped and stacked modes."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="BarChart compares values across categories. Provide rows of data, a category key, and a list of series; choose vertical or horizontal orientation and grouped or stacked mode. Grid, axes, tooltip, and legend follow the shared chart styling."
-        whenToUse={[
-          'To compare discrete categories such as regions, models, or scenarios.',
-          'Stacked mode when the per-category total matters as much as the breakdown.',
-          'Horizontal orientation when category labels are long or there are many categories.',
-        ]}
-        whenNotToUse={[
-          'For continuous time series; use ChartAreaInteractive or a line chart instead.',
-          'For part-to-whole of a single total; use DonutChart.',
-        ]}
-        doNotes={[
-          'Start the value axis at zero so bar lengths stay proportional.',
-        ]}
-      />
+      <DocsGuidance source={BarChartGuidance} />
       <PageContentSection>
         <SectionHeader
           title="Grouped"

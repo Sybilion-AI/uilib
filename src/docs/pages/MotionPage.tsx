@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Tabs, TabsList, TabsTrigger } from '#uilib/components/ui/Tabs';
 import { ToggleGroup, ToggleGroupItem } from '#uilib/components/ui/ToggleGroup';
+import motionGuidance from '#uilib/docs/agent-guidance/motion.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
@@ -94,16 +95,7 @@ export default function MotionPage() {
         subheader="Easing curves and duration tokens for transitions."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="Motion is quick and purposeful. Use --ease-standard for elements entering or changing state, --ease-exit for elements leaving, and pick the shortest duration that still reads: --dur-fast for hovers and toggles, --dur-base for most transitions, --dur-slow for larger surfaces."
-        whenToUse={[
-          'Hover, focus, and state-change transitions on interactive controls.',
-          'Entering and leaving surfaces such as popovers, sheets, and dialogs.',
-        ]}
-        whenNotToUse={[
-          'Decorative or looping animation that does not communicate a state change.',
-        ]}
-      />
+      <DocsGuidance source={motionGuidance} />
       <PageContentSection>
         <h3>Tokens</h3>
         <div className={S.tokenList}>

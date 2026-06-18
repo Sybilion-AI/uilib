@@ -1,3 +1,4 @@
+import { Button } from '#uilib/components/ui/Button';
 import {
   Card,
   CardContent,
@@ -7,13 +8,13 @@ import {
   CardTitle,
   LinkCard,
 } from '#uilib/components/ui/Card';
+import CardGuidance from '#uilib/components/ui/Card/AGENT.md';
+import { PageContentSection } from '#uilib/components/ui/Page';
+import { PackageIcon } from '@phosphor-icons/react';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
-import { Button } from '#uilib/components/ui/Button';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
-import { PackageIcon } from '@phosphor-icons/react';
-import { PageContentSection } from '#uilib/components/ui/Page';
 
 const PADDING_SIZES = ['s', 'm', 'l'] as const;
 const RADIUS_SIZES = ['s', 'm', 'l', 'xl'] as const;
@@ -29,21 +30,7 @@ export default function CardPage() {
         subheader="Padding and radius sizes, slot compositions, and link card."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="Card groups related content and actions into a single bounded container with optional header, content, and footer slots. The header supports an icon, title, and description; the footer typically holds actions."
-        whenToUse={[
-          'To group a self-contained piece of content, such as a summary, setting, or entity.',
-          'In grid dashboards where each tile presents one unit of information.',
-          'When content needs a clear visual boundary from its surroundings.',
-        ]}
-        whenNotToUse={[
-          'To wrap an entire page; use the page layout primitives instead.',
-          'For long, flowing text that does not need a boundary.',
-        ]}
-        doNotes={[
-          'Keep one primary action per card and place it in the footer.',
-        ]}
-      />
+      <DocsGuidance source={CardGuidance} />
       <PageContentSection
         style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
       >

@@ -8,6 +8,7 @@ import {
   type PerformanceChartPayload,
   SPAGHETTI_TIME_SERIES_MATRIX_V,
 } from '#uilib/components/widgets/PerformanceChart';
+import PerformanceChartGuidance from '#uilib/components/widgets/PerformanceChart/AGENT.md';
 import { useTheme } from '#uilib/contexts/theme-context';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
@@ -132,20 +133,7 @@ export default function PerformanceChartPage() {
         subheader="Per-horizon and spaghetti performance plots with linked metrics table."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="PerformanceChart is a widget for evaluating forecast accuracy. It plots per-horizon and spaghetti views of model and drift forecasts against historical data, linked to a metrics table with MAE and MAPE, and handles loading, empty, and run-analysis-hint states."
-        whenToUse={[
-          'To present backtest or performance-analysis results for a dataset’s forecasting models.',
-          'To compare forecast horizons against actuals, including optional custom series matrices.',
-        ]}
-        whenNotToUse={[
-          'For plain historical or forecast charts without performance metrics; use ChartAreaInteractive or LightweightForecastChart.',
-          'When no performance analysis exists yet; show a call to action to run one instead.',
-        ]}
-        doNotes={[
-          'Wire the loading, empty, and hint props to your data-fetch state so the widget shows the right placeholder.',
-        ]}
-      />
+      <DocsGuidance source={PerformanceChartGuidance} />
       <PageContentSection>
         <div
           style={{

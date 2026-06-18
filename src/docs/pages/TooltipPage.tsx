@@ -5,6 +5,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '#uilib/components/ui/Tooltip';
+import TooltipGuidance from '#uilib/components/ui/Tooltip/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
@@ -24,22 +25,7 @@ export default function TooltipPage() {
         subheader="Hover content."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance
-        overview="Tooltip shows brief, supplementary text when users hover or focus a trigger element. Compose Tooltip, TooltipTrigger, and TooltipContent, choosing a side for placement; the overTrigger option positions the content directly over the trigger, which suits revealing truncated text."
-        whenToUse={[
-          'To label icon-only buttons or controls whose purpose is not obvious.',
-          'To reveal the full value of truncated text on hover.',
-          'For short, non-essential hints that supplement the visible interface.',
-        ]}
-        whenNotToUse={[
-          'For information users need to complete a task; show it in the layout instead.',
-          'For rich or interactive content; use a Popover or HoverCard instead.',
-          'On touch-only interfaces where hover is unavailable.',
-        ]}
-        dontNotes={[
-          'Don’t repeat text that is already visible next to the trigger.',
-        ]}
-      />
+      <DocsGuidance source={TooltipGuidance} />
       <PageContentSection>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           {TOOLTIP_SIDES.map(side => (
