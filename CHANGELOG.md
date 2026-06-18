@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/Mir-Insight/uilib/compare/v1.3.105...v1.4.0) (2026-06-18)
+
+
+### Features
+
+* DocsGuidance - AGENT.md glossary and docs migration ([273ed58](https://github.com/Mir-Insight/uilib/commit/273ed5868b0318b8dbf2e5e039fcfd80c773d824))
+* PageColumns - Equal 3-4 column layout and fill API ([e5e9950](https://github.com/Mir-Insight/uilib/commit/e5e9950e4f0f3783b7c92891d34fc33799fc1075))
+
 ### [1.3.105](https://github.com/Mir-Insight/uilib/compare/v1.3.104...v1.3.105) (2026-06-17)
 
 
