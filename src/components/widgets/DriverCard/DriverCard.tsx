@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@sybilion/uilib';
+import { Card, CardContent } from '../../ui/Card';
 import { CoffeeIcon, TrendDownIcon, TrendUpIcon } from '@phosphor-icons/react';
 import React, { useMemo } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/Tooltip';
