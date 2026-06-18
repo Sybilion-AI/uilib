@@ -1520,10 +1520,10 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.11.tgz#a269e055e40e2f45873bae9d1a2fdccbd314ea3f"
   integrity sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg==
 
-"@homecode/ui@^4.17.0":
-  version "4.30.16"
-  resolved "https://registry.yarnpkg.com/@homecode/ui/-/ui-4.30.16.tgz#aa839b56d9385d42390890e49d4353308b11c9cc"
-  integrity sha512-6s0pw2EASvtw9PXTB6PQXdodnXCFy13Em8v+RQeSu6cHYAJCm0bX6KofZEUyAvA+dEGar71+DNfEi199ZTg2mg==
+"@homecode/ui@^4.17.2":
+  version "4.30.15"
+  resolved "https://registry.yarnpkg.com/@homecode/ui/-/ui-4.30.15.tgz#5d803e2c04c0298e859488d3ac2631b30dd6b89b"
+  integrity sha512-j8IGsMFwSz5DW2Qw+57Zkisr1z4CQHemrEYbbrv/mG4BRAgGAryijfWvTW/Yj6qD779oGMbYgD6QA1fSUpG7vQ==
   dependencies:
     "@homecode/ui" "^4.17.2"
     "@pmmmwh/react-refresh-webpack-plugin" "^0.5.10"
@@ -1548,23 +1548,28 @@
     svgo "^3.0.2"
     timen "^0.1.0"
 
-"@homecode/ui@^4.17.2":
-  version "4.30.15"
-  resolved "https://registry.yarnpkg.com/@homecode/ui/-/ui-4.30.15.tgz#5d803e2c04c0298e859488d3ac2631b30dd6b89b"
-  integrity sha512-j8IGsMFwSz5DW2Qw+57Zkisr1z4CQHemrEYbbrv/mG4BRAgGAryijfWvTW/Yj6qD779oGMbYgD6QA1fSUpG7vQ==
+"@homecode/ui@^5.3.9":
+  version "5.3.9"
+  resolved "https://registry.yarnpkg.com/@homecode/ui/-/ui-5.3.9.tgz#da7decfe0d4c1b49e30a87b2e9f72d732db89641"
+  integrity sha512-dNG7YZ4atEdYt31FgnCyPXR/F1h2iQplKasrFJbjMDzXlpp1QWKHiq9JKu8dk1vykehxCpp/k8riFSvx/u821Q==
   dependencies:
     "@homecode/ui" "^4.17.2"
     "@pmmmwh/react-refresh-webpack-plugin" "^0.5.10"
     "@rollup/plugin-typescript" "^11.0.0"
     "@svgr/webpack" "^8.1.0"
+    "@tiptap/core" "^3.22.1"
+    "@tiptap/extension-mention" "^3.22.1"
+    "@tiptap/extensions" "^3.22.1"
+    "@tiptap/pm" "^3.22.1"
+    "@tiptap/react" "^3.22.1"
+    "@tiptap/starter-kit" "^3.22.1"
+    "@tiptap/suggestion" "^3.22.1"
     classnames "^2.3.2"
     compareq "^1.2.2"
     fastest-validator "^1.16.0"
     favicons "^7.1.3"
     favicons-webpack-plugin "^6.0.0"
     justorm "^3.0.2"
-    lodash.omit "^4.5.0"
-    lodash.pick "^4.4.0"
     moment "^2.29.4"
     react "^18.2.0"
     react-dom "^18.2.0"
