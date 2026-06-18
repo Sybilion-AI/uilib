@@ -5,6 +5,7 @@ export {
   type AppShellMainContentProps,
   type AppShellProps,
 } from './AppShell/AppShell';
+export { PageContext } from './pageContext';
 export { PageHeader } from './PageHeader/PageHeader';
 export { PageEmptyCanvas } from './PageEmptyCanvas/PageEmptyCanvas';
 export { PageContent, PageContentSection } from './PageContent/PageContent';
