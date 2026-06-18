@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.3](https://github.com/Mir-Insight/uilib/compare/v1.4.2...v1.4.3) (2026-06-18)
+
+
+### Bug Fixes
+
+* DocsShell - Fix footer scroll when banner shown ([db29e35](https://github.com/Mir-Insight/uilib/commit/db29e358ee6f19b79796f3476ff24692190df6fc))
+
 ### [1.4.2](https://github.com/Mir-Insight/uilib/compare/v1.4.1...v1.4.2) (2026-06-18)
 
 
