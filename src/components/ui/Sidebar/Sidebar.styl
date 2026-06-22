@@ -352,6 +352,7 @@
 // Sidebar menu sub item
 .sidebarMenuSubItem
   position relative
+  min-width 0
   margin-left var(--p-6)
 
   &::before
@@ -605,6 +606,7 @@
 .sidebarMenuSubButton
   color var(--sidebar-foreground)
   display flex
+  width calc(100% - var(--p-3))
   height var(--p-9)
   min-width 0
   transform translateX(-1px)
@@ -645,9 +647,19 @@
   &[data-collapsible="icon"]
     display none
 
-  & > span:first-child
+  & > span
+    flex-grow 1
+    flex-shrink 1
+    min-width 0
+    line-height 20px
     white-space nowrap
     overflow hidden
+
+    // Nested SmartTextTruncate (e.g. title pre-wrapped in app nav items)
+    & > span
+      display block
+      width 100%
+      min-width 0
 
   & > svg
     width 1rem
