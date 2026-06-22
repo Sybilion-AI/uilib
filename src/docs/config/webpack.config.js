@@ -21,6 +21,8 @@ const pkg = require('../../../package.json');
 
 const themeStyl = pathResolve(paths.src, 'theme.styl');
 const logoSvgPath = pathResolve(paths.assets, 'logo.svg');
+/** Favicon rasterization has no CSS context; currentColor in logo.svg renders black. */
+const faviconLogoSvgPath = pathResolve(paths.assets, 'logo-favicon.svg');
 
 /** GitHub Pages project sites live at /<repo>/; set PUBLIC_PATH=/repo-name/ for production deploy. */
 function normalizePublicPath(raw) {
@@ -233,9 +235,9 @@ export default (env, argv) => {
         ...docsHtmlPluginBase,
         filename: '404.html',
       }),
-      existsSync(logoSvgPath) &&
+      existsSync(faviconLogoSvgPath) &&
         new FaviconWebpackPlugin({
-          logo: logoSvgPath,
+          logo: faviconLogoSvgPath,
           mode: 'webapp',
           devMode: 'webapp',
           favicons: {
