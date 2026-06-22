@@ -2,7 +2,7 @@ Colour is defined as a set of core ramps (--sb-cyan/purple/red/green/yellow/gray
 
 ## When to use
 
-- Semantic tokens for surfaces, text, borders, and status colour in components.
+- Semantic tokens for surfaces, text, borders, links, and status colour in components. For links, set only `--link-color` per theme; `--link-color-hover` and `--link-color-active` derive from it via `color-mix`.
 - Ramp steps for data visualisation or decorative accents where a specific hue is needed.
 
 ## When not to use

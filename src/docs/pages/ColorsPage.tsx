@@ -47,6 +47,9 @@ const SEMANTIC_TOKENS = [
   '--status-positive-bg',
   '--status-negative',
   '--status-negative-bg',
+  '--link-color',
+  '--link-color-hover',
+  '--link-color-active',
 ];
 
 function Swatch({ token }: { token: string }) {

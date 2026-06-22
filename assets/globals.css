@@ -39,6 +39,9 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
   --color-brand: var(--brand-color);
+  --color-link: var(--link-color);
+  --color-link-hover: var(--link-color-hover);
+  --color-link-active: var(--link-color-active);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -360,9 +363,9 @@
   --sidebar-border: oklch(0.9 0 0);
   --sidebar-ring: oklch(0.65 0 0);
 
-  --sb-link-color: var(--brand-color-500);
-  --sb-link-visited-color: var(--brand-color-700);
-  --sb-link-color-hover: var(--brand-color-600);
+  --link-color: var(--sb-cyan-700);
+  --link-color-hover: color-mix(in oklch, var(--link-color) 80%, black);
+  --link-color-active: color-mix(in oklch, var(--link-color) 65%, black);
 }
 
 @media (max-width: var(--bp-mobile)) {
@@ -415,8 +418,6 @@
   --sidebar-accent-foreground: oklch(0.95 0 0);
   --sidebar-border: oklch(0.3 0 0);
   --sidebar-ring: oklch(0.5 0 0);
-  --sb-link-color: var(--brand-color-400);
-  --sb-link-visited-color: var(--brand-color-600);
   --status-positive: var(--sb-green-400);
   --status-positive-bg: var(--sb-green-900);
   --status-negative: var(--sb-red-400);
@@ -533,16 +534,17 @@
   }
 
   a {
-    color: var(--sb-link-color);
+    color: var(--link-color);
     cursor: pointer;
   }
 
   a:visited {
-    color: var(--sb-link-visited-color);
+    color: var(--link-color-active);
   }
 
   a:hover {
     text-decoration: underline;
+    color: var(--link-color-hover);
   }
 
   ::selection {
