@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.5](https://github.com/Mir-Insight/uilib/compare/v1.4.4...v1.4.5) (2026-06-22)
+
+
+### Bug Fixes
+
+* LabelWithId - PostHog replay masking and AnalysesSelector ([997e9d7](https://github.com/Mir-Insight/uilib/commit/997e9d7019e2c494fed65282c911164f2e5b132d))
+* PerformanceChart - Prevent timezone infinite loop freeze ([e2f980f](https://github.com/Mir-Insight/uilib/commit/e2f980f8c7a85e88ea480332f6eb43b07416b697))
+
 ### [1.4.4](https://github.com/Mir-Insight/uilib/compare/v1.4.3...v1.4.4) (2026-06-18)
 
 
