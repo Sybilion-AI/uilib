@@ -43,6 +43,7 @@ export * from './components/ui/Foldable';
 export * from './components/ui/Gap/Gap';
 export * from './components/ui/GridLayout/GridLayout';
 export * from './components/ui/Image';
+export * from './components/ui/InfoIconTooltip/InfoIconTooltip';
 export * from './components/ui/ImageWithFallback';
 export * from './components/ui/Input';
 export * from './components/ui/InteractiveContent';

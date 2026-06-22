@@ -5,6 +5,7 @@ interface CssExports {
   'size-lg': string;
   'size-md': string;
   'size-sm': string;
+  'variant-clean': string;
   'variant-default': string;
 }
 export const cssExports: CssExports;

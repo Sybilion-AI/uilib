@@ -3,8 +3,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '#uilib/components/ui/Tooltip';
-import { QuestionIcon } from '@phosphor-icons/react';
 
+import { QuestionIcon } from '@phosphor-icons/react';
 import S from './InfoIconTooltip.styl';
 
 export function InfoIconTooltip({ children }: { children: React.ReactNode }) {

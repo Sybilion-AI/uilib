@@ -508,6 +508,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/ToggleGroupPage'),
   },
   {
+    slug: 'info-icon-tooltip',
+    title: 'InfoIconTooltip',
+    section: 'Overlays',
+    load: () => import('./pages/InfoIconTooltipPage'),
+  },
+  {
     slug: 'tooltip',
     title: 'Tooltip',
     section: 'Overlays',
