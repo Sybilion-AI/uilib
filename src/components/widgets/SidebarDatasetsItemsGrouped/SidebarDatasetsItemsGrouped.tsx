@@ -131,7 +131,9 @@ export function SidebarDatasetsItemsGrouped({
                           onDatasetClick?.(dataset.id);
                         }}
                       >
-                        <SmartTextTruncate>{dataset.name}</SmartTextTruncate>
+                        <SmartTextTruncate data-dataset-id={dataset.id}>
+                          {dataset.name}
+                        </SmartTextTruncate>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'id': string;
+  'label': string;
   'root': string;
 }
 export const cssExports: CssExports;

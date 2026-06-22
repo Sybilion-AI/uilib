@@ -288,10 +288,9 @@ export function AnalysesSelector({
     );
   };
 
-  const renderLabelWithId = (item: AnalysesSelectorItem) => (
+  const renderItemLabel = (item: AnalysesSelectorItem) => (
     <LabelWithId
-      className={cn(S.label, S.itemLabelWithId)}
-      id={String(item.id)}
+      id={item.id}
       label={
         isAnalysisInProgressProp(item.status) ? (
           <TextShimmer as="span">{item.label}</TextShimmer>
@@ -299,6 +298,7 @@ export function AnalysesSelector({
           item.label
         )
       }
+      className={cn(S.label, S.itemLabelWithId)}
     />
   );
 
@@ -306,7 +306,7 @@ export function AnalysesSelector({
     <div className={S.selectItemContent}>
       {renderItemContent(item)}
       {renderIcon(item.icon)}
-      {renderLabelWithId(item)}
+      {renderItemLabel(item)}
       {renderEyeIcon(item)}
     </div>
   );
@@ -334,7 +334,7 @@ export function AnalysesSelector({
           >
             {renderIcon(item.icon)}
             {renderItemContent(item)}
-            {renderLabelWithId(item)}
+            {renderItemLabel(item)}
           </div>
         ))}
         {unselectedItems.length > 0 && (
@@ -362,7 +362,11 @@ export function AnalysesSelector({
             </SelectTrigger>
             <SelectContent>
               {unselectedItems.map(item => (
-                <SelectItem key={item.id} value={String(item.id)}>
+                <SelectItem
+                  key={item.id}
+                  value={String(item.id)}
+                  textValue={item.label}
+                >
                   {renderSelectItem(item)}
                 </SelectItem>
               ))}
@@ -465,11 +469,7 @@ export function AnalysesSelector({
               {renamerTriggerContent}
             </div>
           ) : (
-            <LabelWithId
-              className={S.selectTriggerLabelWithId}
-              id={selectValue}
-              label={<SelectValue placeholder={selectPlaceholder} />}
-            />
+            <SelectValue placeholder={selectPlaceholder} />
           )}
         </SelectTrigger>
         <SelectContent>

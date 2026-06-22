@@ -18,7 +18,6 @@ interface CssExports {
   'selectItemContent': string;
   'selectTrigger': string;
   'selectTriggerContent': string;
-  'selectTriggerLabelWithId': string;
   'selectTriggerRenamer': string;
   'selectTriggerRenamerDisabled': string;
   'selectTriggerRenaming': string;

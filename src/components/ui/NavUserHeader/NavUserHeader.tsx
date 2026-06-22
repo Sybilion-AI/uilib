@@ -69,8 +69,12 @@ export function NavUserHeader({
   const userIdentity = useMemo(
     () => (
       <div className={S.userInfo}>
-        <span className={`${S.userName} ph-no-capture`}>{userName}</span>
-        <span className={S.userEmail}>{userEmail}</span>
+        <span className={`${S.userName} ph-no-capture`} data-user-name>
+          {userName}
+        </span>
+        <span className={`${S.userEmail} ph-no-capture`} data-user-email>
+          {userEmail}
+        </span>
       </div>
     ),
     [userEmail, userName],
