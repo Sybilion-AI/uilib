@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.8](https://github.com/Mir-Insight/uilib/compare/v1.4.7...v1.4.8) (2026-06-22)
+
+
+### Bug Fixes
+
+* Sidebar - smart text turncate on subitems ([491e913](https://github.com/Mir-Insight/uilib/commit/491e913d168fbf4efbc95b135a7f764df1494f07))
+
 ### [1.4.7](https://github.com/Mir-Insight/uilib/compare/v1.4.6...v1.4.7) (2026-06-22)
 
 
