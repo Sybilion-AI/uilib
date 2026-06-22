@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.7](https://github.com/Mir-Insight/uilib/compare/v1.4.6...v1.4.7) (2026-06-22)
+
+
+### Bug Fixes
+
+* favicon ([cb4e547](https://github.com/Mir-Insight/uilib/commit/cb4e547d21a5b965fc94188ec2abaa09522939c8))
+
 ### [1.4.6](https://github.com/Mir-Insight/uilib/compare/v1.4.5...v1.4.6) (2026-06-22)
 
 ### [1.4.5](https://github.com/Mir-Insight/uilib/compare/v1.4.4...v1.4.5) (2026-06-22)
