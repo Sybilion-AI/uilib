@@ -8,12 +8,27 @@
   max-width 720px
   line-height 1.6
 
-  :global(.interactive-content)
-    display block
+  :global(h1)
+    margin var(--p-4) 0 var(--p-2)
+    font-size var(--text-lg)
+    font-weight 600
+    color var(--foreground)
+
+    &:first-child
+      margin-top 0
 
   :global(h2)
     margin var(--p-4) 0 var(--p-2)
     font-size var(--text-base)
+    font-weight 600
+    color var(--foreground)
+
+    &:first-child
+      margin-top 0
+
+  :global(h3)
+    margin var(--p-3) 0 var(--p-2)
+    font-size var(--text-sm)
     font-weight 600
     color var(--foreground)
 
@@ -27,8 +42,71 @@
     li + li
       margin-top 2px
 
+  :global(ol)
+    margin 0 0 var(--p-3)
+    padding-left var(--p-5)
+
+    li + li
+      margin-top 2px
+
   :global(p)
     margin 0 0 var(--p-3)
 
     &:last-child
       margin-bottom 0
+
+  :global(code)
+    font-family ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace
+    font-size 0.875em
+    padding 0.2em 0.35em
+    border-radius var(--p-1)
+    background-color var(--background)
+    color var(--foreground)
+    box-shadow 0 0 1px var(--foreground)
+
+  :global(pre)
+    margin 0 0 var(--p-3)
+    padding var(--p-3)
+    overflow-x auto
+    border-radius var(--p-2)
+    background-color var(--background)
+    box-shadow 0 0 1px var(--foreground)
+
+    code
+      padding 0
+      box-shadow none
+      background none
+
+  :global(a)
+    color var(--sb-green-600)
+    text-decoration underline
+    text-underline-offset 2px
+
+    &:hover
+      color var(--sb-green-700)
+
+    :global(.dark) &
+      color var(--sb-green-400)
+
+      &:hover
+        color var(--sb-green-300)
+
+  :global(table)
+    width 100%
+    margin 0 0 var(--p-3)
+    border-collapse collapse
+    font-size var(--text-sm)
+
+  :global(th),
+  :global(td)
+    padding var(--p-2) var(--p-3)
+    border 1px solid var(--border)
+    text-align left
+    vertical-align top
+
+  :global(th)
+    font-weight 600
+    background-color var(--background)
+
+  :global(strong)
+    font-weight 600
