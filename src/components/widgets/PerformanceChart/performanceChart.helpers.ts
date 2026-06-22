@@ -266,8 +266,31 @@ export function extendCustomPerformanceDriftSeedToHistoricalEnd(
   let lastOrigin = dates[dates.length - 1];
   if (!lastOrigin) return seed;
 
+  const MAX_MONTH_EXTENSIONS = 500;
+  let iterations = 0;
+
   while (lastOrigin.localeCompare(latest) < 0) {
+    iterations += 1;
+    if (iterations > MAX_MONTH_EXTENSIONS) {
+      console.warn(
+        'extendCustomPerformanceDriftSeedToHistoricalEnd: exceeded max month extensions',
+        { lastOrigin, latest },
+      );
+      break;
+    }
+
     const nextOrigin = norm(getNextMonth(lastOrigin));
+    if (
+      nextOrigin === lastOrigin ||
+      nextOrigin.localeCompare(lastOrigin) <= 0
+    ) {
+      console.warn(
+        'extendCustomPerformanceDriftSeedToHistoricalEnd: month did not advance',
+        { lastOrigin, nextOrigin, latest },
+      );
+      break;
+    }
+
     const prevPh = perHorizonDates[perHorizonDates.length - 1];
     const newPh =
       prevPh.length === horizonCount

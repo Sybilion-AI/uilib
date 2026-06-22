@@ -1,5 +1,36 @@
 import type { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
-import { ensureChartForecastBridge } from '#uilib/utils/chartConnectionPoint';
+import {
+  ensureChartForecastBridge,
+  getNextMonth,
+  getPreviousMonth,
+  normalizeToMonthStart,
+} from '#uilib/utils/chartConnectionPoint';
+
+describe('month date helpers', () => {
+  it('normalizeToMonthStart preserves YYYY-MM from string regardless of timezone', () => {
+    expect(normalizeToMonthStart('2025-11-01')).toBe('2025-11-01');
+    expect(normalizeToMonthStart('2025-11-15')).toBe('2025-11-01');
+    expect(normalizeToMonthStart('2025-11')).toBe('2025-11-01');
+  });
+
+  it('getNextMonth advances monotonically', () => {
+    expect(getNextMonth('2025-11-01')).toBe('2025-12-01');
+    expect(getNextMonth('2025-12-01')).toBe('2026-01-01');
+    expect(getNextMonth(getNextMonth('2025-11-01'))).toBe('2026-01-01');
+  });
+
+  it('getPreviousMonth retreats monotonically', () => {
+    expect(getPreviousMonth('2025-11-01')).toBe('2025-10-01');
+    expect(getPreviousMonth('2025-01-01')).toBe('2024-12-01');
+    expect(getPreviousMonth(getPreviousMonth('2025-11-01'))).toBe('2025-09-01');
+  });
+
+  it('getNextMonth and getPreviousMonth are inverses', () => {
+    const start = '2025-06-01';
+    expect(getPreviousMonth(getNextMonth(start))).toBe(start);
+    expect(getNextMonth(getPreviousMonth(start))).toBe(start);
+  });
+});
 
 describe('ensureChartForecastBridge', () => {
   it('adds forecast on previous month from historical so line connects', () => {

@@ -187,12 +187,28 @@ export function isSameMonth(date1: string, date2: string): boolean {
   );
 }
 
+function parseYearMonth(date: string): { year: number; month: number } {
+  const datePart = String(date).split(' ')[0] ?? date;
+  const match = datePart.match(/^(\d{4})-(\d{1,2})/);
+  if (!match) {
+    throw new Error(`Invalid date format: ${date}`);
+  }
+  return {
+    year: parseInt(match[1], 10),
+    month: parseInt(match[2], 10),
+  };
+}
+
+function formatMonthStart(year: number, month: number): string {
+  return `${year}-${String(month).padStart(2, '0')}-01`;
+}
+
 /**
  * Normalize date to first day of month for comparison (YYYY-MM-01)
  */
 export function normalizeToMonthStart(date: string): string {
-  const d = new Date(date);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+  const { year, month } = parseYearMonth(date);
+  return formatMonthStart(year, month);
 }
 
 /**
@@ -225,18 +241,22 @@ export function findLatestForecastDate(
  * Get the previous month date (first day of previous month)
  */
 export function getPreviousMonth(date: string): string {
-  const d = new Date(date);
-  d.setMonth(d.getMonth() - 1);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+  const { year, month } = parseYearMonth(date);
+  if (month === 1) {
+    return formatMonthStart(year - 1, 12);
+  }
+  return formatMonthStart(year, month - 1);
 }
 
 /**
  * Get the next month date (first day of next month)
  */
 export function getNextMonth(date: string): string {
-  const d = new Date(date);
-  d.setMonth(d.getMonth() + 1);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+  const { year, month } = parseYearMonth(date);
+  if (month === 12) {
+    return formatMonthStart(year + 1, 1);
+  }
+  return formatMonthStart(year, month + 1);
 }
 
 /**
