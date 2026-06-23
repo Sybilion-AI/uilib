@@ -110,6 +110,7 @@ export function Renamer({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+                icon
                 className={S.button}
                 variant="ghost"
                 onPointerDown={e => {

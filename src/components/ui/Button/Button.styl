@@ -16,6 +16,9 @@
   transition all var(--dur-base) var(--ease-standard)
   border 0
 
+  &:active
+    opacity 0.8
+
   &:disabled
     pointer-events none
     opacity 0.5
@@ -43,6 +46,9 @@
   &:hover
     background-color var(--sb-gray-800)
 
+    :global(.dark) &
+      background-color var(--sb-gray-600)
+
 .destructive
   background-color var(--destructive-900)
   color white
@@ -51,7 +57,7 @@
     background-color var(--destructive-600)
 
   &:focus-visible
-    ring 3px var(--destructive-200) 
+    ring 3px var(--destructive-200)
 
     :global(.dark) &
       ring 3px var(--destructive-400)
@@ -80,11 +86,11 @@
 
 .ghost
   &:hover
-    background-color var(--accent)
-    color var(--accent-foreground)
+    background-color var(--sb-gray-100)
+    color var(--foreground)
 
-  :global(.dark) &:hover
-    background-color var(--accent-500)
+    :global(.dark) &
+      background-color var(--sb-gray-900)
 
 .link
   color var(--primary)
