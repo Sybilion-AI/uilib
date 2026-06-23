@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.11](https://github.com/Mir-Insight/uilib/compare/v1.4.10...v1.4.11) (2026-06-23)
+
+
+### Bug Fixes
+
+* Renamer - Inline pencil layout and icon scaling ([5a5f833](https://github.com/Mir-Insight/uilib/commit/5a5f83385766b67906218d354ad0359c2543071c))
+
 ### [1.4.10](https://github.com/Mir-Insight/uilib/compare/v1.4.9...v1.4.10) (2026-06-23)
 
 
