@@ -1,9 +1,14 @@
 .root
-  display flex
-  align-items center
+  display inline-block
+  max-width 100%
+  vertical-align top
+
+  &:has(.input)
+    display block
+    width 100%
 
 .value
-  padding-right var(--p-2)
+  display inline
 
 // Matches PageHeader .title h1 typography (page title context).
 .size-lg.root
@@ -30,9 +35,24 @@
   background-color var(--accent) / 0.1
 
 .button
-  // padding-left 0
+  display inline-flex
+  vertical-align middle
+  margin-left var(--p-2)
   opacity 0.5
   transition opacity 0.2s ease-out
 
   .root:hover &
     opacity 1
+
+// Pencil icon tracks Button `size` via --icon-size-* tokens (sm 14 / md 16 / lg 20px).
+.size-sm.root .button svg
+  width var(--icon-size-sm)
+  height var(--icon-size-sm)
+
+.size-md.root .button svg
+  width var(--icon-size-md)
+  height var(--icon-size-md)
+
+.size-lg.root .button svg
+  width var(--icon-size-lg)
+  height var(--icon-size-lg)

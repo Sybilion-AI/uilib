@@ -124,7 +124,7 @@ export function Renamer({
                 size={buttonSizeMap[size]}
                 type="button"
               >
-                <PencilSimpleIcon size={16} />
+                <PencilSimpleIcon aria-hidden />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">Rename</TooltipContent>
