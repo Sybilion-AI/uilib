@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.10](https://github.com/Mir-Insight/uilib/compare/v1.4.9...v1.4.10) (2026-06-23)
+
+
+### Features
+
+* ButtonGroup - Add segmented control wrapper ([b4410f2](https://github.com/Mir-Insight/uilib/commit/b4410f2106d146ec3c765bbbd29a47cf8fd5806d))
+* Page - Add usePageScrollRestoration hook ([1dad8da](https://github.com/Mir-Insight/uilib/commit/1dad8dae6286f03814980a61a77ccbb0d30832cf))
+
+
+### Bug Fixes
+
+* Button - Interaction and variant styling ([51db8d8](https://github.com/Mir-Insight/uilib/commit/51db8d83f3bf03f0773d989de7862f5d0d3e540b))
+* Renamer - edit button padding ([190808c](https://github.com/Mir-Insight/uilib/commit/190808c2958798b8dcb5a6bbce7570d260a4f67b))
+* SybilionAppHeader - decrease actions gap ([d733d58](https://github.com/Mir-Insight/uilib/commit/d733d58235da43b840dbd42e78ca21d737abcfb4))
+
 ### [1.4.9](https://github.com/Mir-Insight/uilib/compare/v1.4.8...v1.4.9) (2026-06-23)
 
 ### [1.4.8](https://github.com/Mir-Insight/uilib/compare/v1.4.7...v1.4.8) (2026-06-22)
