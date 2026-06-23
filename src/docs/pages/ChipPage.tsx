@@ -15,6 +15,7 @@ const VARIANTS: ChipVariant[] = [
   'accent',
   'positive',
   'negative',
+  'yellow',
 ];
 
 export default function ChipPage() {
@@ -109,6 +110,42 @@ export default function ChipPage() {
             </Chip>
             <Chip variant="negative">▼ 3.4%</Chip>
             <Chip variant="positive">▲ 1.2%</Chip>
+          </div>
+        </section>
+        <section>
+          <h3 style={{ marginBottom: '1rem' }}>Squared</h3>
+          <p
+            style={{
+              marginBottom: '0.75rem',
+              color: 'var(--muted-foreground)',
+            }}
+          >
+            Pass <code>squared</code> for compact label badges in lists, tables,
+            and cards.
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.75rem',
+              alignItems: 'center',
+            }}
+          >
+            <Chip variant="neutral" squared>
+              Default
+            </Chip>
+            <Chip variant="line" squared>
+              Outline
+            </Chip>
+            <Chip variant="negative" squared>
+              Red
+            </Chip>
+            <Chip variant="positive" squared>
+              Green
+            </Chip>
+            <Chip variant="yellow" squared>
+              Yellow
+            </Chip>
           </div>
         </section>
         <section>

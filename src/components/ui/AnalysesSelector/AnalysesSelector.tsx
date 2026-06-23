@@ -8,8 +8,8 @@ import {
 } from 'react';
 
 import { AnalysisLineIcon } from '#uilib/components/ui/AnalysisLineIcon';
-import { Badge } from '#uilib/components/ui/Badge';
 import { Button } from '#uilib/components/ui/Button';
+import { Chip } from '#uilib/components/ui/Chip';
 import { LabelWithId } from '#uilib/components/ui/LabelWithId';
 import {
   Select,
@@ -55,9 +55,9 @@ function renderItemContent(item: AnalysesSelectorItem) {
 
   if (failed) {
     return (
-      <Badge variant="red" className={S.itemBadge}>
+      <Chip variant="negative" squared className={S.itemBadge}>
         failed
-      </Badge>
+      </Chip>
     );
   }
 

@@ -14,6 +14,14 @@
   letter-spacing var(--tracking-body)
   transition background-color var(--dur-base) var(--ease-standard), color var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard)
 
+  &.squared
+    border-radius var(--p-1)
+
+  & > svg
+    width 0.75rem
+    height 0.75rem
+    pointer-events none
+
   .dot
     width 6px
     height 6px
@@ -76,3 +84,12 @@
   &.variant-negative
     background var(--status-negative-bg)
     color var(--status-negative)
+
+  // Yellow variant — caution / pending status
+  &.variant-yellow
+    background-color var(--sb-yellow-50)
+    color var(--sb-yellow-600)
+
+    :global(.dark) &
+      background-color var(--sb-yellow-900)
+      color var(--sb-yellow-400)

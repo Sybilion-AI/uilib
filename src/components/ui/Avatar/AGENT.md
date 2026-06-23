@@ -8,7 +8,7 @@ Avatar displays a user or entity image with an automatic fallback to initials wh
 ## When not to use
 
 - For arbitrary illustrative imagery; use a plain image instead.
-- To convey status on its own; pair it with a Badge or status indicator.
+- To convey status on its own; pair it with a Chip or status indicator.
 
 ## Do
 

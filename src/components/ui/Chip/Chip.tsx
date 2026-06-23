@@ -10,17 +10,23 @@ function Chip({
   variant = 'neutral',
   dot,
   trend,
+  squared = false,
   children,
   ...props
 }: ChipProps) {
-  const showDot = dot ?? variant === 'neutral';
+  const showDot = dot ?? (variant === 'neutral' && !squared);
   const TrendIcon =
     trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : null;
 
   return (
     <span
       data-slot="chip"
-      className={cn(S.root, S[`variant-${variant}`], className)}
+      className={cn(
+        S.root,
+        S[`variant-${variant}`],
+        squared && S.squared,
+        className,
+      )}
       {...props}
     >
       {showDot && <span className={S.dot} aria-hidden="true" />}

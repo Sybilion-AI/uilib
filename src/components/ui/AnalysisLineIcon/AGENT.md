@@ -8,4 +8,4 @@ AnalysisLineIcon renders a small solid or dashed line marker in a given colour. 
 ## When not to use
 
 - As a generic decorative icon; it only conveys meaning next to a chart.
-- To indicate status or severity; use Badge instead.
+- To indicate status or severity; use Chip instead.

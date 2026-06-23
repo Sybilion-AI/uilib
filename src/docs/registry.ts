@@ -87,12 +87,6 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/AvatarPage'),
   },
   {
-    slug: 'badge',
-    title: 'Badge',
-    section: 'Data display',
-    load: () => import('./pages/BadgePage'),
-  },
-  {
     slug: 'chip',
     title: 'Chip',
     section: 'Data display',

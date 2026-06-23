@@ -1,6 +1,6 @@
 import cn from 'classnames';
 
-import { Badge } from '#uilib/components/ui/Badge';
+import { Chip } from '#uilib/components/ui/Chip';
 import {
   Tooltip,
   TooltipContent,
@@ -57,9 +57,9 @@ export function DriverIcon({
             zIndex: isSelected ? 2 : '',
           }}
         >
-          <Badge className={S.badge}>
+          <Chip variant="neutral" squared className={S.badge}>
             <div className={S.icon}>{getCategoryIcon(driver.category)}</div>
-          </Badge>
+          </Chip>
         </button>
       </TooltipTrigger>
 

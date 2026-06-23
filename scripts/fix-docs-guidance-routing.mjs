@@ -95,16 +95,16 @@ const GUIDANCE = {
   },
   chip: {
     overview:
-      'Chips are compact pill-shaped capsules for filters, status pills, version tags, and quantitative delta indicators. Unlike Badge, which stays general purpose, Chip carries status and delta semantics: the positive and negative variants sit outside the primary palette and are reserved for quantitative impact signals.',
+      'Chips are compact capsules for filters, status labels, version tags, and quantitative delta indicators. Use the default pill shape for filters and live status; pass squared for compact label badges in lists, tables, and cards.',
     whenToUse: [
       'To present a row of filter options, with the active variant marking the current selection.',
       'To flag live status, version tags, or deadlines with the neutral, accent, and filled variants.',
+      'To label or categorise content in lists, tables, and cards with squared and neutral, line, yellow, positive, or negative variants.',
       'To show a quantitative delta or impact direction with the positive or negative variant, optionally with a trend arrow.',
     ],
     whenNotToUse: [
-      'For general-purpose labels without status or delta semantics; use Badge instead.',
       'For file attachments; use FileChip.',
-      'As decoration; the status variants are reserved for quantitative signals only.',
+      'As decoration; the positive and negative variants are reserved for quantitative signals and status meaning.',
     ],
     doNotes: [
       'Keep chip labels short and in sentence case.',

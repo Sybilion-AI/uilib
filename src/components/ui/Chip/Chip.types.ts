@@ -7,7 +7,8 @@ export type ChipVariant =
   | 'filled'
   | 'accent'
   | 'positive'
-  | 'negative';
+  | 'negative'
+  | 'yellow';
 
 export type ChipTrend = 'up' | 'down';
 
@@ -15,9 +16,11 @@ export interface ChipProps extends ComponentProps<'span'> {
   variant?: ChipVariant;
   /**
    * Show the 6px status dot. Defaults to true for the neutral variant
-   * and false for all others.
+   * (when not squared) and false for all others.
    */
   dot?: boolean;
   /** Render a Lucide trend arrow before the label. */
   trend?: ChipTrend;
+  /** Use compact squared corners instead of the default pill shape. */
+  squared?: boolean;
 }

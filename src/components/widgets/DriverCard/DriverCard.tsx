@@ -1,15 +1,16 @@
-import { Card, CardContent } from '../../ui/Card';
-import { CoffeeIcon, TrendDownIcon, TrendUpIcon } from '@phosphor-icons/react';
 import React, { useMemo } from 'react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/Tooltip';
 
-import { Badge } from '../../ui/Badge';
-import type { DriverData } from '../DriverMap/driverMapGeography';
-import { DriverPerformanceChart } from './DriverPerformanceChart';
+import { CoffeeIcon, TrendDownIcon, TrendUpIcon } from '@phosphor-icons/react';
+
+import { Card, CardContent } from '../../ui/Card';
+import { Chip } from '../../ui/Chip';
 import { LabelWithId } from '../../ui/LabelWithId';
-import S from './DriverCard.styl';
 import { Skeleton } from '../../ui/Skeleton';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/Tooltip';
 import { getCategoryIcon } from '../DriverMap/driverCategoryIcon';
+import type { DriverData } from '../DriverMap/driverMapGeography';
+import S from './DriverCard.styl';
+import { DriverPerformanceChart } from './DriverPerformanceChart';
 
 export interface DriverCardProps {
   selectedDriver: DriverData | null;
@@ -199,13 +200,14 @@ export function DriverCard({
 
           {/* Direction and Lag Information */}
           <div className={S.directionLagSection}>
-            <Badge
-              variant={direction > 0 ? 'green' : 'red'}
+            <Chip
+              variant={direction > 0 ? 'positive' : 'negative'}
+              squared
               className={S.directionBadge}
             >
               <DirectionIcon className={S.trendIcon} />
               {directionText} correlation
-            </Badge>
+            </Chip>
 
             <span className={S.lagInfo}>Lag: {lag}</span>
           </div>
