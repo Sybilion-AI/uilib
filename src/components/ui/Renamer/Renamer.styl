@@ -1,4 +1,4 @@
-.root
+
   display inline-block
   max-width 100%
   vertical-align top
@@ -35,24 +35,39 @@
   background-color var(--accent) / 0.1
 
 .button
+  position relative
   display inline-flex
   vertical-align middle
+
+  height fit-content !important
+  width fit-content !important
   margin-left var(--p-2)
+
   opacity 0.5
   transition opacity 0.2s ease-out
+
+  // minimal clickable area
+  &::before
+    content ''
+    position absolute
+    left -18px
+    top -18px
+    display block
+    width 50px
+    height 50px
 
   .root:hover &
     opacity 1
 
 // Pencil icon tracks Button `size` via --icon-size-* tokens (sm 14 / md 16 / lg 20px).
-.size-sm.root .button svg
+.size-sm .button svg
   width var(--icon-size-sm)
   height var(--icon-size-sm)
 
-.size-md.root .button svg
+.size-md .button svg
   width var(--icon-size-md)
   height var(--icon-size-md)
 
-.size-lg.root .button svg
+.size-lg .button svg
   width var(--icon-size-lg)
   height var(--icon-size-lg)

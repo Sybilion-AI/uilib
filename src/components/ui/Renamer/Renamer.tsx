@@ -1,18 +1,17 @@
-import cn from 'classnames';
-import { useCallback, useEffect, useState } from 'react';
-
-import { Button } from '#uilib/components/ui/Button';
-import { Input } from '#uilib/components/ui/Input';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '#uilib/components/ui/Tooltip';
-import { useIsMobile } from '#uilib/hooks/useIsMobile';
-import { PencilSimpleIcon } from '@phosphor-icons/react';
+import { useCallback, useEffect, useState } from 'react';
 
-import S from './Renamer.styl';
+import { Button } from '#uilib/components/ui/Button';
+import { Input } from '#uilib/components/ui/Input';
+import { PencilSimpleIcon } from '@phosphor-icons/react';
 import type { RenamerProps } from './Renamer.types';
+import S from './Renamer.styl';
+import cn from 'classnames';
+import { useIsMobile } from '#uilib/hooks/useIsMobile';
 
 export function Renamer({
   value = '',
@@ -112,7 +111,7 @@ export function Renamer({
               <Button
                 icon
                 className={S.button}
-                variant="ghost"
+                variant="link"
                 onPointerDown={e => {
                   e.preventDefault();
                   e.stopPropagation();
