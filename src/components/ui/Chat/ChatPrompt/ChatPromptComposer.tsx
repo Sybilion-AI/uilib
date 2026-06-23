@@ -105,6 +105,7 @@ export const ChatPromptComposer = forwardRef<
         <Button
           type="submit"
           size="sm"
+          icon
           disabled={disabled || !canSubmit}
           onMouseDown={e => e.preventDefault()}
         >

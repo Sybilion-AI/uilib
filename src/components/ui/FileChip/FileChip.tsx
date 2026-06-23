@@ -41,7 +41,7 @@ function FileChipHeader({
       description={hint}
       titleClassName={S.title}
       descriptionClassName={S.hint}
-      tooltipProps={{ maxWidth: 400 }}
+      tooltipProps={{ maxWidth: 400, overTrigger: true }}
     >
       {onRemove ? (
         <CardAction>

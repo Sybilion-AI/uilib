@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { Button } from '../../Button';
@@ -85,6 +86,19 @@ export function ChatSheet({
     };
   }
 
+  const [chromePortalReady, setChromePortalReady] = useState(false);
+
+  useEffect(() => {
+    if (!model.isOpen) {
+      setChromePortalReady(false);
+      return;
+    }
+    const frameId = requestAnimationFrame(() => {
+      setChromePortalReady(true);
+    });
+    return () => cancelAnimationFrame(frameId);
+  }, [model.isOpen]);
+
   if (inline) {
     return <ChatChrome {...model.chromeProps} />;
   }
@@ -101,6 +115,7 @@ export function ChatSheet({
         </Button>
       )}
       {model.isOpen &&
+        chromePortalReady &&
         model.chatPanelContainer &&
         createPortal(
           <ChatChrome {...model.chromeProps} />,

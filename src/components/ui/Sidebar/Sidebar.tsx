@@ -100,22 +100,30 @@ export type SetSidebarOpenOptions = {
   layoutAutoClose?: boolean;
 };
 
-type SidebarContextProps = {
-  isOpen: boolean;
+type SidebarActionsContextProps = {
   setOpen: (open: boolean, options?: SetSidebarOpenOptions) => void;
   toggleSidebar: () => void;
-  sidebarWidthPx: number;
   setSidebarWidthPx: (px: number, options?: SetPanelWidthOptions) => void;
-  chatWidthPx: number;
   setChatWidthPx: (px: number, options?: SetPanelWidthOptions) => void;
-  chatPanelOpen: boolean;
   setChatPanelOpen: (open: boolean) => void;
   getShellWidth: () => number;
+  /** Read shell chat open without subscribing to SidebarStateContext. */
+  getChatPanelOpen: () => boolean;
+};
+
+type SidebarStateContextProps = {
+  isOpen: boolean;
+  sidebarWidthPx: number;
+  chatWidthPx: number;
+  chatPanelOpen: boolean;
   /** Portal target for the AI chat side panel (right column). */
   chatPanelContainer: HTMLDivElement | null;
   /** App shell wrapper; used to set `--chat-panel-width` (and `--chat-panel-height` on mobile only). */
   sidebarWrapperRef: RefObject<HTMLDivElement | null>;
 };
+
+type SidebarContextProps = SidebarStateContextProps &
+  SidebarActionsContextProps;
 
 type SidebarProps = ComponentProps<'div'> & {
   defaultOpen?: boolean;
@@ -128,15 +136,41 @@ type SidebarProps = ComponentProps<'div'> & {
   brandText?: string;
 };
 
-const SidebarContext = createContext<SidebarContextProps | null>(null);
+const SidebarActionsContext = createContext<SidebarActionsContextProps | null>(
+  null,
+);
+const SidebarStateContext = createContext<SidebarStateContextProps | null>(
+  null,
+);
 
-function useSidebar() {
-  const context = useContext(SidebarContext);
+function useSidebarActions() {
+  const context = useContext(SidebarActionsContext);
   if (!context) {
-    throw new Error('useSidebar must be used within a SidebarProvider.');
+    throw new Error('useSidebarActions must be used within a SidebarProvider.');
   }
 
   return context;
+}
+
+function useSidebarState() {
+  const context = useContext(SidebarStateContext);
+  if (!context) {
+    throw new Error('useSidebarState must be used within a SidebarProvider.');
+  }
+
+  return context;
+}
+
+function useSidebar(): SidebarContextProps {
+  const actions = useSidebarActions();
+  const state = useSidebarState();
+  return useMemo(
+    () => ({
+      ...state,
+      ...actions,
+    }),
+    [state, actions],
+  );
 }
 
 function SidebarProvider({
@@ -184,10 +218,14 @@ function SidebarProvider({
   const [chatPanelOpen, _setChatPanelOpen] = useState(false);
   const sidebarWidthRef = useRef(sidebarWidthPx);
   const chatWidthRef = useRef(chatWidthPx);
+  const isOpenRef = useRef(isOpen);
+  const chatPanelOpenRef = useRef(chatPanelOpen);
   /** Left nav was auto-closed because chat opened on a narrow shell; reopen when chat closes. */
   const sidebarAutoClosedForChatRef = useRef(false);
   sidebarWidthRef.current = sidebarWidthPx;
   chatWidthRef.current = chatWidthPx;
+  isOpenRef.current = isOpen;
+  chatPanelOpenRef.current = chatPanelOpen;
 
   const mergeWrapperRef = useCallback((el: HTMLDivElement | null) => {
     wrapperRef.current = el;
@@ -204,40 +242,39 @@ function SidebarProvider({
     return typeof window !== 'undefined' ? window.innerWidth : 1200;
   }, []);
 
+  const getChatPanelOpen = useCallback(
+    (): boolean => chatPanelOpenRef.current,
+    [],
+  );
+
   const setSidebarWidthPx = useCallback(
     (px: number, options?: SetPanelWidthOptions) => {
       const persist = options?.persist !== false;
       const shellW = getShellWidth();
       const next = clampSidebarWidthPx(px, shellW, {
-        chatPanelOpen,
-        chatWidthPx,
+        chatPanelOpen: chatPanelOpenRef.current,
+        chatWidthPx: chatWidthRef.current,
       });
       _setSidebarWidthPx(next);
       if (persist && allowPersistSidebarWidth) {
         LS.set(sidebarLsKey, next);
       }
     },
-    [
-      getShellWidth,
-      chatPanelOpen,
-      chatWidthPx,
-      sidebarLsKey,
-      allowPersistSidebarWidth,
-    ],
+    [getShellWidth, sidebarLsKey, allowPersistSidebarWidth],
   );
 
   const setChatWidthPx = useCallback(
     (px: number, options?: SetPanelWidthOptions) => {
       const persist = options?.persist !== false;
       const shellW = getShellWidth();
-      const effectiveSidebarW = isOpen ? sidebarWidthPx : 0;
+      const effectiveSidebarW = isOpenRef.current ? sidebarWidthRef.current : 0;
       const next = clampChatWidthPx(px, shellW, effectiveSidebarW);
       _setChatWidthPx(next);
       if (persist && getCookiePreferences(userId)?.functional) {
         LS.set(CHAT_WIDTH_STORAGE_KEY, next);
       }
     },
-    [getShellWidth, isOpen, sidebarWidthPx, userId],
+    [getShellWidth, userId],
   );
 
   const handleShellResize = useCallback(
@@ -251,14 +288,22 @@ function SidebarProvider({
         const cScaled = Math.round((c * shellW) / prev);
         const effS = (navOpen: boolean, sidebarPx: number) =>
           navOpen ? sidebarPx : 0;
-        let cNext = clampChatWidthPx(cScaled, shellW, effS(isOpen, sScaled));
+        let cNext = clampChatWidthPx(
+          cScaled,
+          shellW,
+          effS(isOpenRef.current, sScaled),
+        );
         let sNext = clampSidebarWidthPx(sScaled, shellW, {
-          chatPanelOpen,
+          chatPanelOpen: chatPanelOpenRef.current,
           chatWidthPx: cNext,
         });
-        cNext = clampChatWidthPx(cScaled, shellW, effS(isOpen, sNext));
+        cNext = clampChatWidthPx(
+          cScaled,
+          shellW,
+          effS(isOpenRef.current, sNext),
+        );
         sNext = clampSidebarWidthPx(sScaled, shellW, {
-          chatPanelOpen,
+          chatPanelOpen: chatPanelOpenRef.current,
           chatWidthPx: cNext,
         });
         _setSidebarWidthPx(sNext);
@@ -272,7 +317,7 @@ function SidebarProvider({
       }
       prevShellWidthRef.current = shellW;
     },
-    [chatPanelOpen, isOpen, userId, sidebarLsKey, allowPersistSidebarWidth],
+    [userId, sidebarLsKey, allowPersistSidebarWidth],
   );
 
   const fitPanelWidthsToShell = useCallback(() => {
@@ -280,15 +325,15 @@ function SidebarProvider({
     if (shellW <= 0) return;
     const s = sidebarWidthRef.current;
     const c = chatWidthRef.current;
-    const effS = isOpen ? s : 0;
+    const effS = isOpenRef.current ? s : 0;
     let cNext = clampChatWidthPx(c, shellW, effS);
     let sNext = clampSidebarWidthPx(s, shellW, {
-      chatPanelOpen,
+      chatPanelOpen: chatPanelOpenRef.current,
       chatWidthPx: cNext,
     });
-    cNext = clampChatWidthPx(c, shellW, isOpen ? sNext : 0);
+    cNext = clampChatWidthPx(c, shellW, isOpenRef.current ? sNext : 0);
     sNext = clampSidebarWidthPx(s, shellW, {
-      chatPanelOpen,
+      chatPanelOpen: chatPanelOpenRef.current,
       chatWidthPx: cNext,
     });
     if (sNext !== s || cNext !== c) {
@@ -301,14 +346,7 @@ function SidebarProvider({
         LS.set(CHAT_WIDTH_STORAGE_KEY, cNext);
       }
     }
-  }, [
-    chatPanelOpen,
-    getShellWidth,
-    isOpen,
-    userId,
-    sidebarLsKey,
-    allowPersistSidebarWidth,
-  ]);
+  }, [getShellWidth, userId, sidebarLsKey, allowPersistSidebarWidth]);
 
   useLayoutEffect(() => {
     if (!shellEl || isSidebarSheetLayout) return;
@@ -328,36 +366,39 @@ function SidebarProvider({
       if (isSidebarSheetLayout) return;
       const shellW = getShellWidth();
       const layoutAfterOpen = {
-        mainSidebarOpen: openingMain || isOpen,
-        chatPanelOpen: openingChat || chatPanelOpen,
-        sidebarWidthPx,
-        chatWidthPx,
+        mainSidebarOpen: openingMain || isOpenRef.current,
+        chatPanelOpen: openingChat || chatPanelOpenRef.current,
+        sidebarWidthPx: sidebarWidthRef.current,
+        chatWidthPx: chatWidthRef.current,
       };
       if (shellFitsSidebarsLayout(shellW, layoutAfterOpen)) return;
-      if (openingMain && chatPanelOpen) {
+      if (openingMain && chatPanelOpenRef.current) {
         _setChatPanelOpen(false);
         if (typeof window !== 'undefined') {
           window.dispatchEvent(new CustomEvent(DISMISS_CHAT_FOR_LAYOUT_EVENT));
         }
-      } else if (openingChat && isOpen) {
+      } else if (openingChat && isOpenRef.current) {
         sidebarAutoClosedForChatRef.current = true;
         setIsOpen(false);
       }
     },
-    [
-      isSidebarSheetLayout,
-      getShellWidth,
-      isOpen,
-      chatPanelOpen,
-      sidebarWidthPx,
-      chatWidthPx,
-    ],
+    [isSidebarSheetLayout, getShellWidth],
   );
 
   const setChatPanelOpen = useCallback(
     (open: boolean) => {
       if (open) {
         closeOppositeSidebarIfNoSpace(false, true);
+        const shellW = getShellWidth();
+        if (shellW > 0 && !isSidebarSheetLayout) {
+          const navOpenAfter =
+            isOpenRef.current && !sidebarAutoClosedForChatRef.current;
+          const effNav = navOpenAfter ? sidebarWidthRef.current : 0;
+          const cNext = clampChatWidthPx(chatWidthRef.current, shellW, effNav);
+          if (cNext !== chatWidthRef.current) {
+            _setChatWidthPx(cNext);
+          }
+        }
         _setChatPanelOpen(true);
         return;
       }
@@ -370,7 +411,12 @@ function SidebarProvider({
         }
       }
     },
-    [closeOppositeSidebarIfNoSpace, userId],
+    [
+      closeOppositeSidebarIfNoSpace,
+      getShellWidth,
+      isSidebarSheetLayout,
+      userId,
+    ],
   );
 
   const setOpen = useCallback(
@@ -407,7 +453,10 @@ function SidebarProvider({
     [isSidebarSheetLayout, userId, closeOppositeSidebarIfNoSpace],
   );
 
-  const toggleSidebar = useCallback(() => setOpen(!isOpen), [isOpen, setOpen]);
+  const toggleSidebar = useCallback(
+    () => setOpen(!isOpenRef.current),
+    [setOpen],
+  );
 
   useEffect(() => {
     const shell = wrapperRef.current;
@@ -452,67 +501,73 @@ function SidebarProvider({
     },
   });
 
-  const contextValue = useMemo<SidebarContextProps>(
+  const sidebarActionsValue = useMemo<SidebarActionsContextProps>(
     () => ({
-      isOpen,
       setOpen,
       toggleSidebar,
-      sidebarWidthPx,
       setSidebarWidthPx,
-      chatWidthPx,
       setChatWidthPx,
-      chatPanelOpen,
       setChatPanelOpen,
       getShellWidth,
-      chatPanelContainer,
-      sidebarWrapperRef: wrapperRef,
+      getChatPanelOpen,
     }),
     [
-      isOpen,
       setOpen,
       toggleSidebar,
-      sidebarWidthPx,
       setSidebarWidthPx,
-      chatWidthPx,
       setChatWidthPx,
-      chatPanelOpen,
+      setChatPanelOpen,
       getShellWidth,
-      chatPanelContainer,
+      getChatPanelOpen,
     ],
   );
 
+  const sidebarStateValue = useMemo<SidebarStateContextProps>(
+    () => ({
+      isOpen,
+      sidebarWidthPx,
+      chatWidthPx,
+      chatPanelOpen,
+      chatPanelContainer,
+      sidebarWrapperRef: wrapperRef,
+    }),
+    [isOpen, sidebarWidthPx, chatWidthPx, chatPanelOpen, chatPanelContainer],
+  );
+
   return (
-    <SidebarContext.Provider value={contextValue}>
-      <TooltipProvider delayDuration={0}>
-        <div
-          ref={mergeWrapperRef}
-          data-slot="sidebar-wrapper"
-          data-state={isOpen ? 'expanded' : 'collapsed'}
-          style={
-            {
-              '--sidebar-width': `${sidebarWidthPx}px`,
-              '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
-              ...style,
-            } as CSSProperties
-          }
-          className={cn(S.sidebarWrapper, className)}
-          {...props}
-        >
+    <SidebarActionsContext.Provider value={sidebarActionsValue}>
+      <SidebarStateContext.Provider value={sidebarStateValue}>
+        <TooltipProvider delayDuration={0}>
           <div
-            className={S.sidebarMainShell}
-            // style={{ viewTransitionName: 'sidebar-gap' }}
+            ref={mergeWrapperRef}
+            data-slot="sidebar-wrapper"
+            data-state={isOpen ? 'expanded' : 'collapsed'}
+            style={
+              {
+                '--sidebar-width': `${sidebarWidthPx}px`,
+                '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
+                ...style,
+              } as CSSProperties
+            }
+            className={cn(S.sidebarWrapper, className)}
+            {...props}
           >
-            {children}
+            <div
+              className={S.sidebarMainShell}
+              // style={{ viewTransitionName: 'sidebar-gap' }}
+            >
+              {children}
+            </div>
+            <div
+              ref={onChatPanelMount}
+              className={S.chatPanelMount}
+              data-slot="chat-panel-mount"
+              // style={{ viewTransitionName: 'sidebar-container' }}
+            />
           </div>
-          <div
-            ref={onChatPanelMount}
-            className={S.chatPanelMount}
-            data-slot="chat-panel-mount"
-            // style={{ viewTransitionName: 'sidebar-container' }}
-          />
-        </div>
-      </TooltipProvider>
-    </SidebarContext.Provider>
+        </TooltipProvider>
+      </SidebarStateContext.Provider>
+    </SidebarActionsContext.Provider>
   );
 }
 
@@ -530,7 +585,8 @@ function Sidebar({
   ...props
 }: SidebarProps) {
   const isSidebarSheetLayout = useIsSidebarSheetLayout();
-  const { isOpen, setOpen } = useSidebar();
+  const { isOpen } = useSidebarState();
+  const { setOpen } = useSidebarActions();
 
   const prevSheetLayoutRef = useRef(isSidebarSheetLayout);
 
@@ -605,7 +661,7 @@ function SidebarTrigger({
   onClick,
   ...props
 }: ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar } = useSidebarActions();
 
   return (
     <Button
@@ -627,7 +683,7 @@ function SidebarTrigger({
 }
 
 function SidebarRail({ className, ...props }: ComponentProps<'button'>) {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar } = useSidebarActions();
 
   return (
     <button
@@ -728,8 +784,8 @@ function SidebarResizeHandle({
   side = 'left',
   ...props
 }: ComponentProps<'div'> & { side?: 'left' | 'right' }) {
-  const { isOpen, sidebarWidthPx, setSidebarWidthPx, getShellWidth } =
-    useSidebar();
+  const { isOpen, sidebarWidthPx } = useSidebarState();
+  const { setSidebarWidthPx, getShellWidth } = useSidebarActions();
   const isSidebarSheetLayout = useIsSidebarSheetLayout();
 
   const edge: 'leading' | 'trailing' = side === 'left' ? 'trailing' : 'leading';
@@ -966,7 +1022,8 @@ function SidebarMenuSubButton({
   tooltip?: string | ComponentProps<typeof TooltipContent>;
 }) {
   const Comp = asChild ? Slot : 'a';
-  const { isOpen, setOpen } = useSidebar();
+  const { isOpen } = useSidebarState();
+  const { setOpen } = useSidebarActions();
   const isSidebarSheetLayout = useIsSidebarSheetLayout();
 
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -1028,4 +1085,6 @@ export {
   SidebarSeparator,
   SidebarTrigger,
   useSidebar,
+  useSidebarActions,
+  useSidebarState,
 };

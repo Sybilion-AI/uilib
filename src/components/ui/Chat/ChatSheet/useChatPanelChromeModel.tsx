@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import {
   ChatPreset,
@@ -47,7 +54,8 @@ import { ScrollRef } from '@homecode/ui';
 
 import {
   DISMISS_CHAT_FOR_LAYOUT_EVENT,
-  useSidebar,
+  useSidebarActions,
+  useSidebarState,
 } from '../../Sidebar/Sidebar';
 import { Chat } from '../Chat';
 import type { ChatChromeProps } from '../ChatChrome';
@@ -177,14 +185,16 @@ export function useChatPanelChromeModel({
   const {
     chatPanelContainer,
     isOpen: sidebarNavOpen,
-    setOpen: setSidebarNavOpen,
     sidebarWidthPx,
     chatWidthPx,
+    chatPanelOpen: shellChatPanelOpen,
+  } = useSidebarState();
+  const {
+    setOpen: setSidebarNavOpen,
     setChatWidthPx,
     getShellWidth,
-    chatPanelOpen: shellChatPanelOpen,
     setChatPanelOpen,
-  } = useSidebar();
+  } = useSidebarActions();
   const [localUiBusy, setLocalUiBusy] = useState(false);
   const [outboundLoadingLabel, setOutboundLoadingLabel] = useState<
     string | undefined
@@ -344,10 +354,12 @@ export function useChatPanelChromeModel({
       layoutDismissedRef.current = false;
       openedShellChatRef.current = true;
       setChatPanelOpen(true);
-      setIsOpen(true);
-      if (!searchParams.has(CHAT_QUERY_PARAM)) {
-        addSearchParams({ [CHAT_QUERY_PARAM]: CHAT_OPEN_VALUE });
-      }
+      startTransition(() => {
+        setIsOpen(true);
+        if (!searchParams.has(CHAT_QUERY_PARAM)) {
+          addSearchParams({ [CHAT_QUERY_PARAM]: CHAT_OPEN_VALUE });
+        }
+      });
       return;
     }
 
