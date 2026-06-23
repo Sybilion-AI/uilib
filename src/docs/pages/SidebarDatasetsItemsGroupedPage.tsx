@@ -7,7 +7,7 @@ import {
   SidebarDatasetsItemsGrouped,
   type SidebarDatasetsItemsGroupedDataset,
 } from '#uilib/components/widgets/SidebarDatasetsItemsGrouped';
-import sidebarDatasetsItemsGroupedGuidance from '#uilib/docs/agent-guidance/sidebar-datasets-items-grouped.md';
+import sidebarDatasetsItemsGroupedGuidance from '#uilib/components/widgets/SidebarDatasetsItemsGrouped/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

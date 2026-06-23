@@ -1,6 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Separator } from '#uilib/components/ui/Separator';
-import separatorGuidance from '#uilib/docs/agent-guidance/separator.md';
+import separatorGuidance from '#uilib/components/ui/Separator/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

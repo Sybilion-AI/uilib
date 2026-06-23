@@ -1,6 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { TextWithDeferTooltip } from '#uilib/components/ui/TextWithDeferTooltip';
-import textWithDeferTooltipGuidance from '#uilib/docs/agent-guidance/text-with-defer-tooltip.md';
+import textWithDeferTooltipGuidance from '#uilib/components/ui/TextWithDeferTooltip/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

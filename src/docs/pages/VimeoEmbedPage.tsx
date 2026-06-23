@@ -1,6 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { VimeoEmbed } from '#uilib/components/ui/VimeoEmbed';
-import vimeoEmbedGuidance from '#uilib/docs/agent-guidance/vimeo-embed.md';
+import vimeoEmbedGuidance from '#uilib/components/ui/VimeoEmbed/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

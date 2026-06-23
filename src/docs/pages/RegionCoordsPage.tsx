@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { RegionSelector } from '#uilib/components/ui/RegionCoords';
-import regionCoordsGuidance from '#uilib/docs/agent-guidance/region-coords.md';
+import regionCoordsGuidance from '#uilib/components/ui/RegionCoords/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

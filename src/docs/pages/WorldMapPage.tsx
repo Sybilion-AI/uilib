@@ -1,6 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { WorldMap } from '#uilib/components/ui/WorldMap';
-import worldMapGuidance from '#uilib/docs/agent-guidance/world-map.md';
+import worldMapGuidance from '#uilib/components/ui/WorldMap/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

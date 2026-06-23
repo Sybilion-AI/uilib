@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Slider } from '#uilib/components/ui/Slider';
-import sliderGuidance from '#uilib/docs/agent-guidance/slider.md';
+import sliderGuidance from '#uilib/components/ui/Slider/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

@@ -1,6 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { PullQuote } from '#uilib/components/ui/PullQuote';
-import pullQuoteGuidance from '#uilib/docs/agent-guidance/pull-quote.md';
+import pullQuoteGuidance from '#uilib/components/ui/PullQuote/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

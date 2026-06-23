@@ -2,11 +2,11 @@ import { useMemo } from 'react';
 
 import { LightweightForecastChart } from '#uilib/components/ui/Chart';
 import type { QuantileBandConfig } from '#uilib/components/ui/Chart/chartForecastVisualization.types';
+import lightweightForecastChartGuidance from '#uilib/components/ui/Chart/lightweight/AGENT.md';
 import type { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
 import type { ForecastItemData } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { useTheme } from '#uilib/contexts/theme-context';
-import lightweightForecastChartGuidance from '#uilib/docs/agent-guidance/lightweight-forecast-chart.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

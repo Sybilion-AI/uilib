@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '#uilib/components/ui/Table';
 import type { TableSize } from '#uilib/components/ui/Table';
-import tableGuidance from '#uilib/docs/agent-guidance/table.md';
+import tableGuidance from '#uilib/components/ui/Table/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

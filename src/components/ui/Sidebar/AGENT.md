@@ -12,4 +12,4 @@ Sidebar provides the primitives for building application navigation rails: Sideb
 
 ## Do
 
-- Mark the current route’s item with isActive so users can orient themselves.
+- Mark the current route's item with isActive so users can orient themselves.

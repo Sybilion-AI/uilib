@@ -1,6 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Skeleton } from '#uilib/components/ui/Skeleton';
-import skeletonGuidance from '#uilib/docs/agent-guidance/skeleton.md';
+import skeletonGuidance from '#uilib/components/ui/Skeleton/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

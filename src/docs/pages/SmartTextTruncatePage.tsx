@@ -1,6 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { SmartTextTruncate } from '#uilib/components/ui/SmartTextTruncate';
-import smartTextTruncateGuidance from '#uilib/docs/agent-guidance/smart-text-truncate.md';
+import smartTextTruncateGuidance from '#uilib/components/ui/SmartTextTruncate/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

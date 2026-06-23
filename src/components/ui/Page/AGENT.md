@@ -1,17 +1,8 @@
 # Page layout system
 
-Sybilion workspace and report surfaces use a small set of **Page** primitives from `@sybilion/uilib`. Agents must compose these instead of inventing layout with inline styles, Tailwind structure classes, or ad-hoc wrappers.
+Sybilion workspace surfaces use a small set of **Page** primitives from `@sybilion/uilib`. Agents must compose these instead of inventing layout with inline styles, Tailwind structure classes, or ad-hoc wrappers.
 
-## Two modes
-
-| Mode               | When                                             | Shell                                                                                 |
-| ------------------ | ------------------------------------------------ | ------------------------------------------------------------------------------------- |
-| **workspace-page** | Route inside `AppShell` / scrolled main column   | `PageHeader` → `PageContent` → `PageContentSection`(s). Optional `PageTabs`.          |
-| **content**        | Report tiles, json-dashboard, embedded body only | No `PageHeader` / `AppShell` chrome. Map React blocks to dashboard tiles (see below). |
-
-Do not nest workspace shell components inside **content** mode output.
-
-## Mandatory workspace-page skeleton
+## Mandatory page skeleton
 
 ```tsx
 <PageHeader title="…" subheader="…" breadcrumbs={[…]} actions={…} />
@@ -131,32 +122,15 @@ Centered empty state: `title`, `hint`, optional `children` (e.g. CTA button). Us
 
 ### GridLayout
 
-Responsive CSS grid (`repeat(auto-fit, minmax(colWidth, 1fr))`). Use for card/tile dashboards inside a section. Report mapping: dashboard **grid** rows / multi-column tile groups.
+Responsive CSS grid (`repeat(auto-fit, minmax(colWidth, 1fr))`). Use for card/tile dashboards inside a section.
 
 ### Card / Foldable
 
 Use inside sections for grouped content; see package `AGENT.md` on those components when present. Do not wrap the whole page in Card.
 
-## Content mode — React → json-dashboard tiles
+## Shell components
 
-When generating **report** / dashboard specs (not workspace routes), map UI blocks to tiles:
-
-| React / intent                  | Dashboard tile / markdown                                         |
-| ------------------------------- | ----------------------------------------------------------------- |
-| `PageHeader` title text         | First `markdown` tile `# Title` or report title field             |
-| `SectionHeader` `title`         | `markdown` with `## …`                                            |
-| `SectionHeader` `description`   | markdown paragraph under that heading                             |
-| `PageContentSection` block      | group of tiles or one markdown section                            |
-| `PageColumns` (N equal columns) | group of N sibling tiles in one dashboard row                     |
-| `GridLayout` children           | grid row of widget tiles                                          |
-| `ChartAreaInteractive` / charts | `dataset_card`, `performance_chart`, etc. (see widget `AGENT.md`) |
-| `PageEmptyCanvas` copy          | `markdown` explanatory tile                                       |
-
-See `AGENT.report-only-tiles.md` in the app repo for tiles without a uilib widget.
-
-## Shell components (workspace only)
-
-Not part of the per-route skeleton but part of **workspace-page** host wiring:
+Not part of the per-route skeleton but part of host app wiring:
 
 - **AppShell** / **AppShellMainContent** — sidebar + main column + header slot + footer.
 - **PageScroll** — scroll root for the main column.

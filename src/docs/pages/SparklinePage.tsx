@@ -1,6 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Sparkline } from '#uilib/components/ui/Sparkline';
-import sparklineGuidance from '#uilib/docs/agent-guidance/sparkline.md';
+import sparklineGuidance from '#uilib/components/ui/Sparkline/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

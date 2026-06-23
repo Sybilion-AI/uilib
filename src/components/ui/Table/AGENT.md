@@ -13,5 +13,4 @@ Table is a set of semantic primitives — Table, TableHeader, TableBody, TableRo
 ## Do
 
 - Keep column headers short and use TableHead cells so the markup stays accessible.
-- Use size=
-- on Table when you need tighter row density.
+- Use size on Table when you need tighter row density.

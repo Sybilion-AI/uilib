@@ -1,11 +1,11 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
+import sidebarGuidance from '#uilib/components/ui/Sidebar/AGENT.md';
 import {
   SidebarGroup,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from '#uilib/components/ui/Sidebar/Sidebar';
-import sidebarGuidance from '#uilib/docs/agent-guidance/sidebar.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

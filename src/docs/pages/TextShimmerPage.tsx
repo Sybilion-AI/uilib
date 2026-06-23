@@ -1,6 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { TextShimmer } from '#uilib/components/ui/TextShimmer';
-import textShimmerGuidance from '#uilib/docs/agent-guidance/text-shimmer.md';
+import textShimmerGuidance from '#uilib/components/ui/TextShimmer/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

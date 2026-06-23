@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#uilib/components/ui/Select';
-import selectGuidance from '#uilib/docs/agent-guidance/select.md';
+import selectGuidance from '#uilib/components/ui/Select/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

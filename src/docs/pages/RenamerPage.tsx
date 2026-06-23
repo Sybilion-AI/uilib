@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Renamer } from '#uilib/components/ui/Renamer';
-import renamerGuidance from '#uilib/docs/agent-guidance/renamer.md';
+import renamerGuidance from '#uilib/components/ui/Renamer/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

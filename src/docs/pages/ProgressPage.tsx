@@ -1,6 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Progress } from '#uilib/components/ui/Progress';
-import progressGuidance from '#uilib/docs/agent-guidance/progress.md';
+import progressGuidance from '#uilib/components/ui/Progress/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

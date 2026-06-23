@@ -1,6 +1,6 @@
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Toggle } from '#uilib/components/ui/Toggle';
-import toggleGuidance from '#uilib/docs/agent-guidance/toggle.md';
+import toggleGuidance from '#uilib/components/ui/Toggle/AGENT.md';
 import { Bold } from 'lucide-react';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';

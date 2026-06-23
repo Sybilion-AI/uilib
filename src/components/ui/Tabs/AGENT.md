@@ -18,4 +18,4 @@ Tabs organise related content into panels that share the same space, with only o
 
 ## Don't
 
-- Don’t use more tabs than fit comfortably in the available width.
+- Don't use more tabs than fit comfortably in the available width.

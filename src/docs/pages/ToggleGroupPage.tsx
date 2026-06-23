@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { ToggleGroup, ToggleGroupItem } from '#uilib/components/ui/ToggleGroup';
-import toggleGroupGuidance from '#uilib/docs/agent-guidance/toggle-group.md';
+import toggleGroupGuidance from '#uilib/components/ui/ToggleGroup/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

@@ -2,7 +2,7 @@ TextShimmer animates a shimmer effect across its text content to signal that an 
 
 ## When to use
 
-- To indicate an in-progress operation with a descriptive label, such as “Generating…”.
+- To indicate an in-progress operation with a descriptive label, such as "Generating…".
 - For streaming or AI-generated content where text appears gradually.
 
 ## When not to use

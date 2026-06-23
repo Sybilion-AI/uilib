@@ -8,7 +8,7 @@ import {
   TabsTrigger,
   type TabsVariant,
 } from '#uilib/components/ui/Tabs';
-import tabsGuidance from '#uilib/docs/agent-guidance/tabs.md';
+import tabsGuidance from '#uilib/components/ui/Tabs/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
