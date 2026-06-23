@@ -1,10 +1,9 @@
-import { PageContentSection } from '#uilib/components/ui/Page';
-import { VimeoEmbed } from '#uilib/components/ui/VimeoEmbed';
-import vimeoEmbedGuidance from '#uilib/components/ui/VimeoEmbed/AGENT.md';
-
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
+import { PageContentSection } from '#uilib/components/ui/Page';
+import { VimeoEmbed } from '#uilib/components/ui/VimeoEmbed';
+import vimeoEmbedGuidance from '#uilib/components/ui/VimeoEmbed/AGENT.md';
 
 export default function VimeoEmbedPage() {
   return (
@@ -17,7 +16,7 @@ export default function VimeoEmbedPage() {
       />
       <DocsGuidance source={vimeoEmbedGuidance} />
       <PageContentSection style={{ maxWidth: 560 }}>
-        <VimeoEmbed videoId="148751763" />
+        <VimeoEmbed videoId="1202135779" videoHash="e26adba036" />
       </PageContentSection>
     </>
   );

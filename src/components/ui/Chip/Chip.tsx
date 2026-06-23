@@ -1,9 +1,8 @@
-import cn from 'classnames';
-
 import { TrendingDown, TrendingUp } from 'lucide-react';
 
-import S from './Chip.styl';
 import { ChipProps } from './Chip.types';
+import S from './Chip.styl';
+import cn from 'classnames';
 
 function Chip({
   className,
@@ -14,7 +13,6 @@ function Chip({
   children,
   ...props
 }: ChipProps) {
-  const showDot = dot ?? (variant === 'neutral' && !squared);
   const TrendIcon =
     trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : null;
 
@@ -29,7 +27,7 @@ function Chip({
       )}
       {...props}
     >
-      {showDot && <span className={S.dot} aria-hidden="true" />}
+      {dot && <span className={S.dot} aria-hidden="true" />}
       {TrendIcon && (
         <TrendIcon className={S.arrow} strokeWidth={1.5} aria-hidden="true" />
       )}

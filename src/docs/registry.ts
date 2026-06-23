@@ -496,12 +496,6 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/TimeRangeControlsPage'),
   },
   {
-    slug: 'toggle',
-    title: 'Toggle',
-    section: 'Forms',
-    load: () => import('./pages/TogglePage'),
-  },
-  {
     slug: 'toggle-group',
     title: 'ToggleGroup',
     section: 'Forms',
