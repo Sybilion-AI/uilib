@@ -24,6 +24,7 @@ export * from './components/ui/PullQuote';
 export * from './components/ui/SignalCard';
 export * from './components/ui/Breadcrumb';
 export * from './components/ui/Button';
+export * from './components/ui/ButtonGroup';
 export * from './components/ui/Card';
 export * from './components/ui/Chart';
 export * from './components/ui/ChartAreaInteractive';

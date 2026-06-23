@@ -69,6 +69,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/ButtonPage'),
   },
   {
+    slug: 'button-group',
+    title: 'ButtonGroup',
+    section: 'Forms',
+    load: () => import('./pages/ButtonGroupPage'),
+  },
+  {
     slug: 'analyses-selector',
     title: 'AnalysesSelector',
     section: 'Data display',
