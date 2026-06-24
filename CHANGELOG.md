@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.13](https://github.com/Mir-Insight/uilib/compare/v1.4.12...v1.4.13) (2026-06-24)
+
+
+### Features
+
+* Sidebar - Expandable menu button API ([d2d5f5e](https://github.com/Mir-Insight/uilib/commit/d2d5f5ed4530991e888dce197f6e2588a29f4b1f))
+
+
+### Bug Fixes
+
+* ChatSheet - typings ([3fb0797](https://github.com/Mir-Insight/uilib/commit/3fb0797535c3046a04dfece1bd164aac73d91e7d))
+
 ### [1.4.12](https://github.com/Mir-Insight/uilib/compare/v1.4.11...v1.4.12) (2026-06-24)
 
 
