@@ -66,6 +66,10 @@ export type DriversComparisonChartProps = {
   seriesInitKey?: string;
   viewTab?: DriversComparisonViewTab;
   onViewTabChange?: (tab: DriversComparisonViewTab) => void;
+  hiddenSeries?: Set<string>;
+  onHiddenSeriesChange?: (
+    update: Set<string> | ((prev: Set<string>) => Set<string>),
+  ) => void;
 };
 
 export type { DriversComparisonViewTab } from './driversComparisonChart.helpers';
@@ -85,14 +89,31 @@ export function DriversComparisonChart({
   seriesInitKey,
   viewTab: viewTabProp,
   onViewTabChange,
+  hiddenSeries: hiddenSeriesProp,
+  onHiddenSeriesChange,
 }: DriversComparisonChartProps) {
   const [internalTimeRange, setInternalTimeRange] =
     useState<string>(ALL_TIME_RANGE);
   const [internalViewTab, setInternalViewTab] =
     useState<DriversComparisonViewTab>('overlapped');
-  const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(new Set());
+  const [internalHiddenSeries, setInternalHiddenSeries] = useState<Set<string>>(
+    new Set(),
+  );
 
   const viewTab = viewTabProp ?? internalViewTab;
+  const hiddenSeriesControlled = hiddenSeriesProp !== undefined;
+  const hiddenSeries = hiddenSeriesProp ?? internalHiddenSeries;
+
+  const setHiddenSeries = useCallback(
+    (update: Set<string> | ((prev: Set<string>) => Set<string>)) => {
+      if (onHiddenSeriesChange) {
+        onHiddenSeriesChange(update);
+        return;
+      }
+      setInternalHiddenSeries(update);
+    },
+    [onHiddenSeriesChange],
+  );
 
   const timeRange = timeRangeProp ?? internalTimeRange;
   const handleTimeRangeChange = useCallback(
@@ -106,25 +127,31 @@ export function DriversComparisonChart({
     [onTimeRangeChange, timeRangeProp],
   );
 
-  const toggleSeries = useCallback((id: number | string) => {
-    const key = toForecastDataKey(id);
-    setHiddenSeries(prev => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
-  }, []);
+  const toggleSeries = useCallback(
+    (id: number | string) => {
+      const key = toForecastDataKey(id);
+      setHiddenSeries(prev => {
+        const next = new Set(prev);
+        if (next.has(key)) next.delete(key);
+        else next.add(key);
+        return next;
+      });
+    },
+    [setHiddenSeries],
+  );
 
-  const showSeries = useCallback((id: number | string) => {
-    const key = toForecastDataKey(id);
-    setHiddenSeries(prev => {
-      if (!prev.has(key)) return prev;
-      const next = new Set(prev);
-      next.delete(key);
-      return next;
-    });
-  }, []);
+  const showSeries = useCallback(
+    (id: number | string) => {
+      const key = toForecastDataKey(id);
+      setHiddenSeries(prev => {
+        if (!prev.has(key)) return prev;
+        const next = new Set(prev);
+        next.delete(key);
+        return next;
+      });
+    },
+    [setHiddenSeries],
+  );
 
   const payloadForView = useMemo(
     () => applyDriversComparisonViewToPayload(payload, viewTab),
@@ -222,6 +249,7 @@ export function DriversComparisonChart({
   const backtestsSeriesInitKeyRef = useRef<string>('');
 
   useEffect(() => {
+    if (hiddenSeriesControlled) return;
     if (tableSeriesRows.length === 0) return;
     const initKey = seriesInitKeyResolved;
     if (backtestsSeriesInitKeyRef.current === initKey) return;
@@ -237,7 +265,12 @@ export function DriversComparisonChart({
       });
       return next;
     });
-  }, [seriesInitKeyResolved, tableSeriesRows]);
+  }, [
+    hiddenSeriesControlled,
+    seriesInitKeyResolved,
+    setHiddenSeries,
+    tableSeriesRows,
+  ]);
 
   const driversComparisonChartData = useMemo(
     () =>
