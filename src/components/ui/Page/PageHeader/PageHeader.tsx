@@ -19,6 +19,7 @@ export function PageHeader({
   title,
   subheader,
   actions,
+  sticky,
 }: {
   breadcrumbs?: BreadcrumbItem[];
   breadcrumbClientLogo?: React.ReactNode;
@@ -28,12 +29,18 @@ export function PageHeader({
   title: React.ReactNode;
   subheader?: React.ReactNode;
   actions?: React.ReactNode;
+  sticky?: boolean;
 }) {
   const { isScrolled } = useContext(PageContext);
 
   return (
     <div
-      className={cn(S.root, actions && S.hasActions, isScrolled && S.scrolled)}
+      className={cn(
+        S.root,
+        actions && S.hasActions,
+        isScrolled && S.scrolled,
+        sticky && S.sticky,
+      )}
     >
       <div className={S.inner}>
         <Breadcrumbs
