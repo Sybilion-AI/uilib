@@ -1,108 +1,371 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import cn from 'classnames';
+import { memo, useCallback, useLayoutEffect, useRef, useState } from 'react';
 
+import S from './SmartTextTruncate.styl';
 import type { SmartTextTruncateProps } from './SmartTextTruncate.types';
 
 const ELLIPSIS = ' ... ';
 const END_CHARS_COUNT = 10;
+const RESIZE_SETTLE_MS = 120;
+const GLOBAL_KEY = '__sybilionSmartTextTruncate';
+const RESIZE_ROOT_SELECTOR = '[data-smart-text-truncate-resize-root]';
+const DRAG_THRESHOLD_PX = 3;
 
-function SmartTextTruncate({
+type InteractionStore = {
+  isPanelDragging: boolean;
+  isResizeRootDragging: boolean;
+};
+
+type GlobalState = {
+  store: InteractionStore;
+  settleTimer: ReturnType<typeof setTimeout> | null;
+  resizeRafId: number;
+  recalcCallbacks: Set<() => void>;
+  resizeRootListenersInit: boolean;
+  panelDragActive: boolean;
+};
+
+type PendingResizeRootDrag = {
+  pointerId: number;
+  startX: number;
+  startY: number;
+};
+
+function getGlobalState(): GlobalState {
+  const w = window as Window & { [GLOBAL_KEY]?: GlobalState };
+  if (!w[GLOBAL_KEY]) {
+    w[GLOBAL_KEY] = {
+      store: {
+        isPanelDragging: false,
+        isResizeRootDragging: false,
+      },
+      settleTimer: null,
+      resizeRafId: 0,
+      recalcCallbacks: new Set(),
+      resizeRootListenersInit: false,
+      panelDragActive: false,
+    };
+  }
+  return w[GLOBAL_KEY];
+}
+
+let pendingResizeRootDrag: PendingResizeRootDrag | null = null;
+
+function getIsFastMode(store: InteractionStore) {
+  return store.isPanelDragging || store.isResizeRootDragging;
+}
+
+function syncFastModeDom(store: InteractionStore) {
+  if (typeof document === 'undefined') {
+    return;
+  }
+  if (getIsFastMode(store)) {
+    document.documentElement.dataset.smartTextTruncateFast = '';
+  } else {
+    delete document.documentElement.dataset.smartTextTruncateFast;
+  }
+}
+
+function clearSettleTimer() {
+  const g = getGlobalState();
+  if (g.settleTimer) {
+    clearTimeout(g.settleTimer);
+    g.settleTimer = null;
+  }
+}
+
+function runSettleRecalc() {
+  getGlobalState().recalcCallbacks.forEach(recalc => recalc());
+}
+
+function scheduleSettle() {
+  const g = getGlobalState();
+  clearSettleTimer();
+
+  g.settleTimer = setTimeout(() => {
+    g.settleTimer = null;
+    runSettleRecalc();
+  }, RESIZE_SETTLE_MS);
+}
+
+function notifyContainerResize() {
+  const g = getGlobalState();
+  if (getIsFastMode(g.store)) {
+    return;
+  }
+  scheduleSettle();
+}
+
+function beginResizeRootDrag() {
+  const g = getGlobalState();
+  if (g.store.isResizeRootDragging) {
+    return;
+  }
+
+  clearSettleTimer();
+  g.store = { ...g.store, isResizeRootDragging: true };
+  syncFastModeDom(g.store);
+}
+
+function endResizeRootDrag() {
+  const g = getGlobalState();
+  pendingResizeRootDrag = null;
+
+  if (!g.store.isResizeRootDragging) {
+    return;
+  }
+
+  g.store = { ...g.store, isResizeRootDragging: false };
+  syncFastModeDom(g.store);
+  scheduleSettle();
+}
+
+function onResizeRootPointerDown(e: PointerEvent) {
+  if (e.button !== 0) {
+    return;
+  }
+
+  const root = (e.target as Element | null)?.closest(RESIZE_ROOT_SELECTOR);
+  if (!root) {
+    return;
+  }
+
+  clearSettleTimer();
+  pendingResizeRootDrag = {
+    pointerId: e.pointerId,
+    startX: e.clientX,
+    startY: e.clientY,
+  };
+}
+
+function onResizeRootPointerMove(e: PointerEvent) {
+  const pending = pendingResizeRootDrag;
+  if (!pending || e.pointerId !== pending.pointerId) {
+    return;
+  }
+
+  const dx = e.clientX - pending.startX;
+  const dy = e.clientY - pending.startY;
+  if (Math.hypot(dx, dy) < DRAG_THRESHOLD_PX) {
+    return;
+  }
+
+  beginResizeRootDrag();
+}
+
+function onResizeRootPointerUp(e: PointerEvent) {
+  const pending = pendingResizeRootDrag;
+  if (!pending || e.pointerId !== pending.pointerId) {
+    return;
+  }
+
+  endResizeRootDrag();
+}
+
+function ensureResizeRootListeners() {
+  const g = getGlobalState();
+  if (g.resizeRootListenersInit) {
+    return;
+  }
+  g.resizeRootListenersInit = true;
+  window.addEventListener('pointerdown', onResizeRootPointerDown);
+  window.addEventListener('pointermove', onResizeRootPointerMove);
+  window.addEventListener('pointerup', onResizeRootPointerUp);
+  window.addEventListener('pointercancel', onResizeRootPointerUp);
+}
+
+function scheduleContainerResize() {
+  const g = getGlobalState();
+  if (g.resizeRafId !== 0) {
+    return;
+  }
+  g.resizeRafId = requestAnimationFrame(() => {
+    g.resizeRafId = 0;
+    notifyContainerResize();
+  });
+}
+
+let sharedResizeObserver: ResizeObserver | null = null;
+let widthProbe: Element | null = null;
+
+function observeWidthProbe(container: Element) {
+  if (widthProbe) {
+    return;
+  }
+
+  if (!sharedResizeObserver) {
+    sharedResizeObserver = new ResizeObserver(() => {
+      const g = getGlobalState();
+      if (getIsFastMode(g.store)) {
+        return;
+      }
+      scheduleContainerResize();
+    });
+  }
+
+  widthProbe = container;
+  sharedResizeObserver.observe(container);
+}
+
+function unobserveWidthProbe(container: Element) {
+  if (widthProbe !== container) {
+    return;
+  }
+
+  sharedResizeObserver?.unobserve(container);
+  widthProbe = null;
+}
+
+/** Panel resize handle — call on first pointer move after press, not on pointer down. */
+function notifyPanelWidthDragStart() {
+  const g = getGlobalState();
+  if (g.panelDragActive) {
+    return;
+  }
+
+  clearSettleTimer();
+  g.panelDragActive = true;
+  g.store = { ...g.store, isPanelDragging: true };
+  syncFastModeDom(g.store);
+}
+
+function notifyPanelWidthDragEnd() {
+  const g = getGlobalState();
+  if (!g.panelDragActive) {
+    return;
+  }
+
+  g.panelDragActive = false;
+  g.store = { ...g.store, isPanelDragging: false };
+  syncFastModeDom(g.store);
+  scheduleSettle();
+}
+
+function computeTruncatedText(
+  fullTextEl: HTMLSpanElement,
+  text: string,
+  containerWidth: number,
+): string {
+  if (text.length <= END_CHARS_COUNT) {
+    return text;
+  }
+
+  fullTextEl.textContent = text;
+  if (fullTextEl.scrollWidth <= containerWidth) {
+    return text;
+  }
+
+  const endPart = text.slice(-END_CHARS_COUNT);
+  let left = 0;
+  let right = text.length - END_CHARS_COUNT;
+  let bestStart = 0;
+
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    const startPart = text.slice(0, mid);
+    const truncated = startPart + ELLIPSIS + endPart;
+
+    fullTextEl.textContent = truncated;
+    if (fullTextEl.scrollWidth <= containerWidth) {
+      bestStart = mid;
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  if (bestStart === 0) {
+    fullTextEl.textContent = ELLIPSIS + endPart;
+    if (fullTextEl.scrollWidth <= containerWidth) {
+      return ELLIPSIS + endPart;
+    }
+    return endPart;
+  }
+
+  return text.slice(0, bestStart) + ELLIPSIS + endPart;
+}
+
+const SmartTextTruncate = memo(function SmartTextTruncate({
   children,
   className,
   ...props
 }: SmartTextTruncateProps) {
   const containerRef = useRef<HTMLSpanElement>(null);
   const fullTextRef = useRef<HTMLSpanElement>(null);
+  const lastMeasuredWidthRef = useRef(0);
+  const childrenRef = useRef(children);
+  childrenRef.current = children;
   const [displayText, setDisplayText] = useState<string>(
     typeof children === 'string' ? children : '',
   );
-  const [resizeTrigger, setResizeTrigger] = useState(0);
+  const displayTextRef = useRef(displayText);
+  displayTextRef.current = displayText;
 
-  useLayoutEffect(() => {
+  const recalc = useCallback(() => {
+    if (getIsFastMode(getGlobalState().store)) {
+      return;
+    }
+
     const container = containerRef.current;
     const fullText = fullTextRef.current;
+    const text = childrenRef.current;
 
-    if (!container || !fullText || typeof children !== 'string') {
+    if (!container || !fullText || typeof text !== 'string') {
       return;
     }
 
-    const text = children;
-
-    // If text is shorter than END_CHARS_COUNT, no truncation needed
     if (text.length <= END_CHARS_COUNT) {
-      setDisplayText(text);
+      if (displayTextRef.current !== text) {
+        setDisplayText(text);
+      }
       return;
     }
 
-    // Measure container width
     const containerWidth = container.clientWidth;
     if (containerWidth === 0) {
-      // Container not yet rendered, keep current text
       return;
     }
 
-    // Measure full text width
-    fullText.textContent = text;
-    const fullTextWidth = fullText.scrollWidth;
-
-    // If text fits, show full text
-    if (fullTextWidth <= containerWidth) {
-      setDisplayText(text);
+    if (
+      containerWidth === lastMeasuredWidthRef.current &&
+      lastMeasuredWidthRef.current !== 0
+    ) {
       return;
     }
 
-    // Calculate truncated text: <start>...<last 10 chars>
-    const endPart = text.slice(-END_CHARS_COUNT);
+    lastMeasuredWidthRef.current = containerWidth;
+    const nextText = computeTruncatedText(fullText, text, containerWidth);
 
-    // Binary search for optimal start length
-    let left = 0;
-    let right = text.length - END_CHARS_COUNT;
-    let bestStart = 0;
-
-    while (left <= right) {
-      const mid = Math.floor((left + right) / 2);
-      const startPart = text.slice(0, mid);
-      const truncated = startPart + ELLIPSIS + endPart;
-
-      fullText.textContent = truncated;
-      const truncatedWidth = fullText.scrollWidth;
-
-      if (truncatedWidth <= containerWidth) {
-        bestStart = mid;
-        left = mid + 1;
-      } else {
-        right = mid - 1;
-      }
+    if (nextText !== displayTextRef.current) {
+      setDisplayText(nextText);
     }
+  }, []);
 
-    // Ensure we have at least some start text
-    if (bestStart === 0) {
-      // If even just ellipsis + end doesn't fit, show only end part
-      fullText.textContent = ELLIPSIS + endPart;
-      if (fullText.scrollWidth <= containerWidth) {
-        setDisplayText(ELLIPSIS + endPart);
-      } else {
-        // Last resort: show only end part without ellipsis
-        setDisplayText(endPart);
-      }
-    } else {
-      setDisplayText(text.slice(0, bestStart) + ELLIPSIS + endPart);
-    }
-  }, [children, resizeTrigger]);
-
-  // Handle ResizeObserver for container resizing
   useLayoutEffect(() => {
+    lastMeasuredWidthRef.current = 0;
+    recalc();
+  }, [children, recalc]);
+
+  useLayoutEffect(() => {
+    ensureResizeRootListeners();
+    const g = getGlobalState();
+    g.recalcCallbacks.add(recalc);
+    return () => {
+      g.recalcCallbacks.delete(recalc);
+    };
+  }, [recalc]);
+
+  useLayoutEffect(() => {
+    ensureResizeRootListeners();
     const container = containerRef.current;
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
-    const resizeObserver = new ResizeObserver(() => {
-      // Trigger recalculation by updating resizeTrigger
-      setResizeTrigger(prev => prev + 1);
-    });
-
-    resizeObserver.observe(container);
+    observeWidthProbe(container);
 
     return () => {
-      resizeObserver.disconnect();
+      unobserveWidthProbe(container);
     };
   }, []);
 
@@ -115,27 +378,18 @@ function SmartTextTruncate({
   }
 
   return (
-    <span
-      ref={containerRef}
-      className={className}
-      {...props}
-      style={{ position: 'relative', ...props.style }}
-    >
-      {displayText}
-      <span
-        ref={fullTextRef}
-        style={{
-          position: 'absolute',
-          visibility: 'hidden',
-          whiteSpace: 'nowrap',
-          top: '-9999px',
-        }}
-        aria-hidden="true"
-      >
+    <span ref={containerRef} className={cn(S.root, className)} {...props}>
+      <span className={S.measuredLabel}>{displayText || children}</span>
+      <span className={S.liveLabel}>{children}</span>
+      <span ref={fullTextRef} className={S.fullText} aria-hidden="true">
         {children}
       </span>
     </span>
   );
-}
+});
 
-export { SmartTextTruncate };
+export {
+  SmartTextTruncate,
+  notifyPanelWidthDragStart,
+  notifyPanelWidthDragEnd,
+};

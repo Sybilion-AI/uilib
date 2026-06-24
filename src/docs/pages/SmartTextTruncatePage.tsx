@@ -10,6 +10,13 @@ import S from './SmartTextTruncatePage.styl';
 const LONG =
   'Very-long-identifier-that-might-not-fit-in-a-narrow-container-without-smart-truncation';
 
+const LIST_ITEMS = Array.from({ length: 50 }, (_, index) => {
+  const suffix = ['Constraints', 'Ontraction', 'Market Risk', 'City Protests'][
+    index % 4
+  ];
+  return `Impact — Impact Report: Professional Beauty Segment Analysis ${index + 1} ${suffix} Index`;
+});
+
 export default function SmartTextTruncatePage() {
   return (
     <>
@@ -21,8 +28,21 @@ export default function SmartTextTruncatePage() {
       />
       <DocsGuidance source={smartTextTruncateGuidance} />
       <PageContentSection>
-        <div className={S.resizableDemo}>
+        <p className={S.sectionLabel}>Single item</p>
+        <div className={S.resizableDemo} data-smart-text-truncate-resize-root>
           <SmartTextTruncate className={S.demoText}>{LONG}</SmartTextTruncate>
+        </div>
+
+        <p className={S.sectionLabel}>List stress test (50 items)</p>
+        <div
+          className={S.resizableListDemo}
+          data-smart-text-truncate-resize-root
+        >
+          {LIST_ITEMS.map(label => (
+            <SmartTextTruncate key={label} className={S.demoText}>
+              {label}
+            </SmartTextTruncate>
+          ))}
         </div>
       </PageContentSection>
     </>

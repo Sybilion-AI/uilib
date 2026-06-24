@@ -18,7 +18,11 @@ import type { ButtonProps } from '#uilib/components/ui/Button/Button.types';
 import { Logo } from '#uilib/components/ui/Logo/Logo';
 import { Separator } from '#uilib/components/ui/Separator';
 import { Sheet, SheetContent, SheetTitle } from '#uilib/components/ui/Sheet';
-import { SmartTextTruncate } from '#uilib/components/ui/SmartTextTruncate/SmartTextTruncate';
+import {
+  SmartTextTruncate,
+  notifyPanelWidthDragEnd,
+  notifyPanelWidthDragStart,
+} from '#uilib/components/ui/SmartTextTruncate/SmartTextTruncate';
 import {
   Tooltip,
   TooltipContent,
@@ -256,8 +260,17 @@ function SidebarProvider({
         chatPanelOpen: chatPanelOpenRef.current,
         chatWidthPx: chatWidthRef.current,
       });
+      sidebarWidthRef.current = next;
+
+      // Live drag: update CSS var only — avoid re-rendering the whole nav tree each frame.
+      if (wrapperRef.current) {
+        wrapperRef.current.style.setProperty('--sidebar-width', `${next}px`);
+      }
+
+      if (!persist) return;
+
       _setSidebarWidthPx(next);
-      if (persist && allowPersistSidebarWidth) {
+      if (allowPersistSidebarWidth) {
         LS.set(sidebarLsKey, next);
       }
     },
@@ -723,6 +736,7 @@ function PanelResizeHandle({
 
   const handleDrag = useCallback(
     (delta: Delta) => {
+      notifyPanelWidthDragStart();
       const shellW = getShellWidth();
       if (shellW <= 0) return;
       const raw =
@@ -747,6 +761,7 @@ function PanelResizeHandle({
   const handleDragEnd = useCallback(
     (e: PointerEvent) => {
       onDragComplete?.(lastRawRef.current);
+      notifyPanelWidthDragEnd();
       try {
         handleRef.current?.releasePointerCapture(e.pointerId);
       } catch {
@@ -1054,6 +1069,7 @@ function SidebarMenuSubButton({
   tooltip,
   className,
   onClick,
+  children,
   ...props
 }: ComponentProps<'a'> & {
   asChild?: boolean;
@@ -1080,7 +1096,11 @@ function SidebarMenuSubButton({
       className={cn(S.sidebarMenuSubButton, S[`size-${size}`], className)}
       onClick={handleClick}
       {...props}
-    />
+    >
+      <SmartTextTruncate className={S.sidebarMenuSubButtonLabel}>
+        {children}
+      </SmartTextTruncate>
+    </Comp>
   );
 
   if (!tooltip) return button;

@@ -29,6 +29,7 @@ interface CssExports {
   sidebarMenuSkeletonText: string;
   sidebarMenuSub: string;
   sidebarMenuSubButton: string;
+  sidebarMenuSubButtonLabel: string;
   sidebarMenuSubItem: string;
   sidebarNone: string;
   sidebarRail: string;
