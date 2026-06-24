@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.14](https://github.com/Mir-Insight/uilib/compare/v1.4.13...v1.4.14) (2026-06-24)
+
+
+### Features
+
+* Sidebar - Menu button addon slot ([cc38622](https://github.com/Mir-Insight/uilib/commit/cc38622bb27c87c080b18303180cda5fd895a331))
+
 ### [1.4.13](https://github.com/Mir-Insight/uilib/compare/v1.4.12...v1.4.13) (2026-06-24)
 
 
