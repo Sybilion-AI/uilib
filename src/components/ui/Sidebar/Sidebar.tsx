@@ -949,9 +949,11 @@ function SidebarMenuButton({
   className,
   icon,
   children,
+  addon,
   ...props
 }: Omit<ButtonProps, 'icon'> & {
   icon?: React.ReactNode;
+  addon?: React.ReactNode;
   isActive?: boolean;
   /** When true, renders an expand/collapse chevron (requires a non–asChild button). */
   hasSubItems?: boolean;
@@ -975,6 +977,13 @@ function SidebarMenuButton({
     </span>
   ) : null;
 
+  const userContent = (
+    <>
+      {label}
+      {addon}
+    </>
+  );
+
   return (
     <Button
       asChild={effectiveAsChild}
@@ -993,10 +1002,10 @@ function SidebarMenuButton({
     >
       {icon}
       {effectiveAsChild ? (
-        label
+        userContent
       ) : (
         <>
-          {label}
+          {userContent}
           {chevron}
         </>
       )}
@@ -1070,12 +1079,14 @@ function SidebarMenuSubButton({
   className,
   onClick,
   children,
+  addon,
   ...props
 }: ComponentProps<'a'> & {
   asChild?: boolean;
   size?: 'sm' | 'md' | 'lg';
   isActive?: boolean;
   tooltip?: string | ComponentProps<typeof TooltipContent>;
+  addon?: React.ReactNode;
 }) {
   const Comp = asChild ? Slot : 'a';
   const { isOpen } = useSidebarState();
@@ -1100,6 +1111,7 @@ function SidebarMenuSubButton({
       <SmartTextTruncate className={S.sidebarMenuSubButtonLabel}>
         {children}
       </SmartTextTruncate>
+      {addon}
     </Comp>
   );
 

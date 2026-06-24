@@ -28,12 +28,6 @@ export default function SmartTextTruncatePage() {
       />
       <DocsGuidance source={smartTextTruncateGuidance} />
       <PageContentSection>
-        <p className={S.sectionLabel}>Single item</p>
-        <div className={S.resizableDemo} data-smart-text-truncate-resize-root>
-          <SmartTextTruncate className={S.demoText}>{LONG}</SmartTextTruncate>
-        </div>
-
-        <p className={S.sectionLabel}>List stress test (50 items)</p>
         <div
           className={S.resizableListDemo}
           data-smart-text-truncate-resize-root

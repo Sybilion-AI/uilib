@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { Input } from '#uilib/components/ui/Input';
 import {
@@ -53,7 +53,7 @@ export function DocsSidebar() {
   const [sidebarSearch, setSidebarSearch] = useState('');
   const q = sidebarSearch.trim().toLowerCase();
   const isFiltering = q.length > 0;
-
+  const navigate = useNavigate();
   const activeSection = useMemo(
     () => sectionForPathname(location.pathname),
     [location.pathname],
@@ -78,6 +78,14 @@ export function DocsSidebar() {
       else next.add(section);
       return next;
     });
+  };
+
+  const handleSubItemClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    to: string,
+  ) => {
+    e.preventDefault();
+    navigate(to);
   };
 
   return (
@@ -126,7 +134,7 @@ export function DocsSidebar() {
                   >
                     {section}
                   </SidebarMenuButton>
-                  {isExpanded ? (
+                  {isExpanded && (
                     <SidebarMenuSub>
                       {filteredEntries.map(e => {
                         const to = `/docs/${e.slug}`;
@@ -134,19 +142,17 @@ export function DocsSidebar() {
                         return (
                           <SidebarMenuSubItem key={e.slug}>
                             <SidebarMenuSubButton
-                              asChild
                               isActive={isActive}
                               size="md"
+                              onClick={e => handleSubItemClick(e, to)}
                             >
-                              <Link to={to}>
-                                <SmartTextTruncate>{e.title}</SmartTextTruncate>
-                              </Link>
+                              {e.title}
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
                         );
                       })}
                     </SidebarMenuSub>
-                  ) : null}
+                  )}
                 </SidebarMenuItem>
               );
             })}

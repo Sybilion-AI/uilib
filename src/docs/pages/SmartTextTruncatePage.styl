@@ -3,29 +3,16 @@
   color var(--muted-foreground)
   font-size 0.875rem
 
-.resizableDemo
-  resize horizontal
-  overflow auto
-  width 200px
-  min-width 60px
-  max-width 100%
-  border 1px solid var(--border)
-  border-radius var(--p-2)
-  padding var(--p-2)
-  margin-bottom var(--p-6)
-
 .resizableListDemo
   resize horizontal
   overflow auto
   width 280px
   min-width 120px
   max-width 100%
+  max-height 300px
   border 1px solid var(--border)
   border-radius var(--p-2)
   padding var(--p-2)
-  display flex
-  flex-direction column
-  gap var(--p-1)
 
   &:active
     border 1px solid var(--brand-color)
@@ -33,3 +20,4 @@
 .demoText
   display block
   width 100%
+  margin-bottom var(--p-1)
