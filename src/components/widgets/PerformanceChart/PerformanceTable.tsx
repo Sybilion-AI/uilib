@@ -87,6 +87,7 @@ interface PerformanceTableProps {
   /** Last row with Add custom data (hidden when custom row already present); per-horizon + spaghetti. */
   showAddEditCustomDataButton?: boolean;
   addEditCustomDataDisabled?: boolean;
+  fullWidth?: boolean;
 }
 
 // Calculate color for a model key
@@ -103,6 +104,7 @@ export function PerformanceTable({
   onEditCustomPerformance,
   showAddEditCustomDataButton = false,
   addEditCustomDataDisabled = false,
+  fullWidth = true,
 }: PerformanceTableProps) {
   // Separate Sybilion AI model from drift model
   const { sybilionModel, driftModel } = useMemo(() => {
@@ -197,7 +199,7 @@ export function PerformanceTable({
       <div className={S.tableWrapper}>
         <PageXScroll
           size="md"
-          fullWidth
+          fullWidth={fullWidth}
           innerClassName={S.tableContainer}
           scrollbarClassName={S.scrollbar}
         >

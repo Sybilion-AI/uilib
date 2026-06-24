@@ -147,6 +147,7 @@ export type PerformanceChartProps = {
   onEditCustomPerformance?: () => void;
   showAddEditCustomDataButton?: boolean;
   addEditCustomDataDisabled?: boolean;
+  tableFullWidth?: boolean;
 
   hiddenSeries?: Set<string>;
   onToggleLegendSeries?: (key: string) => void;
@@ -193,6 +194,7 @@ export function PerformanceChart({
   onEditCustomPerformance,
   showAddEditCustomDataButton = false,
   addEditCustomDataDisabled = false,
+  tableFullWidth,
 
   hiddenSeries: hiddenSeriesProp,
   onToggleLegendSeries,
@@ -1262,6 +1264,7 @@ export function PerformanceChart({
             onEditCustomPerformance={onEditCustomPerformance}
             showAddEditCustomDataButton={showAddEditCustomDataButton}
             addEditCustomDataDisabled={addEditCustomDataDisabled}
+            fullWidth={tableFullWidth}
           />
         )}
       </Tabs>
