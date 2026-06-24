@@ -134,6 +134,10 @@ export type PerformanceChartProps = {
     meta?: { viewTab: PerformanceViewTab },
   ) => void;
 
+  /** Controlled Per horizon / Spaghetti tab; omit for internal state. */
+  viewTab?: PerformanceViewTab;
+  onViewTabChange?: (tab: PerformanceViewTab) => void;
+
   isDarkTheme?: boolean;
   className?: string;
   seriesInitKey?: string;
@@ -177,6 +181,9 @@ export function PerformanceChart({
   timeRange: timeRangeProp,
   onTimeRangeChange,
 
+  viewTab: viewTabProp,
+  onViewTabChange,
+
   isDarkTheme = false,
   className,
   seriesInitKey,
@@ -192,7 +199,8 @@ export function PerformanceChart({
   onEnsureSeriesVisible,
   onHiddenSeriesChange,
 }: PerformanceChartProps) {
-  const [viewTab, setViewTab] = useState<PerformanceViewTab>('perHorizon');
+  const [internalViewTab, setInternalViewTab] =
+    useState<PerformanceViewTab>('perHorizon');
   const [pinMonth, setPinMonth] = useState<string | undefined>(undefined);
   const [spaghettiTimeRange, setSpaghettiTimeRange] = useState<string>('All');
   const [perHorizonChartTimeRange, setPerHorizonChartTimeRange] =
@@ -212,6 +220,17 @@ export function PerformanceChart({
 
   const hiddenSeriesControlled = hiddenSeriesProp !== undefined;
   const hiddenSeries = hiddenSeriesProp ?? internalHiddenSeries;
+  const viewTab = viewTabProp ?? internalViewTab;
+
+  const handleViewTabChange = useCallback(
+    (tab: PerformanceViewTab) => {
+      onViewTabChange?.(tab);
+      if (viewTabProp === undefined) {
+        setInternalViewTab(tab);
+      }
+    },
+    [onViewTabChange, viewTabProp],
+  );
 
   const setHiddenSeries = useCallback(
     (update: Set<string> | ((prev: Set<string>) => Set<string>)) => {
@@ -1137,7 +1156,7 @@ export function PerformanceChart({
         value={viewTab}
         onValueChange={v => {
           if (v === 'perHorizon' || v === 'spaghetti') {
-            setViewTab(v);
+            handleViewTabChange(v);
           }
         }}
         className={S.viewTabs}
