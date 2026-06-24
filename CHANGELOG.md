@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.12](https://github.com/Mir-Insight/uilib/compare/v1.4.11...v1.4.12) (2026-06-24)
+
+
+### Features
+
+* ChatSheet - support separate prop triggerIcon; if no label - trigger is square ([ff62aa4](https://github.com/Mir-Insight/uilib/commit/ff62aa4dd38c34548ee32629c99f59e5a2beb256))
+* DriversComparisonChart - Controlled hidden series ([952eca4](https://github.com/Mir-Insight/uilib/commit/952eca429d44452f2dda6f77a04fe69bb3a458ce))
+* PageHeader - Add optional sticky layout ([179c22f](https://github.com/Mir-Insight/uilib/commit/179c22fbb4c55a5109054f45798ec707f65e7a5a))
+* PerformanceChart - Controlled view tab ([3bd4453](https://github.com/Mir-Insight/uilib/commit/3bd4453942bfd8a46e99338e67883e95a30be702))
+* Renamer - better inlined edit button ([a23f519](https://github.com/Mir-Insight/uilib/commit/a23f519dc048e678b3043b9b715d0ceb8cac2939))
+
+
+### Bug Fixes
+
+* Button - Adjust icon button widths ([fa5c855](https://github.com/Mir-Insight/uilib/commit/fa5c85578075839d875d2181da328f23c28f62b7))
+* Sidebar - Sidebar trigger layout ([cb0447d](https://github.com/Mir-Insight/uilib/commit/cb0447d8a199bdc56f94731101a10b2047da3acc))
+
 ### [1.4.11](https://github.com/Mir-Insight/uilib/compare/v1.4.10...v1.4.11) (2026-06-23)
 
 
