@@ -1,0 +1,45 @@
+@import '../../../../lib/theme.styl';
+
+// Base sidebar wrapper styles (row: main app | chat panel mount)
+.sidebarWrapper
+  display flex
+  flex-direction row
+  align-items stretch
+  height 100%
+  width 100%
+  min-height 0
+
+  :global(#page-sidebar-actions)
+    min-height 100%
+
+  @media (max-width MOBILE)
+    flex-direction column
+    // Pin shell height so PageScroll (was 100vh) does not push chat below the viewport
+    height 100dvh
+    max-height 100dvh
+
+// Left: full app grid (PageScroll)
+.sidebarMainShell
+  flex 1
+  min-width 0
+  min-height 0
+  display flex
+  flex-direction column
+
+// Right: AI chat portal target
+.chatPanelMount
+  flex 0 0 var(--chat-panel-width, 0px)
+  width var(--chat-panel-width, 0px)
+  min-width 0
+  min-height 0
+  overflow hidden
+  border-left 1px solid var(--border)
+  background var(--background)
+
+  @media (max-width MOBILE)
+    flex 0 0 var(--chat-panel-height, 0px)
+    width 100%
+    height var(--chat-panel-height, 0px)
+    border-left none
+    border-top 1px solid var(--border)
+    transition flex-basis 0.2s ease, height 0.2s ease

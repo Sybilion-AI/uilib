@@ -1,0 +1,73 @@
+@import '../../../../lib/theme.styl';
+
+.sidebarMenuAction
+  color var(--sidebar-foreground)
+  position absolute
+  top var(--p-2)
+  right var(--p-2)
+  display flex
+  aspect-ratio 1
+  width 1.25rem
+  align-items center
+  justify-content center
+  border-radius 0.375rem
+  padding 0
+  outline none
+  opacity 0
+  cursor pointer
+  transition transform
+
+  &::before
+    content ""
+    position absolute
+    right 0
+    width calc(100% + var(--p-4))
+    height 100%
+    background-image linear-gradient(to left, var(--sidebar-accent) 70%, transparent 100%)
+    transition opacity 0.2s ease-in-out
+    pointer-events none
+
+  [data-slot="sidebar-menu-sub-item"]:hover &
+    opacity 1
+
+  &:focus-visible
+    box-shadow 0 0 0 2px var(--sidebar-ring)
+
+  & > svg
+    pointer-events none
+    z-index 1
+    width 1rem
+    height 1rem
+    flex-shrink 0
+    opacity .5
+    transition opacity 0.2s ease-in-out
+
+  &:hover > svg
+    opacity 1
+
+  &::after
+    content ""
+    position absolute
+    inset -0.5rem
+    @media (min-width 768px)
+      display none
+
+  &[data-size="sm"]
+    top 0.25rem
+  &[data-size="md"]
+    top 0.375rem
+  &[data-size="lg"]
+    top 0.625rem
+
+  &[data-collapsible="icon"]
+    display none
+
+  &.showOnHover
+    &[data-active="true"]
+      color var(--sidebar-accent-foreground)
+    &[data-state="open"]
+      opacity 1
+    @media (min-width 768px)
+      opacity 0
+      &:focus-within, &:hover
+        opacity 1

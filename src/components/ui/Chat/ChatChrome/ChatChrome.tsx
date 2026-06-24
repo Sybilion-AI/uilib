@@ -12,7 +12,7 @@ import { PaperPlaneRightIcon, X } from '@phosphor-icons/react';
 import { Button } from '../../Button';
 import { DropZone } from '../../DropZone/DropZone';
 import { PanelResizeHandle } from '../../Sidebar/Sidebar';
-import SidebarStem from '../../Sidebar/Sidebar.styl';
+import SidebarResizeStem from '../../Sidebar/SidebarResizeHandle/SidebarResizeHandle.styl';
 import { Chat } from '../Chat';
 import { type ChatAttachmentDropItem, MessageRole } from '../Chat.types';
 import {
@@ -165,7 +165,10 @@ export function ChatChrome({
           getShellWidth={resizeHandle.getShellWidth}
           onDragWidth={resizeHandle.onDragWidth}
           onDragComplete={resizeHandle.onDragComplete}
-          className={cn(SidebarStem.sidebarResizeHandle, S.chatResizeHandle)}
+          className={cn(
+            SidebarResizeStem.sidebarResizeHandle,
+            S.chatResizeHandle,
+          )}
         />
       ) : null}
       <div className={S.panelHeader}>

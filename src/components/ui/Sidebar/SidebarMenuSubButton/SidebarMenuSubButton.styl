@@ -1,0 +1,71 @@
+@import '../../../../lib/theme.styl';
+
+.sidebarMenuSubButton > span
+  text-transform capitalize
+  min-width 0
+
+  &:first-child
+    flex-grow 1
+
+.sidebarMenuSubButton
+  display flex
+  align-items center
+  gap var(--p-1)
+
+  width calc(100% - var(--p-3))
+  height var(--p-9)
+  min-width 0
+  padding var(--p-2) var(--p-3)
+  margin-left var(--p-3)
+
+  overflow hidden
+  transform translateX(-1px)
+  border-radius var(--p-3)
+  color var(--sidebar-foreground)
+  outline none
+  cursor pointer
+  text-decoration none
+
+  &:visited
+    color var(--sidebar-foreground)
+
+  &:hover
+    text-decoration none
+
+  [data-slot="sidebar-menu-sub-item"]:hover &, [data-slot="sidebar-menu-sub-item"]:active &
+    background-color var(--sidebar-accent)
+    color var(--sidebar-accent-foreground)
+
+  &:focus-visible
+    box-shadow 0 0 0 2px var(--sidebar-ring)
+
+  &:disabled, &[aria-disabled="true"]
+    pointer-events none
+    opacity 0.5
+
+  &[data-active="true"]
+    background-color var(--sidebar-accent)
+    color var(--sidebar-accent-foreground)
+
+    &:visited
+      color var(--sidebar-accent-foreground)
+
+  &[data-collapsible="icon"]
+    display none
+
+  & > svg
+    width 1rem
+    height 1rem
+    flex-shrink 0
+    color var(--sidebar-accent-foreground)
+
+  &.size-sm
+    // size hook for API parity
+  &.size-md
+    // size hook for API parity
+  &.size-lg
+    // size hook for API parity
+
+.sidebarMenuSubButtonLabel
+  flex-grow 1
+  min-width 0

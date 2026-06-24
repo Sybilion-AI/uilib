@@ -1,0 +1,42 @@
+@import '../../../../lib/theme.styl';
+
+.sidebarRail
+  position absolute
+  inset-y 0
+  z-index 20
+  display hidden
+  width 1rem
+  // transform translateX(-50%)
+  transition all ease-out
+  &:hover::after
+    background-color var(--sidebar-border)
+  &[data-side="left"]
+    right -1rem
+  &[data-side="right"]
+    left 0
+  &::after
+    content ""
+    position absolute
+    inset-y 0
+    left 50%
+    width 2px
+  @media (min-width 640px)
+    display flex
+  &[data-side="left"]
+    cursor w-resize
+  &[data-side="right"]
+    cursor e-resize
+  &[data-side="left"][data-state="collapsed"]
+    cursor e-resize
+  &[data-side="right"][data-state="collapsed"]
+    cursor w-resize
+  &[data-collapsible="offcanvas"]
+    transform translateX(0)
+    &:hover
+      background-color var(--sidebar)
+    &::after
+      left 100%
+  &[data-side="left"][data-collapsible="offcanvas"]
+    right -0.5rem
+  &[data-side="right"][data-collapsible="offcanvas"]
+    left -0.5rem

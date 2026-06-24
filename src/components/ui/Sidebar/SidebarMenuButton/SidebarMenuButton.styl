@@ -1,0 +1,107 @@
+@import '../../../../lib/theme.styl';
+
+.sidebarMenuButton > span
+  text-transform capitalize
+  min-width 0
+
+  &:first-child
+    flex-grow 1
+
+.sidebarMenuButton
+  display flex
+  width 100%
+  align-items center
+  justify-content  flex-start
+  gap var(--p-2)
+  overflow hidden
+  border-radius var(--p-3)
+  padding var(--p-6) var(--p-3)
+  text-align left
+  outline none
+  cursor pointer
+  transition all
+  color var(--sidebar-foreground)
+  text-decoration none
+
+  &:visited
+    color var(--sidebar-foreground)
+
+  &:hover
+    text-decoration none
+
+  [data-slot="sidebar-menu-sub-item"]:hover &
+  [data-slot="sidebar-menu-sub-item"]:active &
+  [data-slot="sidebar-menu-sub-item"][data-state="open"] &
+    background-color var(--sidebar-accent)
+    color var(--sidebar-accent-foreground)
+
+  &:focus-visible
+    box-shadow 0 0 0 2px var(--sidebar-ring)
+
+  &:disabled, &[aria-disabled="true"]
+    pointer-events none
+    opacity 0.5
+
+  &[data-active="true"]
+    background-color var(--sidebar-accent)
+    font-weight 500
+    color var(--sidebar-accent-foreground)
+
+  &[data-collapsible="icon"]
+    width 2rem !important
+    height 2rem !important
+    padding 0.5rem !important
+
+  & > svg
+    width var(--p-5)
+    height var(--p-5)
+    flex-shrink 0
+
+  &.size-sm
+    height 1.75rem
+  &.size-md
+    height var(--p-12)
+  &.size-lg
+    height 3rem
+    &[data-collapsible="icon"]
+      padding 0 !important
+
+  &.variant-outline
+    background-color var(--background)
+    box-shadow 0 0 0 1px var(--sidebar-border)
+    &:hover
+      background-color var(--sidebar-accent)
+      color var(--sidebar-accent-foreground)
+      box-shadow 0 0 0 1px var(--sidebar-accent)
+
+.sidebarMenuButtonLabel
+  flex-grow 1
+
+.sidebarMenuButtonChevron
+  margin-left auto
+  display flex
+  flex-shrink 0
+  align-items center
+  transition transform 0.1s ease-out
+  opacity 0.5
+
+  .sidebarMenuButton:hover &
+    opacity 1
+
+  &.expanded
+    transform rotate(90deg)
+
+  & > svg
+    width var(--p-5)
+    height var(--p-5)
+
+.sidebarMenuButtonCta
+  display flex
+  width 100%
+  justify-content flex-start
+  text-align left
+
+  & > svg
+    width var(--p-5)
+    height var(--p-5)
+    flex-shrink 0

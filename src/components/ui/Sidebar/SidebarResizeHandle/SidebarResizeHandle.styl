@@ -1,0 +1,37 @@
+@import '../../../../lib/theme.styl';
+
+.sidebarResizeHandle
+  position absolute
+  top -200px
+  // bottom 40px
+  height calc(100vh + 200px - var(--app-banner-height, 0px))
+  z-index 30
+  width 5px
+  border-radius 2.5px
+  user-select none
+  touch-action none
+  background-color transparent
+  transition opacity 150ms ease-out
+  background-color var(--page-color)
+  opacity 0
+
+  &::before
+    content ""
+    position absolute
+    right 0
+    height 100%
+    width 30px
+    cursor col-resize
+
+  &[data-side="left"]
+    right 2px
+  &[data-side="right"]
+    left 0
+  &:hover
+    opacity 1
+  &:active
+    opacity 0
+
+  [data-full-height-resizer] &
+    top -80px
+    height calc(100vh - var(--gap-top) * -1 - var(--app-banner-height, 0px))
