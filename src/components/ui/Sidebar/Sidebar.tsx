@@ -18,6 +18,7 @@ import type { ButtonProps } from '#uilib/components/ui/Button/Button.types';
 import { Logo } from '#uilib/components/ui/Logo/Logo';
 import { Separator } from '#uilib/components/ui/Separator';
 import { Sheet, SheetContent, SheetTitle } from '#uilib/components/ui/Sheet';
+import { SmartTextTruncate } from '#uilib/components/ui/SmartTextTruncate/SmartTextTruncate';
 import {
   Tooltip,
   TooltipContent,
@@ -45,7 +46,7 @@ import { getCookie, setCookie } from '#uilib/lib/cookie';
 import { getCookiePreferences } from '#uilib/lib/cookie-consent/cookie-consent';
 import { LS, Scroll } from '@homecode/ui';
 import { Slot } from '@radix-ui/react-slot';
-import { PanelLeft } from 'lucide-react';
+import { ChevronDown, ChevronRight, PanelLeft } from 'lucide-react';
 
 import S from './Sidebar.styl';
 
@@ -926,26 +927,65 @@ function SidebarMenuItem({ className, ...props }: ComponentProps<'li'>) {
 function SidebarMenuButton({
   asChild = false,
   isActive = false,
+  hasSubItems = false,
+  isExpanded = false,
   variant = 'ghost',
   size = 'sm',
   className,
+  icon,
+  children,
   ...props
-}: ButtonProps & { isActive?: boolean }) {
+}: Omit<ButtonProps, 'icon'> & {
+  icon?: React.ReactNode;
+  isActive?: boolean;
+  /** When true, renders an expand/collapse chevron (requires a non–asChild button). */
+  hasSubItems?: boolean;
+  /** Chevron direction when `hasSubItems` is true. */
+  isExpanded?: boolean;
+}) {
+  const effectiveAsChild = asChild && !hasSubItems;
+
+  const label = (
+    <SmartTextTruncate className={S.sidebarMenuButtonLabel}>
+      {children}
+    </SmartTextTruncate>
+  );
+
+  const chevron = hasSubItems ? (
+    <span
+      className={cn(S.sidebarMenuButtonChevron, isExpanded && S.expanded)}
+      aria-hidden="true"
+    >
+      <ChevronRight size={16} />
+    </span>
+  ) : null;
+
   return (
     <Button
-      asChild={asChild}
+      asChild={effectiveAsChild}
       variant={variant}
       size={size}
       data-slot="sidebar-menu-button"
       data-sidebar="menu-button"
       data-active={isActive}
+      aria-expanded={hasSubItems ? isExpanded : undefined}
       className={cn(
         variant === 'default' ? S.sidebarMenuButtonCta : S.sidebarMenuButton,
         S[`size-${size}`],
         className,
       )}
       {...props}
-    />
+    >
+      {icon}
+      {effectiveAsChild ? (
+        label
+      ) : (
+        <>
+          {label}
+          {chevron}
+        </>
+      )}
+    </Button>
   );
 }
 

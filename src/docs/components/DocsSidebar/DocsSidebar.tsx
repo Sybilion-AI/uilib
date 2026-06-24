@@ -14,7 +14,6 @@ import {
   SidebarMenuSubItem,
 } from '#uilib/components/ui/Sidebar/Sidebar';
 import { SmartTextTruncate } from '#uilib/components/ui/SmartTextTruncate';
-import { ChevronDown, ChevronRight } from 'lucide-react';
 
 import { DOC_REGISTRY, DOC_SECTION_ORDER } from '../../registry';
 import S from './DocsSidebar.styl';
@@ -45,18 +44,6 @@ function entryMatchesQuery(
   return (
     entry.title.toLowerCase().includes(q) ||
     entry.slug.toLowerCase().includes(q)
-  );
-}
-
-function renderSectionChevron(isExpanded: boolean) {
-  return (
-    <div>
-      {isExpanded ? (
-        <ChevronDown size={12} strokeWidth={1.5} />
-      ) : (
-        <ChevronRight size={12} strokeWidth={1.5} />
-      )}
-    </div>
   );
 }
 
@@ -134,11 +121,10 @@ export function DocsSidebar() {
                       if (!isFiltering) toggleSection(section);
                     }}
                     isActive={sectionHasActive}
+                    hasSubItems={filteredEntries.length > 0}
+                    isExpanded={isExpanded}
                   >
-                    <span>
-                      <SmartTextTruncate>{section}</SmartTextTruncate>
-                    </span>
-                    {isFiltering ? null : renderSectionChevron(isExpanded)}
+                    {section}
                   </SidebarMenuButton>
                   {isExpanded ? (
                     <SidebarMenuSub>

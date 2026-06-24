@@ -10,7 +10,7 @@ import {
   SidebarMenuSubItem,
 } from '#uilib/components/ui/Sidebar/Sidebar';
 import { SmartTextTruncate } from '#uilib/components/ui/SmartTextTruncate';
-import { ChevronDown, ChevronRight, PackageOpen } from 'lucide-react';
+import { PackageOpen } from 'lucide-react';
 
 import S from './SidebarDatasetsItemsGrouped.styl';
 import {
@@ -102,22 +102,16 @@ export function SidebarDatasetsItemsGrouped({
               <SidebarMenuButton
                 type="button"
                 isActive={parentActive}
+                hasSubItems
+                isExpanded={isExpanded}
                 onClick={() => toggleGroup(groupName)}
+                icon={<PackageOpen strokeWidth={1.5} size={16} />}
               >
-                <PackageOpen strokeWidth={1.5} size={16} />
-                <SmartTextTruncate>{groupName}</SmartTextTruncate>
-                <div className={S.chevronContainer}>
-                  {isExpanded ? (
-                    <ChevronDown size={12} />
-                  ) : (
-                    <ChevronRight size={12} />
-                  )}
-                </div>
+                {groupName}
               </SidebarMenuButton>
 
               {isExpanded && (
                 <SidebarMenuSub className={S.subMenuContainer}>
-                  <div className={S.subMenuBorder} />
                   {groupDatasets.map(dataset => (
                     <SidebarMenuSubItem
                       key={dataset.id}

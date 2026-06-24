@@ -67,7 +67,10 @@ const MOCK_DATASETS: SidebarDatasetsItemsGroupedDataset[] = [
     sale_price: '0',
     regions: [
       { id: 3, name: 'Europe' },
-      { id: 4, name: 'Germany' },
+      {
+        id: 4,
+        name: 'GermanyGermanyGermanyGermanyGermanyGermanyGermanyGermany',
+      },
     ],
     unit: { id: 1, name: 'MT' },
   },

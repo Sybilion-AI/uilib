@@ -286,7 +286,7 @@
   border-radius 0.375rem
   padding-left 0.25rem
   padding-right 0.25rem
-  font-size 0.75rem
+  // font-size 0.75rem
   font-weight 500
   user-select none
   &[data-size="sm"]
@@ -323,7 +323,7 @@
   position relative
   display flex
   flex-direction column
-  gap var(--p-2)
+  gap var(--p-1)
 
   min-width 0
   padding 0
@@ -339,9 +339,9 @@
   &::before
     content ''
     position absolute
-    left var(--p-5)
+    left 14px
     top 0
-    bottom 26px
+    bottom 0
     width 1px
     background var(--sidebar-border)
     pointer-events none
@@ -353,19 +353,7 @@
 .sidebarMenuSubItem
   position relative
   min-width 0
-  margin-left var(--p-6)
-
-  &::before
-    content ''
-    position absolute
-    left calc(var(--p-1) * -1)
-    top var(--p-2)
-    bottom 0
-    width var(--p-3)
-    height var(--p-3)
-    border-left 1px solid var(--sidebar-border)
-    border-bottom 1px solid var(--sidebar-border)
-    border-bottom-left-radius var(--p-2)
+  margin-left var(--p-4)
 
   a:hover
     text-decoration: none;
@@ -447,7 +435,6 @@
   border-radius var(--p-3)
   padding var(--p-6) var(--p-3)
   text-align left
-  font-size 0.875rem
   outline none
   cursor pointer
   transition all
@@ -484,11 +471,11 @@
     height 2rem !important
     padding 0.5rem !important
 
-  & > span
-    flex-grow 1
-    line-height 20px
-    white-space nowrap
-    overflow hidden
+  // & > span
+  //   flex-grow 1
+  //   line-height 20px
+  //   white-space nowrap
+  //   overflow hidden
 
   & > svg
     width var(--p-5)
@@ -498,13 +485,13 @@
   // Size variants
   &.size-sm
     height 1.75rem
-    font-size 0.75rem
+    // font-size 0.75rem
   &.size-md
     height var(--p-12)
-    font-size 0.875rem
+    // font-size 0.875rem
   &.size-lg
     height 3rem
-    font-size 0.875rem
+    // font-size 0.875rem
     &[data-collapsible="icon"]
       padding 0 !important
 
@@ -516,6 +503,23 @@
       background-color var(--sidebar-accent)
       color var(--sidebar-accent-foreground)
       box-shadow 0 0 0 1px var(--sidebar-accent)
+
+.sidebarMenuButtonLabel
+  flex-grow 1
+
+.sidebarMenuButtonChevron
+  margin-left auto
+  display flex
+  flex-shrink 0
+  align-items center
+  transition transform 0.1s ease-out
+
+  &.expanded
+    transform rotate(90deg)
+
+  & > svg
+    width var(--p-5)
+    height var(--p-5)
 
 // Full-width primary CTA in sidebar (uses ui/Button variant=default; avoids nav hover conflicts)
 .sidebarMenuButtonCta
@@ -604,18 +608,20 @@
 
 // Menu sub button variants
 .sidebarMenuSubButton
-  color var(--sidebar-foreground)
   display flex
+  align-items center
+  gap var(--p-1)
+
   width calc(100% - var(--p-3))
   height var(--p-9)
   min-width 0
-  transform translateX(-1px)
-  align-items center
-  gap var(--p-1)
+  padding var(--p-2) var(--p-3)
+  margin-left var(--p-1)
+
   overflow hidden
+  transform translateX(-1px)
   border-radius var(--p-3)
-  padding var(--p-1) var(--p-2)
-  margin-left var(--p-3)
+  color var(--sidebar-foreground)
   outline none
   cursor pointer
   text-decoration none
@@ -647,19 +653,19 @@
   &[data-collapsible="icon"]
     display none
 
-  & > span
-    flex-grow 1
-    flex-shrink 1
-    min-width 0
-    line-height 20px
-    white-space nowrap
-    overflow hidden
+  // & > span
+  //   flex-grow 1
+  //   flex-shrink 1
+  //   min-width 0
+  //   line-height 20px
+  //   white-space nowrap
+  //   overflow hidden
 
-    // Nested SmartTextTruncate (e.g. title pre-wrapped in app nav items)
-    & > span
-      display block
-      width 100%
-      min-width 0
+  //   // Nested SmartTextTruncate (e.g. title pre-wrapped in app nav items)
+  //   & > span
+  //     display block
+  //     width 100%
+  //     min-width 0
 
   & > svg
     width 1rem
@@ -668,12 +674,12 @@
     color var(--sidebar-accent-foreground)
 
   // Size variants
-  &.size-sm
-    font-size 0.75rem
-  &.size-md
-    font-size 0.875rem
-  &.size-lg
-    font-size 1rem
+  // &.size-sm
+  //   font-size 0.75rem
+  // &.size-md
+  //   font-size 0.875rem
+  // &.size-lg
+  //   font-size 1rem
 
 // View Transition API: opacity cross-fade is the UA default on old/new pseudos.
 // Setting animation-name below replaces that default; keyframes keep opacity + add blur.
