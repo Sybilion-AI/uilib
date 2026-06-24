@@ -15,10 +15,6 @@ ChartAreaInteractive is the full chart shell for time series data, combining an 
 
 - Pass loading while data is being fetched so the chart shows its skeleton state.
 
-## Report tile
-
-- `dataset_card` — host loads dataset + analysis; chart inside dashboard card.
-
 ## Host provides
 
 - `chartData`, `forecastData` built from API

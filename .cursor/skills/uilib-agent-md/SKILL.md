@@ -8,7 +8,7 @@ description: >
 
 # uilib AGENT.md authoring
 
-AGENT.md is the single source of truth for component guidance (Cursor agents, docs site, dashboard LLM prompt).
+AGENT.md is the single source of truth for **component-centric** guidance (Cursor agents, docs site, uilib glossary). Consumer apps (e.g. app dashboard-spec, reports) define tile→component mappings in their own glossaries — not in uilib AGENT.md.
 
 ## File placement
 
@@ -47,13 +47,9 @@ Compatible with `InteractiveContent variant="full"` in docs.
 
 ## Widget format
 
-Same as UI component, plus:
+Same as UI component, plus component-centric binding sections only:
 
 ```markdown
-## Report tile
-
-One line: tile type id and binding role, or "Not used in report tiles."
-
 ## Host provides
 
 - 3–5 bullets: data, callbacks, loading the host must pass
@@ -113,8 +109,10 @@ yarn build:agent-glossary --all   # from uilib root
 Outputs `dist/agent-glossary/`:
 
 - `workspace.index.md` / `content.index.md` — TOC with links (Cursor agent entrypoint)
-- `content.prompt.md` — embedded bodies for runtime dashboard LLM
+- `content.prompt.md` — embedded component bodies for content/report LLM prompts (uilib components only)
 - `*.generated.ts` — TS exports for app imports
+
+Consumers append tile→component mappings via `AGENT_GLOSSARY_APPEND` at build time (e.g. app dashboard-spec glossary).
 
 ## Docs site pattern
 

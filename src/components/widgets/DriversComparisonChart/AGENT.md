@@ -16,10 +16,6 @@ DriversComparisonChart plots a normalized target line against the normalized ser
 - Provide a statusHint when the payload is empty so users understand why the chart is blank.
 - Control viewTab from the page when an external Lagged/Overlapped switcher should stay in sync.
 
-## Report tile
-
-- `drivers_comparison_chart` — host loads normalized backtests payload + dataset historical.
-
 ## Host provides
 
 - `payload`: BacktestsComponentPayload from platform SDK (host fetch per analysis)

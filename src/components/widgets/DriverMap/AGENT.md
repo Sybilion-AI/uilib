@@ -18,10 +18,6 @@ DriverMap renders a world map with regional driver badges, a bottom strip for wo
 - Pass isLoading to both the map and the card so their loading states stay in sync.
 - Provide a driverSelector in DriverCard so users can page through drivers without using the map.
 
-## Report tile
-
-- `drivers_map` — tile resolves analysis id, fetches drivers, passes list + selection.
-
 ## Host provides
 
 - `drivers` as `DriverData[]` from analysis API

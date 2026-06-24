@@ -14,10 +14,6 @@ PerformanceChart is a widget for evaluating forecast accuracy. It plots per-hori
 
 - Wire the loading, empty, and hint props to your data-fetch state so the widget shows the right placeholder.
 
-## Report tile
-
-- `performance_chart` — host loads performance payload + dataset series.
-
 ## Host provides
 
 - `performanceData` (PerformanceChartPayload) and `historicalData` from performance API

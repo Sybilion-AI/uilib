@@ -146,7 +146,7 @@ function convertLegacyWidgetBody(existing) {
       continue;
     }
     const legacy = line.match(
-      /^(Renders|Use when|Not when|Host provides|Report tile|Requires|Empty\/loading):\s*(.*)$/i,
+      /^(Renders|Use when|Not when|Host provides|Requires|Empty\/loading):\s*(.*)$/i,
     );
     if (legacy) {
       const key = legacy[1].toLowerCase().replace(/\s+/g, ' ');
@@ -154,7 +154,6 @@ function convertLegacyWidgetBody(existing) {
         'use when': 'when to use',
         'not when': 'when not to use',
         'host provides': 'host provides',
-        'report tile': 'report tile',
         requires: 'requires',
         'empty/loading': 'empty/loading',
       };
@@ -184,7 +183,6 @@ function convertLegacyWidgetBody(existing) {
     'when not to use',
     'do',
     "don't",
-    'report tile',
     'host provides',
     'requires',
     'empty/loading',
