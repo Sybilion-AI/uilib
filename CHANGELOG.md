@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.16](https://github.com/Mir-Insight/uilib/compare/v1.4.15...v1.4.16) (2026-06-24)
+
+
+### Features
+
+* DriversMap - support className props ([4de784a](https://github.com/Mir-Insight/uilib/commit/4de784aa3ddcc99766e677c7089352b730c97dfd))
+* PerformanceTab - tableFullWidth:boolean ([540cd6a](https://github.com/Mir-Insight/uilib/commit/540cd6a691e4551b22b079f0ba6d6029014b4873))
+
 ### [1.4.15](https://github.com/Mir-Insight/uilib/compare/v1.4.14...v1.4.15) (2026-06-24)
 
 ### [1.4.14](https://github.com/Mir-Insight/uilib/compare/v1.4.13...v1.4.14) (2026-06-24)
