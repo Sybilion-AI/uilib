@@ -27,7 +27,7 @@ export interface ChatSheetProps extends Omit<
   actionsRef?: React.MutableRefObject<ChatSheetActions | null>;
   renderTrigger?: (toggleOpen: () => void, isOpen: boolean) => React.ReactNode;
   triggerIcon?: React.ReactNode;
-  triggerLabel?: string;
+  triggerLabel?: React.ReactNode;
   /** aria-label for icon-only trigger (required when trigger has no visible text) */
   triggerAriaLabel?: string;
   label?: string;
