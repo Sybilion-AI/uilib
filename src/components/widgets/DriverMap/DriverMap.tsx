@@ -1,23 +1,23 @@
-import cn from 'classnames';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
-import { WorldMap } from '#uilib/components/ui/WorldMap';
-import useEvent from '#uilib/hooks/useEvent';
-import { Shimmer } from '@homecode/ui';
-
 import { BadgeSize, DriverIcon } from './DriverIcon/DriverIcon';
-import constants from './DriverIcon/DriverIcon.constants.json';
 import {
   calculateBadgeSizes,
   findMostSpecificRegion,
   getDriverCoordinates,
   hasValidCoords,
 } from './DriverMap.helpers';
-import S from './DriverMap.styl';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
 import type { DriverData } from './driverMapGeography';
+import S from './DriverMap.styl';
+import { Shimmer } from '@homecode/ui';
+import { WorldMap } from '#uilib/components/ui/WorldMap';
+import cn from 'classnames';
+import constants from './DriverIcon/DriverIcon.constants.json';
 import { getHighestImportanceDriver } from './driverMapSelection';
+import useEvent from '#uilib/hooks/useEvent';
 
 export interface DriverMapProps {
+  className?: string;
   drivers: DriverData[];
   isLoading: boolean;
   setSelectedDriver: (driver: DriverData) => void;
@@ -29,6 +29,7 @@ const delay = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
 const transitionDelay = () => delay(constants.FADE_DURATION);
 
 export function DriverMap({
+  className,
   drivers,
   isLoading,
   setSelectedDriver,
@@ -168,7 +169,7 @@ export function DriverMap({
   });
 
   return (
-    <div className={cn(S.root, isTransitioning && S.inTransition)}>
+    <div className={cn(S.root, isTransitioning && S.inTransition, className)}>
       <div className={S.mapInner}>
         <WorldMap className={S.mapWorld} />
         {isLoading && <Shimmer className={S.shimmerOverlay} size="l" />}
