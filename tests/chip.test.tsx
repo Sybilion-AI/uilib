@@ -30,9 +30,9 @@ describe('Chip', () => {
     expect(screen.getByText('Label').className).toContain('variant-neutral');
   });
 
-  it('shows the status dot by default only for the neutral variant', () => {
+  it('does not show the status dot unless dot is true', () => {
     const { container: neutral } = render(<Chip>Neutral</Chip>);
-    expect(neutral.querySelector('.dot')).not.toBeNull();
+    expect(neutral.querySelector('.dot')).toBeNull();
 
     const { container: positive } = render(<Chip variant="positive">Up</Chip>);
     expect(positive.querySelector('.dot')).toBeNull();

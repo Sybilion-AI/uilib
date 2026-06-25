@@ -1,8 +1,9 @@
+import cn from 'classnames';
+
 import { TrendingDown, TrendingUp } from 'lucide-react';
 
-import { ChipProps } from './Chip.types';
 import S from './Chip.styl';
-import cn from 'classnames';
+import { ChipProps } from './Chip.types';
 
 function Chip({
   className,
@@ -15,7 +16,6 @@ function Chip({
 }: ChipProps) {
   const TrendIcon =
     trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : null;
-
   return (
     <span
       data-slot="chip"

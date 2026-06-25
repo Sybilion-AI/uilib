@@ -46,7 +46,8 @@ import { render } from '@testing-library/react';
  *
  * Intentionally skipped (require providers, portals, or runtime APIs that are
  * impractical in this table-driven setup): Select (Radix portal + item
- * composition), Sidebar (SidebarProvider), Dialog/Sheet/Drawer/DropdownMenu/
+ * composition), Sidebar (SidebarProvider), Form (FormProvider + useForm),
+ * Dialog/Sheet/Drawer/DropdownMenu/
  * Confirm (open-state portals), Chat* (ChatContext + tiptap), ChartArea-
  * Interactive and widget charts (domain data fixtures), WorldMap (canvas/geo),
  * VimeoEmbed (network iframe), NavUserHeader and app-shell widgets (auth/app

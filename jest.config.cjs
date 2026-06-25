@@ -3,12 +3,14 @@ module.exports = {
   testEnvironment: 'jsdom',
   moduleNameMapper: {
     '\\.(css|less|sass|scss|styl)$': 'identity-obj-proxy',
+    '^#uilib/.*\\.md$': '<rootDir>/tests/mocks/mdMock.js',
     '^#uilib/(.*)$': '<rootDir>/src/$1',
     '^uilib(.*)$': '<rootDir>/src$1',
     '^@homecode/ui$': '<rootDir>/tests/mocks/homecodeUiMock.ts',
     '^lightweight-charts$': '<rootDir>/tests/mocks/lightweightChartsMock.ts',
     '\\.svg$': '<rootDir>/tests/mocks/svgMock.js',
     '\\.(png|jpe?g|gif|webp|avif)$': '<rootDir>/tests/mocks/fileMock.js',
+    '\\.md$': '<rootDir>/tests/mocks/mdMock.js',
   },
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',

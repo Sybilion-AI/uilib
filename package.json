@@ -125,11 +125,14 @@
   },
   "peerDependencies": {
     "@auth0/auth0-react": "^2.3.1",
+    "@hookform/resolvers": "^5.0.0",
     "@sybilion/platform-sdk": ">=0.0.1",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0",
+    "react-hook-form": "^7.55.0",
     "react-router-dom": ">=6.0.0",
-    "vite": "^6.0.0"
+    "vite": "^6.0.0",
+    "zod": "^4.0.0"
   },
   "peerDependenciesMeta": {
     "@auth0/auth0-react": {
@@ -147,6 +150,7 @@
     "@babel/core": "^7.20.12",
     "@babel/preset-typescript": "^7.21.0",
     "@homecode/ui": "^4.30.6",
+    "@hookform/resolvers": "^5.0.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@rollup/plugin-alias": "^6.0.0",
     "@rollup/plugin-commonjs": "^24.0.1",
@@ -187,6 +191,7 @@
     "prettier": "^3.6.2",
     "react": "^19.0.0",
     "react-dom": "^19.1.1",
+    "react-hook-form": "^7.55.0",
     "react-markdown": "^10.1.0",
     "react-refresh": "^0.17.0",
     "react-router-dom": "^6.28.0",
@@ -206,7 +211,8 @@
     "vite": "^6.0.0",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^5.2.3"
+    "webpack-dev-server": "^5.2.3",
+    "zod": "^4.0.0"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

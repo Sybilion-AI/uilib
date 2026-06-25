@@ -279,6 +279,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/FoldablePage'),
   },
   {
+    slug: 'form',
+    title: 'Form',
+    section: 'Forms',
+    load: () => import('./pages/FormPage'),
+  },
+  {
     slug: 'grid-layout',
     title: 'GridLayout',
     section: 'Layout',
