@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.17](https://github.com/Mir-Insight/uilib/compare/v1.4.16...v1.4.17) (2026-06-25)
+
+
+### Features
+
+* Form - Add schema-driven form primitives ([11338ee](https://github.com/Mir-Insight/uilib/commit/11338ee66ab25215fca3dcffb9e306289808ed53))
+
+
+### Bug Fixes
+
+* AppHeader - Logo position with expanded sidebar ([6a934be](https://github.com/Mir-Insight/uilib/commit/6a934be6f1a08c7fc7bb23b4fb8e5906a4ee12e2))
+
 ### [1.4.16](https://github.com/Mir-Insight/uilib/compare/v1.4.15...v1.4.16) (2026-06-24)
 
 
