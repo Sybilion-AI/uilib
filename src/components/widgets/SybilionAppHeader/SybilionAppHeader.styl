@@ -28,9 +28,14 @@
   @media (max-width MOBILE)
     left 22px
 
-  // Top-level shell: offset logo into sidebar column (same math as nested embed, but absolute — not fixed).
+  // Top-level shell + expanded sidebar: fixed logo when header scrolls; absolute when header is sticky.
   @media (min-width MOBILE)
-    :global([data-slot='sidebar-wrapper'][data-state='expanded']:not([data-slot='app-shell'] [data-slot='sidebar-wrapper']) [data-slot='app-shell']:not([data-slot='app-shell'] [data-slot='app-shell'])) &:global(:not([data-slot='app-shell'] [data-slot='app-shell'] *))
+    :global([data-slot='sidebar-wrapper'][data-state='expanded']:not([data-slot='app-shell'] [data-slot='sidebar-wrapper']) [data-slot='app-shell']:not([data-slot='app-shell'] [data-slot='app-shell'])) :global(header[data-sticky='false']) &:global(:not([data-slot='app-shell'] [data-slot='app-shell'] *))
+      position fixed
+      left 52px
+      top calc(22px + var(--app-banner-height, 0px))
+
+    :global([data-slot='sidebar-wrapper'][data-state='expanded']:not([data-slot='app-shell'] [data-slot='sidebar-wrapper']) [data-slot='app-shell']:not([data-slot='app-shell'] [data-slot='app-shell'])) :global(header[data-sticky='true']) &:global(:not([data-slot='app-shell'] [data-slot='app-shell'] *))
       position absolute
       left calc(-1 * var(--sidebar-width) + 52px)
 

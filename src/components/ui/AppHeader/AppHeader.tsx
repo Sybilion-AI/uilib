@@ -25,6 +25,7 @@ export function AppHeaderHost({
   return (
     <header
       className={cn(S.root, sticky && S.sticky, className)}
+      data-sticky={sticky ? 'true' : 'false'}
       id={anchorId}
     />
   );
