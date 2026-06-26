@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.18](https://github.com/Mir-Insight/uilib/compare/v1.4.17...v1.4.18) (2026-06-26)
+
+
+### Bug Fixes
+
+* DriversComparisonChart - Assign colors after importance sort ([7a93092](https://github.com/Mir-Insight/uilib/commit/7a93092af29ca1c2cdb6d13c93ac032558115f88))
+
 ### [1.4.17](https://github.com/Mir-Insight/uilib/compare/v1.4.16...v1.4.17) (2026-06-25)
 
 
