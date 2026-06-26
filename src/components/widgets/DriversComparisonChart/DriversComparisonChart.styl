@@ -104,10 +104,10 @@
     position relative
     cursor pointer
 
-  td
-  th
-    &:not(:first-child)
-      text-align right
+  th:not(:first-child) > caption
+    justify-content flex-end
+  td:not(:first-child)
+    text-align right
 
 .seriesColSeries
   text-align left

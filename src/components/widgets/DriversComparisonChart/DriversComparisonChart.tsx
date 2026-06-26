@@ -37,6 +37,7 @@ import {
   buildDriversComparisonChartData,
   computeDriversComparisonHistoricalWindowFloor,
   formatSeriesImportance,
+  getDriversWithDataSortedByImportance,
   getLagDisplayForView,
   mergeBacktestsChartData,
   mergeDatasetHistoricalWithBacktestsChartData,
@@ -158,19 +159,10 @@ export function DriversComparisonChart({
     [payload, viewTab],
   );
 
-  const sortedDriversWithData = useMemo(() => {
-    const driversList = payloadForView?.drivers ?? [];
-    if (!driversList.length) return [];
-    return [...driversList]
-      .filter(
-        d =>
-          d.normalized_series &&
-          Object.keys(d.normalized_series).some(
-            key => d.normalized_series![key] != null,
-          ),
-      )
-      .sort((a, b) => String(a.id).localeCompare(String(b.id)));
-  }, [payloadForView?.drivers]);
+  const sortedDriversWithData = useMemo(
+    () => getDriversWithDataSortedByImportance(payloadForView?.drivers),
+    [payloadForView?.drivers],
+  );
 
   const mergedChartData = useMemo(
     () => mergeBacktestsChartData(payloadForView),
@@ -192,15 +184,9 @@ export function DriversComparisonChart({
       datasetHistorical,
       laggedMerged,
     );
-    const sortedDrivers = [...(payload?.drivers ?? [])]
-      .filter(
-        d =>
-          d.normalized_series &&
-          Object.keys(d.normalized_series).some(
-            key => d.normalized_series![key] != null,
-          ),
-      )
-      .sort((a, b) => String(a.id).localeCompare(String(b.id)));
+    const sortedDrivers = getDriversWithDataSortedByImportance(
+      payload?.drivers,
+    );
     const forecastIds = sortedDrivers.map(
       (_, idx) => DRIVER_FORECAST_ID_BASE + idx,
     );
@@ -226,21 +212,19 @@ export function DriversComparisonChart({
 
   const tableSeriesRows = useMemo(() => {
     if (sortedDriversWithData.length === 0) return [];
-    return sortedDriversWithData
-      .map((driver, idx) => {
-        const raw = driver.importance;
-        const importance =
-          typeof raw === 'number' && Number.isFinite(raw) ? raw : null;
-        const lagSource = originalDriversById.get(String(driver.id)) ?? driver;
-        return {
-          id: DRIVER_FORECAST_ID_BASE + idx,
-          name: driver.name || String(driver.id),
-          color: getForecastColor(idx + 1),
-          importance,
-          lag: getLagDisplayForView(resolveDriverLagLabel(lagSource), viewTab),
-        };
-      })
-      .sort((a, b) => b.importance - a.importance);
+    return sortedDriversWithData.map((driver, idx) => {
+      const raw = driver.importance;
+      const importance =
+        typeof raw === 'number' && Number.isFinite(raw) ? raw : null;
+      const lagSource = originalDriversById.get(String(driver.id)) ?? driver;
+      return {
+        id: DRIVER_FORECAST_ID_BASE + idx,
+        name: driver.name || String(driver.id),
+        color: getForecastColor(idx + 1),
+        importance,
+        lag: getLagDisplayForView(resolveDriverLagLabel(lagSource), viewTab),
+      };
+    });
   }, [originalDriversById, sortedDriversWithData, viewTab]);
 
   const seriesInitKeyResolved =

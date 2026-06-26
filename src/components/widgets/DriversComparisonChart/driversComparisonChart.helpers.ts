@@ -21,6 +21,45 @@ export function formatSeriesImportance(value: number | null): string {
   return `${value.toFixed(1)}%`;
 }
 
+function driverImportanceSortKey(
+  importance: number | null | undefined,
+): number {
+  return typeof importance === 'number' && Number.isFinite(importance)
+    ? importance
+    : -Infinity;
+}
+
+/** Higher importance first; ties broken by driver id for stable ordering. */
+export function compareDriversByImportance<
+  T extends { id?: string | number; importance?: number | null },
+>(a: T, b: T): number {
+  const importanceDelta =
+    driverImportanceSortKey(b.importance) -
+    driverImportanceSortKey(a.importance);
+  if (importanceDelta !== 0) return importanceDelta;
+  return String(a.id).localeCompare(String(b.id));
+}
+
+export function sortDriversByImportance<
+  T extends { id?: string | number; importance?: number | null },
+>(drivers: T[]): T[] {
+  return [...drivers].sort(compareDriversByImportance);
+}
+
+export function getDriversWithDataSortedByImportance(
+  drivers: BacktestsComponentPayload['drivers'] | undefined,
+): NonNullable<BacktestsComponentPayload['drivers']> {
+  return sortDriversByImportance(
+    (drivers ?? []).filter(
+      d =>
+        d.normalized_series &&
+        Object.keys(d.normalized_series).some(
+          key => d.normalized_series![key] != null,
+        ),
+    ),
+  );
+}
+
 export function resolveDriverLagLabel(driver: {
   lag?: string | null;
   overall_lag?: string | null;
@@ -165,15 +204,7 @@ export function mergeBacktestsChartData(
   });
 
   if (payload.drivers?.length) {
-    const sorted = [...payload.drivers]
-      .filter(
-        d =>
-          d.normalized_series &&
-          Object.keys(d.normalized_series).some(
-            key => d.normalized_series![key] != null,
-          ),
-      )
-      .sort((a, b) => String(a.id).localeCompare(String(b.id)));
+    const sorted = getDriversWithDataSortedByImportance(payload.drivers);
 
     sorted.forEach((driver, idx) => {
       const fid = DRIVER_FORECAST_ID_BASE + idx;

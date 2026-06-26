@@ -5,8 +5,10 @@ import {
   DRIVER_FORECAST_ID_BASE,
   applyDriversComparisonViewToPayload,
   buildDriversComparisonChartData,
+  compareDriversByImportance,
   computeDriversComparisonHistoricalWindowFloor,
   formatLagMonthsLabel,
+  getDriversWithDataSortedByImportance,
   getLagDisplayForView,
   mergeBacktestsChartData,
   mergeDatasetHistoricalWithBacktestsChartData,
@@ -14,8 +16,55 @@ import {
   resolveDriverLagLabel,
   shiftNormalizedSeriesBackward,
   shiftNormalizedSeriesForward,
+  sortDriversByImportance,
   subtractMonthsFromMonthStart,
 } from './driversComparisonChart.helpers';
+
+describe('sortDriversByImportance', () => {
+  it('orders drivers by importance descending before id tie-break', () => {
+    const drivers = [
+      { id: 'b', importance: 50, normalized_series: { '2015-01-01': 1 } },
+      { id: 'a', importance: 100, normalized_series: { '2015-01-01': 1 } },
+      { id: 'c', importance: 100, normalized_series: { '2015-01-01': 1 } },
+    ];
+    expect(sortDriversByImportance(drivers).map(d => d.id)).toEqual([
+      'a',
+      'c',
+      'b',
+    ]);
+  });
+
+  it('puts drivers without importance last', () => {
+    const drivers = [
+      {
+        id: 'z',
+        name: 'Z',
+        importance: null,
+        normalized_series: { '2015-01-01': 1 },
+      },
+      {
+        id: 'a',
+        name: 'A',
+        importance: 10,
+        normalized_series: { '2015-01-01': 1 },
+      },
+    ];
+    expect(
+      getDriversWithDataSortedByImportance(drivers).map(d => d.id),
+    ).toEqual(['a', 'z']);
+  });
+});
+
+describe('compareDriversByImportance', () => {
+  it('breaks equal importance ties by id', () => {
+    expect(
+      compareDriversByImportance(
+        { id: 'b', importance: 100 },
+        { id: 'a', importance: 100 },
+      ),
+    ).toBeGreaterThan(0);
+  });
+});
 
 describe('parseLagMonthsFromLabel', () => {
   it('uses max month for ranges', () => {
