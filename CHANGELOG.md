@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.19](https://github.com/Mir-Insight/uilib/compare/v1.4.18...v1.4.19) (2026-06-29)
+
+
+### Bug Fixes
+
+* GridLayout - disable min-width ([2a1b18f](https://github.com/Mir-Insight/uilib/commit/2a1b18fbe9dafe50b1428ce7e8034df4be78371d))
+
 ### [1.4.18](https://github.com/Mir-Insight/uilib/compare/v1.4.17...v1.4.18) (2026-06-26)
 
 
