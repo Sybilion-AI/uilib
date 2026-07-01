@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.20](https://github.com/Mir-Insight/uilib/compare/v1.4.19...v1.4.20) (2026-07-01)
+
+
+### Features
+
+* SidebarGroupLabel - in-flow group heading ([80bc327](https://github.com/Mir-Insight/uilib/commit/80bc327a802c54f2479b9a05ddaa57ed750b5e6e))
+
 ### [1.4.19](https://github.com/Mir-Insight/uilib/compare/v1.4.18...v1.4.19) (2026-06-29)
 
 
