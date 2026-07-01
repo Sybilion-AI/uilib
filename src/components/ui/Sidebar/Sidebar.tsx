@@ -16,6 +16,7 @@ export { SidebarSeparator } from './SidebarSeparator/SidebarSeparator';
 export { SidebarContent } from './SidebarContent/SidebarContent';
 export { SidebarGroup } from './SidebarGroup/SidebarGroup';
 export { SidebarGroupAction } from './SidebarGroupAction/SidebarGroupAction';
+export { SidebarGroupLabel } from './SidebarGroupLabel/SidebarGroupLabel';
 export {
   SidebarMenu,
   SidebarMenuItem,

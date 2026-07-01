@@ -1,7 +1,6 @@
-import { PageContentSection } from '#uilib/components/ui/Page';
-import sidebarGuidance from '#uilib/components/ui/Sidebar/AGENT.md';
 import {
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -10,6 +9,8 @@ import {
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
+import { PageContentSection } from '#uilib/components/ui/Page';
+import sidebarGuidance from '#uilib/components/ui/Sidebar/AGENT.md';
 
 export default function SidebarPage() {
   return (
@@ -32,6 +33,7 @@ export default function SidebarPage() {
             borderRadius: 'var(--p-4)',
           }}
         >
+          <SidebarGroupLabel>Group label</SidebarGroupLabel>
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton type="button" isActive>
