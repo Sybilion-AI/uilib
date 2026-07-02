@@ -26,7 +26,13 @@ function entriesBySection() {
     map.set(entry.section, list);
   }
   for (const list of map.values()) {
-    list.sort((a, b) => a.title.localeCompare(b.title));
+    list.sort((a, b) => {
+      const aOverview = a.slug.endsWith('-overview');
+      const bOverview = b.slug.endsWith('-overview');
+      if (aOverview && !bOverview) return -1;
+      if (!aOverview && bOverview) return 1;
+      return a.title.localeCompare(b.title);
+    });
   }
   return map;
 }

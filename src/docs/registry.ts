@@ -63,6 +63,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/SpacingPage'),
   },
   {
+    slug: 'forms-overview',
+    title: 'Overview',
+    section: 'Forms',
+    load: () => import('./pages/FormsOverviewPage'),
+  },
+  {
     slug: 'button',
     title: 'Button',
     section: 'Forms',
@@ -73,6 +79,36 @@ export const DOC_REGISTRY: DocEntry[] = [
     title: 'ButtonGroup',
     section: 'Forms',
     load: () => import('./pages/ButtonGroupPage'),
+  },
+  {
+    slug: 'feedback-overview',
+    title: 'Overview',
+    section: 'Feedback',
+    load: () => import('./pages/FeedbackOverviewPage'),
+  },
+  {
+    slug: 'layout-overview',
+    title: 'Overview',
+    section: 'Layout',
+    load: () => import('./pages/LayoutOverviewPage'),
+  },
+  {
+    slug: 'navigation-overview',
+    title: 'Overview',
+    section: 'Navigation',
+    load: () => import('./pages/NavigationOverviewPage'),
+  },
+  {
+    slug: 'overlays-overview',
+    title: 'Overview',
+    section: 'Overlays',
+    load: () => import('./pages/OverlaysOverviewPage'),
+  },
+  {
+    slug: 'data-display-overview',
+    title: 'Overview',
+    section: 'Data display',
+    load: () => import('./pages/DataDisplayOverviewPage'),
   },
   {
     slug: 'analyses-selector',
