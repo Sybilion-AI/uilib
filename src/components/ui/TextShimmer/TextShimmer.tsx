@@ -11,7 +11,7 @@ function TextShimmerComponent({
   as: Component = 'p',
   className,
   duration = 2,
-  spread = 2,
+  spread = 4,
   inverted = false,
 }: TextShimmerProps) {
   const MotionComponent = motion.create(
