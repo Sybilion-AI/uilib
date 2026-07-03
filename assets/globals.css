@@ -502,6 +502,9 @@
     @apply cursor-pointer;
     font-weight: 500;
   }
+  label[for] {
+    cursor: pointer;
+  }
 
   .font-sans {
     @apply tracking-tight-custom;

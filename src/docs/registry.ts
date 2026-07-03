@@ -255,6 +255,18 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/CheckboxPage'),
   },
   {
+    slug: 'radio-group',
+    title: 'RadioGroup',
+    section: 'Forms',
+    load: () => import('./pages/RadioGroupPage'),
+  },
+  {
+    slug: 'date-picker',
+    title: 'DatePicker',
+    section: 'Forms',
+    load: () => import('./pages/DatePickerPage'),
+  },
+  {
     slug: 'dialog',
     title: 'Dialog',
     section: 'Overlays',

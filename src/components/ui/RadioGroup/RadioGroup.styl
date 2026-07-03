@@ -1,0 +1,70 @@
+.groupRoot
+  display grid
+  gap var(--p-2)
+
+  &[data-orientation=horizontal]
+    display flex
+    flex-direction row
+    flex-wrap wrap
+    gap var(--p-4)
+
+.radioRoot
+  cursor pointer
+  display flex
+  align-items center
+  justify-content center
+  flex-shrink 0
+
+  border-radius 50%
+  border 1px solid var(--input)
+  background transparent
+  box-shadow 0 1px 2px 0 rgba(0, 0, 0, 0.05)
+  outline none
+  transition box-shadow 0.15s ease-in-out
+
+  .dark &
+    background-color var(--input-30)
+
+  &[data-state=checked]
+    border-color var(--primary)
+    color var(--primary)
+    .dark &
+      border-color var(--primary)
+
+  &:focus-visible
+    border-color var(--ring)
+    box-shadow 0 0 0 3px var(--ring-50)
+
+  &[aria-invalid=true]
+    box-shadow 0 0 0 3px var(--destructive-200)
+    border-color var(--destructive)
+    .dark &
+      box-shadow 0 0 0 3px var(--destructive-400)
+
+  &:disabled
+    cursor not-allowed
+    opacity 0.5
+
+.radioIndicator
+  width calc(100% - var(--dot-gap))
+  height calc(100% - var(--dot-gap))
+  border-radius 50%
+  background-color currentColor
+
+  color currentColor
+  transition none
+
+.size-sm
+  --dot-gap 3px
+  width var(--icon-size-sm)
+  height var(--icon-size-sm)
+
+.size-md
+  --dot-gap 4px
+  width var(--icon-size-md)
+  height var(--icon-size-md)
+
+.size-lg
+  --dot-gap 5px
+  width var(--icon-size-lg)
+  height var(--icon-size-lg)

@@ -6,18 +6,18 @@ import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import S from './Checkbox.styl';
 import type { CheckboxProps } from './Checkbox.types';
 
-function Checkbox({ className, ...props }: CheckboxProps) {
+function Checkbox({ className, size = 'md', ...props }: CheckboxProps) {
   return (
     <CheckboxPrimitive.Root
       data-slot="checkbox"
-      className={cn(S.checkboxRoot, className)}
+      className={cn(S.checkboxRoot, S[`size-${size}`], className)}
       {...props}
     >
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"
         className={S.checkboxIndicator}
       >
-        <CheckIcon className="size-3.5" />
+        <CheckIcon className={S.checkIcon} />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );

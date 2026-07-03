@@ -3,6 +3,11 @@ import { useState } from 'react';
 import { Button } from '#uilib/components/ui/Button';
 import { ButtonGroup } from '#uilib/components/ui/ButtonGroup';
 import { Checkbox } from '#uilib/components/ui/Checkbox';
+import {
+  DatePickerInput,
+  DateRangePickerInput,
+} from '#uilib/components/ui/DatePicker';
+import type { DateRangeValue } from '#uilib/components/ui/DatePicker';
 import { DropZone } from '#uilib/components/ui/DropZone/DropZone';
 import { Input } from '#uilib/components/ui/Input';
 import { Label } from '#uilib/components/ui/Label';
@@ -11,6 +16,7 @@ import { LabeledInput } from '#uilib/components/ui/LabeledInput/LabeledInput';
 import { MobileAdaptiveSelector } from '#uilib/components/ui/MobileAdaptiveSelector';
 import { NumberControl } from '#uilib/components/ui/NumberControl';
 import { PageContentSection } from '#uilib/components/ui/Page';
+import { RadioGroup, RadioGroupItem } from '#uilib/components/ui/RadioGroup';
 import { RegionSelector } from '#uilib/components/ui/RegionCoords';
 import { Renamer } from '#uilib/components/ui/Renamer';
 import {
@@ -113,11 +119,17 @@ export default function FormsOverviewPage() {
   const [composedRole, setComposedRole] = useState('editor');
   const [composedNotifications, setComposedNotifications] = useState(true);
   const [composedTerms, setComposedTerms] = useState(false);
+  const [billingPlan, setBillingPlan] = useState('pro');
   const [dropZoneName, setDropZoneName] = useState<string | null>(null);
   const [mobileSelectorValue, setMobileSelectorValue] = useState('a');
   const [regionPick, setRegionPick] = useState<string | null>(null);
   const [renamerValue, setRenamerValue] = useState('Dataset name');
   const [timeRange, setTimeRange] = useState('1y');
+  const [dateValue, setDateValue] = useState('2026-07-03');
+  const [dateRangeValue, setDateRangeValue] = useState<DateRangeValue | null>({
+    start: '2026-07-01',
+    end: '2026-07-31',
+  });
 
   return (
     <>
@@ -241,6 +253,93 @@ export default function FormsOverviewPage() {
         </section>
 
         <section>
+          <h3 style={{ marginBottom: '1rem' }}>RadioGroup</h3>
+          <div style={twoColumnStyle}>
+            <div style={panelStyle}>
+              <p style={stateLabelStyle}>Default</p>
+              <RadioGroup
+                value={billingPlan}
+                onValueChange={setBillingPlan}
+                aria-label="Billing plan"
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <RadioGroupItem value="starter" id="forms-rg-starter" />
+                  <Label htmlFor="forms-rg-starter">Starter</Label>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <RadioGroupItem value="pro" id="forms-rg-pro" />
+                  <Label htmlFor="forms-rg-pro">Pro</Label>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <RadioGroupItem value="enterprise" id="forms-rg-enterprise" />
+                  <Label htmlFor="forms-rg-enterprise">Enterprise</Label>
+                </div>
+              </RadioGroup>
+            </div>
+            <div style={panelStyle}>
+              <p style={stateLabelStyle}>Disabled</p>
+              <RadioGroup
+                defaultValue="starter"
+                disabled
+                aria-label="Disabled plan"
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <RadioGroupItem value="starter" id="forms-rg-dis-starter" />
+                  <Label htmlFor="forms-rg-dis-starter">Starter</Label>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <RadioGroupItem value="pro" id="forms-rg-dis-pro" />
+                  <Label htmlFor="forms-rg-dis-pro">Pro</Label>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <RadioGroupItem
+                    value="enterprise"
+                    id="forms-rg-dis-enterprise"
+                  />
+                  <Label htmlFor="forms-rg-dis-enterprise">Enterprise</Label>
+                </div>
+              </RadioGroup>
+            </div>
+          </div>
+        </section>
+
+        <section>
           <h3 style={{ marginBottom: '1rem' }}>Switch</h3>
           <div style={twoColumnStyle}>
             <div style={panelStyle}>
@@ -282,6 +381,38 @@ export default function FormsOverviewPage() {
               <p style={stateLabelStyle}>Disabled</p>
               <DemoSelect defaultValue="orange" disabled />
             </div>
+          </div>
+        </section>
+
+        <section>
+          <h3 style={{ marginBottom: '1rem' }}>DatePicker</h3>
+          <div style={twoColumnStyle}>
+            <div style={panelStyle}>
+              <p style={stateLabelStyle}>Single date</p>
+              <DatePickerInput
+                value={dateValue}
+                onChange={next => setDateValue(next ?? '')}
+                style={{ width: FIELD_WIDTH }}
+              />
+            </div>
+            <div style={panelStyle}>
+              <p style={stateLabelStyle}>Date range</p>
+              <DateRangePickerInput
+                value={dateRangeValue}
+                onChange={setDateRangeValue}
+                style={{ width: FIELD_WIDTH + 80 }}
+              />
+            </div>
+          </div>
+          <div
+            style={{ ...panelStyle, marginTop: '1rem', maxWidth: FIELD_WIDTH }}
+          >
+            <p style={stateLabelStyle}>Disabled</p>
+            <DatePickerInput
+              value="2026-07-03"
+              disabled
+              style={{ width: FIELD_WIDTH }}
+            />
           </div>
         </section>
 

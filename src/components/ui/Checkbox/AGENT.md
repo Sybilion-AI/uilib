@@ -14,3 +14,4 @@ Checkbox is a binary control for selecting or deselecting an option. Pair it wit
 ## Do
 
 - Write labels positively, such as “Send notifications” rather than “Do not send notifications”.
+- Use `size="sm"` in dense tables or compact lists; `size="lg"` when the control should read larger than body text. Default is `md` (16px).
