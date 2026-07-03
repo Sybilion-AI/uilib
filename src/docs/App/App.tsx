@@ -73,7 +73,7 @@ function DocsLayout() {
                 <PageFooter
                   brandText="Sybilion Design"
                   versionLink="/releases"
-                  versionLabel="1.0.0-docs"
+                  versionLabel={VERSION}
                 />
               }
             >
