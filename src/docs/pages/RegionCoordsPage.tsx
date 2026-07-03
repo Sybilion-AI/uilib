@@ -25,7 +25,7 @@ export default function RegionCoordsPage() {
         actions={<DocsHeaderActions />}
       />
       <DocsGuidance source={regionCoordsGuidance} />
-      <PageContentSection>
+      <PageContentSection style={{ maxWidth: 300 }}>
         <RegionSelector
           regions={REGIONS}
           onSelect={(name, coords) => {

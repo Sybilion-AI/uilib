@@ -37,6 +37,7 @@ export function NumberControl({
   return (
     <div className={cn(S.root, className)} {...props}>
       <Button
+        icon
         variant="ghost"
         size="sm"
         onClick={handleMinus}
@@ -46,6 +47,7 @@ export function NumberControl({
       </Button>
       <span className={S.value}>{value}</span>
       <Button
+        icon
         variant="ghost"
         size="sm"
         onClick={handlePlus}
