@@ -56,6 +56,7 @@ export * from './components/ui/LegacyPlatformLink';
 export * from './components/ui/Logo';
 export * from './components/ui/MobileAdaptiveSelector';
 export * from './components/ui/NavUserHeader';
+export * from './components/ui/Notifications';
 export * from './components/ui/NumberControl';
 export * from './components/ui/Page';
 export * from './components/ui/Progress';

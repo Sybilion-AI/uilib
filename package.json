@@ -84,7 +84,7 @@
   },
   "homepage": "https://github.com/Mir-Insight/uilib#readme",
   "dependencies": {
-    "@homecode/ui": "^5.3.9",
+    "@homecode/ui": "^5.3.11",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-checkbox": "^1.3.3",

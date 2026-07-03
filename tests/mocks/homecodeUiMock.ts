@@ -39,6 +39,20 @@ function Scroll({
   return createElement('div', { className, ref: onInnerRef }, children);
 }
 
+const NotificationsStore = {
+  items: [] as string[],
+  autoHide: [] as string[],
+  data: {} as Record<string, unknown>,
+  paused: false,
+  show(_data: Record<string, unknown>) {
+    return 'mock-notification-id';
+  },
+  close(_id: string) {},
+  remove(_id: string) {},
+  pause() {},
+  unpause() {},
+};
+
 const LS = {
   get(key: string) {
     const raw = window.localStorage.getItem(key);
@@ -62,4 +76,12 @@ const LS = {
   },
 };
 
-export { LS, Scroll, Shimmer, Theme, ThemeDefaults, ThemeHelpers };
+export {
+  LS,
+  NotificationsStore,
+  Scroll,
+  Shimmer,
+  Theme,
+  ThemeDefaults,
+  ThemeHelpers,
+};
