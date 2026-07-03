@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.21](https://github.com/Mir-Insight/uilib/compare/v1.4.20...v1.4.21) (2026-07-03)
+
+
+### Bug Fixes
+
+* SidebarGroup - first child padding top - on the level of breadcrumbs/sidebar_toggle ([3580fd2](https://github.com/Mir-Insight/uilib/commit/3580fd21a24195c396e9700bcab5005c6fdfbb89))
+* TextShimmer - default width and spread ([03324f8](https://github.com/Mir-Insight/uilib/commit/03324f8216707b4a48fd0d2f0454201933b42384))
+
 ### [1.4.20](https://github.com/Mir-Insight/uilib/compare/v1.4.19...v1.4.20) (2026-07-01)
 
 
