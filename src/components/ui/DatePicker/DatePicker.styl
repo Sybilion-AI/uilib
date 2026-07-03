@@ -121,7 +121,8 @@
 .dayRangeStart
   background-color var(--primary)
   color var(--primary-foreground)
-  border-radius var(--radius-input) 0 0 var(--radius-input)
+  border-top-right-radius 0
+  border-bottom-right-radius 0
 
   &:hover:not(:disabled)
     background-color var(--primary)
@@ -130,7 +131,8 @@
 .dayRangeEnd
   background-color var(--primary)
   color var(--primary-foreground)
-  border-radius 0 var(--radius-input) var(--radius-input) 0
+  border-top-left-radius 0
+  border-bottom-left-radius 0
 
   &:hover:not(:disabled)
     background-color var(--primary)
@@ -150,7 +152,7 @@
   min-width 0
 
 .rangeInputFieldActive
-  box-shadow inset 0 0 0 2px var(--brand-color-400)
+  box-shadow inset 0 0 0 2px var(--brand-color-400) !important
 
 .rangeSeparator
   display flex
