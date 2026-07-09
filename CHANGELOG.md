@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.25](https://github.com/Mir-Insight/uilib/compare/v1.4.24...v1.4.25) (2026-07-09)
+
+
+### Bug Fixes
+
+* Uilib - Align package.json exports with Rollup dist output ([8a5a3a8](https://github.com/Mir-Insight/uilib/commit/8a5a3a8d4b7addf5b714949b01f64dc2ec7f7622))
+
 ### [1.4.24](https://github.com/Mir-Insight/uilib/compare/v1.4.23...v1.4.24) (2026-07-09)
 
 
