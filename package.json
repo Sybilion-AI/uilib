@@ -7,8 +7,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "type": "module",
-  "main": "./dist/esm/index.js",
-  "module": "./dist/esm/index.js",
+  "main": "./dist/esm/src/index.js",
+  "module": "./dist/esm/src/index.js",
   "types": "./dist/esm/types/index.d.ts",
   "sideEffects": [
     "**/*.styl",
@@ -21,8 +21,8 @@
   "exports": {
     ".": {
       "types": "./dist/esm/types/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "default": "./dist/esm/index.js"
+      "import": "./dist/esm/src/index.js",
+      "default": "./dist/esm/src/index.js"
     },
     "./src": {
       "types": "./src/index.ts",
@@ -31,8 +31,8 @@
     },
     "./hooks": {
       "types": "./dist/esm/types/src/hooks/index.d.ts",
-      "import": "./dist/esm/hooks/index.js",
-      "default": "./dist/esm/hooks/index.js"
+      "import": "./dist/esm/src/hooks/index.js",
+      "default": "./dist/esm/src/hooks/index.js"
     },
     "./src/*": "./src/*",
     "./logo.svg": "./src/components/ui/Logo/logo.svg"
