@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.24](https://github.com/Mir-Insight/uilib/compare/v1.4.23...v1.4.24) (2026-07-09)
+
+
+### Features
+
+* Card - paddingSize=2xl ([ad2b5c1](https://github.com/Mir-Insight/uilib/commit/ad2b5c1109255748c27ea7fbccc5949729fcb47e))
+
+
+### Bug Fixes
+
+* SybilionAuthLayout - background image rendering ([be303f3](https://github.com/Mir-Insight/uilib/commit/be303f35a573815e9637f17de929a6ef20595b33))
+
 ### [1.4.23](https://github.com/Mir-Insight/uilib/compare/v1.4.22...v1.4.23) (2026-07-03)
 
 
