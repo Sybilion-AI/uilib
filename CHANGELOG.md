@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.27](https://github.com/Mir-Insight/uilib/compare/v1.4.26...v1.4.27) (2026-07-10)
+
+
+### Features
+
+* BrandTokens - Add brand-color-bg and apply across shell ([38136bf](https://github.com/Mir-Insight/uilib/commit/38136bf037005a786e01e62db947c7767e3ce476))
+
 ### [1.4.26](https://github.com/Mir-Insight/uilib/compare/v1.4.25...v1.4.26) (2026-07-10)
 
 ### [1.4.25](https://github.com/Mir-Insight/uilib/compare/v1.4.24...v1.4.25) (2026-07-09)
