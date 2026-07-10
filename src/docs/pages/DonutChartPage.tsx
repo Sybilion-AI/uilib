@@ -22,14 +22,14 @@ const SENTIMENT: DonutChartDatum[] = [
     key: 'positive',
     label: 'Positive',
     value: 58,
-    color: 'var(--status-positive)',
+    color: 'var(--sb-green-600)',
   },
   { key: 'neutral', label: 'Neutral', value: 27, color: 'var(--sb-slate-400)' },
   {
     key: 'negative',
     label: 'Negative',
     value: 15,
-    color: 'var(--status-negative)',
+    color: 'var(--sb-red-600)',
   },
 ];
 

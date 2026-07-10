@@ -5,7 +5,7 @@
   flex-shrink 0
   white-space nowrap
   gap 6px
-  padding 5px 10px
+  padding var(--p-1) var(--p-2)
   border-radius var(--radius-pill)
   font-family var(--font-family-body)
   font-size 11px
@@ -13,6 +13,16 @@
   font-weight 400
   letter-spacing var(--tracking-body)
   transition background-color var(--dur-base) var(--ease-standard), color var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard)
+  --status-positive var(--sb-green-700)
+  --status-positive-bg var(--sb-green-50)
+  --status-negative var(--sb-red-600)
+  --status-negative-bg var(--sb-red-50)
+
+  :global(.dark) &
+    --status-positive var(--sb-green-400)
+    --status-positive-bg var(--sb-green-900)
+    --status-negative var(--sb-red-400)
+    --status-negative-bg var(--sb-red-900)
 
   &.squared
     border-radius var(--p-1)

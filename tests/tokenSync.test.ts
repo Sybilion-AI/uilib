@@ -53,10 +53,6 @@ const SHARED_TOKENS = [
   '--tracking-heading',
   '--tracking-body',
   '--tracking-label',
-  '--status-positive',
-  '--status-positive-bg',
-  '--status-negative',
-  '--status-negative-bg',
 ];
 
 /** Custom property names declared inside the top-level :root block. */
@@ -87,14 +83,5 @@ describe('design token sync between uilib, app, and standalone template', () => 
     const declared = parseRootTokens(file);
     const missing = SHARED_TOKENS.filter(token => !declared.has(token));
     expect(missing).toEqual([]);
-  });
-
-  it('keeps dark-mode status token overrides in all files', () => {
-    for (const file of [UILIB_GLOBALS, APP_GLOBALS, STANDALONE_GLOBALS]) {
-      const css = readFileSync(file, 'utf8');
-      const darkBlock = css.match(/\.dark\s*\{[^}]*\}/g)?.join('\n') ?? '';
-      expect(darkBlock).toContain('--status-positive');
-      expect(darkBlock).toContain('--status-negative');
-    }
   });
 });

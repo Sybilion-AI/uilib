@@ -100,10 +100,6 @@
   --stroke-linejoin: miter;
   --stroke-absolute: true;
   --header-height: 3.5rem;
-  --color-status-positive: var(--status-positive);
-  --color-status-positive-bg: var(--status-positive-bg);
-  --color-status-negative: var(--status-negative);
-  --color-status-negative-bg: var(--status-negative-bg);
   --radius-0: var(--radius-0);
   --radius-1: var(--radius-1);
   --radius-2: var(--radius-2);
@@ -296,12 +292,6 @@
   --tracking-body: 0em;
   --tracking-label: 0.04em;
 
-  /* design-system status colors (mapped onto --sb-* ramps) */
-  --status-positive: var(--sb-green-700);
-  --status-positive-bg: var(--sb-green-100);
-  --status-negative: var(--sb-red-600);
-  --status-negative-bg: var(--sb-red-100);
-
   --font-family-heading: 'KMR Apparat', sans-serif;
   --font-family-body: 'Manrope', sans-serif;
 
@@ -418,10 +408,6 @@
   --sidebar-accent-foreground: oklch(0.95 0 0);
   --sidebar-border: oklch(0.3 0 0);
   --sidebar-ring: oklch(0.5 0 0);
-  --status-positive: var(--sb-green-400);
-  --status-positive-bg: var(--sb-green-900);
-  --status-negative: var(--sb-red-400);
-  --status-negative-bg: var(--sb-red-900);
 }
 
 @layer base {
