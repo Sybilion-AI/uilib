@@ -43,6 +43,7 @@ const SEMANTIC_TOKENS = [
   '--muted',
   '--border',
   '--brand-color',
+  '--brand-color-bg',
   '--link-color',
   '--link-color-hover',
   '--link-color-active',

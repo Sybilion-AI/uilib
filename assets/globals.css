@@ -39,6 +39,7 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
   --color-brand: var(--brand-color);
+  --color-brand-bg: var(--brand-color-bg, var(--brand-color));
   --color-link: var(--link-color);
   --color-link-hover: var(--link-color-hover);
   --color-link-active: var(--link-color-active);
@@ -297,6 +298,7 @@
 
   /* app variables */
   --brand-color: var(--sb-purple-400);
+  --brand-color-bg: var(--brand-color-300);
   --brand-color-50: var(--sb-purple-50);
   --brand-color-100: var(--sb-purple-100);
   --brand-color-200: var(--sb-purple-200);
@@ -353,7 +355,7 @@
   --sidebar-border: oklch(0.9 0 0);
   --sidebar-ring: oklch(0.65 0 0);
 
-  --link-color: var(--sb-cyan-700);
+  --link-color: var(--brand-color);
   --link-color-hover: color-mix(in oklch, var(--link-color) 80%, black);
   --link-color-active: color-mix(in oklch, var(--link-color) 65%, black);
 }
@@ -367,6 +369,7 @@
 }
 
 .dark {
+  --brand-color-bg: var(--brand-color-800);
   --page-color: oklch(0.22 0 0);
   --page-color-alpha-800: oklch(0.2242 0 0 / 0.8);
   --background: oklch(0.14 0 0);
@@ -537,9 +540,6 @@
   }
 
   ::selection {
-    background-color: var(--brand-color-200);
-  }
-  .dark ::selection {
-    background-color: var(--brand-color-800);
+    background-color: var(--brand-color-bg, var(--brand-color));
   }
 }
