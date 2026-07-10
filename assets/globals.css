@@ -133,8 +133,8 @@
 :root {
   --sb-cyan-50: oklch(0.964 0.006 204);
   --sb-cyan-100: oklch(0.933 0.011 204);
-  --sb-cyan-200: oklch(0.76 0.089 204);
-  --sb-cyan-300: oklch(0.7 0.098 204);
+  --sb-cyan-200: oklch(0.882 0.127 204);
+  --sb-cyan-300: oklch(0.754 0.181 204);
   --sb-cyan-400: oklch(0.625 0.234 204);
   --sb-cyan-500: oklch(0.518 0.258 204);
   --sb-cyan-600: oklch(0.421 0.231 204);
@@ -298,7 +298,7 @@
 
   /* app variables */
   --brand-color: var(--sb-purple-400);
-  --brand-color-bg: var(--brand-color-300);
+  --brand-color-bg: var(--brand-color-400);
   --brand-color-50: var(--sb-purple-50);
   --brand-color-100: var(--sb-purple-100);
   --brand-color-200: var(--sb-purple-200);
@@ -369,7 +369,7 @@
 }
 
 .dark {
-  --brand-color-bg: var(--brand-color-800);
+  --brand-color-bg: var(--brand-color-500);
   --page-color: oklch(0.22 0 0);
   --page-color-alpha-800: oklch(0.2242 0 0 / 0.8);
   --background: oklch(0.14 0 0);
