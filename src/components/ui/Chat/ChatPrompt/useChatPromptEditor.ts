@@ -203,13 +203,16 @@ export function useChatPromptEditor({
   useEffect(() => {
     if (!editor || prefillMessage == null || prefillMessage === '') return;
     editor.commands.setContent(chatPromptParagraphDoc(prefillMessage));
-    const t = editor.getText();
-    setPlainDraft(t);
+    // Derive plainDraft from the prefill text directly: relying on
+    // editor.getText() right after setContent can race with onTransaction
+    // (which also reads getText), leaving plainDraft empty and the submit
+    // button disabled.
+    setPlainDraft(prefillMessage);
     queueMicrotask(() => {
       const dom = chatPromptSafeEditorDom(editor);
-      if (dom) syncChatPromptComposerHeight(dom, t);
+      if (dom) syncChatPromptComposerHeight(dom, prefillMessage);
       if (!disabled && !editor.isDestroyed) {
-        editor.chain().focus('end').run();
+        editor.chain().focus().selectAll().run();
       }
     });
   }, [editor, prefillMessage, disabled]);
