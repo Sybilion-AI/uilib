@@ -111,44 +111,46 @@ export default function ChatAttachmentsDropzonePage() {
           send to post it. Office and PDF parsers load on demand when you attach
           those types; PDF also requires <code>allowPdfAttachments</code>.
         </p>
-        <ChatChrome
-          variant="clean"
-          showResizeHandle={false}
-          resizeHandle={undefined}
-          onClose={undefined}
-          isEmpty={isEmpty}
-          renderPresets={() => null}
-          messages={messages}
-          onQuickReply={() => {}}
-          suppressedQuickReplyKeys={NO_QUICK_REPLY_KEYS}
-          isLoading={isLoading}
-          scriptContinueLabel={undefined}
-          onScriptContinue={undefined}
-          showSyntheticBranchButtons={false}
-          unusedBranchKeys={[]}
-          showInlinePresets={false}
-          isLastMessageFromUser={isLastMessageFromUser}
-          scrollRef={scrollRef}
-          effectiveScopeId="docs-chat-attachments-dropzone"
-          onPromptSubmit={onPromptSubmit}
-          onChatDeleted={() => {}}
-          allowedAttachments={TEXT_ATTACHMENT_ACCEPT_PARTS}
-          allowPdfAttachments
-          emptyState={{
-            title: 'Drop a text, Office, or PDF file',
-            description:
-              'Drag a file onto this panel, review it above the composer, then send. DOCX and XLSX are parsed in the browser.',
-            additionalContent: (
-              <p style={{ fontSize: 13, opacity: 0.85 }}>
-                Accepted types include <code>.txt</code>, <code>.csv</code>,{' '}
-                <code>.md</code>, <code>.json</code>, <code>.docx</code>,{' '}
-                <code>.xlsx</code>, and more (
-                {TEXT_ATTACHMENT_ACCEPT_PARTS.length} entries in the text
-                allowlist).
-              </p>
-            ),
-          }}
-        />
+        <div style={{ minHeight: 600 }}>
+          <ChatChrome
+            variant="clean"
+            showResizeHandle={false}
+            resizeHandle={undefined}
+            onClose={undefined}
+            isEmpty={isEmpty}
+            renderPresets={() => null}
+            messages={messages}
+            onQuickReply={() => {}}
+            suppressedQuickReplyKeys={NO_QUICK_REPLY_KEYS}
+            isLoading={isLoading}
+            scriptContinueLabel={undefined}
+            onScriptContinue={undefined}
+            showSyntheticBranchButtons={false}
+            unusedBranchKeys={[]}
+            showInlinePresets={false}
+            isLastMessageFromUser={isLastMessageFromUser}
+            scrollRef={scrollRef}
+            effectiveScopeId="docs-chat-attachments-dropzone"
+            onPromptSubmit={onPromptSubmit}
+            onChatDeleted={() => {}}
+            allowedAttachments={TEXT_ATTACHMENT_ACCEPT_PARTS}
+            allowPdfAttachments
+            emptyState={{
+              title: 'Drop a text, Office, or PDF file',
+              description:
+                'Drag a file onto this panel, review it above the composer, then send. DOCX and XLSX are parsed in the browser.',
+              additionalContent: (
+                <p style={{ fontSize: 13, opacity: 0.85 }}>
+                  Accepted types include <code>.txt</code>, <code>.csv</code>,{' '}
+                  <code>.md</code>, <code>.json</code>, <code>.docx</code>,{' '}
+                  <code>.xlsx</code>, and more (
+                  {TEXT_ATTACHMENT_ACCEPT_PARTS.length} entries in the text
+                  allowlist).
+                </p>
+              ),
+            }}
+          />
+        </div>
       </PageContentSection>
     </>
   );

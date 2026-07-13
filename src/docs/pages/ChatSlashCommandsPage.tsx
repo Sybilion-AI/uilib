@@ -117,35 +117,37 @@ export default function ChatSlashCommandsPage() {
             font-size: 150%;
           }
         `}</style>
-        <ChatChrome
-          variant="clean"
-          showResizeHandle={false}
-          resizeHandle={undefined}
-          onClose={undefined}
-          isEmpty={isEmpty}
-          renderPresets={() => null}
-          messages={messages}
-          onQuickReply={() => {}}
-          suppressedQuickReplyKeys={NO_QUICK_REPLY_KEYS}
-          isLoading={isLoading}
-          scriptContinueLabel={undefined}
-          onScriptContinue={undefined}
-          showSyntheticBranchButtons={false}
-          unusedBranchKeys={[]}
-          showInlinePresets={false}
-          isLastMessageFromUser={isLastMessageFromUser}
-          scrollRef={scrollRef}
-          effectiveScopeId="docs-chat-slash-inline"
-          onPromptSubmit={onSubmit}
-          onChatDeleted={() => {}}
-          slashCommandItems={DOCS_SLASH_ITEMS}
-          promptPlaceholder='Ask something or type "/" for demo commands…'
-          emptyState={{
-            title: 'Try slash commands',
-            description:
-              'Pick a command from the palette to insert a mention chip with optional className and color.',
-          }}
-        />
+        <div style={{ minHeight: 600 }}>
+          <ChatChrome
+            variant="clean"
+            showResizeHandle={false}
+            resizeHandle={undefined}
+            onClose={undefined}
+            isEmpty={isEmpty}
+            renderPresets={() => null}
+            messages={messages}
+            onQuickReply={() => {}}
+            suppressedQuickReplyKeys={NO_QUICK_REPLY_KEYS}
+            isLoading={isLoading}
+            scriptContinueLabel={undefined}
+            onScriptContinue={undefined}
+            showSyntheticBranchButtons={false}
+            unusedBranchKeys={[]}
+            showInlinePresets={false}
+            isLastMessageFromUser={isLastMessageFromUser}
+            scrollRef={scrollRef}
+            effectiveScopeId="docs-chat-slash-inline"
+            onPromptSubmit={onSubmit}
+            onChatDeleted={() => {}}
+            slashCommandItems={DOCS_SLASH_ITEMS}
+            promptPlaceholder='Ask something or type "/" for demo commands…'
+            emptyState={{
+              title: 'Try slash commands',
+              description:
+                'Pick a command from the palette to insert a mention chip with optional className and color.',
+            }}
+          />
+        </div>
       </PageContentSection>
     </>
   );

@@ -172,34 +172,36 @@ export default function ChatComposerPrefillPage() {
             opens chat with prefill once
           </li>
         </ul>
-        <ChatChrome
-          variant="clean"
-          showResizeHandle={false}
-          resizeHandle={undefined}
-          onClose={undefined}
-          isEmpty={isEmpty}
-          renderPresets={() => null}
-          messages={messages}
-          onQuickReply={() => {}}
-          suppressedQuickReplyKeys={NO_QUICK_REPLY_KEYS}
-          isLoading={isLoading}
-          scriptContinueLabel={undefined}
-          onScriptContinue={undefined}
-          showSyntheticBranchButtons={false}
-          unusedBranchKeys={[]}
-          showInlinePresets={false}
-          isLastMessageFromUser={isLastMessageFromUser}
-          scrollRef={scrollRef}
-          effectiveScopeId="docs-chat-composer-prefill-inline"
-          onPromptSubmit={onSubmit}
-          onChatDeleted={() => {}}
-          promptPrefill={inlinePrefill}
-          emptyState={{
-            title: 'Inline prefill demo',
-            description:
-              'Click “Prefill inline composer” or type below. Portal and ?prompt= use the header ChatSheet.',
-          }}
-        />
+        <div style={{ minHeight: 600 }}>
+          <ChatChrome
+            variant="clean"
+            showResizeHandle={false}
+            resizeHandle={undefined}
+            onClose={undefined}
+            isEmpty={isEmpty}
+            renderPresets={() => null}
+            messages={messages}
+            onQuickReply={() => {}}
+            suppressedQuickReplyKeys={NO_QUICK_REPLY_KEYS}
+            isLoading={isLoading}
+            scriptContinueLabel={undefined}
+            onScriptContinue={undefined}
+            showSyntheticBranchButtons={false}
+            unusedBranchKeys={[]}
+            showInlinePresets={false}
+            isLastMessageFromUser={isLastMessageFromUser}
+            scrollRef={scrollRef}
+            effectiveScopeId="docs-chat-composer-prefill-inline"
+            onPromptSubmit={onSubmit}
+            onChatDeleted={() => {}}
+            promptPrefill={inlinePrefill}
+            emptyState={{
+              title: 'Inline prefill demo',
+              description:
+                'Click “Prefill inline composer” or type below. Portal and ?prompt= use the header ChatSheet.',
+            }}
+          />
+        </div>
       </PageContentSection>
     </>
   );

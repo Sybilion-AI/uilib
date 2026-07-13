@@ -139,33 +139,35 @@ export default function ChatUserCsvAttachmentPage() {
             Load preset-style message + CSV attachment
           </Button>
         </p>
-        <ChatChrome
-          variant="clean"
-          showResizeHandle={false}
-          resizeHandle={undefined}
-          onClose={undefined}
-          isEmpty={isEmpty}
-          renderPresets={() => null}
-          messages={messages}
-          onQuickReply={() => {}}
-          suppressedQuickReplyKeys={NO_QUICK_REPLY_KEYS}
-          isLoading={isLoading}
-          scriptContinueLabel={undefined}
-          onScriptContinue={undefined}
-          showSyntheticBranchButtons={false}
-          unusedBranchKeys={[]}
-          showInlinePresets={false}
-          isLastMessageFromUser={isLastMessageFromUser}
-          scrollRef={scrollRef}
-          effectiveScopeId="docs-chat-user-csv"
-          onPromptSubmit={onSubmit}
-          onChatDeleted={() => {}}
-          emptyState={{
-            title: 'CSV attachment demo',
-            description:
-              'Click the button above or send any message. The CSV row uses the same UI as dashboard presets.',
-          }}
-        />
+        <div style={{ minHeight: 600 }}>
+          <ChatChrome
+            variant="clean"
+            showResizeHandle={false}
+            resizeHandle={undefined}
+            onClose={undefined}
+            isEmpty={isEmpty}
+            renderPresets={() => null}
+            messages={messages}
+            onQuickReply={() => {}}
+            suppressedQuickReplyKeys={NO_QUICK_REPLY_KEYS}
+            isLoading={isLoading}
+            scriptContinueLabel={undefined}
+            onScriptContinue={undefined}
+            showSyntheticBranchButtons={false}
+            unusedBranchKeys={[]}
+            showInlinePresets={false}
+            isLastMessageFromUser={isLastMessageFromUser}
+            scrollRef={scrollRef}
+            effectiveScopeId="docs-chat-user-csv"
+            onPromptSubmit={onSubmit}
+            onChatDeleted={() => {}}
+            emptyState={{
+              title: 'CSV attachment demo',
+              description:
+                'Click the button above or send any message. The CSV row uses the same UI as dashboard presets.',
+            }}
+          />
+        </div>
       </PageContentSection>
     </>
   );
