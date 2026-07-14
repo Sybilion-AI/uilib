@@ -12,12 +12,19 @@ AGENT.md is the single source of truth for **component-centric** guidance (Curso
 
 ## File placement
 
-| Doc type                        | Path                                                         |
-| ------------------------------- | ------------------------------------------------------------ |
-| UI component                    | `src/components/ui/ComponentName/AGENT.md`                   |
-| Widget                          | `src/components/widgets/WidgetName/AGENT.md`                 |
-| Foundation (Colors, Spacing, …) | `src/docs/agent-guidance/{slug}.md`                          |
-| Page layout system              | `src/components/ui/Page/AGENT.md` (special — do not shorten) |
+| Doc type                       | Path                                                                                                                                         |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| UI component                   | `src/components/ui/ComponentName/AGENT.md`                                                                                                   |
+| Page per-primitive             | `src/components/ui/Page/<Primitive>/AGENT.md` (e.g. `PageEmptyCanvas/`)                                                                      |
+| Page layout system (composite) | `src/components/ui/Page/AGENT.md` (special — do not shorten)                                                                                 |
+| Chat per-sub                   | `src/components/ui/Chat/<Sub>/AGENT.md` (e.g. `ChatSheet/`, `ChatPrompt/`, `ChatChrome/`, `ChatMessage/`)                                    |
+| Chat composite                 | `src/components/ui/Chat/AGENT.md`                                                                                                            |
+| Widget                         | `src/components/widgets/WidgetName/AGENT.md`                                                                                                 |
+| Foundation / token / system    | `src/docs/agent-guidance/{slug}.md` (colors, typography, spacing, motion, icons, radii-shadows, standalone-app-layout, sybilion-auth-layout) |
+
+Per-primitive Page/Chat AGENT.md files are co-located next to the component they describe; the composite `Page/AGENT.md` / `Chat/AGENT.md` remains the authoritative overview and cross-references subfolder docs rather than duplicating them. `src/docs/agent-guidance/` is **token/system docs only** — Page and Chat feature docs do not live there.
+
+Do **not** add AGENT.md for shell-wired internals that agents never compose directly (e.g. **PageFooter** — pre-wired in standalone `AppLayout`). Same rule as Chat internals removed from the composite (ChatPrompt, ChatMessage). Keep human docs on the uilib docs site if needed.
 
 Do **not** add `src/components/widgets/AGENT.md` (authoring-only; lives in this skill).
 

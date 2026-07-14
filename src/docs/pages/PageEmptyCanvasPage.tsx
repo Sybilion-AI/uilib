@@ -4,7 +4,7 @@ import {
   PageContentSection,
   PageEmptyCanvas,
 } from '#uilib/components/ui/Page';
-import pageEmptyCanvasGuidance from '#uilib/docs/agent-guidance/page-empty-canvas.md';
+import pageEmptyCanvasGuidance from '#uilib/components/ui/Page/PageEmptyCanvas/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

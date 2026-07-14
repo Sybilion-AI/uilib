@@ -7,8 +7,8 @@ import {
   MessageRole,
   type SlashCommandItem,
 } from '#uilib/components/ui/Chat';
+import chatSlashCommandsGuidance from '#uilib/components/ui/Chat/ChatChrome/AGENT.md';
 import { PageContentSection } from '#uilib/components/ui/Page';
-import chatSlashCommandsGuidance from '#uilib/docs/agent-guidance/chat-slash-commands.md';
 import { ScrollRef } from '@homecode/ui';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';

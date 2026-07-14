@@ -6,8 +6,8 @@ import {
   type Message,
   MessageRole,
 } from '#uilib/components/ui/Chat';
+import chatUserCsvAttachmentGuidance from '#uilib/components/ui/Chat/ChatChrome/AGENT.md';
 import { PageContentSection } from '#uilib/components/ui/Page';
-import chatUserCsvAttachmentGuidance from '#uilib/docs/agent-guidance/chat-user-csv-attachment.md';
 import { ScrollRef } from '@homecode/ui';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';

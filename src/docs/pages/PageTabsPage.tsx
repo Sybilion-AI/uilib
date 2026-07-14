@@ -1,5 +1,5 @@
 import { PageContentSection, PageTabs } from '#uilib/components/ui/Page';
-import pageTabsGuidance from '#uilib/docs/agent-guidance/page-tabs.md';
+import pageTabsGuidance from '#uilib/components/ui/Page/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

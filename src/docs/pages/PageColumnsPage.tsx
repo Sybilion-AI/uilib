@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 
 import { PageColumns, PageContentSection } from '#uilib/components/ui/Page';
-import pageColumnsGuidance from '#uilib/docs/agent-guidance/page-columns.md';
+import pageColumnsGuidance from '#uilib/components/ui/Page/AGENT.md';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';

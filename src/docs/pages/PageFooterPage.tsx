@@ -8,13 +8,32 @@ import {
 } from '#uilib/components/ui/Page';
 import type { PageFooterLinkItem } from '#uilib/components/ui/Page/PageFooter/PageFooter';
 import { Switch } from '#uilib/components/ui/Switch';
-import pageFooterGuidance from '#uilib/docs/agent-guidance/page-footer.md';
 import { GlobeIcon, Hash, MailIcon, MessageCircle } from 'lucide-react';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
 import S from './PageFooterPage.styl';
+
+/** Human-maintainer docs only — not in agent glossary (shell-wired via AppLayout). */
+const PAGE_FOOTER_GUIDANCE = `PageFooter renders the page-level footer with copyright, a version label, and an optional row of links that wrap on narrow viewports. Links accept an icon and label and open external destinations.
+
+**Shell-only.** Standalone apps wire this in \`AppLayout\` via \`AppShellMainContent footer={…}\`; agents composing route pages do not import or render PageFooter.
+
+## When to use
+
+- At the bottom of an application shell to show copyright, version, and support links.
+- When you need a consistent set of external links, such as website, email, or community channels.
+
+## When not to use
+
+- For page actions or navigation within the app; keep those in the header or sidebar.
+- Inside individual sections or cards; the footer belongs to the page shell.
+
+## Do
+
+- Keep the link list short so it remains scannable when it wraps on mobile.
+`;
 
 const DEMO_LINKS: PageFooterLinkItem[] = [
   {
@@ -70,7 +89,7 @@ export default function PageFooterPage() {
         subheader="Copyright + optional link row with gap and wrapping."
         actions={<DocsHeaderActions />}
       />
-      <DocsGuidance source={pageFooterGuidance} />
+      <DocsGuidance source={PAGE_FOOTER_GUIDANCE} />
       <PageContent>
         <PageContentSection title="With links prop">
           <div

@@ -7,8 +7,8 @@ import {
   MessageRole,
   TEXT_ATTACHMENT_ACCEPT_PARTS,
 } from '#uilib/components/ui/Chat';
+import chatAttachmentsDropzoneGuidance from '#uilib/components/ui/Chat/ChatChrome/AGENT.md';
 import { PageContentSection } from '#uilib/components/ui/Page';
-import chatAttachmentsDropzoneGuidance from '#uilib/docs/agent-guidance/chat-attachments-dropzone.md';
 import { ScrollRef } from '@homecode/ui';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';

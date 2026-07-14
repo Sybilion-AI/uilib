@@ -22,7 +22,10 @@ const FOUNDATION_SLUGS = new Set([
   'spacing',
 ]);
 
-const PROTECTED_AGENT = new Set(['components/ui/Page/AGENT.md']);
+const PROTECTED_AGENT = new Set([
+  'components/ui/Page/AGENT.md',
+  'components/ui/Chat/AGENT.md',
+]);
 
 /** @type {Record<string, { slug: string, section: string }>} */
 const slugByPageFile = {};

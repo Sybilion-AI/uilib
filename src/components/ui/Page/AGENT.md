@@ -20,6 +20,8 @@ Global tokens (host app `:root`, e.g. `standalone-global.css`): `--page-width`, 
 
 ## PageTabs — rules and patterns
 
+Use `PageTabs` to divide a page into a few parallel views that share the same context. The tab strip scrolls horizontally (via `PageXScroll`) when triggers overflow the container; an outline variant exists for muted surfaces.
+
 **NEVER** place `PageTabs` inside `PageContentSection`. Tabs manage their own horizontal inset via `PageXScroll` / `tabsListProps.withPaddings`.
 
 ### Unified (tabs + panels inside PageContent)
@@ -118,7 +120,7 @@ In-section title block (`title`, `description`, `actions`). Use **inside** `Page
 
 ### PageEmptyCanvas
 
-Centered empty state: `title`, `hint`, optional `children` (e.g. CTA button). Use when a route has no data yet.
+Centered empty state: `title`, `hint`, optional `children` (e.g. CTA button). Place directly in `PageContent` (typically a `PageContentSection`); see `PageEmptyCanvas/AGENT.md`.
 
 ### GridLayout
 
@@ -132,13 +134,17 @@ Use inside sections for grouped content; see package `AGENT.md` on those compone
 
 Not part of the per-route skeleton but part of host app wiring:
 
-- **AppShell** / **AppShellMainContent** — sidebar + main column + header slot + footer.
+- **AppShell** / **AppShellMainContent** — sidebar + main column + `header` / `footer` slots. Standalone apps pre-wire the page footer in `AppLayout`; route pages do not compose footer primitives.
 - **PageScroll** — scroll root for the main column.
 - **SybilionAppHeader** — workspace app switcher + user menu (lives in header slot, not inside `PageContent`).
 
 ## Anti-patterns
 
 - `PageTabs` inside `PageContentSection`.
+- `PageTabs` nested inside another `PageTabs`.
+- `PageTabs` for sequential flow steps — use a wizard or stepper pattern instead.
+- `PageContentSection` nested inside another `PageContentSection`.
+- `PageContentSection` used as a generic container inside cards or other components — it is page-level structure, not a wrapper.
 - Inline styles or Tailwind for page structure.
 - Second `PageHeader` nested in content.
 - `PageContent` without sections for multi-block pages (prefer multiple `PageContentSection`).

@@ -1,6 +1,6 @@
 import type { SlashCommandItem } from '#uilib/components/ui/Chat';
+import chatSheetGuidance from '#uilib/components/ui/Chat/ChatSheet/AGENT.md';
 import { PageContentSection } from '#uilib/components/ui/Page';
-import chatSheetGuidance from '#uilib/docs/agent-guidance/chat-sheet.md';
 import { MessageSquare } from 'lucide-react';
 
 import {
@@ -28,7 +28,7 @@ export default function ChatSheetPage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'Chat' }, { label: 'Chat sheet' }]}
         title="Chat sheet (portal)"
-        subheader={`Same integration as the app dataset page: ChatSheet in header actions with dataset-scoped presets for "${DOCS_SAMPLE_DATASET_NAME}". Panel portaled into the shell chat slot.`}
+        subheader={`Same integration pattern as the app dataset page: portal ChatSheet with dataset-scoped presets for "${DOCS_SAMPLE_DATASET_NAME}" (this demo uses header actions for the trigger). Panel portaled into the shell chat slot.`}
         actions={
           <DocsHeaderActions
             scopeId={DOCS_CHAT_SHEET_SCOPE_ID}

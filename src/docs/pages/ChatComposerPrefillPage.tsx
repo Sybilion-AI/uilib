@@ -7,8 +7,8 @@ import {
   type Message,
   MessageRole,
 } from '#uilib/components/ui/Chat';
+import chatComposerPrefillGuidance from '#uilib/components/ui/Chat/AGENT.md';
 import { PageContentSection } from '#uilib/components/ui/Page';
-import chatComposerPrefillGuidance from '#uilib/docs/agent-guidance/chat-composer-prefill.md';
 import { ScrollRef } from '@homecode/ui';
 import { MessageSquare } from 'lucide-react';
 
