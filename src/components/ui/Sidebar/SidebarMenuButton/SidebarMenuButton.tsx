@@ -1,11 +1,10 @@
-import cn from 'classnames';
-
 import { Button } from '#uilib/components/ui/Button';
 import type { ButtonProps } from '#uilib/components/ui/Button/Button.types';
-import { SmartTextTruncate } from '#uilib/components/ui/SmartTextTruncate/SmartTextTruncate';
 import { ChevronRight } from 'lucide-react';
-
 import S from './SidebarMenuButton.styl';
+import { Slottable } from '@radix-ui/react-slot';
+import { SmartTextTruncate } from '#uilib/components/ui/SmartTextTruncate/SmartTextTruncate';
+import cn from 'classnames';
 
 export function SidebarMenuButton({
   asChild = false,
@@ -45,38 +44,53 @@ export function SidebarMenuButton({
     </span>
   ) : null;
 
-  const userContent = (
-    <>
-      {label}
-      {addon}
-    </>
+  const buttonClassName = cn(
+    variant === 'default' ? S.sidebarMenuButtonCta : S.sidebarMenuButton,
+    S[`size-${size}`],
+    className,
   );
+
+  if (effectiveAsChild) {
+    // The consumer supplies the root element (e.g. <NavLink/>). Radix Slot
+    // requires exactly one element child, so the consumer's element is wrapped
+    // in <Slottable/> and icon/addon stay as siblings — Slot clones the
+    // consumer's element with Button's props and injects the siblings as its
+    // children. SmartTextTruncate is intentionally omitted: wrapping the
+    // consumer's element would nest the rendered <a> inside a truncate
+    // container and break the slot contract.
+    return (
+      <Button
+        asChild
+        variant={variant}
+        size={size}
+        data-slot="sidebar-menu-button"
+        data-sidebar="menu-button"
+        data-active={isActive}
+        className={buttonClassName}
+        {...props}
+      >
+        {icon}
+        <Slottable>{children}</Slottable>
+        {addon}
+      </Button>
+    );
+  }
 
   return (
     <Button
-      asChild={effectiveAsChild}
       variant={variant}
       size={size}
       data-slot="sidebar-menu-button"
       data-sidebar="menu-button"
       data-active={isActive}
       aria-expanded={hasSubItems ? isExpanded : undefined}
-      className={cn(
-        variant === 'default' ? S.sidebarMenuButtonCta : S.sidebarMenuButton,
-        S[`size-${size}`],
-        className,
-      )}
+      className={buttonClassName}
       {...props}
     >
       {icon}
-      {effectiveAsChild ? (
-        userContent
-      ) : (
-        <>
-          {userContent}
-          {chevron}
-        </>
-      )}
+      {label}
+      {addon}
+      {chevron}
     </Button>
   );
 }
