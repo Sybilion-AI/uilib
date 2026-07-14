@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.29](https://github.com/Mir-Insight/uilib/compare/v1.4.28...v1.4.29) (2026-07-14)
+
+
+### Features
+
+* PageEmptyCanvas - Add docs example page ([6244db6](https://github.com/Mir-Insight/uilib/commit/6244db60fdbdd93d10669d06215012ea4661bcf8))
+
 ### [1.4.28](https://github.com/Mir-Insight/uilib/compare/v1.4.27...v1.4.28) (2026-07-14)
 
 
