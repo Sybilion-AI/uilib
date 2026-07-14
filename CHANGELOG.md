@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.28](https://github.com/Mir-Insight/uilib/compare/v1.4.27...v1.4.28) (2026-07-14)
+
+
+### Bug Fixes
+
+* ChatPrompt - Prefill submit active + select all ([cf436d7](https://github.com/Mir-Insight/uilib/commit/cf436d720811f1135928bff72ff6ba50b04213dd))
+* SidebarMenuButton - asChild Slot crash on authenticated routes ([396286c](https://github.com/Mir-Insight/uilib/commit/396286c2b6aa0b3bb6b9dc92fa19dd171dcb98ec))
+
 ### [1.4.27](https://github.com/Mir-Insight/uilib/compare/v1.4.26...v1.4.27) (2026-07-10)
 
 
