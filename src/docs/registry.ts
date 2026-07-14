@@ -429,6 +429,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/PageColumnsPage'),
   },
   {
+    slug: 'page-empty-canvas',
+    title: 'PageEmptyCanvas',
+    section: 'Layout',
+    load: () => import('./pages/PageEmptyCanvasPage'),
+  },
+  {
     slug: 'page-footer',
     title: 'PageFooter',
     section: 'Layout',
