@@ -40,6 +40,7 @@ import {
   useChatsForScopeId,
   useSyncChatPanelBusy,
 } from '#uilib/contexts/chat-context';
+import { loadScopeIndex } from '#uilib/contexts/chatSessionStorage';
 import { shellFitsSidebarsLayout } from '#uilib/hooks/panelWidth';
 import useEvent from '#uilib/hooks/useEvent';
 import { useIsMobile } from '#uilib/hooks/useIsMobile';
@@ -204,6 +205,7 @@ export function useChatPanelChromeModel({
     currentChatId,
     setCurrentChatId,
     newChat,
+    linkSessionToScope,
     sendMessage,
     addMessage,
     removeMessageById,
@@ -253,10 +255,27 @@ export function useChatPanelChromeModel({
 
     if (chats.length > 0) {
       setCurrentChatId(chats[0].session_id);
-    } else {
-      newChat();
+      return;
     }
-  }, [panelActive, currentChatId, chats, setCurrentChatId, newChat]);
+
+    const index = loadScopeIndex(effectiveScopeId);
+    const persistedSessionId =
+      index?.currentSessionId ?? index?.sessionIds[0] ?? null;
+    if (persistedSessionId) {
+      linkSessionToScope(persistedSessionId);
+      return;
+    }
+
+    newChat();
+  }, [
+    panelActive,
+    currentChatId,
+    chats,
+    effectiveScopeId,
+    setCurrentChatId,
+    linkSessionToScope,
+    newChat,
+  ]);
   const [scriptByChatId, setScriptByChatId] = useState<
     Record<string, PresetScriptState>
   >({});

@@ -4,6 +4,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
 } from 'react';
@@ -651,7 +652,9 @@ export function ChatProvider({
     ],
   );
 
-  useEffect(() => {
+  // Layout effect so LS hydration finishes before child `useEffect` hooks that
+  // may call `newChat()` when `?chat=open` opens the panel on first mount.
+  useLayoutEffect(() => {
     if (userSwitchKey === null) {
       setChats({});
       setCurrentChatIdState({});
