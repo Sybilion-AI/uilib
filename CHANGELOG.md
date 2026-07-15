@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.33](https://github.com/Mir-Insight/uilib/compare/v1.4.32...v1.4.33) (2026-07-15)
+
+
+### Features
+
+* Card - Add xs size and size shorthand ([532b600](https://github.com/Mir-Insight/uilib/commit/532b600ed1485dda451ecf1be83224c0d1f9b69e))
+
 ### [1.4.32](https://github.com/Mir-Insight/uilib/compare/v1.4.31...v1.4.32) (2026-07-15)
 
 
