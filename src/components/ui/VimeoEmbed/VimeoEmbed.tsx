@@ -32,6 +32,9 @@ function VimeoEmbed({
   const playerRef = useRef<Player | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
+  // Intrinsic video aspect ratio (width / height) reported by the Vimeo SDK.
+  // Null until the player reports it; falls back to the CSS default meanwhile.
+  const [aspectRatio, setAspectRatio] = useState<number | null>(null);
 
   const parsed = parseVimeoUrl(videoId);
   const id = parsed.id;
@@ -46,6 +49,7 @@ function VimeoEmbed({
 
   // Cleanup player when id/hash changes
   useEffect(() => {
+    setAspectRatio(null);
     if (playerRef.current) {
       playerRef.current
         .destroy()
@@ -86,6 +90,17 @@ function VimeoEmbed({
         .ready()
         .then(() => {
           setIsPlayerReady(true);
+
+          // Read the video's intrinsic dimensions so the container can adopt
+          // the exact aspect ratio — eliminates letterbox stripes from the
+          // hardcoded box ratio mismatching the source video.
+          Promise.all([player.getVideoWidth(), player.getVideoHeight()])
+            .then(([w, h]) => {
+              if (w > 0 && h > 0) setAspectRatio(w / h);
+            })
+            .catch(() => {
+              // Ignore dimension errors; CSS fallback ratio stays in effect
+            });
 
           // Listen to SDK events
           player.on('play', () => setIsPlaying(true));
@@ -156,6 +171,7 @@ function VimeoEmbed({
     <div
       ref={containerRef}
       className={cn(S.root, className, isPlaying && S.isPlaying)}
+      style={aspectRatio ? { aspectRatio: String(aspectRatio) } : undefined}
       {...props}
     >
       <iframe
