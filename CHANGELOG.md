@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.31](https://github.com/Mir-Insight/uilib/compare/v1.4.30...v1.4.31) (2026-07-15)
+
+
+### Bug Fixes
+
+* VimeoEmbed - Reload player when video source changes ([0aac616](https://github.com/Mir-Insight/uilib/commit/0aac616ca2f0af229d6ed4bd1b822561adcb8823))
+
 ### [1.4.30](https://github.com/Mir-Insight/uilib/compare/v1.4.29...v1.4.30) (2026-07-15)
 
 
