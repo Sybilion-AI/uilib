@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import {
   AnchorHTMLAttributes,
   DetailedHTMLProps,
@@ -5,6 +6,11 @@ import {
   useEffect,
   useRef,
 } from 'react';
+
+import { TextWithDeferTooltip } from '#uilib/components/ui/TextWithDeferTooltip';
+import { Scroll } from '@homecode/ui';
+
+import S from './Card.styl';
 import type {
   CardActionProps,
   CardContentProps,
@@ -15,25 +21,24 @@ import type {
   CardTitleProps,
 } from './Card.types';
 
-import S from './Card.styl';
-import { Scroll } from '@homecode/ui';
-import { TextWithDeferTooltip } from '#uilib/components/ui/TextWithDeferTooltip';
-import cn from 'classnames';
-
 const SCROLL_OFFSET = 300;
 
 function Card({
   className,
-  paddingSize = 'm',
-  radiusSize = 'm',
+  size,
+  paddingSize,
+  radiusSize,
   ...props
 }: CardProps) {
+  const resolvedPadding = paddingSize ?? size ?? 'm';
+  const resolvedRadius = radiusSize ?? size ?? 'm';
+
   return (
     <div
       className={cn(
         S.root,
-        S[`padding-${paddingSize}`],
-        S[`radius-${radiusSize}`],
+        S[`padding-${resolvedPadding}`],
+        S[`radius-${resolvedRadius}`],
         className,
       )}
       {...props}

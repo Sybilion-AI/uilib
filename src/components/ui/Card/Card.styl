@@ -3,7 +3,6 @@
 .root
   display flex
   flex-direction column
-  gap var(--p-4)
   max-height 100%
   border-radius var(--radius-card)
   border 1px solid var(--border)
@@ -12,13 +11,20 @@
   color var(--card-foreground)
   position relative
 
+  &.padding-xs
+    padding var(--p-2)
   &.padding-s
     padding var(--p-4)
+    gap var(--p-1)
   &.padding-m
     padding var(--p-6)
+    gap var(--p-2)
   &.padding-l
     padding var(--p-8)
+    gap var(--p-3)
 
+  &.radius-xs
+    border-radius var(--p-1)
   &.radius-s
     border-radius var(--p-2)
   &.radius-m

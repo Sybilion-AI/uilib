@@ -1,11 +1,12 @@
 import {
-  ReactNode,
+  type ReactNode,
   createContext,
   useCallback,
   useContext,
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 
@@ -43,7 +44,13 @@ import type { LinkSessionToScopeOptions } from './chatSessionStorage';
 export type SendChatMessageFn = (
   message: string,
   targetChatId: string,
+  options?: SendChatMessageOptions,
 ) => Promise<ChatResponse>;
+
+export type SendChatMessageOptions = {
+  /** Prior USER/ASSISTANT turns (excludes the outbound user line). */
+  history?: Array<{ role: string; content: string }>;
+};
 
 export type {
   ChatSendMessagePayload,
@@ -177,6 +184,23 @@ function remapSessionIdInMemory(
   return next;
 }
 
+/** Prior USER/ASSISTANT turns for outbound chat APIs (excludes current user line). */
+function buildChatHistoryFromMessages(
+  messages: readonly Message[],
+): SendChatMessageOptions['history'] {
+  const turns = messages.filter(
+    message =>
+      !message.inProgress &&
+      (message.role === MessageRole.USER ||
+        message.role === MessageRole.ASSISTANT) &&
+      message.text.trim() !== '',
+  );
+  return turns.map(message => ({
+    role: message.role,
+    content: message.text,
+  }));
+}
+
 /** Shallow-clone messages for seeding another session; drops in-progress rows. */
 function cloneMessagesForNewSession(messages: readonly Message[]): Message[] {
   return messages
@@ -222,6 +246,8 @@ export function ChatProvider({
     Record<string, number>
   >({});
   const [panelBusyCount, setPanelBusyCount] = useState(0);
+  const chatsRef = useRef(chats);
+  chatsRef.current = chats;
 
   const acquirePanelBusy = useCallback(() => {
     setPanelBusyCount(count => count + 1);
@@ -558,6 +584,11 @@ export function ChatProvider({
       const apiPayload =
         typeof message === 'string' ? message : message.apiMessage;
 
+      const priorChat = chatsRef.current[scopeId]?.find(
+        chat => chat.session_id === targetChatId,
+      );
+      const history = buildChatHistoryFromMessages(priorChat?.messages ?? []);
+
       if (typeof message === 'string') {
         addMessage(scopeId, targetChatId, MessageRole.USER, message);
       } else if (!message.omitUserMessage) {
@@ -587,7 +618,9 @@ export function ChatProvider({
       beginOutboundPending(scopeId, pendingChatSessionId);
       let effectiveSessionId = pendingChatSessionId;
       try {
-        const data = await sendChatMessageFn(apiPayload, pendingChatSessionId);
+        const data = await sendChatMessageFn(apiPayload, pendingChatSessionId, {
+          history,
+        });
 
         effectiveSessionId =
           data.session_id && data.session_id !== pendingChatSessionId

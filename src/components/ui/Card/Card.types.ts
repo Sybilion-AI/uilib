@@ -1,8 +1,12 @@
 import { TextWithDeferTooltipProps } from '#uilib/components/ui/TextWithDeferTooltip';
 
+export type CardSize = 'xs' | 's' | 'm' | 'l';
+
 export interface CardProps extends React.ComponentProps<'div'> {
-  paddingSize?: 's' | 'm' | 'l';
-  radiusSize?: 's' | 'm' | 'l' | 'xl';
+  /** Shorthand for matching `paddingSize` and `radiusSize`. */
+  size?: CardSize;
+  paddingSize?: CardSize;
+  radiusSize?: CardSize | 'xl';
 }
 
 export interface CardHeaderProps extends Omit<

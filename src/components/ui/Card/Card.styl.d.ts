@@ -12,11 +12,13 @@ interface CssExports {
   'padding-l': string;
   'padding-m': string;
   'padding-s': string;
+  'padding-xs': string;
   'radius-2xl': string;
   'radius-l': string;
   'radius-m': string;
   'radius-s': string;
   'radius-xl': string;
+  'radius-xs': string;
   'root': string;
   'scroll': string;
   'title': string;

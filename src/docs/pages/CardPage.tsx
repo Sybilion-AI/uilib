@@ -1,3 +1,4 @@
+import { Button } from '#uilib/components/ui/Button';
 import {
   Card,
   CardContent,
@@ -7,17 +8,16 @@ import {
   CardTitle,
   LinkCard,
 } from '#uilib/components/ui/Card';
+import CardGuidance from '#uilib/components/ui/Card/AGENT.md';
+import { PageContentSection } from '#uilib/components/ui/Page';
+import { PackageIcon } from '@phosphor-icons/react';
 
 import { AppPageHeader } from '../components/AppPageHeader/AppPageHeader';
-import { Button } from '#uilib/components/ui/Button';
-import CardGuidance from '#uilib/components/ui/Card/AGENT.md';
 import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
-import { PackageIcon } from '@phosphor-icons/react';
-import { PageContentSection } from '#uilib/components/ui/Page';
 
-const PADDING_SIZES = ['s', 'm', 'l'] as const;
-const RADIUS_SIZES = ['s', 'm', 'l', 'xl'] as const;
+const PADDING_SIZES = ['xs', 's', 'm', 'l'] as const;
+const RADIUS_SIZES = ['xs', 's', 'm', 'l', 'xl'] as const;
 
 const CARD_WIDTH = 280;
 
