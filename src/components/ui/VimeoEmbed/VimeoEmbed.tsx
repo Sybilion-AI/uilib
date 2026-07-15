@@ -30,6 +30,10 @@ function VimeoEmbed({
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<Player | null>(null);
+  // Generation token: incremented on every [id, hash] change so that stale
+  // async destroys / ready callbacks from a previous video can't clobber the
+  // current player ref.
+  const generationRef = useRef(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   // Intrinsic video aspect ratio (width / height) reported by the Vimeo SDK.
@@ -50,14 +54,23 @@ function VimeoEmbed({
   // Cleanup player when id/hash changes
   useEffect(() => {
     setAspectRatio(null);
-    if (playerRef.current) {
-      playerRef.current
+    generationRef.current += 1;
+    const token = generationRef.current;
+
+    const previousPlayer = playerRef.current;
+    playerRef.current = null;
+    setIsPlayerReady(false);
+    setIsPlaying(false);
+
+    if (previousPlayer) {
+      previousPlayer
         .destroy()
         .catch(() => {
           // Ignore destroy errors
         })
         .finally(() => {
-          playerRef.current = null;
+          if (generationRef.current !== token) return;
+          if (playerRef.current) return;
           setIsPlayerReady(false);
           setIsPlaying(false);
         });
@@ -68,49 +81,61 @@ function VimeoEmbed({
   const handleIframeLoad = useCallback(() => {
     if (!iframeRef.current) return;
 
-    // Clean up existing player if any
-    if (playerRef.current) {
-      playerRef.current
-        .destroy()
-        .catch(() => {
-          // Ignore destroy errors
-        })
-        .finally(() => {
-          playerRef.current = null;
-        });
+    const token = generationRef.current;
+
+    const previousPlayer = playerRef.current;
+    playerRef.current = null;
+    if (previousPlayer) {
+      previousPlayer.destroy().catch(() => {});
     }
 
     try {
       const player = new Player(iframeRef.current);
 
+      if (generationRef.current !== token) {
+        player.destroy().catch(() => {});
+        return;
+      }
+
       playerRef.current = player;
 
-      // Wait for player to be ready before setting up events
       player
         .ready()
         .then(() => {
+          if (generationRef.current !== token) {
+            if (playerRef.current === player) playerRef.current = null;
+            player.destroy().catch(() => {});
+            return;
+          }
+
           setIsPlayerReady(true);
 
-          // Read the video's intrinsic dimensions so the container can adopt
-          // the exact aspect ratio — eliminates letterbox stripes from the
-          // hardcoded box ratio mismatching the source video.
           Promise.all([player.getVideoWidth(), player.getVideoHeight()])
             .then(([w, h]) => {
+              if (generationRef.current !== token) return;
               if (w > 0 && h > 0) setAspectRatio(w / h);
             })
             .catch(() => {
               // Ignore dimension errors; CSS fallback ratio stays in effect
             });
 
-          // Listen to SDK events
-          player.on('play', () => setIsPlaying(true));
-          player.on('pause', () => setIsPlaying(false));
-          player.on('ended', () => setIsPlaying(false));
+          player.on('play', () => {
+            if (generationRef.current !== token) return;
+            setIsPlaying(true);
+          });
+          player.on('pause', () => {
+            if (generationRef.current !== token) return;
+            setIsPlaying(false);
+          });
+          player.on('ended', () => {
+            if (generationRef.current !== token) return;
+            setIsPlaying(false);
+          });
         })
         .catch(() => {
           // Ignore ready errors
         });
-    } catch (error) {
+    } catch {
       // Ignore initialization errors
     }
   }, []);
@@ -175,6 +200,7 @@ function VimeoEmbed({
       {...props}
     >
       <iframe
+        key={embedUrl}
         ref={iframeRef}
         src={embedUrl}
         className={S.iframe}
