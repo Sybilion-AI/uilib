@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.30](https://github.com/Mir-Insight/uilib/compare/v1.4.29...v1.4.30) (2026-07-15)
+
+
+### Bug Fixes
+
+* VimeoEmbed - Fit container to intrinsic video aspect ratio ([689f768](https://github.com/Mir-Insight/uilib/commit/689f768d828cec232747dcbab0d6cf26dc01cd93))
+
 ### [1.4.29](https://github.com/Mir-Insight/uilib/compare/v1.4.28...v1.4.29) (2026-07-14)
 
 
