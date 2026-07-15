@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.32](https://github.com/Mir-Insight/uilib/compare/v1.4.31...v1.4.32) (2026-07-15)
+
+
+### Bug Fixes
+
+* Chat - Restore session on reload with chat open ([305b43c](https://github.com/Mir-Insight/uilib/commit/305b43cc5092856b48fde7eec4db3c2fe45c3a98))
+
 ### [1.4.31](https://github.com/Mir-Insight/uilib/compare/v1.4.30...v1.4.31) (2026-07-15)
 
 
