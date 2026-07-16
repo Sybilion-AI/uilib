@@ -21,7 +21,7 @@ export function AppPageHeader({
       subheader={subheader}
       actions={actions}
       breadcrumbClientLogo={<Logo size="sm" showText={false} />}
-      breadcrumbCompanyName="Sybilion uilib"
+      breadcrumbCompanyName="Sybilion Design System"
       breadcrumbs={['client-name', ...breadcrumbs]}
     />
   );

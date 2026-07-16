@@ -17,6 +17,7 @@ export function Chat({
   onChatDeleted,
   onNewChat,
   hideChatSelector = false,
+  chatSelectorProps,
   ...props
 }: ChatProps) {
   return (
@@ -24,6 +25,7 @@ export function Chat({
       {scopeId && !hideChatSelector ? (
         <div className={S.header}>
           <ChatSelector
+            {...chatSelectorProps}
             id={scopeId}
             onChatDeleted={onChatDeleted}
             onNewChat={onNewChat}

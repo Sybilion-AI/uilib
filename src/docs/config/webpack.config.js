@@ -241,7 +241,7 @@ export default (env, argv) => {
           mode: 'webapp',
           devMode: 'webapp',
           favicons: {
-            appName: 'Sybilion uilib',
+            appName: 'Sybilion Design System',
             developerName: 'Sybilion',
             developerURL: null,
             background: '#fff',

@@ -1,5 +1,6 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 
+import { ChatSelectorProps } from '#uilib/components/ui/Chat/ChatSheet/ChatSelector.js';
 import type {
   SlashCommandItem,
   SlashOnItemCommand,
@@ -165,4 +166,6 @@ export interface ChatProps extends HTMLAttributes<HTMLDivElement> {
   onNewChat?: () => void;
   /** When true, skip built-in header ChatSelector (e.g. external page-header slot). */
   hideChatSelector?: boolean;
+  /** Props for the chat selector. */
+  chatSelectorProps?: Partial<ChatSelectorProps>;
 }
