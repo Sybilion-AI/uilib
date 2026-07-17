@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.34](https://github.com/Mir-Insight/uilib/compare/v1.4.33...v1.4.34) (2026-07-17)
+
+
+### Features
+
+* Chat - Pass through selector props ([6da0a03](https://github.com/Mir-Insight/uilib/commit/6da0a03392faae9e78c862ff63124c1614e67d6f))
+
 ### [1.4.33](https://github.com/Mir-Insight/uilib/compare/v1.4.32...v1.4.33) (2026-07-15)
 
 
