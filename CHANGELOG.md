@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.35](https://github.com/Mir-Insight/uilib/compare/v1.4.34...v1.4.35) (2026-07-27)
+
+
+### Bug Fixes
+
+* Chat - Attachment-only message display ([dc34522](https://github.com/Mir-Insight/uilib/commit/dc34522a155ea3a366e2ca95a8141db09884d880))
+
 ### [1.4.34](https://github.com/Mir-Insight/uilib/compare/v1.4.33...v1.4.34) (2026-07-17)
 
 
