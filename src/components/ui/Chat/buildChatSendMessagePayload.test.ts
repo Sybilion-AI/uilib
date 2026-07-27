@@ -38,15 +38,16 @@ describe('buildChatSendMessagePayload', () => {
     expect(result.userTextFileAttachments?.[0].filename).toMatch(/\.csv$/i);
   });
 
-  it('uses first file name as displayText when message is empty', () => {
+  it('keeps displayText empty when message is empty (attachment-only)', () => {
     const result = buildChatSendMessagePayload('', [
       makeDropItem('report.pdf', 'pdf text', 'pdf'),
     ]);
     if (typeof result === 'string') {
       throw new Error('expected payload object');
     }
-    expect(result.displayText).toBe('report.pdf');
-    expect(result.apiMessage).toBe('report.pdf\n\npdf text');
+    expect(result.displayText).toBe('');
+    expect(result.apiMessage).toBe('pdf text');
+    expect(result.userTextFileAttachments?.[0].displayName).toBe('report.pdf');
     expect(result.userTextFileAttachments?.[0].filename).toMatch(/\.pdf$/i);
   });
 

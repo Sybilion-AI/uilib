@@ -66,11 +66,17 @@ export function ChatMessage({
         />
       ) : (
         <div className={S.userColumn}>
-          <div
-            className={cn(S.text, textClassName && S.textCustom, textClassName)}
-          >
-            <InteractiveContent text={text} />
-          </div>
+          {text.trim() && (
+            <div
+              className={cn(
+                S.text,
+                textClassName && S.textCustom,
+                textClassName,
+              )}
+            >
+              <InteractiveContent text={text} />
+            </div>
+          )}
           {fileAttachments.map(attachment => (
             <UserTextFileAttachmentBubble
               key={`${attachment.displayName}:${attachment.filename}`}

@@ -68,10 +68,14 @@ export function ChatSelector({
     }
     if (chat.messages.length > 0) {
       const firstMessage = chat.messages[0];
-      return (
-        firstMessage.text.slice(0, 30) +
-        (firstMessage.text.length > 30 ? '...' : '')
-      );
+      const text = firstMessage.text.trim();
+      const attachmentName =
+        firstMessage.userTextFileAttachments?.[0]?.displayName?.trim() ?? '';
+      // Attachment-only sends keep text empty — title from filename instead.
+      const label = text || attachmentName;
+      if (label) {
+        return label.slice(0, 30) + (label.length > 30 ? '...' : '');
+      }
     }
     return 'New chat';
   };

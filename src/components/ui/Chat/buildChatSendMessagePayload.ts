@@ -64,12 +64,11 @@ export function buildChatSendMessagePayload(
   }
 
   const userTextFileAttachments = attachments.map(dropItemToUserAttachment);
-  const resolvedDisplayText =
-    trimmed.length > 0 ? trimmed : userTextFileAttachments[0].displayName;
 
   return {
-    apiMessage: buildApiMessage(resolvedDisplayText, attachments),
-    displayText: resolvedDisplayText,
+    apiMessage: buildApiMessage(trimmed, attachments),
+    // Keep empty when send is attachment-only — filename shows on the card, not as a text bubble.
+    displayText: trimmed,
     userTextFileAttachments,
   };
 }
