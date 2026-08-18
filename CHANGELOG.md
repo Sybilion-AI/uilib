@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.36](https://github.com/Mir-Insight/uilib/compare/v1.4.35...v1.4.36) (2026-08-18)
+
+
+### Features
+
+* Foldable - Add clear variant ([944e1f0](https://github.com/Mir-Insight/uilib/commit/944e1f09eb6cf7485e8a3714599d14129fcd7eb8))
+
 ### [1.4.35](https://github.com/Mir-Insight/uilib/compare/v1.4.34...v1.4.35) (2026-07-27)
 
 
