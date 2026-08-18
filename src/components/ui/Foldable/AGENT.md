@@ -1,4 +1,4 @@
-Foldable is a collapsible section with a clickable header that shows or hides its content. Pass the header and content as props, and use defaultUnfolded to open the section initially.
+Foldable is a collapsible section with a clickable header that shows or hides its content. Pass the header and content as props, and use defaultUnfolded to open the section initially. `variant="clear"` strips the bordered card fill; the default keeps it.
 
 ## When to use
 

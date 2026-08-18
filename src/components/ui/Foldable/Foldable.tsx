@@ -11,6 +11,7 @@ export function Foldable({
   content,
   contentClassName,
   defaultUnfolded = false,
+  variant = 'default',
 }: FoldableProps) {
   const [isUnfolded, setIsUnfolded] = useState(defaultUnfolded);
 
@@ -19,20 +20,28 @@ export function Foldable({
   };
 
   return (
-    <div className={cn(S.root, isUnfolded && S.unfolded)}>
-      <div className={S.header} onClick={toggleFold}>
+    <div
+      className={cn(
+        S.root,
+        isUnfolded && S.unfolded,
+        variant === 'clear' && S.clear,
+      )}
+    >
+      <div className={S.header} onClick={toggleFold} aria-expanded={isUnfolded}>
         <div className={S.headerContent}>{header}</div>
         <div className={S.toggle}>
-          {isUnfolded ? (
-            <CaretUpIcon size={20} className={S.icon} />
-          ) : (
-            <CaretDownIcon size={20} className={S.icon} />
-          )}
+          <CaretUpIcon size={20} className={S.icon} />
         </div>
       </div>
-      {isUnfolded && (
-        <div className={cn(S.content, contentClassName)}>{content}</div>
-      )}
+      <div
+        className={cn(
+          S.content,
+          !isUnfolded && S.contentHidden,
+          contentClassName,
+        )}
+      >
+        {content}
+      </div>
     </div>
   );
 }

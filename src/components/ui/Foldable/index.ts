@@ -1,2 +1,2 @@
 export { Foldable } from './Foldable';
-export type { FoldableProps } from './Foldable.types';
+export type { FoldableProps, FoldableVariant } from './Foldable.types';

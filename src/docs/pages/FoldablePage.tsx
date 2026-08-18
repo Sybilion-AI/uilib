@@ -16,11 +16,17 @@ export default function FoldablePage() {
         actions={<DocsHeaderActions />}
       />
       <DocsGuidance source={FoldableGuidance} />
-      <PageContentSection>
+      <PageContentSection style={{ width: '300px' }}>
         <Foldable
           header={<span>Click to expand</span>}
           content={<p style={{ margin: 0 }}>Hidden content inside.</p>}
           defaultUnfolded
+        />
+        <br />
+        <Foldable
+          header={<span>Clear variant</span>}
+          content={<p style={{ margin: 0 }}>Hidden content inside.</p>}
+          variant="clear"
         />
       </PageContentSection>
     </>
