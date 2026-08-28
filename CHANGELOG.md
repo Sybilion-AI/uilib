@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.37](https://github.com/Mir-Insight/uilib/compare/v1.4.36...v1.4.37) (2026-08-28)
+
+
+### Features
+
+* Chip - Add size variants ([cfd45d3](https://github.com/Mir-Insight/uilib/commit/cfd45d3f51542e2a3a1af941d06dd4a042573b51))
+
+
+### Bug Fixes
+
+* Input - Focus rings and token cleanup ([c9abc3d](https://github.com/Mir-Insight/uilib/commit/c9abc3db7e7cfcbe4ee7bf6b2a5d7b9667ab1a90))
+
 ### [1.4.36](https://github.com/Mir-Insight/uilib/compare/v1.4.35...v1.4.36) (2026-08-18)
 
 
