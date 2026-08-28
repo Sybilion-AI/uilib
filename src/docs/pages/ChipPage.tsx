@@ -1,5 +1,5 @@
 import { Chip } from '#uilib/components/ui/Chip';
-import type { ChipVariant } from '#uilib/components/ui/Chip';
+import type { ChipSize, ChipVariant } from '#uilib/components/ui/Chip';
 import ChipGuidance from '#uilib/components/ui/Chip/AGENT.md';
 import { PageContentSection } from '#uilib/components/ui/Page';
 
@@ -17,6 +17,8 @@ const VARIANTS: ChipVariant[] = [
   'negative',
   'yellow',
 ];
+
+const SIZES: ChipSize[] = ['xs', 'sm', 'md', 'lg'];
 
 export default function ChipPage() {
   return (
@@ -44,6 +46,23 @@ export default function ChipPage() {
             {VARIANTS.map(v => (
               <Chip key={v} variant={v}>
                 {v}
+              </Chip>
+            ))}
+          </div>
+        </section>
+        <section>
+          <h3 style={{ marginBottom: '1rem' }}>Sizes</h3>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.75rem',
+              alignItems: 'center',
+            }}
+          >
+            {SIZES.map(s => (
+              <Chip key={s} size={s} variant="line">
+                {s}
               </Chip>
             ))}
           </div>

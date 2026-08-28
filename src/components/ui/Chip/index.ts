@@ -1,2 +1,2 @@
 export { Chip } from './Chip';
-export type { ChipProps, ChipTrend, ChipVariant } from './Chip.types';
+export type { ChipProps, ChipSize, ChipTrend, ChipVariant } from './Chip.types';

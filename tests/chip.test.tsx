@@ -30,6 +30,16 @@ describe('Chip', () => {
     expect(screen.getByText('Label').className).toContain('variant-neutral');
   });
 
+  it('defaults to sm and applies size classes', () => {
+    render(<Chip>Default</Chip>);
+    expect(screen.getByText('Default')).toHaveAttribute('data-size', 'sm');
+    expect(screen.getByText('Default').className).toContain('sizeSm');
+
+    render(<Chip size="lg">Large</Chip>);
+    expect(screen.getByText('Large')).toHaveAttribute('data-size', 'lg');
+    expect(screen.getByText('Large').className).toContain('sizeLg');
+  });
+
   it('does not show the status dot unless dot is true', () => {
     const { container: neutral } = render(<Chip>Neutral</Chip>);
     expect(neutral.querySelector('.dot')).toBeNull();

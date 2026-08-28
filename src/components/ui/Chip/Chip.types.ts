@@ -12,8 +12,11 @@ export type ChipVariant =
 
 export type ChipTrend = 'up' | 'down';
 
+export type ChipSize = 'xs' | 'sm' | 'md' | 'lg';
+
 export interface ChipProps extends ComponentProps<'span'> {
   variant?: ChipVariant;
+  size?: ChipSize;
   /**
    * Show the 6px status dot. Defaults to true for the neutral variant
    * (when not squared) and false for all others.

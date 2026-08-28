@@ -4,6 +4,10 @@ interface CssExports {
   'arrow': string;
   'dot': string;
   'root': string;
+  'sizeLg': string;
+  'sizeMd': string;
+  'sizeSm': string;
+  'sizeXs': string;
   'squared': string;
   'variant-accent': string;
   'variant-active': string;

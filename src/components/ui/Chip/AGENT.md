@@ -1,4 +1,4 @@
-Chips are compact capsules for filters, status labels, version tags, and quantitative delta indicators. Use the default pill shape for filters and live status; pass `squared` for compact label badges in lists, tables, and cards.
+Chips are compact capsules for filters, status labels, version tags, and quantitative delta indicators. Use the default pill shape for filters and live status; pass `squared` for compact label badges in lists, tables, and cards. Size is `xs` | `sm` | `md` | `lg` (same tokens as Select; Button uses `sm` | `md` | `lg`). Default `sm` keeps the compact badge.
 
 ## When to use
 

@@ -4,12 +4,8 @@
   width fit-content
   flex-shrink 0
   white-space nowrap
-  gap 6px
-  padding var(--p-1) var(--p-2)
   border-radius var(--radius-pill)
   font-family var(--font-family-body)
-  font-size 11px
-  line-height 1rem
   font-weight 400
   letter-spacing var(--tracking-body)
   transition background-color var(--dur-base) var(--ease-standard), color var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard)
@@ -27,10 +23,74 @@
   &.squared
     border-radius var(--p-1)
 
+  &.sizeXs
+    gap 4px
+    min-height 28px
+    padding 0 10px
+    font-size var(--text-xs)
+    line-height 1
+
+    & > svg
+    .arrow
+      width 0.625rem
+      height 0.625rem
+
+    .dot
+      width 4px
+      height 4px
+
+  &.sizeSm
+    gap 6px
+    padding var(--p-1) var(--p-2)
+    font-size 11px
+    line-height 1rem
+
+    & > svg
+      width 0.75rem
+      height 0.75rem
+
+    .arrow
+      width 10px
+      height 10px
+
+  &.sizeMd
+    gap var(--p-2)
+    min-height 40px
+    padding 11px 14px
+    font-size var(--text-sm)
+    line-height 1
+
+    & > svg
+    .arrow
+      width 1rem
+      height 1rem
+
+    .dot
+      width 8px
+      height 8px
+
+  &.sizeLg
+    gap var(--p-2)
+    min-height 48px
+    padding var(--p-4) var(--p-6)
+    font-size var(--text-base)
+    line-height 1
+
+    & > svg
+    .arrow
+      width 1.25rem
+      height 1.25rem
+
+    .dot
+      width 8px
+      height 8px
+
   & > svg
-    width 0.75rem
-    height 0.75rem
     pointer-events none
+
+  &[role="combobox"]
+    cursor pointer
+    border none
 
   .dot
     width 6px
