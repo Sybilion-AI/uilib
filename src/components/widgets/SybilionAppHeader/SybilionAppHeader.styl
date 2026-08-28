@@ -18,7 +18,7 @@
 .logoArea
   position absolute
   top 22px
-  left 40px
+  left 28px
   z-index 10
 
   display flex
@@ -26,7 +26,7 @@
   gap var(--p-2)
 
   @media (max-width MOBILE)
-    left 22px
+    left 16px
 
   // Top-level shell + expanded sidebar: fixed logo when header scrolls; absolute when header is sticky.
   @media (min-width MOBILE)
@@ -37,7 +37,7 @@
 
     :global([data-slot='sidebar-wrapper'][data-state='expanded']:not([data-slot='app-shell'] [data-slot='sidebar-wrapper']) [data-slot='app-shell']:not([data-slot='app-shell'] [data-slot='app-shell'])) :global(header[data-sticky='true']) &:global(:not([data-slot='app-shell'] [data-slot='app-shell'] *))
       position absolute
-      left calc(-1 * var(--sidebar-width) + 52px)
+      left calc(-1 * var(--sidebar-width) + 40px)
 
     // Nested shell (e.g. docs embed): absolute within header; offset into sidebar when expanded.
     :global([data-slot='app-shell'] [data-slot='sidebar-wrapper'][data-state='expanded'] [data-slot='app-shell']) &
@@ -56,7 +56,7 @@
 
   font-weight 400
   font-size 1.5rem
-  color var(--color-foreground)
+  color var(--foreground)
   text-decoration none
   white-space nowrap
 

@@ -53,7 +53,12 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       data-variant={variant}
-      className={cn(S.selectTrigger, darker && S.darker, className)}
+      className={cn(
+        !asChild && S.selectTrigger,
+        !asChild && darker && S.darker,
+        !asChild && variant === 'clear' && S.clear,
+        className,
+      )}
       asChild={asChild}
       {...props}
     >

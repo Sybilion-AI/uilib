@@ -1,6 +1,7 @@
 .selectTrigger
   position relative
   display flex
+  box-sizing border-box
   width fit-content
   align-items center
   justify-content space-between
@@ -47,30 +48,30 @@
     // color var(--muted-foreground)
 
   &[data-size="xs"]
-    height auto
+    height 28px
     min-height 28px
     padding 0 10px
     border-radius var(--p-4)
     font-size var(--text-xs)
 
   &[data-size="sm"]
-    height auto
+    height 32px
     min-height 32px
     padding 0 14px
     border-radius var(--p-4)
     font-size 13px
 
   &[data-size="md"]
-    height auto
+    height 40px
     min-height 40px
-    padding 11px 14px
+    padding 0 14px
     border-radius var(--p-4)
     font-size var(--text-sm)
 
   &[data-size="lg"]
-    height auto
+    height 48px
     min-height 48px
-    padding var(--p-4) var(--p-6)
+    padding 0 var(--p-6)
     border-radius var(--p-4)
     font-size var(--text-base)
 

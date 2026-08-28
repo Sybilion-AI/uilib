@@ -59,6 +59,8 @@ import { Button } from '@sybilion/uilib';
 
 Use this when you want **compiled** ESM (CSS modules processed; no Stylus loader required for the library). Ensure your bundler still handles standard JS/CSS imports from `node_modules` as usual.
 
+Vite + `yarn link`: keep the default `dist` entry. Do **not** alias `@sybilion/uilib` to `src` (SVGR / Stylus / `#uilib` live in Rollup). After src edits run `yarn build:watch`. Consumer Vite needs `optimizeDeps.exclude: ['@sybilion/uilib']` and `server.fs.allow` for the linked realpath.
+
 ### Optional: source (`./src` subpath)
 
 To compile from **TypeScript + Stylus** in your app, use the `./src` export:

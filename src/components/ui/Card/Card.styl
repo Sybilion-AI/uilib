@@ -78,8 +78,10 @@
   width calc(100% + var(--p-6))
   padding-right var(--p-6)
 
+  // Keep ≥3px inset so Input/Select 1px box-shadow + 2px inset focus can paint
+  // inside Scroll's overflow:hidden. Cards that truly scroll still scroll.
   & [data-slot="card-content"]
-    padding-right 1px
+    padding 3px
 
 // content:
 .centered
