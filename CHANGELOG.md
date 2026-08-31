@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.38](https://github.com/Mir-Insight/uilib/compare/v1.4.37...v1.4.38) (2026-08-31)
+
+
+### Features
+
+* Select - Add searchable filter and Banner docs ([c96952e](https://github.com/Mir-Insight/uilib/commit/c96952e7e5a8a69c5c021174fa829115c42c46ee))
+
 ### [1.4.37](https://github.com/Mir-Insight/uilib/compare/v1.4.36...v1.4.37) (2026-08-28)
 
 
