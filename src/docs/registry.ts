@@ -87,6 +87,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/FeedbackOverviewPage'),
   },
   {
+    slug: 'banner',
+    title: 'Banner',
+    section: 'Feedback',
+    load: () => import('./pages/BannerPage'),
+  },
+  {
     slug: 'notifications',
     title: 'Notifications',
     section: 'Feedback',

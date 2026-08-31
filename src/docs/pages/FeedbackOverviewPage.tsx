@@ -1,3 +1,4 @@
+import { Banner } from '#uilib/components/ui/Banner';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Progress } from '#uilib/components/ui/Progress';
 import { Skeleton } from '#uilib/components/ui/Skeleton';
@@ -22,12 +23,17 @@ export default function FeedbackOverviewPage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'Overview' }]}
         title="Overview"
-        subheader="Progress, loading placeholders, and animated status text."
+        subheader="Inline notices, progress, loading placeholders, and animated status text."
         actions={<DocsHeaderActions />}
       />
       <PageContentSection
         style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}
       >
+        <section>
+          <h3 style={{ marginBottom: '1rem' }}>Banner</h3>
+          <Banner>Forecast refresh completed.</Banner>
+        </section>
+
         <section>
           <h3 style={{ marginBottom: '1rem' }}>Progress</h3>
           <div style={panelStyle}>

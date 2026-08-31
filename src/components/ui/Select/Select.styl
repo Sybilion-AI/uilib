@@ -96,6 +96,31 @@
     text-overflow ellipsis
     white-space nowrap
 
+  &.searchable
+    cursor text
+
+  .selectTriggerInput
+    flex 1
+    min-width 0
+    width 100%
+    border none
+    background transparent
+    outline none
+    font inherit
+    font-weight inherit
+    font-size inherit
+    color inherit
+    padding 0
+    margin 0
+    box-shadow none
+    cursor text
+
+    &::placeholder
+      color var(--muted-foreground)
+
+    &:disabled
+      cursor not-allowed
+
   svg
     pointer-events none
     flex-shrink 0
@@ -191,6 +216,11 @@
   font-size var(--text-xs)
   color var(--muted-foreground)
 
+.selectEmpty
+  padding var(--p-2)
+  font-size var(--text-sm)
+  color var(--muted-foreground)
+
 .selectItem
   position relative
   display flex
@@ -219,6 +249,7 @@
     border-bottom-right-radius var(--radius-md)
 
   &:focus
+  &[data-highlighted="true"]
     background-color var(--accent)
     color var(--accent-foreground)
 

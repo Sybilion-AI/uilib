@@ -12,7 +12,9 @@ export interface SelectTriggerProps extends React.ComponentProps<
   asChild?: boolean;
 }
 
-export type SelectProps = React.ComponentProps<typeof SelectPrimitive.Root>;
+export type SelectProps = React.ComponentProps<typeof SelectPrimitive.Root> & {
+  searchable?: boolean;
+};
 export type SelectGroupProps = React.ComponentProps<
   typeof SelectPrimitive.Group
 >;

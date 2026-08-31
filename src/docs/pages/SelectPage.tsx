@@ -64,7 +64,7 @@ export default function SelectPage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'Select' }]}
         title="Select"
-        subheader="Variants, sizes, placeholder, darker trigger, and disabled state."
+        subheader="Variants, sizes, placeholder, darker trigger, disabled, and searchable."
         actions={<DocsHeaderActions />}
       />
       <DocsGuidance source={selectGuidance} />
@@ -190,6 +190,35 @@ export default function SelectPage() {
               />
             ))}
           </div>
+        </section>
+        <section>
+          <h3 style={{ marginBottom: '1rem' }}>Searchable</h3>
+          <p
+            style={{
+              marginBottom: '0.75rem',
+              color: 'var(--muted-foreground)',
+            }}
+          >
+            Pass <code>searchable</code> on <code>Select</code>. The trigger is
+            an input; typing filters options.
+          </p>
+          <Select searchable defaultValue="apple">
+            <SelectTrigger style={{ width: 240 }}>
+              <SelectValue placeholder="Search fruit" />
+            </SelectTrigger>
+            <SelectContent>
+              {[
+                ...FRUIT_OPTIONS,
+                { value: 'mango', label: 'Mango' },
+                { value: 'kiwi', label: 'Kiwi' },
+                { value: 'pear', label: 'Pear' },
+              ].map(o => (
+                <SelectItem key={o.value} value={o.value}>
+                  {o.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </section>
         <section>
           <h3 style={{ marginBottom: '1rem' }}>Disabled</h3>
