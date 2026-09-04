@@ -82,6 +82,7 @@ export * from './components/ui/ToggleGroup';
 export * from './components/ui/Tooltip';
 export * from './components/ui/VimeoEmbed';
 export * from './components/ui/WorldMap';
+export * from './components/ui/SupplyChainMap';
 export * from './components/ui/WorkspaceAppSwitcher';
 export * from './components/widgets/SidebarDatasetsItemsGrouped';
 export * from './components/widgets/DriverCard';

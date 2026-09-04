@@ -4,6 +4,8 @@ module.exports = {
   moduleNameMapper: {
     '\\.(css|less|sass|scss|styl)$': 'identity-obj-proxy',
     '^#uilib/.*\\.md$': '<rootDir>/tests/mocks/mdMock.js',
+    '^d3-geo$': '<rootDir>/node_modules/d3-geo/dist/d3-geo.js',
+    '^d3-array$': '<rootDir>/node_modules/d3-array/dist/d3-array.js',
     '^#uilib/(.*)$': '<rootDir>/src/$1',
     '^uilib(.*)$': '<rootDir>/src$1',
     '^@homecode/ui$': '<rootDir>/tests/mocks/homecodeUiMock.ts',

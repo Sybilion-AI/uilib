@@ -597,6 +597,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     section: 'Media',
     load: () => import('./pages/WorldMapPage'),
   },
+  {
+    slug: 'supply-chain-map',
+    title: 'SupplyChainMap',
+    section: 'Media',
+    load: () => import('./pages/SupplyChainMapPage'),
+  },
 ];
 
 export const docPageComponents: Record<

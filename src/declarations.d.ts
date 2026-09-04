@@ -4,6 +4,10 @@ declare const DOCS_ROUTER_BASENAME: string;
 
 declare module '*.png';
 declare module '*.json';
+declare module 'world-atlas/countries-110m.json' {
+  const value: unknown;
+  export default value;
+}
 
 declare module '*.svg' {
   import type { FC, SVGProps } from 'react';

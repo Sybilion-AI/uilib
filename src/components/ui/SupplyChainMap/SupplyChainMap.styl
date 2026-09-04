@@ -1,0 +1,193 @@
+@import 'lib/theme.styl'
+
+.root
+  position relative
+  display flex
+  flex-direction column
+  border 1px solid var(--border)
+  border-radius var(--radius-card)
+  overflow hidden
+  background radial-gradient(120% 100% at 50% 0%, #ffffff 0%, var(--card) 58%, #eceff0 100%)
+  height clamp(440px, 54vh, 720px)
+  color var(--card-foreground)
+
+  &.fill
+    flex 1
+    min-height 0
+    height auto
+
+.canvas
+  position relative
+  flex 1
+  min-height 320px
+  cursor grab
+  touch-action none
+
+  &:active
+    cursor grabbing
+
+.baseCanvas
+  position absolute
+  inset 0
+  width 100%
+  height 100%
+
+.overlay
+  position absolute
+  inset 0
+  z-index 3
+  pointer-events none
+
+  > *
+    position absolute
+    transform translate(-50%, -50%)
+
+.marker
+  width 12px
+  height 12px
+  pointer-events none
+
+  &.cluster
+    width 22px
+    height 22px
+
+  &.dimmed
+    opacity 0.28
+
+.node
+  appearance none
+  pointer-events auto
+  display flex
+  align-items center
+  justify-content center
+  width 12px
+  height 12px
+  border 1.5px solid #ffffff
+  border-radius 50%
+  padding 0
+  cursor pointer
+  color #ffffff
+  font-size 10px
+  font-weight 600
+  line-height 1
+  box-shadow 0 0 0 2px rgba(255, 255, 255, 0.35)
+  transition box-shadow 120ms ease, transform 120ms ease, border-color 120ms ease
+
+  &.cluster
+    width 22px
+    height 22px
+
+.marker.selected .node
+.node.selected
+  border-color #242829
+  box-shadow 0 0 0 2.5px rgba(36, 40, 41, 0.28)
+
+.marker:hover .node
+.marker:focus-within .node
+  transform scale(1.18)
+  box-shadow 0 0 0 3px rgba(15, 158, 192, 0.38)
+
+.label
+  appearance none
+  font-family inherit
+  pointer-events auto
+  position absolute
+  left calc(100% + 6px)
+  top 50%
+  transform translateY(-50%)
+  padding 2px 6px
+  border-radius 6px
+  background rgba(255, 255, 255, 0.92)
+  border 1px solid var(--border)
+  font-size 11px
+  line-height 1.2
+  color var(--card-foreground)
+  white-space nowrap
+  cursor pointer
+  transition border-color 120ms ease, box-shadow 120ms ease, background 120ms ease
+
+  &.primary
+    font-weight 600
+
+.marker:hover .label
+.marker:focus-within .label
+.label:hover
+.label:focus-visible
+  background #ffffff
+  border-color #0f9ec0
+  box-shadow 0 1px 4px rgba(36, 40, 41, 0.12)
+
+.empty
+  display flex
+  align-items center
+  justify-content center
+  min-height 320px
+  padding 24px
+  color var(--muted-foreground, #54646a)
+  text-align center
+
+.disclosure
+  position absolute
+  left 12px
+  right 12px
+  bottom 12px
+  z-index 4
+  display flex
+  flex-wrap wrap
+  align-items center
+  gap 8px
+  padding 8px 10px
+  border-radius 8px
+  background rgba(255, 255, 255, 0.88)
+  border 1px solid var(--border)
+  font-size 12px
+
+.action
+  border 1px solid var(--border)
+  background var(--card, #fff)
+  border-radius 6px
+  padding 4px 8px
+  cursor pointer
+  color inherit
+
+.zoom
+  display flex
+  gap 4px
+  margin-left auto
+
+.inspection
+  position absolute
+  left 12px
+  right 12px
+  top 12px
+  z-index 2
+  margin 0
+  padding 10px 12px
+  border-radius 8px
+  background rgba(255, 255, 255, 0.92)
+  border 1px solid var(--border)
+
+.kicker
+  font-size 11px
+  letter-spacing 0.04em
+  text-transform uppercase
+  color var(--muted-foreground, #54646a)
+
+.hint
+  position absolute
+  left 12px
+  right 12px
+  top 12px
+  z-index 2
+  margin 0
+  font-size 12px
+  color var(--muted-foreground, #54646a)
+
+@media (max-width: 420px)
+  .disclosure
+    flex-direction column
+    align-items stretch
+
+  .zoom
+    margin-left 0
+    justify-content center
