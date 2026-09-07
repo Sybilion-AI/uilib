@@ -11,6 +11,9 @@
   height clamp(440px, 54vh, 720px)
   color var(--card-foreground)
 
+  :global(.dark) &
+    background radial-gradient(120% 100% at 50% 0%, var(--card) 0%, var(--background) 58%, #12181c 100%)
+
   &.fill
     flex 1
     min-height 0
@@ -73,6 +76,11 @@
   box-shadow 0 0 0 2px rgba(255, 255, 255, 0.35)
   transition box-shadow 120ms ease, transform 120ms ease, border-color 120ms ease
 
+  :global(.dark) &
+    border-color #1a2226
+    color #0f1416
+    box-shadow 0 0 0 2px rgba(26, 34, 38, 0.45)
+
   &.cluster
     width 22px
     height 22px
@@ -81,6 +89,10 @@
 .node.selected
   border-color #242829
   box-shadow 0 0 0 2.5px rgba(36, 40, 41, 0.28)
+
+  :global(.dark) &
+    border-color #e8eef0
+    box-shadow 0 0 0 2.5px rgba(232, 238, 240, 0.35)
 
 .marker:hover .node
 .marker:focus-within .node
@@ -97,7 +109,7 @@
   transform translateY(-50%)
   padding 2px 6px
   border-radius 6px
-  background rgba(255, 255, 255, 0.92)
+  background unquote('color-mix(in srgb, var(--card) 92%, transparent)')
   border 1px solid var(--border)
   font-size 11px
   line-height 1.2
@@ -113,9 +125,13 @@
 .marker:focus-within .label
 .label:hover
 .label:focus-visible
-  background #ffffff
+  background var(--card)
   border-color #0f9ec0
   box-shadow 0 1px 4px rgba(36, 40, 41, 0.12)
+
+  :global(.dark) &
+    border-color #2ec4e0
+    box-shadow 0 1px 4px rgba(0, 0, 0, 0.45)
 
 .empty
   display flex
@@ -138,17 +154,25 @@
   gap 8px
   padding 8px 10px
   border-radius 8px
-  background rgba(255, 255, 255, 0.88)
+  background unquote('color-mix(in srgb, var(--card) 88%, transparent)')
   border 1px solid var(--border)
   font-size 12px
+  color var(--card-foreground)
+
+  :global(.dark) &
+    background unquote('color-mix(in srgb, var(--background) 72%, transparent)')
+    box-shadow 0 1px 8px rgba(0, 0, 0, 0.35)
 
 .action
   border 1px solid var(--border)
-  background var(--card, #fff)
+  background var(--card)
   border-radius 6px
   padding 4px 8px
   cursor pointer
   color inherit
+
+  :global(.dark) &
+    background var(--secondary, var(--card))
 
 .zoom
   display flex
@@ -164,8 +188,12 @@
   margin 0
   padding 10px 12px
   border-radius 8px
-  background rgba(255, 255, 255, 0.92)
+  background unquote('color-mix(in srgb, var(--card) 92%, transparent)')
   border 1px solid var(--border)
+  color var(--card-foreground)
+
+  :global(.dark) &
+    background unquote('color-mix(in srgb, var(--background) 78%, transparent)')
 
 .kicker
   font-size 11px

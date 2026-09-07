@@ -3,7 +3,7 @@ import { feature } from 'topojson-client';
 import type { GeometryCollection, Topology } from 'topojson-specification';
 import worldData from 'world-atlas/countries-110m.json';
 
-import { MAP_COLORS, OCEAN_TONE } from './map-colors';
+import type { MapBasemapPalette } from './map-colors';
 import { type MapCamera, mapProjection, projectPoint } from './map-projection';
 
 type CountryFeature = {
@@ -32,6 +32,7 @@ export type MapDrawCommand = {
   dpr: number;
   camera: MapCamera;
   arcs: MapDrawArc[];
+  palette: MapBasemapPalette;
 };
 
 type MapCanvas = {
@@ -58,7 +59,7 @@ export function paintSupplyChainMap(
   ctx: MapCanvasCtx,
   command: MapDrawCommand,
 ): MapHitLane[] {
-  const { width, height, dpr, camera, arcs } = command;
+  const { width, height, dpr, camera, arcs, palette } = command;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, width, height);
 
@@ -70,22 +71,22 @@ export function paintSupplyChainMap(
   };
 
   draw({ type: 'Sphere' });
-  ctx.fillStyle = OCEAN_TONE;
+  ctx.fillStyle = palette.ocean;
   ctx.fill();
 
   draw(geoGraticule10());
-  ctx.strokeStyle = MAP_COLORS.graticule;
+  ctx.strokeStyle = palette.graticule;
   ctx.lineWidth = 1;
   ctx.stroke();
 
   for (const f of COUNTRY_FEATURES) {
     draw(f.geometry as GeoPermissibleObjects);
-    ctx.fillStyle = MAP_COLORS.land;
+    ctx.fillStyle = palette.land;
     ctx.fill();
   }
   ctx.beginPath();
   for (const f of COUNTRY_FEATURES) path(f.geometry as GeoPermissibleObjects);
-  ctx.strokeStyle = MAP_COLORS.landStroke;
+  ctx.strokeStyle = palette.landStroke;
   ctx.lineWidth = 0.7;
   ctx.stroke();
 

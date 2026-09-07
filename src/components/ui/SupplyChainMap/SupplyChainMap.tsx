@@ -11,9 +11,11 @@ import {
   useState,
 } from 'react';
 
+import { useTheme } from '#uilib/contexts/theme-context';
+
 import S from './SupplyChainMap.styl';
 import type { SupplyChainMapProps } from './SupplyChainMap.types';
-import { MAP_COLORS } from './map-colors';
+import { MAP_COLORS, MAP_COLORS_DARK, mapBasemapPalette } from './map-colors';
 import {
   discloseMapScene,
   resolveMapDisclosureAnchors,
@@ -111,6 +113,8 @@ export function SupplyChainMap({
   fill,
   className,
 }: SupplyChainMapProps) {
+  const { isDarkMode } = useTheme();
+  const marks = isDarkMode ? MAP_COLORS_DARK : MAP_COLORS;
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
@@ -438,12 +442,12 @@ export function SupplyChainMap({
           to: a.to,
           color:
             a.onSpine || liveCascade?.laneIds.has(a.id)
-              ? MAP_COLORS.spine
-              : MAP_COLORS.arcDefault,
+              ? marks.spine
+              : marks.arcDefault,
           alpha: dim ? 0.22 : 1,
         };
       }),
-    [clusteredArcs, liveCascade],
+    [clusteredArcs, liveCascade, marks],
   );
 
   const drawCommand = useMemo<MapDrawCommand | null>(() => {
@@ -454,8 +458,9 @@ export function SupplyChainMap({
       dpr: typeof window === 'undefined' ? 1 : window.devicePixelRatio || 1,
       camera,
       arcs: drawArcs,
+      palette: mapBasemapPalette(isDarkMode),
     };
-  }, [camera, size, drawArcs]);
+  }, [camera, size, drawArcs, isDarkMode]);
 
   const { mode: rendererMode, canvasKey } = useMapBaseRenderer(
     canvasRef,
@@ -619,7 +624,7 @@ export function SupplyChainMap({
                     type="button"
                     className={cn(S.node, cluster.count > 1 && S.cluster)}
                     style={{
-                      background: isOrg ? MAP_COLORS.org : MAP_COLORS.chain,
+                      background: isOrg ? marks.org : marks.chain,
                     }}
                     title={title}
                     aria-label={

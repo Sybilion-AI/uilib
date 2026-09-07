@@ -40,5 +40,6 @@ describe('SupplyChainMap contract', () => {
     expect(styl).toMatch(/^\.label/m);
     expect(styl).toMatch(/\.marker:hover \.node/);
     expect(styl).toMatch(/\.marker:hover \.label/);
+    expect(styl).toMatch(/:global\(\.dark\)/);
   });
 });
