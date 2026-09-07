@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.39](https://github.com/Mir-Insight/uilib/compare/v1.4.38...v1.4.39) (2026-09-07)
+
+
+### Features
+
+* SupplyChainMap - Add dark theme support ([5d90a93](https://github.com/Mir-Insight/uilib/commit/5d90a9330e4d20a003d6ce7f815f80190e15e7a0))
+* SupplyChainMap - Add world map to uilib with docs example ([7f059d3](https://github.com/Mir-Insight/uilib/commit/7f059d3daddd92e8e80a75bee67ca30ecd2eb406))
+
+
+### Bug Fixes
+
+* Overlay - Raise overlay z-index above app header ([bfd4b75](https://github.com/Mir-Insight/uilib/commit/bfd4b7578e0ac9c9aa2e04fd38638dbdd1adaa2c))
+
 ### [1.4.38](https://github.com/Mir-Insight/uilib/compare/v1.4.37...v1.4.38) (2026-08-31)
 
 
