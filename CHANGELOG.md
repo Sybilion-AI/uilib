@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.40](https://github.com/Mir-Insight/uilib/compare/v1.4.39...v1.4.40) (2026-09-07)
+
+
+### Bug Fixes
+
+* remove 'use client' ([9343d80](https://github.com/Mir-Insight/uilib/commit/9343d8050f366b9d191aaa36bf15f31876dcf20b))
+
 ### [1.4.39](https://github.com/Mir-Insight/uilib/compare/v1.4.38...v1.4.39) (2026-09-07)
 
 
