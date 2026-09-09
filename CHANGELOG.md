@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.41](https://github.com/Mir-Insight/uilib/compare/v1.4.40...v1.4.41) (2026-09-09)
+
+
+### Bug Fixes
+
+* Foldable - icon rotation ([659cf35](https://github.com/Mir-Insight/uilib/commit/659cf35163f7e0f27ed875832e0265ee8350108b))
+* Tabs variant=link - incative border ([09b6f12](https://github.com/Mir-Insight/uilib/commit/09b6f129c65b266618e509304ca885496330b0e3))
+
 ### [1.4.40](https://github.com/Mir-Insight/uilib/compare/v1.4.39...v1.4.40) (2026-09-07)
 
 
