@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.42](https://github.com/Mir-Insight/uilib/compare/v1.4.41...v1.4.42) (2026-09-14)
+
+
+### Features
+
+* Chat - Split onto dedicated export ([2ff56fa](https://github.com/Mir-Insight/uilib/commit/2ff56faedced075144262e011affa4be22d32aff))
+
 ### [1.4.41](https://github.com/Mir-Insight/uilib/compare/v1.4.40...v1.4.41) (2026-09-09)
 
 
