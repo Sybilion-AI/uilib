@@ -54,6 +54,7 @@ The package `[exports](./package.json)` entry `.` resolves to Rollup output and 
 ```ts
 import { Button } from '@sybilion/uilib';
 import { ChatProvider, ChatSheet } from '@sybilion/uilib/chat';
+import { SignInPage, SybilionSignInPanel } from '@sybilion/uilib/signin';
 
 // or, with alias: import { Button } from 'uilib';
 ```
@@ -118,6 +119,7 @@ runs `yarn build` before `npm publish`. `dist/` is build output only (not commit
 These areas expect the **app** to supply behavior or data (not vendored from product code):
 
 - **Chat** — import from `@sybilion/uilib/chat` (`Chat`, `ChatSheet`, `ChatProvider`, slash-mention, chat-api types). Not on the main barrel. `ChatContext` exports types and hooks only. Implement `ChatContext.Provider` with `ChatContextType` in the app. Use `renderMessageChart` (or equivalent props) where charts appear inside messages.
+- **Sign-in / SPA chrome** — import from `@sybilion/uilib/signin` (`SybilionSignInPanel`, `SignInPage`, `SybilionAppHeader`). These use `react-router-dom` and are not on the main barrel (webpack evaluates every barrel re-export before tree-shake). Page layout pieces that still use the router (`PageScroll`, `PageFooter`, `Breadcrumbs`) remain on the main index for now.
 - **ChartAreaInteractive** — pass legend/overlay controls such as `toggleLegendSeries`, `ensureAnalysisSeriesVisible`, `hiddenSeries`, and `overlayForecastData` (use an empty object only if quantiles are entirely prop-driven).
 - **PageFooter** — `versionLink` (empty string hides the version badge), `versionLabel`, and optional `children` between the logo block and copyright (debug UI, forms, etc. stay in the app).
 - **Breadcrumbs** / **PageHeader** — `clientLogo`, `companyName`, and breadcrumb item data.
