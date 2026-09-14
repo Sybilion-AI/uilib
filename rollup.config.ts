@@ -31,7 +31,7 @@ const { COMPRESS } = process.env;
 
 export default [
   {
-    input: ['src/index.ts', 'src/hooks/index.ts'],
+    input: ['src/index.ts', 'src/chat.ts', 'src/hooks/index.ts'],
     output: [
       {
         dir: 'dist/esm',

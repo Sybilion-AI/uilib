@@ -53,6 +53,7 @@ The package `[exports](./package.json)` entry `.` resolves to Rollup output and 
 
 ```ts
 import { Button } from '@sybilion/uilib';
+import { ChatProvider, ChatSheet } from '@sybilion/uilib/chat';
 
 // or, with alias: import { Button } from 'uilib';
 ```
@@ -116,7 +117,7 @@ runs `yarn build` before `npm publish`. `dist/` is build output only (not commit
 
 These areas expect the **app** to supply behavior or data (not vendored from product code):
 
-- **Chat** — `ChatContext` exports types and hooks only. Implement `ChatContext.Provider` with `ChatContextType` in the app. Use `renderMessageChart` (or equivalent props) where charts appear inside messages.
+- **Chat** — import from `@sybilion/uilib/chat` (`Chat`, `ChatSheet`, `ChatProvider`, slash-mention, chat-api types). Not on the main barrel. `ChatContext` exports types and hooks only. Implement `ChatContext.Provider` with `ChatContextType` in the app. Use `renderMessageChart` (or equivalent props) where charts appear inside messages.
 - **ChartAreaInteractive** — pass legend/overlay controls such as `toggleLegendSeries`, `ensureAnalysisSeriesVisible`, `hiddenSeries`, and `overlayForecastData` (use an empty object only if quantiles are entirely prop-driven).
 - **PageFooter** — `versionLink` (empty string hides the version badge), `versionLabel`, and optional `children` between the logo block and copyright (debug UI, forms, etc. stay in the app).
 - **Breadcrumbs** / **PageHeader** — `clientLogo`, `companyName`, and breadcrumb item data.

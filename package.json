@@ -24,10 +24,20 @@
       "import": "./dist/esm/src/index.js",
       "default": "./dist/esm/src/index.js"
     },
+    "./chat": {
+      "types": "./dist/esm/types/src/chat.d.ts",
+      "import": "./dist/esm/src/chat.js",
+      "default": "./dist/esm/src/chat.js"
+    },
     "./src": {
       "types": "./src/index.ts",
       "import": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./src/chat": {
+      "types": "./src/chat.ts",
+      "import": "./src/chat.ts",
+      "default": "./src/chat.ts"
     },
     "./hooks": {
       "types": "./dist/esm/types/src/hooks/index.d.ts",
