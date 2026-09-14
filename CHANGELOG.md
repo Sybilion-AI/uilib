@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.43](https://github.com/Mir-Insight/uilib/compare/v1.4.42...v1.4.43) (2026-09-14)
+
+
+### Features
+
+* SignInPage - Split onto dedicated export ([556ecff](https://github.com/Mir-Insight/uilib/commit/556ecffdbd5a0306c1727239172de1929a97e1dd))
+
 ### [1.4.42](https://github.com/Mir-Insight/uilib/compare/v1.4.41...v1.4.42) (2026-09-14)
 
 
