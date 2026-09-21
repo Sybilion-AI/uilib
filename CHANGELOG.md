@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/Mir-Insight/uilib/compare/v1.4.43...v1.5.0) (2026-09-21)
+
+
+### Features
+
+* FocusOutline - Shared keyboard focus ring ([e575510](https://github.com/Mir-Insight/uilib/commit/e5755103477b905189edcffea6685c1df531cc7c))
+* Rollup - Add SignIn entry ([ed8a298](https://github.com/Mir-Insight/uilib/commit/ed8a298c0afec382263961e5f8102a8b91fe869c))
+
 ### [1.4.43](https://github.com/Mir-Insight/uilib/compare/v1.4.42...v1.4.43) (2026-09-14)
 
 
