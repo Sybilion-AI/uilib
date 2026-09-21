@@ -1,3 +1,5 @@
+@import 'lib/theme.styl'
+
 .root
   display flex
   width 100%
@@ -7,6 +9,7 @@
   overflow visible
   transition color, box-shadow, outline-color
   transition-duration 150ms
+  focus-outline()
 
   &.variant-default,
   &.variant-clean
@@ -19,13 +22,13 @@
     border-radius var(--radius-input)
     box-shadow 0 0 0 1px var(--border)
 
+    &[aria-invalid="true"]
+      --focus-outline-color var(--destructive)
+      box-shadow inset 0 0 0 2px var(--destructive)
+
     &:focus,
     &:focus-visible
-      box-shadow inset 0 0 0 2px var(--brand-color-400)
-
-    &[aria-invalid="true"]
-      border-color var(--destructive)
-      box-shadow inset 0 0 0 2px var(--destructive)
+      box-shadow none
 
   &.size-sm
     height 32px
@@ -65,5 +68,9 @@
   :global(.dark) &
     background-color var(--input) / 0.3
 
-    &[aria-invalid="true"]
+    &.variant-default[aria-invalid="true"]
       box-shadow inset 0 0 0 2px var(--destructive)
+
+    &.variant-default:focus,
+    &.variant-default:focus-visible
+      box-shadow none

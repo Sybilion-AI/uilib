@@ -1,3 +1,5 @@
+@import 'lib/theme.styl'
+
 .root
   display flex
   flex-direction column
@@ -48,12 +50,7 @@
   color var(--muted-foreground)
   transition color 0.2s, box-shadow 0.2s
   cursor pointer
-
-  &:focus-visible
-    outline 1px solid var(--ring)
-    outline-offset 0
-    border-color var(--ring)
-    box-shadow 0 0 0 3px var(--ring-50)
+  focus-outline()
 
   &:disabled
     pointer-events none

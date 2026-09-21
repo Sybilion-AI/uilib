@@ -84,9 +84,7 @@
     background-color var(--accent)
     color var(--accent-foreground)
 
-  &:focus-visible
-    outline 2px solid var(--ring)
-    outline-offset 1px
+  focus-outline()
 
   &:disabled
     cursor not-allowed
@@ -153,6 +151,10 @@
 
 .rangeInputFieldActive
   box-shadow inset 0 0 0 2px var(--brand-color-400) !important
+
+  &:focus
+  &:focus-visible
+    box-shadow none !important
 
 .rangeSeparator
   display flex

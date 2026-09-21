@@ -1,3 +1,5 @@
+@import 'lib/theme.styl'
+
 .sliderRoot
   position relative
   display flex
@@ -53,14 +55,11 @@
   touch-action none
   user-select none
   pointer-events auto
+  focus-outline()
 
   &:hover
     transform translate(-50%, -50%) scale(1.1)
     box-shadow 0px 4px 8px rgba(0, 0, 0, 0.15)
-
-  &:focus-visible
-    outline 2px solid var(--primary)
-    outline-offset 2px
 
   &:active
     cursor grabbing

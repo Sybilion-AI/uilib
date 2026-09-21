@@ -1,3 +1,5 @@
+@import 'lib/theme.styl'
+
 // Base button styles
 .root
   display inline-flex
@@ -15,6 +17,7 @@
   cursor pointer
   transition all var(--dur-base) var(--ease-standard)
   border 0
+  focus-outline()
 
   &:active
     opacity 0.8
@@ -22,10 +25,6 @@
   &:disabled
     pointer-events none
     opacity 0.5
-
-  &:focus-visible
-    border-color var(--ring)
-    ring 3px var(--ring-50)
 
   &[aria-invalid="true"]
     border-color var(--destructive)
@@ -55,12 +54,6 @@
 
   &:hover
     background-color var(--destructive-600)
-
-  &:focus-visible
-    ring 3px var(--destructive-200)
-
-    :global(.dark) &
-      ring 3px var(--destructive-400)
 
 .outline
   border 1px solid var(--border)

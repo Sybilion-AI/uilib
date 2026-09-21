@@ -67,9 +67,7 @@
   &:hover
     background-color var(--sb-gray-50)
 
-  &:focus-visible
-    outline 2px solid var(--ring)
-    outline-offset 2px
+  focus-outline()
 
   :global(.dark) &
     &:hover
@@ -102,6 +100,8 @@
   &:hover:not(:disabled)
     background-color var(--muted)
     color var(--foreground)
+
+  focus-outline()
 
   &:disabled
     opacity 0.5

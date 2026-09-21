@@ -115,12 +115,7 @@ $animationDuration = 200ms
   border-radius var(--radius-sm)
   outline none
   cursor pointer
-
-  &:focus
-    ring 2px
-    ring-color var(--ring)
-    ring-offset 2px
-    ring-offset-color var(--background)
+  focus-outline()
 
   &:disabled
     pointer-events none

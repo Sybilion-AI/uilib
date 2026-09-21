@@ -1,10 +1,12 @@
 import cn from 'classnames';
 import {
+  FocusEvent,
   FormEvent,
   forwardRef,
   useCallback,
   useImperativeHandle,
   useRef,
+  useState,
 } from 'react';
 
 import type { ChatPromptProps } from '../Chat.types';
@@ -74,6 +76,20 @@ export const ChatPrompt = forwardRef<ChatPromptComposerHandle, ChatPromptProps>(
 
     emitSubmitRef.current = emitSubmitAndClear;
 
+    const [editorFocused, setEditorFocused] = useState(false);
+
+    const handleRootFocus = useCallback(() => {
+      if (!disabled) setEditorFocused(true);
+    }, [disabled]);
+
+    const handleRootBlur = useCallback((e: FocusEvent<HTMLFormElement>) => {
+      const root = e.currentTarget;
+      requestAnimationFrame(() => {
+        if (root.matches(':focus-within')) return;
+        setEditorFocused(false);
+      });
+    }, []);
+
     const handleSubmitForm = useCallback(
       (e?: FormEvent) => {
         e?.preventDefault();
@@ -87,7 +103,18 @@ export const ChatPrompt = forwardRef<ChatPromptComposerHandle, ChatPromptProps>(
     }
 
     return (
-      <form onSubmit={handleSubmitForm} className={cn(S.root, className)}>
+      <form
+        onSubmit={handleSubmitForm}
+        onFocus={handleRootFocus}
+        onBlur={handleRootBlur}
+        onClick={handleRootFocus}
+        aria-disabled={disabled}
+        className={cn(
+          S.root,
+          editorFocused && !disabled && S.rootFocused,
+          className,
+        )}
+      >
         <ChatPromptAttachments
           attachments={attachments}
           onRemove={index => onRemoveAttachment?.(index)}

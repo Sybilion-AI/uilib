@@ -1,3 +1,5 @@
+@import 'lib/theme.styl'
+
 .root
   display flex
   align-items center
@@ -41,6 +43,7 @@
   cursor pointer
   user-select none
   transition opacity 0.2s ease
+  focus-outline()
 
   &:hover
   &.disabled

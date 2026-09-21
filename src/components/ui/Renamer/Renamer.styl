@@ -1,4 +1,4 @@
-
+.root
   display inline-block
   max-width 100%
   vertical-align top
@@ -30,6 +30,10 @@
     padding 4px 12px 4px 0
     border-radius var(--p-4)
     box-shadow 0 0 0 1px var(--border)
+
+    &:focus,
+    &:focus-visible
+      box-shadow none
 
 .empty.size-lg.root .input
   background-color var(--accent) / 0.1

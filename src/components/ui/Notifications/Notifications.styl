@@ -1,3 +1,5 @@
+@import 'lib/theme.styl'
+
 .root
   position fixed
   top var(--header-height)
@@ -103,6 +105,11 @@
   opacity 0
   transform scale(0.85)
   transition opacity 0.15s ease-out, transform 0.15s ease-out
+  focus-outline()
+
+.closeButton:focus-visible
+  opacity 0.85
+  transform scale(1)
 
 .item:hover .closeButton
   opacity 0.85

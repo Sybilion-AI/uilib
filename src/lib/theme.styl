@@ -17,6 +17,23 @@ line-clamp($lines)
   -webkit-line-clamp $lines
   -webkit-box-orient vertical
 
+focus-outline-style()
+  outline var(--focus-outline-width, 2px) solid var(--focus-outline-color, var(--ring))
+  outline-offset var(--focus-outline-offset, 2px)
+
+focus-outline-target()
+  &:not(:disabled):not([aria-disabled='true']):not([data-disabled])
+    focus-outline-style()
+
+focus-outline()
+  &:focus-visible
+    focus-outline-target()
+
+focus-outline-within()
+  &:focus-visible
+  &:focus-within
+    focus-outline-target()
+
 :global(:root)
   @media (max-width: MOBILE)
     --page-x-padding: var(--p-6)

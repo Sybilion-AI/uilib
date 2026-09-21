@@ -1,3 +1,5 @@
+@import 'lib/theme.styl'
+
 .selectTrigger
   position relative
   display flex
@@ -23,6 +25,7 @@
   outline none
   cursor pointer
   transition all 0.2s ease-in-out
+  focus-outline-within()
 
   // fade complex (non-text) content:
   &::before
@@ -77,9 +80,6 @@
 
   &[data-placeholder]
     color var(--muted-foreground)
-
-  &:focus-visible
-    border-color var(--ring)
 
   &[aria-invalid="true"]
     border-color var(--destructive)
@@ -143,10 +143,7 @@
   border none
   background-color transparent
   box-shadow none
-
-  &:focus-visible
-    border none
-    box-shadow none
+  focus-outline()
 
   @media (prefers-color-scheme: dark)
     background-color transparent
@@ -235,6 +232,7 @@
   font-size var(--text-sm)
   outline none
   user-select none
+  focus-outline()
 
   &.selected
     font-weight 600
