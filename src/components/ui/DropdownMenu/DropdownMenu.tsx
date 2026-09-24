@@ -99,7 +99,7 @@ function DropdownMenuCheckboxItem({
     >
       <span className={S.indicator}>
         <DropdownMenuPrimitive.ItemIndicator>
-          <Check className="size-4" />
+          <Check size={16} />
         </DropdownMenuPrimitive.ItemIndicator>
       </span>
       {children}
@@ -129,7 +129,7 @@ function DropdownMenuRadioItem({
     >
       <span className={S.indicator}>
         <DropdownMenuPrimitive.ItemIndicator>
-          <Circle className="size-2 fill-current" />
+          <Circle size={8} weight="fill" />
         </DropdownMenuPrimitive.ItemIndicator>
       </span>
       {children}
@@ -196,7 +196,7 @@ function DropdownMenuSubTrigger({
       {...props}
     >
       {children}
-      <CaretRight className="ml-auto size-4" />
+      <CaretRight size={16} className={S.subTriggerIcon} />
     </DropdownMenuPrimitive.SubTrigger>
   );
 }

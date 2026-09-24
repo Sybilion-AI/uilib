@@ -45,4 +45,9 @@ describe('published CSS entries', () => {
       }
     }
   });
+
+  it('does not ship Tailwind as a dependency', () => {
+    expect(pkg.dependencies?.tailwindcss).toBeUndefined();
+    expect(pkg.peerDependencies?.tailwindcss).toBeUndefined();
+  });
 });

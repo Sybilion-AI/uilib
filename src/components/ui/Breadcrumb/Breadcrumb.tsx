@@ -90,8 +90,7 @@ function BreadcrumbEllipsis({ className, ...props }: BreadcrumbEllipsisProps) {
       className={cn(S.breadcrumbEllipsis, className)}
       {...props}
     >
-      <DotsThree className="size-4" />
-      <span className="sr-only">More</span>
+      <DotsThree size={16} />
     </span>
   );
 }

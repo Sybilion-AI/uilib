@@ -181,7 +181,7 @@ export function ChatChrome({
             aria-label="Close chat"
             onClick={onClose}
           >
-            <X className="size-4" />
+            <X size={16} />
           </Button>
         ) : null}
       </div>

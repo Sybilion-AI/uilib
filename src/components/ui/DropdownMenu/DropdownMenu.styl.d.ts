@@ -20,6 +20,7 @@ interface CssExports {
   'slide-in-from-top': string;
   'subContent': string;
   'subTrigger': string;
+  'subTriggerIcon': string;
   'zoom-in': string;
   'zoom-out': string;
 }

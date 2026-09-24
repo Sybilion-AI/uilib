@@ -10,7 +10,7 @@
   "endOfLine": "auto",
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "importOrder": [
-    "^(react|classnames|class-variance-authority|tailwind-merge|@auth0)(.*)$",
+    "^(react|classnames|@auth0)(.*)$",
     "^[^.](.*)$",
     "^#uilib/(components|hooks|lib|tools)(.*)$",
     "^[./]"

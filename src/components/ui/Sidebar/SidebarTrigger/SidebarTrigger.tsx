@@ -27,7 +27,7 @@ export function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelLeft size={20} strokeWidth={1.5} className="text-foreground" />
+      <PanelLeft size={20} strokeWidth={1.5} />
       {/* <span className="sr-only">Toggle Sidebar</span> */}
     </Button>
   );

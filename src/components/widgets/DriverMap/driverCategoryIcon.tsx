@@ -25,7 +25,7 @@ import {
 // Icon mapping based on category
 export const getCategoryIcon = (category: string | undefined | null) => {
   if (!category) {
-    return <ChartBarIcon className="h-full w-full" />;
+    return <ChartBarIcon size="100%" />;
   }
   const categoryLower = category.toLowerCase();
 
@@ -36,7 +36,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('residential') ||
     categoryLower.includes('property')
   )
-    return <HouseIcon className="h-full w-full" />;
+    return <HouseIcon size="100%" />;
 
   // Construction & Infrastructure
   if (
@@ -47,7 +47,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('engineering') ||
     categoryLower.includes('contracting')
   )
-    return <HardHatIcon className="h-full w-full" />;
+    return <HardHatIcon size="100%" />;
 
   // Climate & Environment
   if (
@@ -60,7 +60,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('sustainability') ||
     categoryLower.includes('green')
   )
-    return <ThermometerIcon className="h-full w-full" />;
+    return <ThermometerIcon size="100%" />;
 
   // Supply Chain & Trade
   if (
@@ -69,7 +69,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('logistics') ||
     categoryLower.includes('transport')
   )
-    return <TruckIcon className="h-full w-full" />;
+    return <TruckIcon size="100%" />;
 
   // Energy & Power
   if (
@@ -77,7 +77,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('power') ||
     categoryLower.includes('electricity')
   )
-    return <LightningIcon className="h-full w-full" />;
+    return <LightningIcon size="100%" />;
 
   // Labor Market & Employment
   if (
@@ -91,7 +91,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('job market') ||
     categoryLower.includes('workforce')
   )
-    return <IdentificationCardIcon className="h-full w-full" />;
+    return <IdentificationCardIcon size="100%" />;
 
   // Workforce & Human Resources
   if (
@@ -103,7 +103,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('talent') ||
     categoryLower.includes('recruitment')
   )
-    return <UsersIcon className="h-full w-full" />;
+    return <UsersIcon size="100%" />;
 
   // Manufacturing & Production
   if (
@@ -112,7 +112,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('manufacturing') ||
     categoryLower.includes('industry')
   )
-    return <FactoryIcon className="h-full w-full" />;
+    return <FactoryIcon size="100%" />;
 
   // Finance & Economics
   if (
@@ -122,7 +122,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('economy') ||
     categoryLower.includes('gdp')
   )
-    return <CurrencyDollarIcon className="h-full w-full" />;
+    return <CurrencyDollarIcon size="100%" />;
 
   // Data & Analytics
   if (
@@ -130,7 +130,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('analytics') ||
     categoryLower.includes('statistics')
   )
-    return <DatabaseIcon className="h-full w-full" />;
+    return <DatabaseIcon size="100%" />;
 
   // Global & International
   if (
@@ -138,7 +138,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('international') ||
     categoryLower.includes('world')
   )
-    return <GlobeIcon className="h-full w-full" />;
+    return <GlobeIcon size="100%" />;
 
   // Chemicals & Pharmaceuticals
   if (
@@ -148,7 +148,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('drug') ||
     categoryLower.includes('compound')
   )
-    return <FlaskIcon className="h-full w-full" />;
+    return <FlaskIcon size="100%" />;
 
   // Food & Agriculture
   if (
@@ -161,7 +161,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('dairy') ||
     categoryLower.includes('meat')
   )
-    return <ForkKnifeIcon className="h-full w-full" />;
+    return <ForkKnifeIcon size="100%" />;
 
   // Income & Wealth
   if (
@@ -172,7 +172,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('earnings') ||
     categoryLower.includes('revenue')
   )
-    return <WalletIcon className="h-full w-full" />;
+    return <WalletIcon size="100%" />;
 
   // Consumption & Retail
   if (
@@ -183,7 +183,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('purchases') ||
     categoryLower.includes('demand')
   )
-    return <ShoppingCartIcon className="h-full w-full" />;
+    return <ShoppingCartIcon size="100%" />;
 
   // Living Conditions & Quality of Life
   if (
@@ -195,7 +195,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('welfare') ||
     categoryLower.includes('happiness')
   )
-    return <HeartIcon className="h-full w-full" />;
+    return <HeartIcon size="100%" />;
 
   // Minerals & Mining
   if (
@@ -210,7 +210,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('aluminum') ||
     categoryLower.includes('lithium')
   )
-    return <TreeIcon className="h-full w-full" />;
+    return <TreeIcon size="100%" />;
 
   // Textiles & Fibers
   if (
@@ -225,7 +225,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('garment') ||
     categoryLower.includes('apparel')
   )
-    return <TShirtIcon className="h-full w-full" />;
+    return <TShirtIcon size="100%" />;
 
   // Crafts & Artisan
   if (
@@ -239,7 +239,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('woodwork') ||
     categoryLower.includes('jewelry')
   )
-    return <WrenchIcon className="h-full w-full" />;
+    return <WrenchIcon size="100%" />;
 
   // Population & Demographics
   if (
@@ -254,7 +254,7 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('gender') ||
     categoryLower.includes('ethnicity')
   )
-    return <UsersIcon className="h-full w-full" />;
+    return <UsersIcon size="100%" />;
 
   // Market Indices & Trading
   if (
@@ -270,8 +270,8 @@ export const getCategoryIcon = (category: string | undefined | null) => {
     categoryLower.includes('ftse') ||
     categoryLower.includes('candlestick')
   )
-    return <ChartLineIcon className="h-full w-full" />;
+    return <ChartLineIcon size="100%" />;
 
   // Default fallback
-  return <ChartBarIcon className="h-full w-full" />;
+  return <ChartBarIcon size="100%" />;
 };
