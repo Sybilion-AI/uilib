@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/Mir-Insight/uilib/compare/v1.5.0...v1.6.0) (2026-09-24)
+
+
+### Features
+
+* GlobalStyles - Export tokens.css and base.css ([38834ca](https://github.com/Mir-Insight/uilib/commit/38834ca0d6da3c68e01cdeb7804511e35ba4e028))
+
 ## [1.5.0](https://github.com/Mir-Insight/uilib/compare/v1.4.43...v1.5.0) (2026-09-21)
 
 
