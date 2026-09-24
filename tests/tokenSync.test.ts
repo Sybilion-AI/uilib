@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const UILIB_GLOBALS = join(__dirname, '..', 'assets', 'globals.css');
+const UILIB_GLOBALS = join(__dirname, '..', 'assets', 'tokens.css');
 const APP_GLOBALS = join(__dirname, '..', '..', 'app', 'assets', 'globals.css');
 const STANDALONE_GLOBALS = join(
   __dirname,

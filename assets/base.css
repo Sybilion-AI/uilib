@@ -1,0 +1,149 @@
+/*
+ * Sybilion base element styles. Plain CSS, no Tailwind. Requires tokens.css.
+ * Import: @import '@sybilion/uilib/base.css';
+ * Everything except the focus ring lives in `@layer base`, so any unlayered
+ * app or component rule wins over it.
+ */
+
+/* Keyboard focus ring. Intentionally unlayered so it wins over component
+   `outline: none` resets; override via --focus-outline-* tokens. */
+:where(
+    a,
+    button,
+    input,
+    textarea,
+    select,
+    summary,
+    [href],
+    [tabindex]:not([tabindex='-1']),
+    [contenteditable='true'],
+    [role='button'],
+    [role='tab'],
+    [role='menuitem'],
+    [role='menuitemcheckbox'],
+    [role='menuitemradio'],
+    [role='option'],
+    [role='checkbox'],
+    [role='radio'],
+    [role='switch'],
+    [role='slider'],
+    [role='combobox'],
+    [role='listbox'],
+    [role='link'],
+    [role='spinbutton']
+  ):focus-visible:not(:disabled):not([aria-disabled='true']):not(
+    [data-disabled]
+  ) {
+  outline: var(--focus-outline-width, 2px) solid
+    var(--focus-outline-color, var(--ring));
+  outline-offset: var(--focus-outline-offset, 2px);
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: 'Manrope', sans-serif;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  html,
+  body {
+    overscroll-behavior-y: none;
+  }
+
+  html {
+    background-color: var(--background);
+  }
+
+  body {
+    min-height: 100vh;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-family-body);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    line-height: 1.6;
+  }
+
+  #app-root {
+    max-height: 100vh;
+    overflow: hidden;
+    min-height: 100vh;
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-family-heading);
+  }
+
+  h1 {
+    font-weight: 500;
+    font-size: var(--text-3xl);
+    line-height: 1.4;
+    user-select: text;
+  }
+
+  h2 {
+    font-weight: 300;
+    font-size: var(--text-2xl);
+    line-height: 1.4;
+  }
+
+  h3 {
+    font-weight: 500;
+    font-size: var(--text-xl);
+    line-height: 1.4;
+  }
+
+  label {
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  button,
+  input,
+  select,
+  optgroup,
+  textarea,
+  ::file-selector-button {
+    font: inherit; /* 1 */
+    font-feature-settings: inherit; /* 1 */
+    font-variation-settings: inherit; /* 1 */
+    letter-spacing: inherit; /* 1 */
+    color: inherit; /* 1 */
+    border-radius: 0; /* 2 */
+    background-color: transparent; /* 3 */
+    opacity: 1; /* 4 */
+  }
+
+  button {
+    font-weight: 500;
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+  }
+
+  a:visited {
+    color: var(--link-color-active);
+  }
+
+  a:hover {
+    text-decoration: underline;
+    color: var(--link-color-hover);
+  }
+
+  ::selection {
+    background-color: var(--brand-color-bg, var(--brand-color));
+  }
+}

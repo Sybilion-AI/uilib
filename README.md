@@ -22,6 +22,22 @@ Equivalent in `package.json`:
 }
 ```
 
+### Global styles
+
+Import the design tokens (and optionally the base element styles) once, from your app's global stylesheet. Don't copy them into the app.
+
+```css
+@import '@sybilion/uilib/tokens.css'; /* :root + .dark custom properties, fonts */
+@import '@sybilion/uilib/base.css'; /* optional: reset, element defaults, focus ring */
+
+:root {
+  /* app overrides go after the imports, e.g. the brand slot (default: purple) */
+  --brand-color: var(--sb-cyan-400);
+}
+```
+
+Both files are plain CSS; uilib does not use Tailwind. Apps that run Tailwind keep their own `@theme` mapping onto these tokens.
+
 ### Bare `uilib` imports + scoped install
 
 When the package is installed as `@sybilion/uilib` but you keep imports as `from 'uilib'`, add a bundler alias and matching TypeScript paths:

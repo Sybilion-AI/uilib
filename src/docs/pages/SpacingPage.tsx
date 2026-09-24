@@ -6,7 +6,7 @@ import { DocsGuidance } from '../components/DocsGuidance/DocsGuidance';
 import { DocsHeaderActions } from '../docsHeaderActions';
 import S from './SpacingPage.styl';
 
-/** Steps defined in globals.css; each step is 4px. */
+/** Steps defined in assets/tokens.css; each step is 4px. */
 const STEPS = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 17, 18, 19, 20, 23, 24,
 ];

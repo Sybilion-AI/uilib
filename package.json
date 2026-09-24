@@ -55,7 +55,9 @@
       "default": "./dist/esm/src/hooks/index.js"
     },
     "./src/*": "./src/*",
-    "./logo.svg": "./src/components/ui/Logo/logo.svg"
+    "./logo.svg": "./src/components/ui/Logo/logo.svg",
+    "./tokens.css": "./assets/tokens.css",
+    "./base.css": "./assets/base.css"
   },
   "files": [
     "assets",
