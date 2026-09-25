@@ -96,7 +96,7 @@ When a docs page needs a runnable demo, extract it to `{ComponentName}.example.t
 - **AGENT.md** should link to the example when one exists (path relative to uilib package root, markdown link).
 - Example files are for agents and the docs site — not part of the published package API (`index.ts` must not re-export them).
 
-Webpack/babel already include all `src/**/*.tsx` when imported from docs; no extra build config.
+The docs Vite config already handles all `src/**/*.tsx` when imported from docs; no extra build config.
 
 ## Do not include
 
@@ -131,7 +131,7 @@ import { CardExample } from '#uilib/components/ui/Card/Card.example'; // when pr
 <CardExample />
 ```
 
-Webpack loads `*.md` as raw strings; `DocsGuidance` strips frontmatter and renders via `InteractiveContent`.
+The docs Vite config (`uilib:raw-md` plugin) loads `*.md` as raw strings; `DocsGuidance` strips frontmatter and renders via `InteractiveContent`.
 
 ## Migrating from DocsGuidance props
 
