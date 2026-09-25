@@ -245,6 +245,9 @@ export default defineConfig(({ mode }) => {
       outDir: paths.build,
       emptyOutDir: true,
       sourcemap: false,
+      // Internal docs site: the main bundle and lazy pages (icons, pdfjs, xlsx)
+      // are large by design; keep the warning for real regressions only.
+      chunkSizeWarningLimit: 1500,
     },
   };
 });
