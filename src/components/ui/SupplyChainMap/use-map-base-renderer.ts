@@ -65,11 +65,12 @@ export function useMapBaseRenderer(
 
     let worker: Worker;
     try {
-      // Bundlers (webpack docs, Vite, Next) resolve this worker entry.
+      // Bundlers (Vite docs, webpack, Next) resolve this worker entry.
       // Published Rollup output may keep a .ts URL — paint then falls back
       // to the main-thread path below.
       worker = new Worker(
         new URL('./SupplyChainMap.render.worker.ts', import.meta.url),
+        { type: 'module' },
       );
     } catch {
       forceMainRef.current = true;

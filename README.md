@@ -146,7 +146,7 @@ These areas expect the **app** to supply behavior or data (not vendored from pro
 
 | Script                | Description                                 |
 | --------------------- | ------------------------------------------- |
-| `yarn dev`            | Webpack dev server for the docs app         |
+| `yarn dev`            | Vite dev server for the docs app            |
 | `yarn docs:build`     | Production build of docs to `build/`        |
 | `yarn build`          | Rollup ESM build to `dist/esm`              |
 | `yarn build:watch`    | Rollup in watch mode                        |

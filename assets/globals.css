@@ -1,5 +1,5 @@
 /*
- * uilib docs site entry (linked from assets/index.html). Not exported.
+ * uilib docs site entry (linked from index.html). Not exported.
  * Apps import the shared entries from the package instead:
  *   @sybilion/uilib/tokens.css   — design tokens (plain CSS)
  *   @sybilion/uilib/base.css     — element defaults + focus ring (plain CSS)
