@@ -6,7 +6,8 @@
  */
 
 /* Keyboard focus ring. Intentionally unlayered so it wins over component
-   `outline: none` resets; override via --focus-outline-* tokens. */
+   `outline: none` resets; override via --focus-outline-* tokens. Shown on
+   [aria-disabled] elements too: they stay focusable, so focus must stay visible. */
 :where(
     a,
     button,
@@ -31,9 +32,7 @@
     [role='listbox'],
     [role='link'],
     [role='spinbutton']
-  ):focus-visible:not(:disabled):not([aria-disabled='true']):not(
-    [data-disabled]
-  ) {
+  ):focus-visible:not(:disabled):not([data-disabled]) {
   outline: var(--focus-outline-width, 2px) solid
     var(--focus-outline-color, var(--ring));
   outline-offset: var(--focus-outline-offset, 2px);

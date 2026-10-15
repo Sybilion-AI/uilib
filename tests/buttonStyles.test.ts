@@ -1,6 +1,6 @@
-import stylus from 'stylus';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import stylus from 'stylus';
 
 const ROOT = join(__dirname, '..');
 
