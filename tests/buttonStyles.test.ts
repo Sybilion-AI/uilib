@@ -1,0 +1,36 @@
+import stylus from 'stylus';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+const ROOT = join(__dirname, '..');
+
+/** Compile a .styl the way the build does (CSS-module class names stay plain). */
+function compile(file: string): string {
+  const path = join(ROOT, file);
+  let out = '';
+  stylus(readFileSync(path, 'utf8'))
+    .set('filename', path)
+    .set('paths', [join(ROOT, 'src')])
+    .render((err, css) => {
+      if (err) throw err;
+      out = css;
+    });
+  return out;
+}
+
+/** The declarations of every rule whose selector matches `selector`. */
+function declarationsFor(css: string, selector: RegExp): string[] {
+  return [...css.matchAll(/([^{}@]+)\{([^{}]*)\}/g)]
+    .filter(([, sel]) => selector.test(sel.trim()))
+    .map(([, , body]) => body);
+}
+
+describe('Button styles', () => {
+  const css = compile('src/components/ui/Button/Button.styl');
+
+  it('reads its font from the body-font token', () => {
+    const [root] = declarationsFor(css, /^\.root$/);
+    expect(root).toMatch(/font-family:\s*var\(--font-family-body,/);
+    expect(root).not.toMatch(/font-family:\s*['"]?Manrope/);
+  });
+});
