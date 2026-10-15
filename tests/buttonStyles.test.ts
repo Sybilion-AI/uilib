@@ -34,6 +34,35 @@ describe('Button styles', () => {
     expect(root).not.toMatch(/font-family:\s*['"]?Manrope/);
   });
 
+  describe('cascade layer', () => {
+    /** Selector preludes that sit outside every at-rule block. */
+    function unlayeredRules(source: string): string[] {
+      const found: string[] = [];
+      let depth = 0;
+      for (const [token] of source.matchAll(/[{}]|[^{}]+/g)) {
+        if (token === '{') depth += 1;
+        else if (token === '}') depth -= 1;
+        else if (depth === 0 && token.trim()) found.push(token.trim());
+      }
+      return found;
+    }
+
+    it('declares the layer order before using it, so it sits above base', () => {
+      const order = css.indexOf('@layer base, components;');
+      const block = css.indexOf('@layer components {');
+      expect(order).toBeGreaterThanOrEqual(0);
+      expect(block).toBeGreaterThan(order);
+    });
+
+    it('puts every Button rule inside the layer', () => {
+      const outside = unlayeredRules(css).filter(
+        prelude =>
+          !prelude.startsWith('@layer') && !prelude.startsWith('@media'),
+      );
+      expect(outside).toEqual([]);
+    });
+  });
+
   describe('disabled', () => {
     it('keeps pointer events so a title hint can show, and says so with a cursor', () => {
       const disabled = declarationsFor(css, /^\.root:disabled$/).join('');
