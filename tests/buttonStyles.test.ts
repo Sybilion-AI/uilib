@@ -33,4 +33,24 @@ describe('Button styles', () => {
     expect(root).toMatch(/font-family:\s*var\(--font-family-body,/);
     expect(root).not.toMatch(/font-family:\s*['"]?Manrope/);
   });
+
+  describe('disabled', () => {
+    it('keeps pointer events so a title hint can show, and says so with a cursor', () => {
+      const disabled = declarationsFor(css, /^\.root:disabled$/).join('');
+      expect(disabled).not.toMatch(/pointer-events/);
+      expect(disabled).toMatch(/cursor:\s*not-allowed/);
+      expect(disabled).toMatch(/opacity:\s*0?\.5/);
+    });
+
+    it('does not paint hover or active styles on a disabled button', () => {
+      const interactive = [...css.matchAll(/([^{}@]+)\{[^{}]*\}/g)]
+        .map(([, sel]) => sel.trim())
+        .filter(sel => /:(hover|active)\b/.test(sel));
+      expect(interactive.length).toBeGreaterThan(0);
+      for (const selector of interactive) {
+        // :where() keeps the guard at zero specificity.
+        expect(selector).toContain(':where(:not(:disabled))');
+      }
+    });
+  });
 });

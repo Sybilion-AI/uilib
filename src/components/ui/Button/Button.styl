@@ -19,11 +19,15 @@
   border 0
   focus-outline()
 
-  &:active
+  &:active:where(:not(:disabled))
     opacity 0.8
 
+  // Not pointer-events none: a disabled button must still receive hover so its
+  // `title` can say why. Hover and active styles are guarded instead, inside
+  // :where() so the guard adds no specificity (an app override that beat
+  // `.root:hover` must keep beating it).
   &:disabled
-    pointer-events none
+    cursor not-allowed
     opacity 0.5
 
   &[aria-invalid="true"]
@@ -42,7 +46,7 @@
   background-color var(--primary)
   color var(--primary-foreground)
 
-  &:hover
+  &:hover:where(:not(:disabled))
     background-color var(--sb-gray-800)
 
     :global(.dark) &
@@ -52,14 +56,14 @@
   background-color var(--destructive-900)
   color white
 
-  &:hover
+  &:hover:where(:not(:disabled))
     background-color var(--destructive-600)
 
 .outline
   border 1px solid var(--border)
   background-color var(--background)
 
-  &:hover
+  &:hover:where(:not(:disabled))
     background-color var(--sb-gray-50)
     border-color var(--border)
 
@@ -67,18 +71,18 @@
     background-color var(--sb-gray-900)
     border-color var(--border)
 
-    &:hover
+    &:hover:where(:not(:disabled))
       background-color var(--sb-gray-800)
 
 .secondary
   background-color var(--secondary)
   color var(--secondary-foreground)
 
-  &:hover
+  &:hover:where(:not(:disabled))
     background-color var(--secondary-800)
 
 .ghost
-  &:hover
+  &:hover:where(:not(:disabled))
     background-color var(--sb-gray-100)
     color var(--foreground)
 
@@ -90,7 +94,7 @@
   text-decoration underline
   text-underline-offset 4px
 
-  &:hover
+  &:hover:where(:not(:disabled))
     text-decoration underline
 
 // Size styles
