@@ -21,8 +21,10 @@ focus-outline-style()
   outline var(--focus-outline-width, 2px) solid var(--focus-outline-color, var(--ring))
   outline-offset var(--focus-outline-offset, 2px)
 
+// Not excluded: [aria-disabled]. Such an element stays in the tab order (that is
+// why it is not `disabled`, e.g. a busy button), so focus must still be visible.
 focus-outline-target()
-  &:not(:disabled):not([aria-disabled='true']):not([data-disabled])
+  &:not(:disabled):not([data-disabled])
     focus-outline-style()
 
 focus-outline()

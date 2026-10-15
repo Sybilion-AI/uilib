@@ -1,129 +1,143 @@
 @import 'lib/theme.styl'
 
-// Base button styles
-.root
-  display inline-flex
-  align-items center
-  justify-content center
-  gap var(--p-2)
-  flex-shrink 0
-  white-space nowrap
-  border-radius var(--radius-button)
-  font-family 'Manrope', sans-serif
-  font-size 15px
-  font-weight 500
-  line-height 1
-  outline none
-  cursor pointer
-  transition all var(--dur-base) var(--ease-standard)
-  border 0
-  focus-outline()
+// Component styles live in a CSS cascade layer, so an app's own unlayered rules
+// win over them without specificity tricks (`[data-slot="button"].x`, !important).
+// The order is declared here too, so `components` sits above base.css's `base`
+// layer even when this stylesheet is the first of the two to load.
+@css {
+  @layer base, components;
+}
 
-  &:active
-    opacity 0.8
+@layer components
 
-  &:disabled
-    pointer-events none
-    opacity 0.5
-
-  &[aria-invalid="true"]
-    border-color var(--destructive)
-    ring 3px var(--destructive-200)
-
-  // SVG icon styles
-  svg
-    pointer-events none
+  // Base button styles
+  .root
+    display inline-flex
+    align-items center
+    justify-content center
+    gap var(--p-2)
     flex-shrink 0
-    // width 16px
-    // height 16px
+    white-space nowrap
+    border-radius var(--radius-button)
+    font-family var(--font-family-body, 'Manrope', sans-serif)
+    font-size 15px
+    font-weight 500
+    line-height 1
+    outline none
+    cursor pointer
+    transition all var(--dur-base) var(--ease-standard)
+    border 0
+    focus-outline()
 
-// Variant styles
-.default
-  background-color var(--primary)
-  color var(--primary-foreground)
+    &:active:where(:not(:disabled))
+      opacity 0.8
 
-  &:hover
-    background-color var(--sb-gray-800)
+    // Not pointer-events none: a disabled button must still receive hover so its
+    // `title` can say why. Hover and active styles are guarded instead, inside
+    // :where() so the guard adds no specificity (an app override that beat
+    // `.root:hover` must keep beating it).
+    &:disabled
+      cursor not-allowed
+      opacity 0.5
 
-    :global(.dark) &
-      background-color var(--sb-gray-600)
+    &[aria-invalid="true"]
+      border-color var(--destructive)
+      ring 3px var(--destructive-200)
 
-.destructive
-  background-color var(--destructive-900)
-  color white
+    // SVG icon styles
+    svg
+      pointer-events none
+      flex-shrink 0
+      // width 16px
+      // height 16px
 
-  &:hover
-    background-color var(--destructive-600)
+  // Variant styles
+  .default
+    background-color var(--primary)
+    color var(--primary-foreground)
 
-.outline
-  border 1px solid var(--border)
-  background-color var(--background)
-
-  &:hover
-    background-color var(--sb-gray-50)
-    border-color var(--border)
-
-  :global(.dark) &
-    background-color var(--sb-gray-900)
-    border-color var(--border)
-
-    &:hover
+    &:hover:where(:not(:disabled))
       background-color var(--sb-gray-800)
 
-.secondary
-  background-color var(--secondary)
-  color var(--secondary-foreground)
+      :global(.dark) &
+        background-color var(--sb-gray-600)
 
-  &:hover
-    background-color var(--secondary-800)
+  .destructive
+    background-color var(--destructive-900)
+    color white
 
-.ghost
-  &:hover
-    background-color var(--sb-gray-100)
-    color var(--foreground)
+    &:hover:where(:not(:disabled))
+      background-color var(--destructive-600)
+
+  .outline
+    border 1px solid var(--border)
+    background-color var(--background)
+
+    &:hover:where(:not(:disabled))
+      background-color var(--sb-gray-50)
+      border-color var(--border)
 
     :global(.dark) &
       background-color var(--sb-gray-900)
+      border-color var(--border)
 
-.link
-  color var(--primary)
-  text-decoration underline
-  text-underline-offset 4px
+      &:hover:where(:not(:disabled))
+        background-color var(--sb-gray-800)
 
-  &:hover
+  .secondary
+    background-color var(--secondary)
+    color var(--secondary-foreground)
+
+    &:hover:where(:not(:disabled))
+      background-color var(--secondary-800)
+
+  .ghost
+    &:hover:where(:not(:disabled))
+      background-color var(--sb-gray-100)
+      color var(--foreground)
+
+      :global(.dark) &
+        background-color var(--sb-gray-900)
+
+  .link
+    color var(--primary)
     text-decoration underline
+    text-underline-offset 4px
 
-// Size styles
+    &:hover:where(:not(:disabled))
+      text-decoration underline
 
-.sizeSm
-  height 30px
-  padding 0 14px
-  font-size var(--text-sm)
-  border-radius var(--p-5)
+  // Size styles
 
-.sizeMd
-  height 44px
-  padding 0 var(--p-4)
-  border-radius var(--p-4)
+  .sizeSm
+    height 30px
+    padding 0 14px
+    font-size var(--text-sm)
+    border-radius var(--p-5)
 
-.sizeLg
-  height 48px
-  padding 0 var(--p-6)
-  font-size var(--text-base)
-  border-radius var(--p-4)
+  .sizeMd
+    height 44px
+    padding 0 var(--p-4)
+    border-radius var(--p-4)
 
-// Icon buttons: square, sized per size variant, same radius as the size variant
-.sizeIcon
-  padding 0
+  .sizeLg
+    height 48px
+    padding 0 var(--p-6)
+    font-size var(--text-base)
+    border-radius var(--p-4)
 
-  &.sizeSm
-    width 30px
+  // Icon buttons: square, sized per size variant, same radius as the size variant
+  .sizeIcon
     padding 0
 
-  &.sizeMd
-    width 44px
-    padding 0
+    &.sizeSm
+      width 30px
+      padding 0
 
-  &.sizeLg
-    width 48px
-    padding 0
+    &.sizeMd
+      width 44px
+      padding 0
+
+    &.sizeLg
+      width 48px
+      padding 0
