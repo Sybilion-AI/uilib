@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.1](https://github.com/Mir-Insight/uilib/compare/v1.6.0...v1.6.1) (2026-10-15)
+
+
+### Bug Fixes
+
+* Button and FocusOutline - Let apps theme, hint and focus a Button ([#6](https://github.com/Mir-Insight/uilib/issues/6)) ([1721271](https://github.com/Mir-Insight/uilib/commit/1721271f4ec1850b838669f878ef1969f0148184))
+
 ## [1.6.0](https://github.com/Mir-Insight/uilib/compare/v1.5.0...v1.6.0) (2026-09-24)
 
 
