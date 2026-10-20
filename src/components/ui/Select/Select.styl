@@ -114,6 +114,9 @@
     margin 0
     box-shadow none
     cursor text
+    // The trigger draws the ring (focus-outline-within); base.css's global
+    // focus ring outranks `outline none`, so zero its width here instead.
+    --focus-outline-width 0
 
     &::placeholder
       color var(--muted-foreground)
