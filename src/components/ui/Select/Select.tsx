@@ -257,6 +257,7 @@ function SearchableTrigger({
   size = 'md',
   variant = 'default',
   darker = false,
+  round = false,
   hideChevron = false,
   disabled: disabledProp,
   style,
@@ -303,6 +304,7 @@ function SearchableTrigger({
         S.selectTrigger,
         S.searchable,
         darker && S.darker,
+        round && S.round,
         variant === 'clear' && S.clear,
         className,
       )}
@@ -390,6 +392,7 @@ function SelectTrigger({
   size = 'md',
   variant = 'default',
   darker = false,
+  round = false,
   children,
   hideChevron = false,
   asChild = false,
@@ -405,6 +408,7 @@ function SelectTrigger({
           size={size}
           variant={variant}
           darker={darker}
+          round={round}
           hideChevron={hideChevron}
           {...props}
         />
@@ -420,6 +424,7 @@ function SelectTrigger({
       className={cn(
         !asChild && S.selectTrigger,
         !asChild && darker && S.darker,
+        !asChild && round && S.round,
         !asChild && variant === 'clear' && S.clear,
         className,
       )}

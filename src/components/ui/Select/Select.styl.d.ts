@@ -5,6 +5,7 @@ interface CssExports {
   darker: string;
   fadeIn: string;
   fadeOut: string;
+  round: string;
   searchable: string;
   selectContent: string;
   selectContentPopper: string;

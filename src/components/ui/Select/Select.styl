@@ -78,6 +78,10 @@
     border-radius var(--p-4)
     font-size var(--text-base)
 
+  // Pill corners; after the size rules so it overrides their radius
+  &.round
+    border-radius 100px
+
   &[data-placeholder]
     color var(--muted-foreground)
 

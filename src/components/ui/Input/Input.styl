@@ -30,6 +30,10 @@
     &:focus-visible
       box-shadow none
 
+  // Pill corners; after the variant rules so it overrides their radius
+  &.round
+    border-radius 100px
+
   &.size-sm
     height 32px
     font-size var(--text-xs)
