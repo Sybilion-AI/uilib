@@ -1,6 +1,8 @@
-# Publish to npm from CI with a provenance attestation, so consumers can check
-# which commit and workflow built the tarball (`npm audit signatures`).
-# Runs when a release tag (from `yarn release`) is pushed.
+# Publish to npm from CI.
+# Runs when a release tag (from `yarn release`) is pushed, or by hand from the
+# Actions tab (it then publishes the version in package.json on the chosen branch).
+# No `--provenance`: npm only signs provenance for public source repositories,
+# and this one is private (E422 on v1.7.0). Add it back if the repo goes public.
 # One-time: add an NPM_TOKEN repository secret (an automation token from the
 # npm account or org that owns the package).
 
@@ -13,7 +15,6 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   publish:
@@ -36,6 +37,6 @@ jobs:
         run: yarn build
 
       - name: Publish
-        run: npm publish --provenance --access public
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
