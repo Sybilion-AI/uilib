@@ -115,6 +115,7 @@ Declare these in **your** app (`package.json`):
 - `react` and `react-dom` (>= 18) — required so the app and `@homecode/ui` resolve the **same** React (avoid invalid hook call / duplicate trees).
 - `react-router-dom` (>= 6) — layout components that use routing-aware UI.
 - `@auth0/auth0-react` (^2.3, **optional peer**) — install when you import `SybilionAuthProvider` / Sybilion auth hooks (see `peerDependenciesMeta`). Standalone docs include it in the `yarn add` line.
+- `xlsx` (^0.18.5), `mammoth` (^1.9) and `pdfjs-dist` (^4.10) (**optional peers**) — install them when you use Chat file attachments (`@sybilion/uilib/chat`). Chat loads them with `import()` only when a spreadsheet, Word or PDF file is attached, so an app that does not use Chat does not need them.
 
 **Included with `@sybilion/uilib`** (normal `dependencies`): `@homecode/ui` (^4.17), Radix, Recharts, `@vimeo/player`, `motion`, etc. You import `Theme` / primitives from `@homecode/ui` without adding it separately unless you want an explicit top-level version pin.
 
