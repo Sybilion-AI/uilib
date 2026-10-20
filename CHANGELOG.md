@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/Sybilion-AI/uilib/compare/v1.6.1...v1.7.0) (2026-10-20)
+
+
+### Features
+
+* Button, Input and Select - Add round prop for pill corners ([#7](https://github.com/Sybilion-AI/uilib/issues/7)) ([5e05054](https://github.com/Sybilion-AI/uilib/commit/5e050545acf98e11dcdf848a179b1b73d6fa68c8))
+
 ### [1.6.1](https://github.com/Mir-Insight/uilib/compare/v1.6.0...v1.6.1) (2026-10-15)
 
 

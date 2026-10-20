@@ -1,7 +1,7 @@
 {
   "name": "@sybilion/uilib",
-  "version": "1.6.1",
-  "description": "Sybilion Design System \u2014 React UI components (Vite + Stylus)",
+  "version": "1.7.0",
+  "description": "Sybilion Design System — React UI components (Vite + Stylus)",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
