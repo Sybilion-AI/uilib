@@ -13,6 +13,7 @@ function Button({
   variant = 'default',
   size = 'md',
   icon = false,
+  round = false,
   asChild = false,
   ...props
 }: ButtonProps) {
@@ -26,6 +27,7 @@ function Button({
         S[variant],
         sizeClass(size),
         icon && S.sizeIcon,
+        round && S.round,
         className,
       )}
       {...props}

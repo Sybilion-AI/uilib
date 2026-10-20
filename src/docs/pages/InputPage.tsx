@@ -15,7 +15,7 @@ export default function InputPage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'Input' }]}
         title="Input"
-        subheader="Variants, sizes, textarea, placeholder, and disabled state."
+        subheader="Variants, sizes, textarea, round, placeholder, and disabled state."
         actions={<DocsHeaderActions />}
       />
       <DocsGuidance source={InputGuidance} />
@@ -112,6 +112,36 @@ export default function InputPage() {
                 </tr>
               </tbody>
             </table>
+          </div>
+        </section>
+        <section>
+          <h3 style={{ marginBottom: '1rem' }}>Round</h3>
+          <p
+            style={{
+              marginBottom: '0.75rem',
+              color: 'var(--muted-foreground)',
+            }}
+          >
+            Pass <code>round</code> for pill corners (
+            <code>border-radius: 100px</code>).
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.75rem',
+              alignItems: 'center',
+            }}
+          >
+            {SIZES.map(s => (
+              <Input
+                key={s}
+                size={s}
+                round
+                placeholder={`Round ${s}`}
+                style={{ width: 200 }}
+              />
+            ))}
           </div>
         </section>
         <section>
