@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.1](https://github.com/Sybilion-AI/uilib/compare/v1.7.0...v1.7.1) (2026-10-20)
+
+
+### Bug Fixes
+
+* publish without npm provenance ([#11](https://github.com/Sybilion-AI/uilib/issues/11)) ([013c85d](https://github.com/Sybilion-AI/uilib/commit/013c85d6eb6b5772b6e40462e74aa20c62ee9e03))
+
 ## [1.7.0](https://github.com/Sybilion-AI/uilib/compare/v1.6.1...v1.7.0) (2026-10-20)
 
 
