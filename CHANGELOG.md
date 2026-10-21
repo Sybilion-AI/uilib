@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.2](https://github.com/Sybilion-AI/uilib/compare/v1.7.1...v1.7.2) (2026-10-21)
+
+
+### Bug Fixes
+
+* remove rudimental doc ([51cd09b](https://github.com/Sybilion-AI/uilib/commit/51cd09b910da464927e2f2f4407e505ba21ce829))
+
 ### [1.7.1](https://github.com/Sybilion-AI/uilib/compare/v1.7.0...v1.7.1) (2026-10-20)
 
 
