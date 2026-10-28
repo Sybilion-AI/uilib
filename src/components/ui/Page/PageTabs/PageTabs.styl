@@ -14,6 +14,14 @@
     padding-left var(--page-x-padding)
     padding-right var(--page-x-padding)
 
+// The row scrolls, so it clips whatever is drawn outside the tabs, and the
+// shared focus ring (2px wide, 2px outside) would lose its top and bottom.
+// Draw it inside the tab instead, its outer edge 2px in so that it clears the
+// link variant's 2px underline. A value set on a tab itself still wins; one set
+// higher up does not, because the ring has to stay inside.
+.listInner
+  --focus-outline-offset calc(-1 * var(--focus-outline-width, 2px) - 2px)
+
 .variant-button
 .variant-outline
   .listInner
