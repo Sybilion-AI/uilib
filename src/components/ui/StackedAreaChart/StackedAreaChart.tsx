@@ -235,7 +235,6 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
               // A point scale runs the areas edge to edge and starts and ends
               // each zone on its rows; bars keep a band each.
               scale={asBars ? 'auto' : 'point'}
-              padding={asBars ? undefined : { left: 8, right: 8 }}
               ticks={ticks}
               tickFormatter={ticks ? yearLabel : xTickFormatter}
               minTickGap={ticks ? 8 : 24}
