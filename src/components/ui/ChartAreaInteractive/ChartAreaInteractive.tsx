@@ -114,10 +114,23 @@ export function ChartAreaInteractive({
       });
     const opts =
       anchorId != null && Number.isFinite(anchorId) && anchorForecastLoaded
-        ? { endDateAnchorAnalysisId: anchorId }
+        ? {
+            endDateAnchorAnalysisId: anchorId,
+            anchorHistoryKey: forecastHistoryKey(
+              forecastData?.find(f => f.id === anchorId),
+              historyData,
+            ),
+          }
         : undefined;
     return filterDataForTimeRange(chartData, timeRange, opts);
-  }, [chartData, timeRange, selectedAnalysisId, selectedForecast?.id]);
+  }, [
+    chartData,
+    timeRange,
+    selectedAnalysisId,
+    selectedForecast?.id,
+    forecastData,
+    historyData,
+  ]);
 
   const bridgedChartData = useMemo(
     () =>

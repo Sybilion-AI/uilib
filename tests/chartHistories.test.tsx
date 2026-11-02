@@ -5,6 +5,11 @@ import { ChartAreaInteractive } from '#uilib/components/ui/ChartAreaInteractive/
 import { filterDataForTimeRange } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.helpers';
 import type { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
 import {
+  getForecastColor,
+  getHistoryColor,
+  resolveHistoryLines,
+} from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
+import {
   forecastHistoryKey,
   historySeriesKey,
   historySeriesKeys,
@@ -12,7 +17,7 @@ import {
 } from '#uilib/components/ui/ChartAreaInteractive/chartHistories';
 import { isKeyExcludedFromYScale } from '#uilib/components/ui/ChartAreaInteractive/overlays/useChartYRange';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 // recharts' ResponsiveContainer measures the DOM via ResizeObserver, which
 // jsdom does not implement; replace it with a fixed-size passthrough so the
@@ -131,7 +136,25 @@ describe('history lines in scale and time range', () => {
     expect(isKeyExcludedFromYScale('historical_b', hidden)).toBe(false);
   });
 
-  it('anchors the window end on any history line', () => {
+  it('anchors the window end on the history the forecast joins', () => {
+    const rows: ChartDataPoint[] = [
+      { date: '2024-01-01', historical_a: 1 },
+      { date: '2025-06-01', historical_a: 1, forecast_1: 1 },
+      { date: '2026-09-01', historical_b: 2 },
+    ];
+    const out = filterDataForTimeRange(rows, '6m', {
+      endDateAnchorAnalysisId: 1,
+      anchorHistoryKey: 'historical_a',
+    });
+    // Ends at Jun 2025 (history a and forecast 1), not at history b.
+    expect(out.map(r => r.date)).toEqual(['2025-06-01', '2026-09-01']);
+    const anyHistory = filterDataForTimeRange(rows, '6m', {
+      endDateAnchorAnalysisId: 1,
+    });
+    expect(anyHistory.map(r => r.date)).toEqual(['2026-09-01']);
+  });
+
+  it('anchors the window end on any history line by default', () => {
     const rows: ChartDataPoint[] = [
       { date: '2024-01-01', historical_a: 1 },
       { date: '2026-09-01', historical_b: 2 },
@@ -142,6 +165,25 @@ describe('history lines in scale and time range', () => {
     });
     // Ends at Sep 2026 (history b), not at the other run in 2027.
     expect(out.map(r => r.date)).toEqual(['2026-09-01', '2027-06-01']);
+  });
+});
+
+describe('history line defaults', () => {
+  it('applies label and colour defaults, keeping given ones', () => {
+    expect(
+      resolveHistoryLines([{ id: 'a' }, { id: 2, name: 'B', color: '#abc' }]),
+    ).toEqual([
+      { dataKey: 'historical_a', name: 'a', color: getHistoryColor(0) },
+      { dataKey: 'historical_2', name: 'B', color: '#abc' },
+    ]);
+  });
+
+  it('takes history colours from the far end of the forecast palette', () => {
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        expect(getHistoryColor(i)).not.toBe(getForecastColor(j));
+      }
+    }
   });
 });
 
@@ -269,6 +311,34 @@ describe('ChartAreaInteractive with several history lines', () => {
         history,
       );
     }
+  });
+
+  it('toggles a history line by its own key from the legend', () => {
+    const toggled: string[] = [];
+    render(
+      <ChartAreaInteractive
+        chartRenderId="test"
+        chartData={DATA}
+        historyData={HISTORIES}
+        forecastData={FORECASTS}
+        loading={false}
+        hasCombinedData
+        isDarkTheme={false}
+        disableAnimation
+        timeRange="All"
+        onTimeRangeChange={() => {}}
+        pinMonth={undefined}
+        onPinMonthChange={() => {}}
+        disableTimeRangeSelector
+        toggleLegendSeries={key => toggled.push(key)}
+        ensureAnalysisSeriesVisible={() => {}}
+      />,
+    );
+    // The selector already sends 'forecast_-1' on mount (its "Historical"
+    // auto-select, unrelated to several histories); look at the click only.
+    toggled.length = 0;
+    fireEvent.click(screen.getByText('Product B'));
+    expect(toggled).toEqual(['historical_b']);
   });
 
   it('does not join forecasts that name no history when there are several', () => {

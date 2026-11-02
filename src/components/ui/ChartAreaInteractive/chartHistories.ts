@@ -16,7 +16,11 @@ export type HistoryItemData = {
   id: string | number;
   /** Legend and tooltip label. Defaults to the id. */
   name?: string;
-  /** Line colour. Defaults to the forecast palette by position. */
+  /**
+   * Line colour. Defaults to the forecast palette taken from its far end, so
+   * the first histories and the first forecasts differ. To pair a product's
+   * history and forecast, pass the same colour to both.
+   */
   color?: string;
 };
 

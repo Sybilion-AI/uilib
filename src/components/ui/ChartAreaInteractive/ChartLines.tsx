@@ -62,6 +62,26 @@ export const getForecastQuantileBandColor = (index: number) =>
     FORECAST_LINE_COLORS[index % FORECAST_LINE_COLORS.length]
   ];
 
+/** A history line as drawn: data key, label and colour with defaults applied. */
+export type HistoryLine = { dataKey: string; name: string; color: string };
+
+/** Default colour of the history at `index`: the forecast palette from its far end. */
+export function getHistoryColor(index: number): string {
+  const n = FORECAST_LINE_COLORS.length;
+  return FORECAST_LINE_COLORS[n - 1 - (index % n)];
+}
+
+/** `historyData` with the defaults applied, in order (empty without it). */
+export function resolveHistoryLines(
+  histories?: HistoryItemData[],
+): HistoryLine[] {
+  return (histories ?? []).map((h, index) => ({
+    dataKey: historySeriesKey(h.id),
+    name: h.name ?? String(h.id),
+    color: h.color ?? getHistoryColor(index),
+  }));
+}
+
 /** Same tint logic as intervals/threshold overlays: band fill follows forecast line hex when known. */
 export function resolveQuantileBandFillForForecastLine(
   lineColor: string,
@@ -121,11 +141,7 @@ export const ChartLines = memo(
     const historyLines = useMemo(
       () =>
         historyData?.length
-          ? historyData.map((h, index) => ({
-              dataKey: historySeriesKey(h.id),
-              name: h.name ?? String(h.id),
-              color: h.color ?? getForecastColor(index),
-            }))
+          ? resolveHistoryLines(historyData)
           : [
               {
                 dataKey: HISTORY_SERIES_KEY,

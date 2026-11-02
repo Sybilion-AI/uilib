@@ -15,10 +15,10 @@ import {
   ChartLines,
   ForecastItemData,
   getForecastColor,
+  resolveHistoryLines,
 } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
 import {
   HistoryItemData,
-  historySeriesKey,
   historySeriesKeys,
   isHistorySeriesKey,
 } from '#uilib/components/ui/ChartAreaInteractive/chartHistories';
@@ -458,51 +458,35 @@ const BaseChartWrapperContent = forwardRef<
     );
   };
 
-  // Extract only line data (historical and forecast_* properties) for animation trigger
-  // This prevents re-animation when only quantile band data changes
-  // Use a stable reference based on actual line data values, not chartData reference
-  const lineDataKey = useMemo(() => {
-    const lineData = chartData.map(point => {
-      const linePoint: Record<string, unknown> = { date: point.date };
-      // History and forecast_* lines, but not quantile band properties
-      Object.keys(point).forEach(key => {
-        if (
-          (isHistorySeriesKey(key) && point[key] !== undefined) ||
-          key.startsWith('forecast_')
-        ) {
-          linePoint[key] = point[key];
-        }
-      });
-      return linePoint;
-    });
-    // Create a stable key based on actual line data values
-    return JSON.stringify(lineData);
-  }, [chartData]);
-
-  const lineDataForAnimation = useMemo(() => {
-    const lineData = chartData.map(point => {
-      const linePoint: Record<string, unknown> = { date: point.date };
-      // History and forecast_* lines, but not quantile band properties
-      Object.keys(point).forEach(key => {
-        if (
-          (isHistorySeriesKey(key) && point[key] !== undefined) ||
-          key.startsWith('forecast_')
-        ) {
-          linePoint[key] = point[key];
-        }
-      });
-      return linePoint;
-    });
-    return lineData;
-  }, [lineDataKey]);
+  // Only the line data (history and forecast_* keys) triggers the draw
+  // animation, so a change to quantile band data alone does not re-animate.
+  // The string key keeps the array's reference stable while the values are.
+  const lineData = useMemo(
+    () =>
+      chartData.map(point => {
+        const linePoint: Record<string, unknown> = { date: point.date };
+        Object.keys(point).forEach(key => {
+          if (
+            (isHistorySeriesKey(key) && point[key] !== undefined) ||
+            key.startsWith('forecast_')
+          ) {
+            linePoint[key] = point[key];
+          }
+        });
+        return linePoint;
+      }),
+    [chartData],
+  );
+  const lineDataKey = useMemo(() => JSON.stringify(lineData), [lineData]);
+  const lineDataForAnimation = useMemo(() => lineData, [lineDataKey]);
 
   const historyLegend = useMemo(
     () =>
       showLegend && historyData?.length
-        ? historyData.map((h, index) => ({
-            value: h.name ?? String(h.id),
-            color: h.color ?? getForecastColor(index),
-            dataKey: historySeriesKey(h.id),
+        ? resolveHistoryLines(historyData).map(h => ({
+            value: h.name,
+            color: h.color,
+            dataKey: h.dataKey,
           }))
         : undefined,
     [historyData, showLegend],

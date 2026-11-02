@@ -45,7 +45,10 @@ export interface AnalysesSelectorProps {
   preventDeselection?: boolean;
   /** Hidden series keys, e.g. `historical`, `forecast_<analysisId>` (app-owned state). */
   hiddenSeries?: Set<string>;
-  /** Toggle hidden/visible for an analysis id (maps to `forecast_<id>` internally). */
+  /**
+   * Toggle hidden/visible for an analysis id (maps to `forecast_<id>` internally),
+   * or for a `historicalItems` line by its `seriesKey`.
+   */
   onToggleSeries?: (analysisId: number | string) => void;
   /** Override default pending/running/cancelling detection for labels. */
   isAnalysisInProgress?: (status?: string) => boolean;

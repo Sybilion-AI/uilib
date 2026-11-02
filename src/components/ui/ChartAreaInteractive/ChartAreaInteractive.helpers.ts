@@ -113,15 +113,23 @@ function hasPlottableChartSeriesValue(item: ChartDataPoint): boolean {
 
 /**
  * Row counts toward the "end" of the window when anchoring the time range to a
- * selected forecast (any history line + that analysis line / quantiles).
+ * selected forecast (the history it joins + that analysis line / quantiles).
+ * `historyKey`: that history's data key, null for none, undefined for any.
  */
 function rowContributesToAnchoredTimeRange(
   item: ChartDataPoint,
   analysisId: number,
+  historyKey: string | null | undefined,
 ): boolean {
-  for (const key of Object.keys(item)) {
-    if (isHistorySeriesKey(key) && isPlottableNumber(item[key])) {
+  if (historyKey !== undefined) {
+    if (historyKey !== null && isPlottableNumber(item[historyKey])) {
       return true;
+    }
+  } else {
+    for (const key of Object.keys(item)) {
+      if (isHistorySeriesKey(key) && isPlottableNumber(item[key])) {
+        return true;
+      }
     }
   }
   const forecastKey = `forecast_${analysisId}`;
@@ -140,14 +148,20 @@ function rowContributesToAnchoredTimeRange(
 
 function computeLatestPlottableDate(
   data: ChartDataPoint[],
-  options?: { endDateAnchorAnalysisId?: number | null },
+  options?: FilterDataForTimeRangeOptions,
 ): Date | null {
   const anchorId = options?.endDateAnchorAnalysisId;
 
   const pick = (item: ChartDataPoint, useAnchor: boolean): Date | null => {
     if (!item.date) return null;
     if (useAnchor && anchorId != null) {
-      if (!rowContributesToAnchoredTimeRange(item, anchorId)) {
+      if (
+        !rowContributesToAnchoredTimeRange(
+          item,
+          anchorId,
+          options?.anchorHistoryKey,
+        )
+      ) {
         return null;
       }
     } else if (!hasPlottableChartSeriesValue(item)) {
@@ -180,6 +194,11 @@ export type FilterDataForTimeRangeOptions = {
   /** When set (e.g. selected forecast on Forecast tab), the window ends at the
    *  latest point that has shared historical or that analysis — not at another run. */
   endDateAnchorAnalysisId?: number | null;
+  /**
+   * The history line that anchored forecast joins (`historical`,
+   * `historical_<id>`), or null for none. Omitted: any history line counts.
+   */
+  anchorHistoryKey?: string | null;
 };
 
 export const filterDataForTimeRange = (

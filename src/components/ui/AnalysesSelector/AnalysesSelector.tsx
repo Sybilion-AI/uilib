@@ -33,15 +33,18 @@ const isFailed = (item: AnalysesSelectorItem) =>
   item.status?.toLowerCase() === 'fail';
 
 /**
- * History lines use negative ids (-1 for the single "Historical" item, -1…-N
- * for `historicalItems`); analyses have positive ids.
+ * An entry listed in the selector. History entries (the single "Historical",
+ * id -1, or one per `historicalItems` line) carry their line's `seriesKey`.
  */
-const isHistoryItem = (item: AnalysesSelectorItem) =>
-  typeof item.id === 'number' && item.id < 0;
+type ListedItem = AnalysesSelectorItem & {
+  dimmed?: boolean;
+  seriesKey?: string;
+};
+
+const isHistoryItem = (item: ListedItem) =>
+  item.id === -1 || item.seriesKey !== undefined;
 
 const isDashedIcon = (item: AnalysesSelectorItem) => !isHistoryItem(item);
-
-type ListedItem = AnalysesSelectorItem & { dimmed?: boolean };
 
 const defaultIsAnalysisInProgress = (status?: string) =>
   ['pending', 'running', 'cancelling'].includes(status?.toLowerCase() ?? '');
@@ -152,12 +155,17 @@ export function AnalysesSelector({
   const historyEntries = useMemo(() => {
     if (!showHistorical) return [];
     if (historicalItems?.length) {
-      return historicalItems.map((h, index) => ({
-        id: -(index + 1),
-        label: h.label,
-        color: h.color,
-        dimmed: hiddenSeries.has(h.seriesKey),
-      }));
+      return historicalItems.map(
+        (h, index): ListedItem => ({
+          // Negative ids keep them apart from analyses in keys; the history
+          // is recognised by its seriesKey.
+          id: -(index + 1),
+          label: h.label,
+          color: h.color,
+          seriesKey: h.seriesKey,
+          dimmed: hiddenSeries.has(h.seriesKey),
+        }),
+      );
     }
     return [
       {
@@ -279,13 +287,13 @@ export function AnalysesSelector({
     handleItemClick(item);
   };
 
-  const handleItemClick = (item: AnalysesSelectorItem) => {
+  const handleItemClick = (item: ListedItem) => {
     if (isFailed(item) && onFailedItemClick) {
       onFailedItemClick(item.id);
     } else if (preventDeselection || (inlineMode && enableToggleHidden)) {
       // When preventDeselection is true, or in inlineMode with enableToggleHidden,
-      // toggle hidden series instead of selection
-      toggleSeries(item.id);
+      // toggle hidden series instead of selection. A history line toggles by its key.
+      toggleSeries(item.seriesKey ?? item.id);
     } else {
       // Non-inlineMode: keep original behavior
       onItemToggle(item.id);
@@ -305,9 +313,10 @@ export function AnalysesSelector({
     );
   };
 
-  const renderItemLabel = (item: AnalysesSelectorItem) => (
+  const renderItemLabel = (item: ListedItem) => (
     <LabelWithId
-      id={item.id}
+      // -1 shows no id badge: history lines have no analysis id.
+      id={isHistoryItem(item) ? -1 : item.id}
       label={
         isAnalysisInProgressProp(item.status) ? (
           <TextShimmer as="span">{item.label}</TextShimmer>

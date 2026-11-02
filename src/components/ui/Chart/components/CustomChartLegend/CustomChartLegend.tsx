@@ -106,6 +106,11 @@ export function CustomChartLegend({
 
   const handleToggleSeriesVisibility = useCallback(
     (analysisId: number | string) => {
+      const history = histories?.find(h => h.dataKey === analysisId);
+      if (history) {
+        onClick?.({ ...history }, -1, {});
+        return;
+      }
       const dataKey =
         Number(analysisId) === -1 ? 'historical' : `forecast_${analysisId}`;
       const index =
@@ -121,7 +126,7 @@ export function CustomChartLegend({
         {},
       );
     },
-    [onClick, payload],
+    [onClick, payload, histories],
   );
 
   const handleItemToggle = useCallback(
