@@ -101,36 +101,38 @@ export function ChartAreaInteractive({
     }
   }, [selectedAnalysisId, ensureAnalysisSeriesVisible]);
 
-  const timeFilteredChartData = useMemo(() => {
+  const anchorAnalysisId = useMemo(() => {
     const raw = selectedAnalysisId ?? selectedForecast?.id ?? null;
-    const anchorId =
-      raw == null ? null : typeof raw === 'number' ? raw : Number(raw);
+    const id = raw == null ? null : typeof raw === 'number' ? raw : Number(raw);
+    return id != null && Number.isFinite(id) ? id : null;
+  }, [selectedAnalysisId, selectedForecast?.id]);
+
+  // The history the anchored forecast joins, as a string, so the time filter
+  // does not rerun when the host passes new but equal arrays.
+  const anchorHistoryKey = useMemo(
+    () =>
+      anchorAnalysisId == null
+        ? undefined
+        : forecastHistoryKey(
+            forecastData?.find(f => f.id === anchorAnalysisId),
+            historyData,
+          ),
+    [anchorAnalysisId, forecastData, historyData],
+  );
+
+  const timeFilteredChartData = useMemo(() => {
     const anchorForecastLoaded =
-      anchorId != null &&
-      Number.isFinite(anchorId) &&
+      anchorAnalysisId != null &&
       chartData.some(row => {
-        const value = row[`forecast_${anchorId}`];
+        const value = row[`forecast_${anchorAnalysisId}`];
         return typeof value === 'number' && Number.isFinite(value);
       });
     const opts =
-      anchorId != null && Number.isFinite(anchorId) && anchorForecastLoaded
-        ? {
-            endDateAnchorAnalysisId: anchorId,
-            anchorHistoryKey: forecastHistoryKey(
-              forecastData?.find(f => f.id === anchorId),
-              historyData,
-            ),
-          }
+      anchorAnalysisId != null && anchorForecastLoaded
+        ? { endDateAnchorAnalysisId: anchorAnalysisId, anchorHistoryKey }
         : undefined;
     return filterDataForTimeRange(chartData, timeRange, opts);
-  }, [
-    chartData,
-    timeRange,
-    selectedAnalysisId,
-    selectedForecast?.id,
-    forecastData,
-    historyData,
-  ]);
+  }, [chartData, timeRange, anchorAnalysisId, anchorHistoryKey]);
 
   const bridgedChartData = useMemo(
     () =>

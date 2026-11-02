@@ -18,8 +18,9 @@ export type HistoryItemData = {
   name?: string;
   /**
    * Line colour. Defaults to the forecast palette taken from its far end, so
-   * the first histories and the first forecasts differ. To pair a product's
-   * history and forecast, pass the same colour to both.
+   * histories and forecasts differ while there are 8 lines or fewer (the
+   * palette's size). To pair a product's history and forecast, pass the same
+   * colour to both.
    */
   color?: string;
 };

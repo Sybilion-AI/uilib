@@ -15,7 +15,10 @@ import {
   historySeriesKeys,
   isHistorySeriesKey,
 } from '#uilib/components/ui/ChartAreaInteractive/chartHistories';
-import { isKeyExcludedFromYScale } from '#uilib/components/ui/ChartAreaInteractive/overlays/useChartYRange';
+import {
+  calculateChartYRange,
+  isKeyExcludedFromYScale,
+} from '#uilib/components/ui/ChartAreaInteractive/overlays/useChartYRange';
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 
@@ -134,6 +137,21 @@ describe('history lines in scale and time range', () => {
     const hidden = new Set(['historical_a']);
     expect(isKeyExcludedFromYScale('historical_a', hidden)).toBe(true);
     expect(isKeyExcludedFromYScale('historical_b', hidden)).toBe(false);
+  });
+
+  it('scales a selected forecast with its own history only', () => {
+    const scoped = calculateChartYRange(DATA, {
+      excludeQuantileBands: true,
+      forecastId: 1,
+      forecastHistoryKey: 'historical_a',
+    });
+    // Product A (10–13) only, not Product B's 50–54.
+    expect(scoped.yMax).toBeLessThan(20);
+    const all = calculateChartYRange(DATA, {
+      excludeQuantileBands: true,
+      forecastId: 1,
+    });
+    expect(all.yMax).toBeGreaterThan(50);
   });
 
   it('anchors the window end on the history the forecast joins', () => {
@@ -313,7 +331,7 @@ describe('ChartAreaInteractive with several history lines', () => {
     }
   });
 
-  it('toggles a history line by its own key from the legend', () => {
+  it('shows history legend entries without toggling them, like "Historical"', () => {
     const toggled: string[] = [];
     render(
       <ChartAreaInteractive
@@ -338,7 +356,7 @@ describe('ChartAreaInteractive with several history lines', () => {
     // auto-select, unrelated to several histories); look at the click only.
     toggled.length = 0;
     fireEvent.click(screen.getByText('Product B'));
-    expect(toggled).toEqual(['historical_b']);
+    expect(toggled).toEqual([]);
   });
 
   it('does not join forecasts that name no history when there are several', () => {

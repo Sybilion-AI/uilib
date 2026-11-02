@@ -2,7 +2,10 @@ import { useMemo, useRef } from 'react';
 
 import { BaseChartWrapperProps } from '#uilib/components/ui/Chart/components/BaseChartWrapper';
 import { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
-import { isHistorySeriesKey } from '#uilib/components/ui/ChartAreaInteractive/chartHistories';
+import {
+  forecastHistoryKey as historyKeyOfForecast,
+  isHistorySeriesKey,
+} from '#uilib/components/ui/ChartAreaInteractive/chartHistories';
 
 interface UseChartYRangeOptions {
   baseChartProps: BaseChartWrapperProps;
@@ -15,6 +18,11 @@ interface UseChartYRangeOptions {
 export interface CalculateChartYRangeOptions {
   excludeQuantileBands: boolean;
   forecastId?: number;
+  /**
+   * With `forecastId`: the history line that forecast joins (null: none).
+   * Other history lines are left out. Omitted: every history line counts.
+   */
+  forecastHistoryKey?: string | null;
   hiddenSeries?: Set<string>;
   includeHiddenInYScale?: boolean;
 }
@@ -61,6 +69,7 @@ export function calculateChartYRange(
   {
     excludeQuantileBands,
     forecastId,
+    forecastHistoryKey,
     hiddenSeries,
     includeHiddenInYScale = false,
   }: CalculateChartYRangeOptions,
@@ -82,6 +91,12 @@ export function calculateChartYRange(
       // quantile band (exclude other forecasts and their quantile values only).
       if (forecastId !== undefined) {
         if (key.startsWith('forecast_') && key !== `forecast_${forecastId}`)
+          return;
+        if (
+          forecastHistoryKey !== undefined &&
+          isHistorySeriesKey(key) &&
+          key !== forecastHistoryKey
+        )
           return;
         // Exclude q{quantile}_{otherAnalysisId} - only include selected forecast's quantiles
         if (key.startsWith('q') && !key.endsWith(`_${forecastId}`)) return;
@@ -166,6 +181,19 @@ export function useChartYRange({
   const prevBaseChartDataRef = useRef(baseChartProps.chartData);
   const prevHiddenSeriesKeyRef = useRef(serializeHiddenSeries(hiddenSeries));
 
+  // With several histories, the selected forecast scales with its own only.
+  const { forecastData, historyData } = baseChartProps;
+  const selectedHistoryKey = useMemo(
+    () =>
+      selectedForecastId !== undefined && historyData?.length
+        ? historyKeyOfForecast(
+            forecastData?.find(f => f.id === selectedForecastId),
+            historyData,
+          )
+        : undefined,
+    [selectedForecastId, forecastData, historyData],
+  );
+
   const calculateYRange = (
     dataToUse: ChartDataPoint[],
     excludeBands: boolean,
@@ -174,6 +202,8 @@ export function useChartYRange({
     calculateChartYRange(dataToUse, {
       excludeQuantileBands: excludeBands,
       forecastId,
+      forecastHistoryKey:
+        forecastId === selectedForecastId ? selectedHistoryKey : undefined,
       hiddenSeries,
       includeHiddenInYScale,
     });
@@ -242,6 +272,7 @@ export function useChartYRange({
     selectedForecastId,
     hiddenSeries,
     includeHiddenInYScale,
+    selectedHistoryKey,
   ]);
 
   // When disableRescaleWhenQuantileChanges is false, calculate from transformed data
@@ -272,6 +303,7 @@ export function useChartYRange({
     selectedForecastId,
     hiddenSeries,
     includeHiddenInYScale,
+    selectedHistoryKey,
   ]);
 
   // Return appropriate range

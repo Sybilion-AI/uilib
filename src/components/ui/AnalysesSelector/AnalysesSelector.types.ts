@@ -35,8 +35,9 @@ export interface AnalysesSelectorProps {
   showHistorical?: boolean;
   /**
    * Several history lines (one per product), shown in place of the single
-   * "Historical" item, each with its own colour. `seriesKey` is the line's
-   * data key in `hiddenSeries` (e.g. `historical_<id>`).
+   * "Historical" item, each with its own colour. Like "Historical" they are
+   * shown only, not toggled. `seriesKey` is the line's data key (e.g.
+   * `historical_<id>`); the entry dims while `hiddenSeries` has it.
    */
   historicalItems?: AnalysesSelectorHistoricalItem[];
   enableToggleHidden?: boolean;
@@ -45,10 +46,7 @@ export interface AnalysesSelectorProps {
   preventDeselection?: boolean;
   /** Hidden series keys, e.g. `historical`, `forecast_<analysisId>` (app-owned state). */
   hiddenSeries?: Set<string>;
-  /**
-   * Toggle hidden/visible for an analysis id (maps to `forecast_<id>` internally),
-   * or for a `historicalItems` line by its `seriesKey`.
-   */
+  /** Toggle hidden/visible for an analysis id (maps to `forecast_<id>` internally). */
   onToggleSeries?: (analysisId: number | string) => void;
   /** Override default pending/running/cancelling detection for labels. */
   isAnalysisInProgress?: (status?: string) => boolean;

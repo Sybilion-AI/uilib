@@ -34,7 +34,8 @@ const isFailed = (item: AnalysesSelectorItem) =>
 
 /**
  * An entry listed in the selector. History entries (the single "Historical",
- * id -1, or one per `historicalItems` line) carry their line's `seriesKey`.
+ * id -1, or one per `historicalItems` line, which carries its `seriesKey`) are
+ * shown only: like "Historical", they do not toggle or select.
  */
 type ListedItem = AnalysesSelectorItem & {
   dimmed?: boolean;
@@ -288,12 +289,13 @@ export function AnalysesSelector({
   };
 
   const handleItemClick = (item: ListedItem) => {
+    if (item.seriesKey !== undefined) return;
     if (isFailed(item) && onFailedItemClick) {
       onFailedItemClick(item.id);
     } else if (preventDeselection || (inlineMode && enableToggleHidden)) {
       // When preventDeselection is true, or in inlineMode with enableToggleHidden,
-      // toggle hidden series instead of selection. A history line toggles by its key.
-      toggleSeries(item.seriesKey ?? item.id);
+      // toggle hidden series instead of selection
+      toggleSeries(item.id);
     } else {
       // Non-inlineMode: keep original behavior
       onItemToggle(item.id);

@@ -7,6 +7,7 @@ import type {
   TimeSeriesPoint,
 } from '#uilib/components/ui/Chart/chartForecastVisualization.types';
 import type { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
+import { HISTORY_SERIES_KEY } from '#uilib/components/ui/ChartAreaInteractive/chartHistories';
 
 export type EnsureChartForecastBridgeOptions = {
   forecastSeriesIds?: number[];
@@ -20,11 +21,10 @@ export type EnsureChartForecastBridgeOptions = {
   historyKeyFor?: (forecastId: number) => string | null;
 };
 
-const DEFAULT_HISTORY_KEY = 'historical';
-
-function numberAt(row: ChartDataPoint, key: string): number | null {
+/** A history line's value on a row, or null when it has none. */
+function historyValueAt(row: ChartDataPoint, key: string): number | null {
   const v = row[key];
-  return typeof v === 'number' ? v : null;
+  return v == null || Array.isArray(v) ? null : (v as number);
 }
 
 const FORECAST_KEY_RE = /^forecast_(\d+)$/;
@@ -74,7 +74,7 @@ function findFirstForecastDateForBridge(
       getPreviousMonth(next.date),
     );
     const forecastVal = row[dataKey];
-    const historyVal = numberAt(row, historyKey);
+    const historyVal = historyValueAt(row, historyKey);
     const isSyntheticBridge =
       normalizeToMonthStart(row.date) === expectedBridgeDate &&
       historyVal != null &&
@@ -119,7 +119,7 @@ export function ensureChartForecastBridge(
 
   const rows = sorted.map(p => ({ ...p }));
 
-  const historyKeyFor = options?.historyKeyFor ?? (() => DEFAULT_HISTORY_KEY);
+  const historyKeyFor = options?.historyKeyFor ?? (() => HISTORY_SERIES_KEY);
 
   for (const id of seriesIds) {
     const historyKey = historyKeyFor(id);
@@ -142,7 +142,7 @@ export function ensureChartForecastBridge(
 
     if (prevMonthIdx >= 0) {
       const existing = rows[prevMonthIdx][dataKey];
-      const hPrev = numberAt(rows[prevMonthIdx], historyKey);
+      const hPrev = historyValueAt(rows[prevMonthIdx], historyKey);
       if ((existing === undefined || existing === null) && hPrev !== null) {
         rows[prevMonthIdx] = {
           ...rows[prevMonthIdx],
@@ -151,7 +151,7 @@ export function ensureChartForecastBridge(
       }
     }
 
-    const lastHist = findLastValidChartPoint(rows, historyKey);
+    const lastHist = findLastValidHistoricalChartPoint(rows, historyKey);
     if (!lastHist) continue;
 
     const normLast = normalizeToMonthStart(lastHist.date);
@@ -164,7 +164,7 @@ export function ensureChartForecastBridge(
     const existingAtLast = rows[idxLast][dataKey];
     if (existingAtLast !== undefined && existingAtLast !== null) continue;
 
-    const hLast = numberAt(rows[idxLast], historyKey);
+    const hLast = historyValueAt(rows[idxLast], historyKey);
     if (hLast !== null) {
       rows[idxLast] = { ...rows[idxLast], [dataKey]: hLast };
     }
@@ -186,24 +186,15 @@ export function findLastValidHistoricalPoint(
 }
 
 /**
- * Find the last valid historical data point from ChartDataPoint array
+ * Find the last valid historical data point from ChartDataPoint array, on the
+ * single `historical` line or on the history line under `key`.
  */
 export function findLastValidHistoricalChartPoint(
   historical: ChartDataPoint[],
+  key: string = HISTORY_SERIES_KEY,
 ): ChartDataPoint | null {
-  const validPoints = historical.filter(
-    point => point.historical !== null && point.historical !== undefined,
-  );
-  return validPoints.length > 0 ? validPoints[validPoints.length - 1] : null;
-}
-
-/** The last row with a number under `key` (a history line's data key). */
-function findLastValidChartPoint(
-  rows: ChartDataPoint[],
-  key: string,
-): ChartDataPoint | null {
-  for (let i = rows.length - 1; i >= 0; i--) {
-    if (numberAt(rows[i], key) !== null) return rows[i];
+  for (let i = historical.length - 1; i >= 0; i--) {
+    if (historyValueAt(historical[i], key) !== null) return historical[i];
   }
   return null;
 }
