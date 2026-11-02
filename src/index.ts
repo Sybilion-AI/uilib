@@ -27,6 +27,7 @@ export * from './components/ui/Chart';
 export * from './components/ui/ChartAreaInteractive';
 export * from './components/ui/DonutChart';
 export * from './components/ui/BarChart';
+export * from './components/ui/StackedAreaChart';
 export * from './components/ui/Checkbox';
 export * from './components/ui/Confirm';
 export * from './components/ui/DatePicker';

@@ -1,0 +1,321 @@
+import type { ReactNode } from 'react';
+
+import {
+  MARGIN_KEY,
+  StackedAreaChart,
+  compareZones,
+  stackRows,
+  stackWeights,
+  yearTicks,
+} from '#uilib/components/ui/StackedAreaChart';
+import '@testing-library/jest-dom';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+
+// recharts' ResponsiveContainer measures the DOM via ResizeObserver, which
+// jsdom does not implement; replace it with a fixed-size passthrough.
+jest.mock('recharts', () => {
+  const actual = jest.requireActual<typeof import('recharts')>('recharts');
+  const React = jest.requireActual<typeof import('react')>('react');
+
+  function ResponsiveContainer({ children }: { children?: ReactNode }) {
+    const sized = React.isValidElement<{ width?: number; height?: number }>(
+      children,
+    )
+      ? React.cloneElement(children, { width: 600, height: 360 })
+      : children;
+    return React.createElement(
+      'div',
+      { style: { width: 600, height: 360 } },
+      sized,
+    );
+  }
+
+  return { ...actual, ResponsiveContainer };
+});
+
+const LAYERS = [
+  { key: 'raw', label: 'Raw material' },
+  { key: 'energy', label: 'Energy' },
+];
+const KEYS = LAYERS.map(l => l.key);
+
+const ROWS = [
+  { date: '2024-01-01', raw: 3, energy: 1, paid: 5 },
+  { date: '2024-02-01', raw: 3, energy: 1, paid: 5 },
+  { date: '2024-03-01', raw: 3, energy: 1, paid: 3 },
+  { date: '2024-04-01', raw: 3, energy: 1, paid: 3 },
+];
+
+describe('stackRows', () => {
+  it('zero-fills missing layers and adds the margin share of the total', () => {
+    const rows = stackRows(
+      [
+        { x: 'a', raw: 3, energy: null },
+        { x: 'b', raw: 2, energy: 2 },
+      ],
+      KEYS,
+      10,
+    );
+    expect(rows[0]).toMatchObject({ raw: 3, energy: 0 });
+    expect(rows[0][MARGIN_KEY]).toBeCloseTo(0.3);
+    expect(rows[1][MARGIN_KEY]).toBeCloseTo(0.4);
+  });
+
+  it('sets the margin to 0 without a positive pct', () => {
+    for (const pct of [null, undefined, 0, -5]) {
+      expect(stackRows([{ raw: 1, energy: 1 }], KEYS, pct)[0][MARGIN_KEY]).toBe(
+        0,
+      );
+    }
+  });
+
+  it('does not change the input rows', () => {
+    const input = [{ raw: 1 }];
+    stackRows(input, KEYS, 5);
+    expect(input).toEqual([{ raw: 1 }]);
+  });
+});
+
+describe('stackWeights', () => {
+  it('uses the last row with a positive total', () => {
+    expect(
+      stackWeights(
+        [
+          { raw: 1, energy: 3 },
+          { raw: 0, energy: 0 },
+        ],
+        KEYS,
+      ),
+    ).toEqual({ raw: 25, energy: 75 });
+  });
+
+  it('is all zeros when no row has a total', () => {
+    expect(stackWeights([{ raw: 0 }], KEYS)).toEqual({ raw: 0, energy: 0 });
+    expect(stackWeights([], KEYS)).toEqual({ raw: 0, energy: 0 });
+  });
+});
+
+describe('compareZones', () => {
+  it('splits the x range where the line crosses the stack', () => {
+    const rows = stackRows(ROWS, KEYS, null);
+    expect(compareZones(rows, 'date', KEYS, 'paid')).toEqual([
+      { x1: '2024-01-01', x2: '2024-03-01', kind: 'above' },
+      { x1: '2024-03-01', x2: '2024-04-01', kind: 'below' },
+    ]);
+  });
+
+  it('counts the margin as part of the stack', () => {
+    // total 4, margin 50% → stack 6, so a price of 5 is below it.
+    const rows = stackRows(ROWS.slice(0, 2), KEYS, 50);
+    expect(compareZones(rows, 'date', KEYS, 'paid')).toEqual([
+      { x1: '2024-01-01', x2: '2024-02-01', kind: 'below' },
+    ]);
+  });
+
+  it('ends a range at a row without a compare value', () => {
+    const rows = stackRows(
+      [
+        { date: 'a', raw: 1, energy: 0, paid: 5 },
+        { date: 'b', raw: 1, energy: 0, paid: 5 },
+        { date: 'c', raw: 1, energy: 0, paid: null },
+        { date: 'd', raw: 1, energy: 0, paid: 5 },
+      ],
+      KEYS,
+      null,
+    );
+    expect(compareZones(rows, 'date', KEYS, 'paid')).toEqual([
+      { x1: 'a', x2: 'c', kind: 'above' },
+    ]);
+  });
+
+  it('returns nothing without a compare value', () => {
+    expect(
+      compareZones(
+        stackRows([{ date: 'a', raw: 1 }], KEYS),
+        'date',
+        KEYS,
+        'paid',
+      ),
+    ).toEqual([]);
+  });
+});
+
+describe('yearTicks', () => {
+  it('returns the first row of each year once there are enough years', () => {
+    const rows = ['2022-06-01', '2022-12-01', '2023-01-01', '2024-03-01'].map(
+      date => ({ date }),
+    );
+    expect(yearTicks(rows, 'date')).toEqual([
+      '2022-06-01',
+      '2023-01-01',
+      '2024-03-01',
+    ]);
+  });
+
+  it('is undefined below the minimum number of years or for non-dates', () => {
+    expect(
+      yearTicks([{ date: '2022-01-01' }, { date: '2023-01-01' }], 'date'),
+    ).toBeUndefined();
+    expect(
+      yearTicks([{ q: 'Q1' }, { q: 'Q2' }, { q: 'Q3' }], 'q'),
+    ).toBeUndefined();
+  });
+});
+
+describe('StackedAreaChart', () => {
+  it('draws the layers as stacked areas with the overlay line', () => {
+    const { container } = render(
+      <StackedAreaChart
+        data={ROWS}
+        xKey="date"
+        layers={LAYERS}
+        overlays={[{ key: 'paid', label: 'Prices paid' }]}
+      />,
+    );
+    expect(container.querySelectorAll('.recharts-area').length).toBe(2);
+    expect(container.querySelectorAll('.recharts-bar').length).toBe(0);
+    expect(container.querySelectorAll('.recharts-line').length).toBe(1);
+    expect(screen.getByText('Prices paid')).toBeInTheDocument();
+  });
+
+  it('draws bars below barsBelow rows', () => {
+    const { container } = render(
+      <StackedAreaChart data={ROWS.slice(0, 2)} xKey="date" layers={LAYERS} />,
+    );
+    expect(container.querySelectorAll('.recharts-bar').length).toBe(2);
+    expect(container.querySelectorAll('.recharts-area').length).toBe(0);
+  });
+
+  it('shows each layer weight in the legend', () => {
+    render(<StackedAreaChart data={ROWS} xKey="date" layers={LAYERS} />);
+    expect(screen.getByText('75%')).toBeInTheDocument();
+    expect(screen.getByText('25%')).toBeInTheDocument();
+  });
+
+  it('hides the weights when showWeights is false', () => {
+    render(
+      <StackedAreaChart
+        data={ROWS}
+        xKey="date"
+        layers={LAYERS}
+        showWeights={false}
+      />,
+    );
+    expect(screen.queryByText('75%')).toBeNull();
+  });
+
+  it('shows the margin layer only with a positive pct', () => {
+    const { container, rerender } = render(
+      <StackedAreaChart
+        data={ROWS}
+        xKey="date"
+        layers={LAYERS}
+        margin={{ pct: 0 }}
+      />,
+    );
+    expect(container.querySelectorAll('.recharts-area').length).toBe(2);
+    expect(screen.queryByText('margin 0%')).toBeNull();
+
+    rerender(
+      <StackedAreaChart
+        data={ROWS}
+        xKey="date"
+        layers={LAYERS}
+        margin={{ pct: 12 }}
+      />,
+    );
+    expect(container.querySelectorAll('.recharts-area').length).toBe(3);
+    expect(screen.getByText('margin 12%')).toBeInTheDocument();
+  });
+
+  it('shades the compare zones and names them in the legend', async () => {
+    const { container } = render(
+      <StackedAreaChart
+        data={ROWS}
+        xKey="date"
+        layers={LAYERS}
+        overlays={[{ key: 'paid', label: 'Prices paid', compare: true }]}
+        zoneLabels={{ above: 'Paid above cost', below: 'Paid below cost' }}
+      />,
+    );
+    expect(screen.getByText('Paid above cost')).toBeInTheDocument();
+    expect(screen.getByText('Paid below cost')).toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        container.querySelectorAll('.recharts-reference-area').length,
+      ).toBe(2),
+    );
+  });
+
+  it('draws no zones without a compare overlay', () => {
+    render(
+      <StackedAreaChart
+        data={ROWS}
+        xKey="date"
+        layers={LAYERS}
+        overlays={[{ key: 'paid' }]}
+      />,
+    );
+    expect(screen.queryByText('above')).toBeNull();
+  });
+
+  it('hides a layer when its legend entry is clicked', () => {
+    const onToggleKey = jest.fn();
+    const { container } = render(
+      <StackedAreaChart
+        data={ROWS}
+        xKey="date"
+        layers={LAYERS}
+        onToggleKey={onToggleKey}
+      />,
+    );
+    const button = screen.getByRole('button', { name: /Energy/ });
+    expect(button).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(button);
+    expect(onToggleKey).toHaveBeenCalledWith('energy');
+    expect(button).toHaveAttribute('aria-pressed', 'false');
+    expect(container.querySelectorAll('.recharts-area').length).toBe(1);
+  });
+
+  it('leaves visibility to the host when hiddenKeys is given', () => {
+    const onToggleKey = jest.fn();
+    render(
+      <StackedAreaChart
+        data={ROWS}
+        xKey="date"
+        layers={LAYERS}
+        hiddenKeys={new Set(['raw'])}
+        onToggleKey={onToggleKey}
+      />,
+    );
+    const raw = screen.getByRole('button', { name: /Raw material/ });
+    expect(raw).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.click(screen.getByRole('button', { name: /Energy/ }));
+    expect(onToggleKey).toHaveBeenCalledWith('energy');
+    expect(screen.getByRole('button', { name: /Energy/ })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+  });
+
+  it('labels the x axis by year with yearTicks', async () => {
+    const rows = ['2022', '2023', '2024'].flatMap(year =>
+      ['01', '07'].map(month => ({
+        date: `${year}-${month}-01`,
+        raw: 1,
+        energy: 1,
+      })),
+    );
+    const { container } = render(
+      <StackedAreaChart data={rows} xKey="date" layers={LAYERS} yearTicks />,
+    );
+    const xTicks = () =>
+      Array.from(
+        container.querySelectorAll(
+          '.recharts-xAxis-tick-labels .recharts-cartesian-axis-tick-value',
+        ),
+      ).map(node => node.textContent);
+    // Axis ticks paint a render after layout.
+    await waitFor(() => expect(xTicks()).toEqual(['2022', '2023', '2024']));
+  });
+});

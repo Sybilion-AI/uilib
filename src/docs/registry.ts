@@ -225,6 +225,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/BarChartPage'),
   },
   {
+    slug: 'stacked-area-chart',
+    title: 'StackedAreaChart',
+    section: 'Charts',
+    load: () => import('./pages/StackedAreaChartPage'),
+  },
+  {
     slug: 'chat',
     title: 'Chat',
     section: 'Chat',
