@@ -27,8 +27,12 @@ const COST_ROWS: StackedAreaChartDatum[] = Array.from(
       energy: Number((0.6 + 0.15 * Math.cos(i / 3)).toFixed(2)),
       labour: Number((0.45 + i * 0.004).toFixed(2)),
       freight: Number((0.2 + 0.05 * wave).toFixed(2)),
+      // A price every third month and in the last one, so the line and its
+      // shading run the full width.
       paid:
-        i % 3 === 0 ? Number((3.3 + 0.35 * Math.sin(i / 5)).toFixed(2)) : null,
+        i % 3 === 0 || i === 35
+          ? Number((3.3 + 0.35 * Math.sin(i / 5)).toFixed(2))
+          : null,
     };
   },
 );
