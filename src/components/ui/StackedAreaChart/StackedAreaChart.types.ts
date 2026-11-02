@@ -6,7 +6,7 @@ export type StackedAreaChartDatum = Record<
 >;
 
 export interface StackedAreaChartLayer {
-  /** Data key of the layer in each datum. A missing value stacks as 0. */
+  /** Data key of the layer in each datum. A value that is not a number stacks as 0. */
   key: string;
   /** Legend and tooltip label; falls back to the key. */
   label?: ReactNode;

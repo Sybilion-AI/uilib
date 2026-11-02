@@ -13,8 +13,8 @@ StackedAreaChart shows how a total is built from parts over time: cost layers st
 
 ## Do
 
-- Pass rows in x order. Missing layer values stack as 0; overlay gaps are bridged, and the compare zones follow the bridged line.
-- Expect zones to change at rows: a crossing between two rows shows at the next row. Hiding a layer or the compare line in the legend updates the margin and the zones to match what is drawn.
+- Pass rows in x order, with layer and overlay values as numbers (a numeric string counts as missing). Missing layer values stack as 0; overlay gaps are bridged, and the compare zones follow the bridged line.
+- Expect zones to change at rows: a crossing between two rows shows at the next row. Hiding a layer or the compare line in the legend updates the margin, the zones and the weights to match what is drawn.
 - Give each layer a `label`; the legend and tooltip use it.
 - Keep `margin.pct` in the host's state and pass it on every change; the margin layer stays mounted, so typing does not redraw the chart.
 - Set `yearTicks` for multi-year monthly data so the axis reads one label per year.

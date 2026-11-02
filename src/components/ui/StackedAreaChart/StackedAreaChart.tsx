@@ -54,9 +54,6 @@ const ZONE_Z_INDEX = 50;
 
 const AXIS_LINE = { stroke: 'var(--border)', strokeWidth: 1 };
 
-/** Recharts sorts tooltip rows with a stable sort: one key keeps the series order. */
-const keepOrder = () => 0;
-
 const layerColor = (layer: StackedAreaChartLayer, index: number) =>
   layer.color ?? getChartSeriesColor(index);
 const overlayColor = (overlay: StackedAreaChartOverlay) =>
@@ -196,10 +193,15 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
   ) => {
     const legend = useLegendState();
     const hidden: ReadonlySet<string> = hiddenKeys ?? legend.hiddenSeries;
-    const toggle = (key: string) => {
-      onToggleKey?.(key);
-      if (!hiddenKeys) legend.toggleSeries(key);
-    };
+    // With hiddenKeys and no onToggleKey nothing can change visibility, so
+    // the legend entries are not buttons.
+    const toggle =
+      hiddenKeys && !onToggleKey
+        ? undefined
+        : (key: string) => {
+            onToggleKey?.(key);
+            if (!hiddenKeys) legend.toggleSeries(key);
+          };
 
     // Keyed on the joined keys, so layers passed inline do not redo the maths.
     const layerKeysJoined = layers.map(l => l.key).join(KEY_SEP);
@@ -226,9 +228,11 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
       () => stackRows(data, layerKeys, marginPct, visibleKeys),
       [data, layerKeys, marginPct, visibleKeys],
     );
+    // Shares of the layers that are drawn, from the data: typing a margin
+    // does not change them.
     const weights = useMemo(
-      () => (showWeights ? stackWeights(rows, layerKeys) : undefined),
-      [showWeights, rows, layerKeys],
+      () => (showWeights ? stackWeights(data, visibleKeys) : undefined),
+      [showWeights, data, visibleKeys],
     );
     const asBars = rows.length < barsBelow;
     const compareKey = overlays.find(o => o.compare)?.key;
@@ -242,8 +246,8 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
       zones.some(zone => zone.kind === kind),
     );
     const ticks = useMemo(
-      () => (yearTicks ? findYearTicks(rows, xKey) : undefined),
-      [yearTicks, rows, xKey],
+      () => (yearTicks ? findYearTicks(data, xKey) : undefined),
+      [yearTicks, data, xKey],
     );
 
     const config = useMemo(() => {
@@ -306,7 +310,6 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
             />
             {showTooltip && (
               <ChartTooltip
-                itemSorter={keepOrder}
                 content={tooltip => (
                   <StackedTooltip
                     active={tooltip.active}
@@ -383,7 +386,7 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
               return (
                 <Line
                   key={overlay.key}
-                  type="monotone"
+                  type="linear"
                   dataKey={overlay.key}
                   name={overlay.key}
                   stroke={color}
@@ -411,9 +414,13 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
                   />
                 }
                 label={layer.label ?? layer.key}
-                extra={weights ? `${weights[layer.key] ?? 0}%` : undefined}
+                extra={
+                  weights && !hidden.has(layer.key)
+                    ? `${weights[layer.key] ?? 0}%`
+                    : undefined
+                }
                 dimmed={hidden.has(layer.key)}
-                onClick={() => toggle(layer.key)}
+                onClick={toggle && (() => toggle(layer.key))}
               />
             ))}
             {marginOn && (
@@ -438,7 +445,7 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
                 }
                 label={overlay.label ?? overlay.key}
                 dimmed={hidden.has(overlay.key)}
-                onClick={() => toggle(overlay.key)}
+                onClick={toggle && (() => toggle(overlay.key))}
               />
             ))}
             {zoneKinds.map(kind => (

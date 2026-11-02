@@ -105,6 +105,13 @@ describe('stackWeights', () => {
     expect(Object.values(quarters).reduce((x, y) => x + y, 0)).toBe(100);
   });
 
+  it('counts a negative value as 0', () => {
+    expect(stackWeights([{ raw: 5, energy: -1 }], KEYS)).toEqual({
+      raw: 100,
+      energy: 0,
+    });
+  });
+
   it('is all zeros when no row has a total', () => {
     expect(stackWeights([{ raw: 0 }], KEYS)).toEqual({ raw: 0, energy: 0 });
     expect(stackWeights([], KEYS)).toEqual({ raw: 0, energy: 0 });
@@ -163,18 +170,31 @@ describe('compareZones', () => {
     ]);
   });
 
-  it('keeps a range open through a row where the line equals the stack', () => {
-    const rows = stackRows(
-      [
-        { date: 'a', raw: 4, energy: 0, paid: 5 },
-        { date: 'b', raw: 4, energy: 0, paid: 4 },
-        { date: 'c', raw: 4, energy: 0, paid: 5 },
-      ],
-      KEYS,
-      null,
-    );
-    expect(compareZones(rows, 'date', KEYS, 'paid')).toEqual([
-      { x1: 'a', x2: 'c', kind: 'above' },
+  it('ends and starts ranges on a row where the line touches the stack', () => {
+    const at = (paid: number[]) =>
+      compareZones(
+        stackRows(
+          paid.map((value, i) => ({
+            date: String.fromCharCode(97 + i),
+            raw: 10,
+            energy: 0,
+            paid: value,
+          })),
+          KEYS,
+          null,
+        ),
+        'date',
+        KEYS,
+        'paid',
+      );
+    expect(at([12, 10, 8, 8])).toEqual([
+      { x1: 'a', x2: 'b', kind: 'above' },
+      { x1: 'b', x2: 'd', kind: 'below' },
+    ]);
+    expect(at([10, 8, 8])).toEqual([{ x1: 'a', x2: 'c', kind: 'below' }]);
+    expect(at([12, 10, 12])).toEqual([
+      { x1: 'a', x2: 'b', kind: 'above' },
+      { x1: 'b', x2: 'c', kind: 'above' },
     ]);
   });
 
@@ -227,6 +247,19 @@ describe('yearTicks', () => {
     expect(
       yearTicks([{ q: 'Q1' }, { q: 'Q2' }, { q: 'Q3' }], 'q'),
     ).toBeUndefined();
+    const epoch = [1704067200000, 1735689600000, 1767225600000];
+    expect(
+      yearTicks(
+        epoch.map(t => ({ t })),
+        't',
+      ),
+    ).toBeUndefined();
+    expect(
+      yearTicks(
+        ['17040672', '17356896', '17672256'].map(t => ({ t })),
+        't',
+      ),
+    ).toBeUndefined();
   });
 });
 
@@ -258,6 +291,19 @@ describe('StackedAreaChart', () => {
     render(<StackedAreaChart data={ROWS} xKey="date" layers={LAYERS} />);
     expect(screen.getByText('75%')).toBeInTheDocument();
     expect(screen.getByText('25%')).toBeInTheDocument();
+  });
+
+  it('shares the weights among the visible layers', () => {
+    render(
+      <StackedAreaChart
+        data={ROWS}
+        xKey="date"
+        layers={LAYERS}
+        hiddenKeys={new Set(['raw'])}
+      />,
+    );
+    expect(screen.getByText('100%')).toBeInTheDocument();
+    expect(screen.queryByText('75%')).toBeNull();
   });
 
   it('hides the weights when showWeights is false', () => {
@@ -380,6 +426,19 @@ describe('StackedAreaChart', () => {
     expect(onToggleKey).toHaveBeenCalledWith('energy');
     expect(button).toHaveAttribute('aria-pressed', 'false');
     expect(container.querySelectorAll('.recharts-area').length).toBe(1);
+  });
+
+  it('makes the legend read-only with hiddenKeys and no onToggleKey', () => {
+    render(
+      <StackedAreaChart
+        data={ROWS}
+        xKey="date"
+        layers={LAYERS}
+        hiddenKeys={new Set()}
+      />,
+    );
+    expect(screen.queryByRole('button')).toBeNull();
+    expect(screen.getByText('Energy')).toBeInTheDocument();
   });
 
   it('leaves visibility to the host when hiddenKeys is given', () => {

@@ -68,6 +68,7 @@ const formatMonth = (value: string | number) =>
   new Date(String(value)).toLocaleDateString('en-GB', {
     month: 'short',
     year: 'numeric',
+    timeZone: 'UTC',
   });
 
 export default function StackedAreaChartPage() {

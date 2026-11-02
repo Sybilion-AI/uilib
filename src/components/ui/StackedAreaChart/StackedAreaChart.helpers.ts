@@ -40,7 +40,7 @@ export function stackRows(
 
 /**
  * Each layer's share of the total, in whole percent, at the last row whose
- * total is above zero. Rounded by largest remainder, so the shares add up to
+ * total is above zero (a negative value counts as 0). Rounded by largest remainder, so the shares add up to
  * 100. All zeros when no row has a total.
  */
 export function stackWeights(
@@ -48,7 +48,8 @@ export function stackWeights(
   layerKeys: readonly string[],
 ): Record<string, number> {
   for (let i = rows.length - 1; i >= 0; i--) {
-    const total = layersTotal(rows[i], layerKeys);
+    let total = 0;
+    for (const key of layerKeys) total += Math.max(num(rows[i][key]) ?? 0, 0);
     if (total <= 0) continue;
     const shares = layerKeys.map(key => {
       const exact = (Math.max(num(rows[i][key]) ?? 0, 0) / total) * 100;
@@ -67,7 +68,7 @@ export function stackWeights(
 
 /**
  * The compare values with gaps between two known values filled in a straight
- * line by row, as the chart draws them. Rows before the first and after the
+ * line by row, as the chart draws them (the overlays are linear lines). Rows before the first and after the
  * last known value stay null.
  */
 function bridgedValues(
@@ -101,8 +102,8 @@ export type CompareZone = {
  * (the given layers plus the margin on rows from {@link stackRows}). Gaps in
  * the compare line are bridged as the line is drawn. A range runs from the
  * first row on one side to the row where the side changes, so adjacent ranges
- * meet at that row; a row where the line equals the stack keeps the open range
- * going. Ranges are whole rows: a crossing between two rows shows at the next.
+ * meet at that row; a row where the line equals the stack ends a range and
+ * starts the next. Ranges are whole rows: a crossing between two rows shows at the next.
  * Meant for a point-scale x axis, where a range starts and ends on its rows.
  */
 export function compareZones(
@@ -117,26 +118,36 @@ export function compareZones(
   const zones: CompareZone[] = [];
   let open: { x1: string | number; kind: CompareZone['kind'] } | null = null;
   let lastOnSide = -1;
-  const close = (x2: string | number) => {
-    if (open && x2 !== open.x1) zones.push({ ...open, x2 });
+  let lastTouch = -1;
+  const push = (
+    range: { x1: string | number; kind: CompareZone['kind'] },
+    x2: string | number,
+  ) => {
+    if (x2 !== range.x1) zones.push({ ...range, x2 });
   };
   for (let i = 0; i < rows.length; i++) {
     const kind = sides[i];
-    if (kind === 'equal' || (open && kind === open.kind)) {
-      if (open) lastOnSide = i;
+    if (kind === 'equal') {
+      // The line touches the stack here: a range ends and the next starts.
+      if (open) push(open, xOf(i));
+      open = null;
+      lastTouch = i;
       continue;
     }
-    if (open) {
-      // The side changed at row i, or the line ended after lastOnSide.
-      close(kind ? xOf(i) : xOf(lastOnSide));
-      open = null;
+    if (open && kind === open.kind) {
+      lastOnSide = i;
+      continue;
     }
+    // The side changed at row i, or the line ended after lastOnSide.
+    if (open) push(open, kind ? xOf(i) : xOf(lastOnSide));
+    open = null;
     if (kind) {
-      open = { x1: xOf(i), kind };
+      const from = lastTouch >= 0 && lastTouch === i - 1 ? i - 1 : i;
+      open = { x1: xOf(from), kind };
       lastOnSide = i;
     }
   }
-  if (open) close(xOf(lastOnSide));
+  if (open) push(open, xOf(lastOnSide));
   return zones;
 }
 
@@ -176,11 +187,12 @@ function compareSides(
   });
 }
 
-const YEAR_RE = /^(\d{4})/;
+/** A date string: a four-digit year, alone or followed by `-`. */
+const YEAR_RE = /^(\d{4})(?:-|$)/;
 
 /**
- * The x value of the first row in each year, when x values start with a
- * four-digit year and span at least `minYears` years; otherwise undefined.
+ * The x value of the first row in each year, when x values are date strings
+ * (`YYYY` or `YYYY-…`) and span at least `minYears` years; otherwise undefined.
  */
 export function yearTicks(
   rows: readonly StackedAreaChartDatum[],
@@ -191,8 +203,8 @@ export function yearTicks(
   const ticks: Array<string | number> = [];
   for (const row of rows) {
     const x = row[xKey];
-    if (x == null) continue;
-    const year = YEAR_RE.exec(String(x))?.[1];
+    if (typeof x !== 'string') continue;
+    const year = YEAR_RE.exec(x)?.[1];
     if (!year || seen.has(year)) continue;
     seen.add(year);
     ticks.push(x);
