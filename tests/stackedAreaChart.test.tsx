@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import {
   MARGIN_KEY,
   StackedAreaChart,
+  compareRowZones,
   compareZones,
   stackRows,
   stackWeights,
@@ -69,6 +70,11 @@ describe('stackRows', () => {
     }
   });
 
+  it('takes the margin from the total of the given layers', () => {
+    const rows = stackRows([{ raw: 3, energy: 1 }], KEYS, 50, ['energy']);
+    expect(rows[0][MARGIN_KEY]).toBeCloseTo(0.5);
+  });
+
   it('does not change the input rows', () => {
     const input = [{ raw: 1 }];
     stackRows(input, KEYS, 5);
@@ -87,6 +93,16 @@ describe('stackWeights', () => {
         KEYS,
       ),
     ).toEqual({ raw: 25, energy: 75 });
+  });
+
+  it('rounds so the shares add up to 100', () => {
+    const weights = stackWeights([{ a: 1, b: 1, c: 1 }], ['a', 'b', 'c']);
+    expect(weights.a + weights.b + weights.c).toBe(100);
+    const quarters = stackWeights(
+      [{ a: 0.5, b: 0.5, c: 0.5, d: 1.5 }],
+      ['a', 'b', 'c', 'd'],
+    );
+    expect(Object.values(quarters).reduce((x, y) => x + y, 0)).toBe(100);
   });
 
   it('is all zeros when no row has a total', () => {
@@ -112,19 +128,61 @@ describe('compareZones', () => {
     ]);
   });
 
-  it('ends a range at a row without a compare value', () => {
+  it('bridges gaps in the compare line and ends at its last value', () => {
     const rows = stackRows(
       [
         { date: 'a', raw: 1, energy: 0, paid: 5 },
-        { date: 'b', raw: 1, energy: 0, paid: 5 },
-        { date: 'c', raw: 1, energy: 0, paid: null },
-        { date: 'd', raw: 1, energy: 0, paid: 5 },
+        { date: 'b', raw: 1, energy: 0, paid: null },
+        { date: 'c', raw: 1, energy: 0, paid: 5 },
+        { date: 'd', raw: 1, energy: 0, paid: null },
       ],
       KEYS,
       null,
     );
     expect(compareZones(rows, 'date', KEYS, 'paid')).toEqual([
       { x1: 'a', x2: 'c', kind: 'above' },
+    ]);
+  });
+
+  it('places a crossing inside a gap at the bridged value', () => {
+    // paid runs 6 → 2 over a stack of 4: the bridged b is 4.67 (above),
+    // c is 3.33 (below).
+    const rows = stackRows(
+      ['a', 'b', 'c', 'd'].map((date, i) => ({
+        date,
+        raw: 4,
+        energy: 0,
+        paid: i === 0 ? 6 : i === 3 ? 2 : null,
+      })),
+      KEYS,
+      null,
+    );
+    expect(compareZones(rows, 'date', KEYS, 'paid')).toEqual([
+      { x1: 'a', x2: 'c', kind: 'above' },
+      { x1: 'c', x2: 'd', kind: 'below' },
+    ]);
+  });
+
+  it('keeps a range open through a row where the line equals the stack', () => {
+    const rows = stackRows(
+      [
+        { date: 'a', raw: 4, energy: 0, paid: 5 },
+        { date: 'b', raw: 4, energy: 0, paid: 4 },
+        { date: 'c', raw: 4, energy: 0, paid: 5 },
+      ],
+      KEYS,
+      null,
+    );
+    expect(compareZones(rows, 'date', KEYS, 'paid')).toEqual([
+      { x1: 'a', x2: 'c', kind: 'above' },
+    ]);
+  });
+
+  it('judges the line against the given layers only', () => {
+    // Without raw (3), the stack is 1, so a price of 3 is above it.
+    const rows = stackRows(ROWS.slice(2), KEYS, null, ['energy']);
+    expect(compareZones(rows, 'date', ['energy'], 'paid')).toEqual([
+      { x1: '2024-03-01', x2: '2024-04-01', kind: 'above' },
     ]);
   });
 
@@ -137,6 +195,16 @@ describe('compareZones', () => {
         'paid',
       ),
     ).toEqual([]);
+  });
+});
+
+describe('compareRowZones', () => {
+  it('gives each row with a side its own zone', () => {
+    const rows = stackRows(ROWS.slice(1, 3), KEYS, null);
+    expect(compareRowZones(rows, 'date', KEYS, 'paid')).toEqual([
+      { x1: '2024-02-01', x2: '2024-02-01', kind: 'above' },
+      { x1: '2024-03-01', x2: '2024-03-01', kind: 'below' },
+    ]);
   });
 });
 
@@ -244,6 +312,43 @@ describe('StackedAreaChart', () => {
       expect(
         container.querySelectorAll('.recharts-reference-area').length,
       ).toBe(2),
+    );
+  });
+
+  it('names only the zone kinds the chart has', () => {
+    render(
+      <StackedAreaChart
+        data={ROWS.slice(0, 2)}
+        xKey="date"
+        layers={LAYERS}
+        barsBelow={0}
+        overlays={[{ key: 'paid', compare: true }]}
+      />,
+    );
+    expect(screen.getByText('above')).toBeInTheDocument();
+    expect(screen.queryByText('below')).toBeNull();
+  });
+
+  it('drops the zones when the compare line is hidden', async () => {
+    const { container } = render(
+      <StackedAreaChart
+        data={ROWS}
+        xKey="date"
+        layers={LAYERS}
+        overlays={[{ key: 'paid', label: 'Prices paid', compare: true }]}
+      />,
+    );
+    await waitFor(() =>
+      expect(
+        container.querySelectorAll('.recharts-reference-area').length,
+      ).toBe(2),
+    );
+    fireEvent.click(screen.getByRole('button', { name: /Prices paid/ }));
+    expect(screen.queryByText('above')).toBeNull();
+    await waitFor(() =>
+      expect(
+        container.querySelectorAll('.recharts-reference-area').length,
+      ).toBe(0),
     );
   });
 

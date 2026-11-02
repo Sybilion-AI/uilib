@@ -1,10 +1,11 @@
 import cn from 'classnames';
-import { CSSProperties, ReactNode, forwardRef, useMemo, useState } from 'react';
+import { CSSProperties, ReactNode, forwardRef, useMemo } from 'react';
 
 import type { ChartConfig } from '#uilib/components/ui/Chart';
 import { ChartContainer, ChartTooltip } from '#uilib/components/ui/Chart';
 import ChartS from '#uilib/components/ui/Chart/Chart.styl';
 import { getChartSeriesColor } from '#uilib/components/ui/Chart/chartSeriesPalette';
+import { useLegendState } from '#uilib/components/ui/Chart/hooks/useLegendState';
 import {
   Area,
   Bar,
@@ -18,6 +19,7 @@ import {
 
 import {
   MARGIN_KEY,
+  compareRowZones,
   compareZones,
   yearTicks as findYearTicks,
   stackRows,
@@ -40,6 +42,10 @@ const ZONE_FILL = {
   below: 'var(--sb-red-100)',
 } as const;
 const DEFAULT_ZONE_LABELS = { above: 'above', below: 'below' };
+const NO_OVERLAYS: StackedAreaChartOverlay[] = [];
+/** Joins keys into one memo dependency; a key cannot hold this character. */
+const KEY_SEP = '\u0000';
+const splitKeys = (joined: string) => (joined ? joined.split(KEY_SEP) : []);
 /**
  * Recharts 3 draws by layer: grid -100, area 100, bar 300, line 400. Zones go
  * over the grid and under the stack.
@@ -98,8 +104,8 @@ function StackedTooltip({
                 className={cn(ChartS.tooltipIndicator, ChartS['indicator-dot'])}
                 style={
                   {
-                    '--color-bg': row.color,
-                    '--color-border': row.color,
+                    '--color-bg': config[key]?.color ?? row.color,
+                    '--color-border': config[key]?.color ?? row.color,
                   } as CSSProperties
                 }
               />
@@ -169,7 +175,7 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
       data,
       xKey,
       layers,
-      overlays = [],
+      overlays = NO_OVERLAYS,
       margin,
       showWeights = true,
       yearTicks = false,
@@ -188,45 +194,57 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
     },
     ref,
   ) => {
-    const [ownHidden, setOwnHidden] = useState<ReadonlySet<string>>(
-      () => new Set(),
-    );
-    const hidden = hiddenKeys ?? ownHidden;
+    const legend = useLegendState();
+    const hidden: ReadonlySet<string> = hiddenKeys ?? legend.hiddenSeries;
     const toggle = (key: string) => {
       onToggleKey?.(key);
-      if (hiddenKeys) return;
-      setOwnHidden(prev => {
-        const next = new Set(prev);
-        if (next.has(key)) next.delete(key);
-        else next.add(key);
-        return next;
-      });
+      if (!hiddenKeys) legend.toggleSeries(key);
     };
 
-    const layerKeys = useMemo(() => layers.map(l => l.key), [layers]);
+    // Keyed on the joined keys, so layers passed inline do not redo the maths.
+    const layerKeysJoined = layers.map(l => l.key).join(KEY_SEP);
+    const visibleKeysJoined = layers
+      .filter(l => !hidden.has(l.key))
+      .map(l => l.key)
+      .join(KEY_SEP);
+    const layerKeys = useMemo(
+      () => splitKeys(layerKeysJoined),
+      [layerKeysJoined],
+    );
+    // Recharts leaves hidden layers out of the stack, so the margin and the
+    // zones follow the stack that is drawn.
+    const visibleKeys = useMemo(
+      () => splitKeys(visibleKeysJoined),
+      [visibleKeysJoined],
+    );
     const marginPct = margin?.pct ?? null;
     const marginOn = marginPct != null && marginPct > 0;
     const marginLabel = margin?.label ?? `margin ${marginPct ?? 0}%`;
     const marginColor = margin?.color ?? DEFAULT_MARGIN_COLOR;
 
     const rows = useMemo(
-      () => stackRows(data, layerKeys, marginPct),
-      [data, layerKeys, marginPct],
+      () => stackRows(data, layerKeys, marginPct, visibleKeys),
+      [data, layerKeys, marginPct, visibleKeys],
     );
     const weights = useMemo(
       () => (showWeights ? stackWeights(rows, layerKeys) : undefined),
       [showWeights, rows, layerKeys],
     );
-    const compare = overlays.find(o => o.compare);
-    const zones = useMemo(
-      () => (compare ? compareZones(rows, xKey, layerKeys, compare.key) : []),
-      [compare, rows, xKey, layerKeys],
+    const asBars = rows.length < barsBelow;
+    const compareKey = overlays.find(o => o.compare)?.key;
+    const zonesOn = compareKey != null && !hidden.has(compareKey);
+    const zones = useMemo(() => {
+      if (!zonesOn || compareKey == null) return [];
+      const find = asBars ? compareRowZones : compareZones;
+      return find(rows, xKey, visibleKeys, compareKey);
+    }, [zonesOn, compareKey, asBars, rows, xKey, visibleKeys]);
+    const zoneKinds = (['above', 'below'] as const).filter(kind =>
+      zones.some(zone => zone.kind === kind),
     );
     const ticks = useMemo(
       () => (yearTicks ? findYearTicks(rows, xKey) : undefined),
       [yearTicks, rows, xKey],
     );
-    const asBars = rows.length < barsBelow;
 
     const config = useMemo(() => {
       const out: ChartConfig = {};
@@ -269,6 +287,10 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
             )}
             <XAxis
               dataKey={xKey}
+              // A point scale runs the areas edge to edge and starts and ends
+              // each zone on its rows; bars keep a band each.
+              scale={asBars ? 'auto' : 'point'}
+              padding={asBars ? undefined : { left: 8, right: 8 }}
               ticks={ticks}
               tickFormatter={ticks ? yearLabel : xTickFormatter}
               minTickGap={ticks ? 8 : 24}
@@ -299,7 +321,7 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
             )}
             {zones.map(zone => (
               <ReferenceArea
-                key={`${zone.kind}-${zone.x1}`}
+                key={`${zone.kind}-${String(zone.x1)}`}
                 x1={zone.x1}
                 x2={zone.x2}
                 fill={ZONE_FILL[zone.kind]}
@@ -419,19 +441,18 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
                 onClick={() => toggle(overlay.key)}
               />
             ))}
-            {zones.length > 0 &&
-              (['above', 'below'] as const).map(kind => (
-                <LegendEntry
-                  key={kind}
-                  swatch={
-                    <span
-                      className={cn(ChartS.legendIndicator, S.legendZone)}
-                      style={{ backgroundColor: ZONE_FILL[kind] }}
-                    />
-                  }
-                  label={zoneLabels[kind]}
-                />
-              ))}
+            {zoneKinds.map(kind => (
+              <LegendEntry
+                key={kind}
+                swatch={
+                  <span
+                    className={cn(ChartS.legendIndicator, S.legendZone)}
+                    style={{ backgroundColor: ZONE_FILL[kind] }}
+                  />
+                }
+                label={zoneLabels[kind]}
+              />
+            ))}
           </div>
         )}
       </div>

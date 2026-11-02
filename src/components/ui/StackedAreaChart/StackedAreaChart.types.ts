@@ -23,8 +23,8 @@ export interface StackedAreaChartOverlay {
   color?: string;
   /**
    * Shade the x ranges where this line is above or below the stacked total
-   * (layers plus the margin). At most one overlay should set it; the first
-   * one that does is used.
+   * (the visible layers plus the margin), changing at rows. Hidden with the
+   * line. At most one overlay should set it; the first one that does is used.
    */
   compare?: boolean;
 }
