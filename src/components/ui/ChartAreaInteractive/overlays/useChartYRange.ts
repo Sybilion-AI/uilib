@@ -148,8 +148,14 @@ export function calculateChartYRange(
     return { yMin: 0, yMax: 100 };
   }
 
-  const min = Math.min(...allValues);
-  const max = Math.max(...allValues);
+  // A loop, not Math.min(...values): one value per row and line can exceed
+  // the engine's argument limit.
+  let min = Infinity;
+  let max = -Infinity;
+  for (const v of allValues) {
+    if (v < min) min = v;
+    if (v > max) max = v;
+  }
   const diff = max - min;
 
   return {
