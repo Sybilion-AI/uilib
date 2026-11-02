@@ -61,7 +61,11 @@ export interface StackedAreaChartProps extends Omit<
   overlays?: StackedAreaChartOverlay[];
   /** An extra layer on top of the stack, a percentage of the layers' total. */
   margin?: StackedAreaChartMargin;
-  /** Show each layer's share of the total at the last x with a total, in the legend. */
+  /**
+   * Show each visible layer's share of the total in the legend, from the last
+   * row where every visible layer has a value (or, when none has, the last
+   * row with a total).
+   */
   showWeights?: boolean;
   /**
    * Label the x axis by year, one tick at the first row of each year, when

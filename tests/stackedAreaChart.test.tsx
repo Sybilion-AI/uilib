@@ -1,14 +1,14 @@
 import type { ReactNode } from 'react';
 
+import { StackedAreaChart } from '#uilib/components/ui/StackedAreaChart';
 import {
   MARGIN_KEY,
-  StackedAreaChart,
   compareRowZones,
   compareZones,
   stackRows,
   stackWeights,
   yearTicks,
-} from '#uilib/components/ui/StackedAreaChart';
+} from '#uilib/components/ui/StackedAreaChart/StackedAreaChart.helpers';
 import { StackedTooltip } from '#uilib/components/ui/StackedAreaChart/StackedAreaChart.tooltip';
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
@@ -245,6 +245,26 @@ describe('compareZones with missing cost', () => {
     );
     expect(compareZones(rows, 'date', KEYS, 'paid')).toEqual([
       { x1: 'c', x2: 'd', kind: 'above' },
+    ]);
+  });
+});
+
+describe('compareZones with decimals', () => {
+  it('treats a price equal to a sum of decimals as touching', () => {
+    const rows = stackRows(
+      [
+        { date: 'a', raw: 1.8, energy: 0.6, x: 0.45, y: 0.45, paid: 4 },
+        { date: 'b', raw: 1.8, energy: 0.6, x: 0.45, y: 0.45, paid: 3.3 },
+        { date: 'c', raw: 1.8, energy: 0.6, x: 0.45, y: 0.45, paid: 3 },
+      ],
+      ['raw', 'energy', 'x', 'y'],
+      null,
+    );
+    expect(
+      compareZones(rows, 'date', ['raw', 'energy', 'x', 'y'], 'paid'),
+    ).toEqual([
+      { x1: 'a', x2: 'b', kind: 'above' },
+      { x1: 'b', x2: 'c', kind: 'below' },
     ]);
   });
 });

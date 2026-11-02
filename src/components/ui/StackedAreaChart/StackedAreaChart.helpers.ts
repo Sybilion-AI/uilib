@@ -123,7 +123,7 @@ export type CompareZone = {
  * row to the row after it (where the side changes), so adjacent ranges meet
  * on a row; a row where the line touches the stack starts the next range.
  * Ranges are whole rows: a crossing between two rows shows at the next, and a
- * run of one row with nothing after it (the last row) has no width.
+ * run of one row with no compared row after it has no width and is left out.
  * Meant for a point-scale x axis, where a range starts and ends on its rows.
  */
 export function compareZones(
@@ -184,8 +184,10 @@ function compareSides(
     const value = line[i];
     if (value == null || row[COST_KNOWN_KEY] === 0) return null;
     const stack = layersTotal(row, layerKeys) + (num(row[MARGIN_KEY]) ?? 0);
-    if (value > stack) return 'above';
-    if (value < stack) return 'below';
+    // Sums of decimals are not exact: 1.8 + 0.6 + 0.45 + 0.45 is not 3.3.
+    const tolerance = 1e-9 * Math.max(1, Math.abs(stack), Math.abs(value));
+    if (value > stack + tolerance) return 'above';
+    if (value < stack - tolerance) return 'below';
     return 'equal';
   });
 }
