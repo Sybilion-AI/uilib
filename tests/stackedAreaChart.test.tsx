@@ -3,10 +3,12 @@ import type { ReactNode } from 'react';
 import { StackedAreaChart } from '#uilib/components/ui/StackedAreaChart';
 import {
   MARGIN_KEY,
+  chartTop,
   compareRowZones,
   compareZones,
   stackRows,
   stackWeights,
+  valueAxis,
   yearTicks,
 } from '#uilib/components/ui/StackedAreaChart/StackedAreaChart.helpers';
 import { StackedTooltip } from '#uilib/components/ui/StackedAreaChart/StackedAreaChart.tooltip';
@@ -276,6 +278,33 @@ describe('compareRowZones', () => {
       { x1: '2024-02-01', x2: '2024-02-01', kind: 'above' },
       { x1: '2024-03-01', x2: '2024-03-01', kind: 'below' },
     ]);
+  });
+});
+
+describe('valueAxis', () => {
+  it('keeps the axis steady while a margin moves the top a little', () => {
+    // 3.96 and 3.97 used to give €4 and €8 axes with automatic rounding.
+    expect(valueAxis(3.96)).toEqual({ max: 5, ticks: [0, 1, 2, 3, 4, 5] });
+    expect(valueAxis(3.97)).toEqual({ max: 5, ticks: [0, 1, 2, 3, 4, 5] });
+  });
+
+  it('leaves headroom above the top and uses round steps', () => {
+    expect(valueAxis(3.8)).toEqual({ max: 4, ticks: [0, 1, 2, 3, 4] });
+    expect(valueAxis(230).ticks).toEqual([0, 50, 100, 150, 200, 250]);
+    expect(valueAxis(0.42).ticks).toEqual([0, 0.1, 0.2, 0.3, 0.4, 0.5]);
+  });
+
+  it('falls back to a 0 to 1 axis without a positive top', () => {
+    expect(valueAxis(0).max).toBe(1);
+    expect(valueAxis(Number.NaN).max).toBe(1);
+  });
+});
+
+describe('chartTop', () => {
+  it('takes the higher of the stack with margin and the lines', () => {
+    const rows = stackRows(ROWS, KEYS, 50);
+    expect(chartTop(rows, KEYS, [])).toBeCloseTo(6);
+    expect(chartTop(rows, ['energy'], ['paid'])).toBe(5);
   });
 });
 

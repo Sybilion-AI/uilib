@@ -192,6 +192,51 @@ function compareSides(
   });
 }
 
+/**
+ * A value axis from 0 for a top value: at most `maxIntervals` steps of
+ * 1, 2, 2.5 or 5 × 10ⁿ, with a little headroom above the top. Small changes
+ * in the top (a margin being typed) move the axis by one step at most,
+ * instead of doubling it the way automatic rounding can.
+ */
+export function valueAxis(
+  top: number,
+  maxIntervals = 5,
+  headroom = 0.05,
+): { max: number; ticks: number[] } {
+  const target = Number.isFinite(top) && top > 0 ? top * (1 + headroom) : 1;
+  let exponent = Math.floor(Math.log10(target / maxIntervals));
+  for (;;) {
+    for (const mantissa of [1, 2, 2.5, 5]) {
+      const step = mantissa * 10 ** exponent;
+      const count = Math.ceil(target / step - 1e-9);
+      if (count <= maxIntervals) {
+        const ticks = Array.from({ length: count + 1 }, (_, i) =>
+          Number((i * step).toPrecision(12)),
+        );
+        return { max: ticks[ticks.length - 1], ticks };
+      }
+    }
+    exponent += 1;
+  }
+}
+
+/** The highest stacked total (layers plus margin) or line value on any row. */
+export function chartTop(
+  rows: readonly StackedAreaChartDatum[],
+  layerKeys: readonly string[],
+  lineKeys: readonly string[],
+): number {
+  let top = 0;
+  for (const row of rows) {
+    top = Math.max(
+      top,
+      layersTotal(row, layerKeys) + (num(row[MARGIN_KEY]) ?? 0),
+    );
+    for (const key of lineKeys) top = Math.max(top, num(row[key]) ?? 0);
+  }
+  return top;
+}
+
 /** A date string: a four-digit year, alone or followed by `-`. */
 const YEAR_RE = /^(\d{4})(?:-|$)/;
 

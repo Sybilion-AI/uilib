@@ -19,11 +19,13 @@ import {
 
 import {
   MARGIN_KEY,
+  chartTop,
   compareRowZones,
   compareZones,
   yearTicks as findYearTicks,
   stackRows,
   stackWeights,
+  valueAxis,
   yearLabel,
 } from './StackedAreaChart.helpers';
 import S from './StackedAreaChart.styl';
@@ -176,6 +178,14 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
     const zoneKinds = (['above', 'below'] as const).filter(kind =>
       zones.some(zone => zone.kind === kind),
     );
+    const visibleLinesJoined = joinKeys(
+      overlays.filter(o => !hidden.has(o.key)).map(o => o.key),
+    );
+    const yAxis = useMemo(
+      () =>
+        valueAxis(chartTop(rows, visibleKeys, splitKeys(visibleLinesJoined))),
+      [rows, visibleKeys, visibleLinesJoined],
+    );
     const ticks = useMemo(
       () => (yearTicks ? findYearTicks(data, xKey) : undefined),
       [yearTicks, data, xKey],
@@ -233,7 +243,11 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
               axisLine={AXIS_LINE}
             />
             <YAxis
-              domain={[0, 'auto']}
+              // Our own steps: automatic rounding can double the axis when the
+              // margin nudges the top past a round number.
+              domain={[0, yAxis.max]}
+              ticks={yAxis.ticks}
+              allowDataOverflow
               tickFormatter={valueFormatter}
               width={56}
               tickLine={false}
@@ -283,7 +297,7 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
                   dataKey={layer.key}
                   name={layer.key}
                   fill={layerColor(layer, index)}
-                  fillOpacity={0.92}
+                  fillOpacity={1}
                   hide={hidden.has(layer.key)}
                   {...stackProps}
                 />
@@ -307,7 +321,7 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
                   dataKey={MARGIN_KEY}
                   name={MARGIN_KEY}
                   fill={marginColor}
-                  fillOpacity={0.9}
+                  fillOpacity={1}
                   hide={!marginOn}
                   {...stackProps}
                 />
