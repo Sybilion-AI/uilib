@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { CSSProperties, ReactNode, forwardRef, useMemo } from 'react';
+import { ReactNode, forwardRef, useMemo } from 'react';
 
 import type { ChartConfig } from '#uilib/components/ui/Chart';
 import { ChartContainer, ChartTooltip } from '#uilib/components/ui/Chart';
@@ -27,6 +27,7 @@ import {
   yearLabel,
 } from './StackedAreaChart.helpers';
 import S from './StackedAreaChart.styl';
+import { StackedTooltip, type TooltipRow } from './StackedAreaChart.tooltip';
 import type {
   StackedAreaChartLayer,
   StackedAreaChartOverlay,
@@ -45,7 +46,10 @@ const DEFAULT_ZONE_LABELS = { above: 'above', below: 'below' };
 const NO_OVERLAYS: StackedAreaChartOverlay[] = [];
 /** Joins keys into one memo dependency; a key cannot hold this character. */
 const KEY_SEP = '\u0000';
-const splitKeys = (joined: string) => (joined ? joined.split(KEY_SEP) : []);
+/** Each key is prefixed with the separator, so an empty key survives the trip. */
+const joinKeys = (keys: readonly string[]) =>
+  keys.map(key => KEY_SEP + key).join('');
+const splitKeys = (joined: string) => joined.split(KEY_SEP).slice(1);
 /**
  * Recharts 3 draws by layer: grid -100, area 100, bar 300, line 400. Zones go
  * over the grid and under the stack.
@@ -58,78 +62,6 @@ const layerColor = (layer: StackedAreaChartLayer, index: number) =>
   layer.color ?? getChartSeriesColor(index);
 const overlayColor = (overlay: StackedAreaChartOverlay) =>
   overlay.color ?? DEFAULT_OVERLAY_COLOR;
-
-type TooltipRow = {
-  dataKey?: unknown;
-  name?: unknown;
-  value?: unknown;
-  color?: string;
-};
-
-function StackedTooltip({
-  active,
-  payload,
-  label,
-  config,
-  valueFormatter,
-  labelFormatter,
-}: {
-  active?: boolean;
-  payload?: ReadonlyArray<TooltipRow>;
-  label?: unknown;
-  config: ChartConfig;
-  valueFormatter?: (value: number) => string;
-  labelFormatter?: (value: string | number) => string;
-}) {
-  const rows = (payload ?? []).filter(
-    row => typeof row.value === 'number' && Number.isFinite(row.value),
-  );
-  if (!active || rows.length === 0) return null;
-  const x = typeof label === 'number' || typeof label === 'string' ? label : '';
-  return (
-    <div className={ChartS.tooltipContainer}>
-      <div className="font-medium">
-        {labelFormatter ? labelFormatter(x) : String(x)}
-      </div>
-      <div className={ChartS.tooltipContentGrid}>
-        {rows.map(row => {
-          const key = String(row.dataKey ?? row.name);
-          const value = row.value as number;
-          return (
-            <div key={key} className={cn(ChartS.tooltipItem, 'items-center')}>
-              <div
-                className={cn(ChartS.tooltipIndicator, ChartS['indicator-dot'])}
-                style={
-                  {
-                    '--color-bg': config[key]?.color ?? row.color,
-                    '--color-border': config[key]?.color ?? row.color,
-                  } as CSSProperties
-                }
-              />
-              <div className={cn(ChartS.tooltipContent, 'items-center')}>
-                <span
-                  className={cn(
-                    'text-muted-foreground',
-                    ChartS.tooltipLabelText,
-                  )}
-                >
-                  {config[key]?.label ?? String(row.name ?? key)}
-                </span>
-                <span className={ChartS.tooltipValue}>
-                  {valueFormatter
-                    ? valueFormatter(value)
-                    : value.toLocaleString(undefined, {
-                        maximumFractionDigits: 2,
-                      })}
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
 
 function LegendEntry({
   swatch,
@@ -204,11 +136,10 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
           };
 
     // Keyed on the joined keys, so layers passed inline do not redo the maths.
-    const layerKeysJoined = layers.map(l => l.key).join(KEY_SEP);
-    const visibleKeysJoined = layers
-      .filter(l => !hidden.has(l.key))
-      .map(l => l.key)
-      .join(KEY_SEP);
+    const layerKeysJoined = joinKeys(layers.map(l => l.key));
+    const visibleKeysJoined = joinKeys(
+      layers.filter(l => !hidden.has(l.key)).map(l => l.key),
+    );
     const layerKeys = useMemo(
       () => splitKeys(layerKeysJoined),
       [layerKeysJoined],

@@ -2,6 +2,8 @@ import type { StackedAreaChartDatum } from './StackedAreaChart.types';
 
 /** Data key of the margin layer. Prefixed so it cannot clash with a layer key. */
 export const MARGIN_KEY = '__margin';
+/** 1 when a row from {@link stackRows} has a value for any stacked layer, else 0. */
+export const COST_KNOWN_KEY = '__costKnown';
 
 const num = (v: unknown): number | null =>
   typeof v === 'number' && Number.isFinite(v) ? v : null;
@@ -20,7 +22,9 @@ export function layersTotal(
  * Rows ready to stack: every missing layer value becomes 0, and the margin
  * layer (`MARGIN_KEY`) is `pct` percent of the total of `totalKeys` (the
  * layers that are drawn; all layers by default). Without a positive `pct`
- * the margin key is 0, so the layer can stay mounted.
+ * the margin key is 0, so the layer can stay mounted. `COST_KNOWN_KEY` says
+ * whether any of `totalKeys` had a value, so a row with no cost at all is
+ * not compared as a cost of 0.
  */
 export function stackRows(
   rows: readonly StackedAreaChartDatum[],
@@ -32,6 +36,7 @@ export function stackRows(
   return rows.map(row => {
     const next: StackedAreaChartDatum = { ...row };
     for (const key of layerKeys) next[key] = num(row[key]) ?? 0;
+    next[COST_KNOWN_KEY] = totalKeys.some(key => num(row[key]) != null) ? 1 : 0;
     next[MARGIN_KEY] =
       pct != null && pct > 0 ? layersTotal(next, totalKeys) * (pct / 100) : 0;
     return next;
@@ -39,31 +44,44 @@ export function stackRows(
 }
 
 /**
- * Each layer's share of the total, in whole percent, at the last row whose
- * total is above zero (a negative value counts as 0). Rounded by largest remainder, so the shares add up to
- * 100. All zeros when no row has a total.
+ * Each layer's share of the total, in whole percent, at the last row where
+ * every layer has a value and the total is above zero; when no row is
+ * complete, at the last row with a total. A negative value counts as 0.
+ * Rounded by largest remainder, so the shares add up to 100. All zeros when
+ * no row has a total.
  */
 export function stackWeights(
   rows: readonly StackedAreaChartDatum[],
   layerKeys: readonly string[],
 ): Record<string, number> {
-  for (let i = rows.length - 1; i >= 0; i--) {
-    let total = 0;
-    for (const key of layerKeys) total += Math.max(num(rows[i][key]) ?? 0, 0);
-    if (total <= 0) continue;
-    const shares = layerKeys.map(key => {
-      const exact = (Math.max(num(rows[i][key]) ?? 0, 0) / total) * 100;
-      return { key, whole: Math.floor(exact), rest: exact - Math.floor(exact) };
-    });
-    let left = 100 - shares.reduce((sum, share) => sum + share.whole, 0);
-    for (const share of [...shares].sort((a, b) => b.rest - a.rest)) {
-      if (left <= 0) break;
-      share.whole += 1;
-      left -= 1;
-    }
-    return Object.fromEntries(shares.map(share => [share.key, share.whole]));
+  const positive = (row: StackedAreaChartDatum, key: string) =>
+    Math.max(num(row[key]) ?? 0, 0);
+  const totalOf = (row: StackedAreaChartDatum) =>
+    layerKeys.reduce((sum, key) => sum + positive(row, key), 0);
+  const isComplete = (row: StackedAreaChartDatum) =>
+    layerKeys.every(key => num(row[key]) != null);
+
+  let row: StackedAreaChartDatum | undefined;
+  for (let i = rows.length - 1; i >= 0 && !row; i--) {
+    if (isComplete(rows[i]) && totalOf(rows[i]) > 0) row = rows[i];
   }
-  return Object.fromEntries(layerKeys.map(key => [key, 0]));
+  for (let i = rows.length - 1; i >= 0 && !row; i--) {
+    if (totalOf(rows[i]) > 0) row = rows[i];
+  }
+  if (!row) return Object.fromEntries(layerKeys.map(key => [key, 0]));
+
+  const total = totalOf(row);
+  const shares = layerKeys.map(key => {
+    const exact = (positive(row, key) / total) * 100;
+    return { key, whole: Math.floor(exact), rest: exact - Math.floor(exact) };
+  });
+  let left = 100 - shares.reduce((sum, share) => sum + share.whole, 0);
+  for (const share of [...shares].sort((x, y) => y.rest - x.rest)) {
+    if (left <= 0) break;
+    share.whole += 1;
+    left -= 1;
+  }
+  return Object.fromEntries(shares.map(share => [share.key, share.whole]));
 }
 
 /**
@@ -100,10 +118,12 @@ export type CompareZone = {
 /**
  * The x ranges where the compare line is above or below the stacked total
  * (the given layers plus the margin on rows from {@link stackRows}). Gaps in
- * the compare line are bridged as the line is drawn. A range runs from the
- * first row on one side to the row where the side changes, so adjacent ranges
- * meet at that row; a row where the line equals the stack ends a range and
- * starts the next. Ranges are whole rows: a crossing between two rows shows at the next.
+ * the compare line are bridged as the line is drawn; a row with no cost is
+ * on neither side. Each run of rows on one side becomes a range from its first
+ * row to the row after it (where the side changes), so adjacent ranges meet
+ * on a row; a row where the line touches the stack starts the next range.
+ * Ranges are whole rows: a crossing between two rows shows at the next, and a
+ * run of one row with nothing after it (the last row) has no width.
  * Meant for a point-scale x axis, where a range starts and ends on its rows.
  */
 export function compareZones(
@@ -116,38 +136,21 @@ export function compareZones(
   const xOf = (i: number) => rows[i][xKey] as string | number;
 
   const zones: CompareZone[] = [];
-  let open: { x1: string | number; kind: CompareZone['kind'] } | null = null;
-  let lastOnSide = -1;
-  let lastTouch = -1;
-  const push = (
-    range: { x1: string | number; kind: CompareZone['kind'] },
-    x2: string | number,
-  ) => {
-    if (x2 !== range.x1) zones.push({ ...range, x2 });
-  };
-  for (let i = 0; i < rows.length; i++) {
+  let i = 0;
+  while (i < sides.length) {
     const kind = sides[i];
-    if (kind === 'equal') {
-      // The line touches the stack here: a range ends and the next starts.
-      if (open) push(open, xOf(i));
-      open = null;
-      lastTouch = i;
+    if (kind !== 'above' && kind !== 'below') {
+      i++;
       continue;
     }
-    if (open && kind === open.kind) {
-      lastOnSide = i;
-      continue;
-    }
-    // The side changed at row i, or the line ended after lastOnSide.
-    if (open) push(open, kind ? xOf(i) : xOf(lastOnSide));
-    open = null;
-    if (kind) {
-      const from = lastTouch >= 0 && lastTouch === i - 1 ? i - 1 : i;
-      open = { x1: xOf(from), kind };
-      lastOnSide = i;
-    }
+    let end = i;
+    while (end + 1 < sides.length && sides[end + 1] === kind) end++;
+    const first = sides[i - 1] === 'equal' ? i - 1 : i;
+    const last =
+      end + 1 < sides.length && sides[end + 1] != null ? end + 1 : end;
+    if (first !== last) zones.push({ x1: xOf(first), x2: xOf(last), kind });
+    i = end + 1;
   }
-  if (open) push(open, xOf(lastOnSide));
   return zones;
 }
 
@@ -179,7 +182,7 @@ function compareSides(
   const line = bridgedValues(rows, compareKey);
   return rows.map((row, i) => {
     const value = line[i];
-    if (value == null) return null;
+    if (value == null || row[COST_KNOWN_KEY] === 0) return null;
     const stack = layersTotal(row, layerKeys) + (num(row[MARGIN_KEY]) ?? 0);
     if (value > stack) return 'above';
     if (value < stack) return 'below';

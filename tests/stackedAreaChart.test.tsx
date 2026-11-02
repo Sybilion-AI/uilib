@@ -9,6 +9,7 @@ import {
   stackWeights,
   yearTicks,
 } from '#uilib/components/ui/StackedAreaChart';
+import { StackedTooltip } from '#uilib/components/ui/StackedAreaChart/StackedAreaChart.tooltip';
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
@@ -103,6 +104,18 @@ describe('stackWeights', () => {
       ['a', 'b', 'c', 'd'],
     );
     expect(Object.values(quarters).reduce((x, y) => x + y, 0)).toBe(100);
+  });
+
+  it('prefers the last row where every layer has a value', () => {
+    expect(
+      stackWeights(
+        [
+          { raw: 1, energy: 3 },
+          { raw: 2, energy: null },
+        ],
+        KEYS,
+      ),
+    ).toEqual({ raw: 25, energy: 75 });
   });
 
   it('counts a negative value as 0', () => {
@@ -215,6 +228,24 @@ describe('compareZones', () => {
         'paid',
       ),
     ).toEqual([]);
+  });
+});
+
+describe('compareZones with missing cost', () => {
+  it('puts a row with no layer value on neither side', () => {
+    const rows = stackRows(
+      [
+        { date: 'a', paid: 3 },
+        { date: 'b', paid: 3 },
+        { date: 'c', raw: 1, energy: 1, paid: 3 },
+        { date: 'd', raw: 1, energy: 1, paid: 3 },
+      ],
+      KEYS,
+      null,
+    );
+    expect(compareZones(rows, 'date', KEYS, 'paid')).toEqual([
+      { x1: 'c', x2: 'd', kind: 'above' },
+    ]);
   });
 });
 
@@ -481,5 +512,58 @@ describe('StackedAreaChart', () => {
       ).map(node => node.textContent);
     // Axis ticks paint a render after layout.
     await waitFor(() => expect(xTicks()).toEqual(['2022', '2023', '2024']));
+  });
+});
+
+describe('StackedTooltip', () => {
+  const config = {
+    raw: { label: 'Raw material', color: '#111111' },
+    paid: { label: 'Prices paid', color: '#222222' },
+  };
+
+  it('shows zero values, labels from the config and formatted values', () => {
+    render(
+      <StackedTooltip
+        active
+        label="2024-01-01"
+        payload={[
+          { dataKey: 'raw', name: 'raw', value: 0, color: 'white' },
+          { dataKey: 'paid', name: 'paid', value: 3.5 },
+          { dataKey: 'energy', name: 'energy', value: undefined },
+        ]}
+        config={config}
+        valueFormatter={value => `€${value.toFixed(2)}`}
+        labelFormatter={value => `Month ${value}`}
+      />,
+    );
+    expect(screen.getByText('Month 2024-01-01')).toBeInTheDocument();
+    expect(screen.getByText('Raw material')).toBeInTheDocument();
+    expect(screen.getByText('€0.00')).toBeInTheDocument();
+    expect(screen.getByText('€3.50')).toBeInTheDocument();
+    expect(screen.queryByText('energy')).toBeNull();
+  });
+
+  it('colours each row from the config, not the stack stroke', () => {
+    const { container } = render(
+      <StackedTooltip
+        active
+        label="x"
+        payload={[{ dataKey: 'raw', name: 'raw', value: 1, color: 'white' }]}
+        config={config}
+      />,
+    );
+    const dot = container.querySelector<HTMLElement>('[style]');
+    expect(dot?.style.getPropertyValue('--color-bg')).toBe('#111111');
+  });
+
+  it('renders nothing when inactive', () => {
+    const { container } = render(
+      <StackedTooltip
+        active={false}
+        payload={[{ dataKey: 'raw', value: 1 }]}
+        config={config}
+      />,
+    );
+    expect(container).toBeEmptyDOMElement();
   });
 });
