@@ -22,6 +22,22 @@ import { TimeRangeBrushHost } from './TimeRangeBrushLayer';
 import { forecastHistoryKey } from './chartHistories';
 import { IntervalsOverlay, PinOverlay, ThresholdsOverlay } from './overlays';
 
+type ForecastHistoryKeys = {
+  /** [forecastId, history key or null] for each `forecastData` item. */
+  byId: [number, string | null][];
+  /** For a forecast that is only in `chartData`: no `continues` to go on. */
+  other: string | null;
+};
+
+/** The bridge's `historyKeyFor`, from serialised {@link ForecastHistoryKeys}. */
+function historyKeyLookup(
+  serialised: string,
+): (forecastId: number) => string | null {
+  const { byId, other }: ForecastHistoryKeys = JSON.parse(serialised);
+  const map = new Map(byId);
+  return id => (map.has(id) ? map.get(id)! : other);
+}
+
 export const chartConfig = {
   // Chart now supports light/dark themes with dynamic colors
 } satisfies ChartConfig;
@@ -134,23 +150,33 @@ export function ChartAreaInteractive({
     return filterDataForTimeRange(chartData, timeRange, opts);
   }, [chartData, timeRange, anchorAnalysisId, anchorHistoryKey]);
 
+  // Which history each forecast joins, as a string, so the bridge does not
+  // rerun when the host passes a new but equal historyData array.
+  const forecastHistoryKeys = useMemo(
+    () =>
+      JSON.stringify({
+        byId: (forecastData ?? []).map(f => [
+          f.id,
+          forecastHistoryKey(f, historyData),
+        ]),
+        other: forecastHistoryKey(undefined, historyData),
+      } satisfies ForecastHistoryKeys),
+    [forecastData, historyData],
+  );
+
   const bridgedChartData = useMemo(
     () =>
       disableForecastHistoricalBridge
         ? timeFilteredChartData
         : ensureChartForecastBridge(timeFilteredChartData, {
             forecastSeriesIds: forecastData?.map(f => f.id),
-            historyKeyFor: id =>
-              forecastHistoryKey(
-                forecastData?.find(f => f.id === id),
-                historyData,
-              ),
+            historyKeyFor: historyKeyLookup(forecastHistoryKeys),
           }),
     [
       timeFilteredChartData,
       disableForecastHistoricalBridge,
       forecastData,
-      historyData,
+      forecastHistoryKeys,
     ],
   );
 

@@ -177,6 +177,7 @@ export function useChartYRange({
     yMin: number;
     yMax: number;
     forecastId?: number;
+    historyKey?: string | null;
   } | null>(null);
   const prevBaseChartDataRef = useRef(baseChartProps.chartData);
   const prevHiddenSeriesKeyRef = useRef(serializeHiddenSeries(hiddenSeries));
@@ -231,7 +232,10 @@ export function useChartYRange({
       prevBaseChartDataRef.current = baseChartProps.chartData;
       stableYRangeRef.current = null;
     }
-    if (stableYRangeRef.current?.forecastId !== selectedForecastId) {
+    if (
+      stableYRangeRef.current?.forecastId !== selectedForecastId ||
+      stableYRangeRef.current?.historyKey !== selectedHistoryKey
+    ) {
       stableYRangeRef.current = null;
     }
     const hiddenSeriesKey = serializeHiddenSeries(hiddenSeries);
@@ -258,6 +262,7 @@ export function useChartYRange({
       stableYRangeRef.current = {
         ...result,
         forecastId: selectedForecastId,
+        historyKey: selectedHistoryKey,
       };
     }
 
@@ -310,7 +315,9 @@ export function useChartYRange({
   if (disableRescaleWhenQuantileChanges) {
     const cached = stableYRangeRef.current;
     const cachedMatchesForecast =
-      cached && cached.forecastId === selectedForecastId;
+      cached &&
+      cached.forecastId === selectedForecastId &&
+      cached.historyKey === selectedHistoryKey;
     return cachedMatchesForecast
       ? { yMin: cached!.yMin, yMax: cached!.yMax }
       : (stableRange ?? { yMin: 0, yMax: 100 });

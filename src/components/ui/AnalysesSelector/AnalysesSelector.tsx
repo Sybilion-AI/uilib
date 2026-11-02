@@ -351,7 +351,7 @@ export function AnalysesSelector({
       >
         {selectedItems.map(item => (
           <div
-            key={item.id}
+            key={item.seriesKey ?? item.id}
             className={cn(
               S.item,
               disabled && S.disabled,

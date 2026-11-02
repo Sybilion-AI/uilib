@@ -93,7 +93,8 @@ export interface BaseChartWrapperProps {
   /**
    * Several history lines (one per product), each under `historical_<id>` in
    * `chartData`, with its own colour and legend entry. Omit for the single
-   * `historical` line.
+   * `historical` line. With it, `historicalLineColor` does not apply: give
+   * each history its `color`.
    */
   historyData?: HistoryItemData[];
   loading: boolean;
@@ -640,10 +641,14 @@ const BaseChartWrapperContent = forwardRef<
     const allLineValues = [...historicalValues, ...forecastValues];
 
     if (allLineValues.length > 0) {
-      // @ts-ignore
-      const dataMin = Math.min(...allLineValues);
-      // @ts-ignore
-      const dataMax = Math.max(...allLineValues);
+      // A loop, not Math.min(...values): one value per row and line can
+      // exceed the engine's argument limit.
+      let dataMin = Infinity;
+      let dataMax = -Infinity;
+      for (const v of allLineValues as number[]) {
+        if (v < dataMin) dataMin = v;
+        if (v > dataMax) dataMax = v;
+      }
       const explicitRange = yMax - yMin;
       const dataRange = dataMax - dataMin;
       const wastedSpaceRatio = (explicitRange - dataRange) / dataRange;

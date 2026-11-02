@@ -14,7 +14,7 @@ export const HISTORY_SERIES_KEY = 'historical';
 export type HistoryItemData = {
   /** Unique within the chart. The line's data key is `historical_<id>`. */
   id: string | number;
-  /** Legend and tooltip label. Defaults to the id. */
+  /** Legend and tooltip label. Defaults to the id (also when empty). */
   name?: string;
   /**
    * Line colour. Defaults to the forecast palette taken from its far end, so

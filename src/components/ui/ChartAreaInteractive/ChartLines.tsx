@@ -77,7 +77,7 @@ export function resolveHistoryLines(
 ): HistoryLine[] {
   return (histories ?? []).map((h, index) => ({
     dataKey: historySeriesKey(h.id),
-    name: h.name ?? String(h.id),
+    name: h.name || String(h.id),
     color: h.color ?? getHistoryColor(index),
   }));
 }
