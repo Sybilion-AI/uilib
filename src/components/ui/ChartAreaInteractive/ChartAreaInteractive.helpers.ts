@@ -1,4 +1,5 @@
 import type { Analysis, ChartDataPoint } from './ChartAreaInteractive.types';
+import { isHistorySeriesKey } from './chartHistories';
 
 // Helper function to format large numbers with k/m abbreviations
 export const formatNumber = (value: number): string => {
@@ -112,14 +113,16 @@ function hasPlottableChartSeriesValue(item: ChartDataPoint): boolean {
 
 /**
  * Row counts toward the "end" of the window when anchoring the time range to a
- * selected forecast (shared historical + that analysis line / quantiles).
+ * selected forecast (any history line + that analysis line / quantiles).
  */
 function rowContributesToAnchoredTimeRange(
   item: ChartDataPoint,
   analysisId: number,
 ): boolean {
-  if (isPlottableNumber(item.historical)) {
-    return true;
+  for (const key of Object.keys(item)) {
+    if (isHistorySeriesKey(key) && isPlottableNumber(item[key])) {
+      return true;
+    }
   }
   const forecastKey = `forecast_${analysisId}`;
   if (isPlottableNumber(item[forecastKey])) {

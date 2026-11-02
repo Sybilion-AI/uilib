@@ -10,6 +10,12 @@ export interface AnalysesSelectorItem {
   updated_at?: string;
 }
 
+export interface AnalysesSelectorHistoricalItem {
+  seriesKey: string;
+  label: string;
+  color?: string;
+}
+
 export interface AnalysesSelectorProps {
   items: AnalysesSelectorItem[];
   /** Single id, set, or array. Omit or `undefined` = nothing selected (Select falls back to first item for display). */
@@ -27,6 +33,12 @@ export interface AnalysesSelectorProps {
   onFailedItemClick?: (id: number) => void;
   /** Show historical item as first in the list */
   showHistorical?: boolean;
+  /**
+   * Several history lines (one per product), shown in place of the single
+   * "Historical" item, each with its own colour. `seriesKey` is the line's
+   * data key in `hiddenSeries` (e.g. `historical_<id>`).
+   */
+  historicalItems?: AnalysesSelectorHistoricalItem[];
   enableToggleHidden?: boolean;
   maxVisibleItems?: number;
   /** When true, prevents deselection and shows maxVisibleItems inline + rest in dropdown */

@@ -16,6 +16,12 @@ import {
   ForecastItemData,
   getForecastColor,
 } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
+import {
+  HistoryItemData,
+  historySeriesKey,
+  historySeriesKeys,
+  isHistorySeriesKey,
+} from '#uilib/components/ui/ChartAreaInteractive/chartHistories';
 import { Skeleton } from '#uilib/components/ui/Skeleton';
 import { chartRenderQueue } from '#uilib/utils/chartRenderQueue';
 import { Tooltip as ChartTooltip, ComposedChart, LineChart } from 'recharts';
@@ -84,6 +90,12 @@ export interface BaseChartWrapperProps {
   chartData: ChartDataPoint[];
   historicalLineColor?: string;
   forecastData?: ForecastItemData[];
+  /**
+   * Several history lines (one per product), each under `historical_<id>` in
+   * `chartData`, with its own colour and legend entry. Omit for the single
+   * `historical` line.
+   */
+  historyData?: HistoryItemData[];
   loading: boolean;
   hasCombinedData?: boolean; // Indicates if combinedData is available (for cache hits)
   isDarkTheme: boolean;
@@ -202,6 +214,7 @@ const BaseChartWrapperContent = forwardRef<
     chartData,
     historicalLineColor,
     forecastData = [],
+    historyData,
     loading,
     hasCombinedData,
     renderId,
@@ -451,12 +464,12 @@ const BaseChartWrapperContent = forwardRef<
   const lineDataKey = useMemo(() => {
     const lineData = chartData.map(point => {
       const linePoint: Record<string, unknown> = { date: point.date };
-      if (point.historical !== undefined) {
-        linePoint.historical = point.historical;
-      }
-      // Include all forecast_* properties but exclude quantile band properties
+      // History and forecast_* lines, but not quantile band properties
       Object.keys(point).forEach(key => {
-        if (key.startsWith('forecast_')) {
+        if (
+          (isHistorySeriesKey(key) && point[key] !== undefined) ||
+          key.startsWith('forecast_')
+        ) {
           linePoint[key] = point[key];
         }
       });
@@ -469,12 +482,12 @@ const BaseChartWrapperContent = forwardRef<
   const lineDataForAnimation = useMemo(() => {
     const lineData = chartData.map(point => {
       const linePoint: Record<string, unknown> = { date: point.date };
-      if (point.historical !== undefined) {
-        linePoint.historical = point.historical;
-      }
-      // Include all forecast_* properties but exclude quantile band properties
+      // History and forecast_* lines, but not quantile band properties
       Object.keys(point).forEach(key => {
-        if (key.startsWith('forecast_')) {
+        if (
+          (isHistorySeriesKey(key) && point[key] !== undefined) ||
+          key.startsWith('forecast_')
+        ) {
           linePoint[key] = point[key];
         }
       });
@@ -482,6 +495,18 @@ const BaseChartWrapperContent = forwardRef<
     });
     return lineData;
   }, [lineDataKey]);
+
+  const historyLegend = useMemo(
+    () =>
+      showLegend && historyData?.length
+        ? historyData.map((h, index) => ({
+            value: h.name ?? String(h.id),
+            color: h.color ?? getForecastColor(index),
+            dataKey: historySeriesKey(h.id),
+          }))
+        : undefined,
+    [historyData, showLegend],
+  );
 
   const legendPayload = useMemo(() => {
     if (!showLegend) return [];
@@ -614,12 +639,12 @@ const BaseChartWrapperContent = forwardRef<
   let effectiveAutoScale = autoScaleYAxis;
   if (autoScaleYAxis !== false && yMin !== undefined && yMax !== undefined) {
     const dataKeys = chartData.length > 0 ? Object.keys(chartData[0]) : [];
-    const historicalValues =
-      !includeHiddenInYScale && hiddenSeries?.has('historical')
-        ? []
-        : chartData
-            .map(p => p.historical)
-            .filter(v => v !== null && v !== undefined);
+    const visibleHistoryKeys = historySeriesKeys(historyData).filter(
+      k => includeHiddenInYScale || !hiddenSeries?.has(k),
+    );
+    const historicalValues = chartData
+      .flatMap(p => visibleHistoryKeys.map(k => p[k]))
+      .filter(v => v !== null && v !== undefined);
     const forecastKeys = dataKeys.filter(k => k.startsWith('forecast_'));
     const visibleForecastKeys =
       !includeHiddenInYScale && hiddenSeries
@@ -737,6 +762,7 @@ const BaseChartWrapperContent = forwardRef<
             historicalLineColor={historicalLineColor}
             chartData={chartData}
             forecastData={forecastData}
+            historyData={historyData}
             hiddenSeries={hiddenSeries}
             isDarkTheme={isDarkTheme}
             shouldAnimate={shouldAnimate}
@@ -765,11 +791,14 @@ const BaseChartWrapperContent = forwardRef<
         {showLegend &&
           (legendVariant === 'svg' ? (
             <LegendSvg
-              payload={legendPayload.map(p => ({
-                value: p.value,
-                color: p.color,
-                dataKey: p.dataKey,
-              }))}
+              payload={[
+                ...(historyLegend ?? []).map(p => ({ ...p, solid: true })),
+                ...legendPayload.map(p => ({
+                  value: p.value,
+                  color: p.color,
+                  dataKey: p.dataKey,
+                })),
+              ]}
               width={legendWidth}
               marginLeft={legendMarginLeft}
             />
@@ -777,6 +806,7 @@ const BaseChartWrapperContent = forwardRef<
             <CustomChartLegend
               className={legendClassName}
               payload={legendPayload}
+              histories={historyLegend}
               onClick={onLegendClick}
               hiddenSeries={hiddenSeries}
               onAnalysisSelect={onAnalysisSelect}

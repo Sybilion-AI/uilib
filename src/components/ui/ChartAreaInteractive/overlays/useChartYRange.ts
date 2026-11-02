@@ -2,6 +2,7 @@ import { useMemo, useRef } from 'react';
 
 import { BaseChartWrapperProps } from '#uilib/components/ui/Chart/components/BaseChartWrapper';
 import { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
+import { isHistorySeriesKey } from '#uilib/components/ui/ChartAreaInteractive/chartHistories';
 
 interface UseChartYRangeOptions {
   baseChartProps: BaseChartWrapperProps;
@@ -33,8 +34,8 @@ export function isKeyExcludedFromYScale(
 ): boolean {
   if (!hiddenSeries || hiddenSeries.size === 0) return false;
 
-  if (key === 'historical') {
-    return hiddenSeries.has('historical');
+  if (isHistorySeriesKey(key)) {
+    return hiddenSeries.has(key);
   }
 
   if (key.startsWith('forecast_')) {

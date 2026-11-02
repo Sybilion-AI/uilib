@@ -32,7 +32,16 @@ import { SelectInlineRenamer } from './SelectInlineRenamer';
 const isFailed = (item: AnalysesSelectorItem) =>
   item.status?.toLowerCase() === 'fail';
 
-const isDashedIcon = (item: AnalysesSelectorItem) => item.id !== -1;
+/**
+ * History lines use negative ids (-1 for the single "Historical" item, -1…-N
+ * for `historicalItems`); analyses have positive ids.
+ */
+const isHistoryItem = (item: AnalysesSelectorItem) =>
+  typeof item.id === 'number' && item.id < 0;
+
+const isDashedIcon = (item: AnalysesSelectorItem) => !isHistoryItem(item);
+
+type ListedItem = AnalysesSelectorItem & { dimmed?: boolean };
 
 const defaultIsAnalysisInProgress = (status?: string) =>
   ['pending', 'running', 'cancelling'].includes(status?.toLowerCase() ?? '');
@@ -106,6 +115,7 @@ export function AnalysesSelector({
   triggerProps,
   onFailedItemClick,
   showHistorical = true,
+  historicalItems,
   enableToggleHidden = false,
   maxVisibleItems = 1,
   preventDeselection = false,
@@ -138,17 +148,30 @@ export function AnalysesSelector({
     );
   }, [selectedIds]);
 
+  // The history entries: one per `historicalItems` line, or the single "Historical".
+  const historyEntries = useMemo(() => {
+    if (!showHistorical) return [];
+    if (historicalItems?.length) {
+      return historicalItems.map((h, index) => ({
+        id: -(index + 1),
+        label: h.label,
+        color: h.color,
+        dimmed: hiddenSeries.has(h.seriesKey),
+      }));
+    }
+    return [
+      {
+        id: -1,
+        label: 'Historical',
+        dimmed: hiddenSeries.has('historical'),
+      },
+    ];
+  }, [showHistorical, historicalItems, hiddenSeries]);
+
   // In inlineMode, show Historical + selected analyses (limited by maxVisibleItems)
   const selectedItems = useMemo(() => {
     if (inlineMode) {
-      const list = [];
-      if (showHistorical) {
-        list.push({
-          id: -1,
-          label: 'Historical',
-          dimmed: hiddenSeries.has('historical'),
-        });
-      }
+      const list: ListedItem[] = [...historyEntries];
       // Filter by selectedIds, exclude failed items and user series
       const analysesOnly = items.filter(
         item =>
@@ -167,18 +190,12 @@ export function AnalysesSelector({
       return list.concat(limitedItems);
     }
     // Non-inlineMode: keep original behavior
-    const list = [];
-    if (showHistorical) {
-      list.push({
-        id: -1,
-        label: 'Historical',
-      });
-    }
+    const list: ListedItem[] = [...historyEntries];
     return list.concat(items.filter(item => selectedSet.has(item.id)));
   }, [
     items,
     selectedSet,
-    showHistorical,
+    historyEntries,
     inlineMode,
     hiddenSeries,
     maxVisibleItems,
@@ -327,7 +344,7 @@ export function AnalysesSelector({
             className={cn(
               S.item,
               disabled && S.disabled,
-              item.id === -1 && S.historical,
+              isHistoryItem(item) && S.historical,
               item.dimmed && S.dimmed,
             )}
             onClick={() => !disabled && handleItemClick(item)}

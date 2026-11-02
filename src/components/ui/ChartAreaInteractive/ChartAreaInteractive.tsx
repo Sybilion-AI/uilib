@@ -19,6 +19,7 @@ import {
 import S from './ChartAreaInteractive.styl';
 import { ChartAreaInteractiveProps } from './ChartAreaInteractive.types';
 import { TimeRangeBrushHost } from './TimeRangeBrushLayer';
+import { forecastHistoryKey } from './chartHistories';
 import { IntervalsOverlay, PinOverlay, ThresholdsOverlay } from './overlays';
 
 export const chartConfig = {
@@ -38,6 +39,7 @@ export function ChartAreaInteractive({
   onPreviewMonthChange,
   chartData,
   forecastData,
+  historyData,
   error,
   loading = false,
   isDarkTheme = false,
@@ -123,8 +125,18 @@ export function ChartAreaInteractive({
         ? timeFilteredChartData
         : ensureChartForecastBridge(timeFilteredChartData, {
             forecastSeriesIds: forecastData?.map(f => f.id),
+            historyKeyFor: id =>
+              forecastHistoryKey(
+                forecastData?.find(f => f.id === id),
+                historyData,
+              ),
           }),
-    [timeFilteredChartData, disableForecastHistoricalBridge, forecastData],
+    [
+      timeFilteredChartData,
+      disableForecastHistoricalBridge,
+      forecastData,
+      historyData,
+    ],
   );
 
   // Extract quantileBands from restProps
@@ -151,6 +163,7 @@ export function ChartAreaInteractive({
     xAxisClassName,
     yAxisClassName,
     chartData: bridgedChartData,
+    historyData,
     chartClassName: S.chartContainer,
     // chartClassName: cn(S.chartContainer, chartContainerClassName),
     legendClassName,
