@@ -20,6 +20,11 @@ interface ChartAxesProps {
   yMin?: number;
   yMax?: number;
   autoScaleYAxis?: boolean;
+  /**
+   * Draw no axes, but keep them for the chart's coordinates: the tooltip still
+   * names the row's date and the y-axis keeps `yMin`/`yMax`.
+   */
+  hide?: boolean;
 }
 
 export function ChartAxes({
@@ -36,6 +41,7 @@ export function ChartAxes({
   yMin,
   yMax,
   autoScaleYAxis = false,
+  hide = false,
 }: ChartAxesProps) {
   const tickColor = 'var(--muted-foreground)';
 
@@ -108,6 +114,7 @@ export function ChartAxes({
       <XAxis
         className={xAxisClassName}
         dataKey="date"
+        hide={hide}
         tickLine={false}
         axisLine={false}
         tickMargin={8}
@@ -123,6 +130,7 @@ export function ChartAxes({
       </XAxis>
       <YAxis
         className={yAxisClassName}
+        hide={hide}
         tickLine={false}
         axisLine={false}
         tickMargin={8}

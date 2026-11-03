@@ -142,6 +142,21 @@ describe('BaseChartWrapper tooltip values', () => {
   });
 });
 
+describe('BaseChartWrapper without axes', () => {
+  it('draws no axis but the tooltip still names the row’s date', async () => {
+    const { container } = await hoverAndRead(640, {
+      showAxes: false,
+      labelFormatter: (v: unknown) => `month ${String(v)}`,
+    });
+    await waitFor(() =>
+      expect(container.textContent).toContain('month 2026-03-01'),
+    );
+    expect(
+      container.querySelectorAll('.recharts-cartesian-axis-tick'),
+    ).toHaveLength(0);
+  });
+});
+
 describe('BaseChartWrapper lines across missing months', () => {
   const gappy = [
     { date: '2026-01-01', historical: 1, forecast_1: 1 },

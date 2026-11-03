@@ -155,6 +155,10 @@ export interface BaseChartWrapperProps {
    */
   disableLineDrawAnimation?: boolean;
   showGrid?: boolean;
+  /**
+   * Draw the axes. Off, they are still there, hidden: the tooltip keeps the
+   * row's date and the y-axis keeps `yMin`/`yMax`.
+   */
   showAxes?: boolean;
   showTooltip?: boolean;
   showLegend?: boolean;
@@ -726,21 +730,20 @@ const BaseChartWrapperContent = forwardRef<
         >
           <ChartComponent data={chartData} margin={margin}>
             <ChartGrid />
-            {showAxes && (
-              <ChartAxes
-                formatDate={formatDateFn}
-                formatNumber={formatNumber}
-                xAxisClassName={xAxisClassName}
-                yAxisClassName={yAxisClassName}
-                xAxisLabel={xAxisLabel}
-                yAxisLabel={yAxisLabel}
-                xMin={xMin}
-                xMax={xMax}
-                yMin={yMin}
-                yMax={yMax}
-                autoScaleYAxis={effectiveAutoScale}
-              />
-            )}
+            <ChartAxes
+              hide={!showAxes}
+              formatDate={formatDateFn}
+              formatNumber={formatNumber}
+              xAxisClassName={xAxisClassName}
+              yAxisClassName={yAxisClassName}
+              xAxisLabel={xAxisLabel}
+              yAxisLabel={yAxisLabel}
+              xMin={xMin}
+              xMax={xMax}
+              yMin={yMin}
+              yMax={yMax}
+              autoScaleYAxis={effectiveAutoScale}
+            />
           </ChartComponent>
         </ChartContainer>
       )}
@@ -753,22 +756,22 @@ const BaseChartWrapperContent = forwardRef<
         {...containerProps}
       >
         <ChartComponent data={chartData} margin={margin}>
-          {/* Render invisible axes for coordinate system, but hide labels */}
-          {showAxes && (
-            <ChartAxes
-              formatDate={formatDateFn}
-              formatNumber={formatNumber}
-              xAxisClassName={cn(xAxisClassName)}
-              yAxisClassName={cn(yAxisClassName)}
-              xAxisLabel={xAxisLabel}
-              yAxisLabel={yAxisLabel}
-              xMin={xMin}
-              xMax={xMax}
-              yMin={yMin}
-              yMax={yMax}
-              autoScaleYAxis={effectiveAutoScale}
-            />
-          )}
+          {/* The axes, hidden when showAxes is off: they still place the rows
+              by date and keep yMin/yMax, so the tooltip names the date. */}
+          <ChartAxes
+            hide={!showAxes}
+            formatDate={formatDateFn}
+            formatNumber={formatNumber}
+            xAxisClassName={cn(xAxisClassName)}
+            yAxisClassName={cn(yAxisClassName)}
+            xAxisLabel={xAxisLabel}
+            yAxisLabel={yAxisLabel}
+            xMin={xMin}
+            xMax={xMax}
+            yMin={yMin}
+            yMax={yMax}
+            autoScaleYAxis={effectiveAutoScale}
+          />
 
           {/* Quantile Bands (widest to narrowest) */}
           {quantileBands?.[0] && (
