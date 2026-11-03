@@ -109,6 +109,7 @@ export const ChartLines = memo(
     connectHistoryNulls = false,
     connectForecastNulls = false,
     historyOnTop = false,
+    showEndDots = true,
   }: {
     chartData: ChartDataPoint[];
     forecastData?: ForecastItemData[];
@@ -131,6 +132,8 @@ export const ChartLines = memo(
      * faint forecasts that would otherwise cover the history).
      */
     historyOnTop?: boolean;
+    /** Mark each line's last point with a dot (default: on). */
+    showEndDots?: boolean;
   }) => {
     const dotStroke = isDarkTheme ? '#000000' : '#FFFFFF';
 
@@ -241,7 +244,9 @@ export const ChartLines = memo(
         dataKey={dataKey}
         stroke={color}
         strokeWidth={1}
-        dot={props => renderHistoryDot(props, dataKey, color)}
+        dot={
+          showEndDots ? props => renderHistoryDot(props, dataKey, color) : false
+        }
         activeDot={{ ...activeDotHistorical, fill: color }}
         name={name}
         legendType={showLegend === false ? 'none' : undefined}
@@ -273,7 +278,9 @@ export const ChartLines = memo(
             stroke={color}
             strokeWidth={1}
             strokeDasharray={forecastLineStyle === 'dashed' ? '4 2' : '0'}
-            dot={props => renderForecastDot(props, id, color)}
+            dot={
+              showEndDots ? props => renderForecastDot(props, id, color) : false
+            }
             activeDot={activeDotForecast(color)}
             name={`${name || `${id}`}`}
             legendType={showLegend === false ? 'none' : undefined}

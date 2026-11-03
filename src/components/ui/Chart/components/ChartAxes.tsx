@@ -22,7 +22,9 @@ interface ChartAxesProps {
   autoScaleYAxis?: boolean;
   /**
    * Draw no axes. A hidden x-axis is kept, so the tooltip still names the
-   * row's date; the y-axis is left to recharts' default, as without axes.
+   * row's date. The y-axis keeps fixed `yMin`/`yMax` (with `autoScaleYAxis`
+   * off) as its range, widened if the data goes past it; otherwise it is
+   * recharts' default, as without axes.
    */
   hide?: boolean;
 }
@@ -128,6 +130,9 @@ export function ChartAxes({
           <Label value={xAxisLabel} position="insideBottom" offset={-5} />
         )}
       </XAxis>
+      {hide && !autoScaleYAxis && yMin !== undefined && yMax !== undefined && (
+        <YAxis hide domain={[yMin, yMax]} />
+      )}
       {!hide && (
         <YAxis
           className={yAxisClassName}

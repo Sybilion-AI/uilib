@@ -144,6 +144,8 @@ export interface BaseChartWrapperProps {
   connectForecastNulls?: boolean;
   /** Draw history lines over the forecast lines (default: under them). */
   historyOnTop?: boolean;
+  /** Mark each line's last point with a dot (default: on). */
+  showEndDots?: boolean;
   formatDate?: (value: string, detailed?: boolean) => string;
   labelFormatter?: (value: unknown) => string;
   onLegendClick?: (data: LegendPayload, index: number, event: any) => void;
@@ -272,6 +274,7 @@ const BaseChartWrapperContent = forwardRef<
     connectHistoryNulls,
     connectForecastNulls,
     historyOnTop,
+    showEndDots,
     formatDate: formatDateFn = formatDate,
     labelFormatter,
     onLegendClick,
@@ -796,6 +799,7 @@ const BaseChartWrapperContent = forwardRef<
             connectHistoryNulls={connectHistoryNulls}
             connectForecastNulls={connectForecastNulls}
             historyOnTop={historyOnTop}
+            showEndDots={showEndDots}
           />
 
           {showTooltip && (

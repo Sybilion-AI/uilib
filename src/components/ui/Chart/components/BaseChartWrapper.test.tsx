@@ -230,7 +230,8 @@ describe('BaseChartWrapper line order', () => {
 
   it('draws history last, over the forecasts, when asked', async () => {
     const container = await renderChart(640, { ...props, historyOnTop: true });
-    expect(strokes(container)).toEqual(['cyan', 'black']);
+    // The history layer mounts a moment after the line layer.
+    await waitFor(() => expect(strokes(container)).toEqual(['cyan', 'black']));
   });
 
   it('keeps history on top after a forecast is hidden and shown again', async () => {
@@ -254,6 +255,49 @@ describe('BaseChartWrapper line order', () => {
     rerender(chart(new Set()));
     await waitFor(() => expect(strokes(container)).toHaveLength(2));
     expect(strokes(container)).toEqual(['cyan', 'black']);
+  });
+});
+
+describe('BaseChartWrapper end dots', () => {
+  const dots = (container: HTMLElement) => {
+    const layers = container.querySelectorAll('.recharts-wrapper');
+    return layers[layers.length - 1].querySelectorAll('circle').length;
+  };
+
+  it('marks each line’s last point by default', async () => {
+    const container = await renderChart(640);
+    await waitFor(() => expect(dots(container)).toBe(1));
+  });
+
+  it('leaves them off when asked', async () => {
+    const container = await renderChart(640, { showEndDots: false });
+    await nextFrame();
+    expect(dots(container)).toBe(0);
+  });
+});
+
+describe('BaseChartWrapper without axes, fixed y range', () => {
+  it('keeps yMin/yMax as the hidden y-axis range', async () => {
+    // One value of 0.5 on a fixed 0–1 range sits in the middle of the plot;
+    // with recharts' default range it would sit at the top.
+    const container = await renderChart(640, {
+      chartData: [
+        { date: '2026-01-01', historical: 0.5 },
+        { date: '2026-02-01', historical: 0.5 },
+      ],
+      showAxes: false,
+      yMin: 0,
+      yMax: 1,
+      autoScaleYAxis: false,
+    });
+    const d = container
+      .querySelectorAll('.recharts-wrapper')
+      [
+        container.querySelectorAll('.recharts-wrapper').length - 1
+      ].querySelector('.recharts-line-curve')!
+      .getAttribute('d')!;
+    const y = Number(/^M[-\d.]+,([-\d.]+)/.exec(d)?.[1]);
+    expect(y).toBeCloseTo(H / 2, 0);
   });
 });
 
