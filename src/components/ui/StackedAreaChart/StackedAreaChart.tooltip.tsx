@@ -12,9 +12,8 @@ export type TooltipRow = {
 };
 
 /**
- * Tooltip rows in series order, showing real zeros (ChartTooltipContent hides
- * them) and colouring each row from the chart config (an area's own colour
- * is its white stack stroke).
+ * Tooltip rows in series order, showing real zeros, and colouring each row
+ * from the chart config (an area's own colour is its white stack stroke).
  */
 export function StackedTooltip({
   active,

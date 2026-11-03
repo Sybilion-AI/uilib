@@ -96,4 +96,11 @@ export interface QuantileBandConfig {
     | 'basis'
     | 'natural';
   fillPattern?: 'solid' | 'dots' | 'lines';
+  /**
+   * Fill across months with no range (default true). Read by the Recharts
+   * charts' bands (BaseChartWrapper, ChartAreaInteractive's default mode),
+   * not by LightweightForecastChart or the intervals and thresholds overlays,
+   * which build their own bands.
+   */
+  connectNulls?: boolean;
 }

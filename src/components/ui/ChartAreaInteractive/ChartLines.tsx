@@ -106,6 +106,8 @@ export const ChartLines = memo(
     forecastLineStyle = 'dashed',
     disableAnimation = false,
     disableHistoricalAnimation = false,
+    connectHistoryNulls = false,
+    connectForecastNulls = false,
   }: {
     chartData: ChartDataPoint[];
     forecastData?: ForecastItemData[];
@@ -119,6 +121,10 @@ export const ChartLines = memo(
     forecastLineStyle?: 'dashed' | 'solid';
     disableAnimation?: boolean;
     disableHistoricalAnimation?: boolean;
+    /** Draw each history line across months it has no value for. */
+    connectHistoryNulls?: boolean;
+    /** Draw each forecast line across months it has no value for. */
+    connectForecastNulls?: boolean;
   }) => {
     const dotStroke = isDarkTheme ? '#000000' : '#FFFFFF';
 
@@ -231,6 +237,7 @@ export const ChartLines = memo(
             name={name}
             legendType={showLegend === false ? 'none' : undefined}
             strokeDasharray="0"
+            connectNulls={connectHistoryNulls}
             hide={hiddenSeries?.has(dataKey)}
             isAnimationActive={historicalAnimationActive}
             animationDuration={animationDuration}
@@ -261,6 +268,7 @@ export const ChartLines = memo(
               activeDot={activeDotForecast(color)}
               name={`${name || `${id}`}`}
               legendType={showLegend === false ? 'none' : undefined}
+              connectNulls={connectForecastNulls}
               hide={hiddenSeries?.has(dataKey)}
               isAnimationActive={forecastAnimationActive}
               animationDuration={animationDuration}

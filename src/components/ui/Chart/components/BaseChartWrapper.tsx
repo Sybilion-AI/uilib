@@ -133,6 +133,15 @@ export interface BaseChartWrapperProps {
   yMax?: number;
   autoScaleYAxis?: boolean;
   formatNumber?: (value: number) => string;
+  /**
+   * Formats the numbers in the tooltip. Without it they print as is. Not
+   * `formatNumber`, which is the axis's and often compact ("1.2k").
+   */
+  formatTooltipValue?: (value: number) => string;
+  /** Draw history lines across months with no value (default: a gap). */
+  connectHistoryNulls?: boolean;
+  /** Draw forecast lines across months with no value (default: a gap). */
+  connectForecastNulls?: boolean;
   formatDate?: (value: string, detailed?: boolean) => string;
   labelFormatter?: (value: unknown) => string;
   onLegendClick?: (data: LegendPayload, index: number, event: any) => void;
@@ -253,6 +262,9 @@ const BaseChartWrapperContent = forwardRef<
     yMax,
     autoScaleYAxis = true,
     formatNumber,
+    formatTooltipValue,
+    connectHistoryNulls,
+    connectForecastNulls,
     formatDate: formatDateFn = formatDate,
     labelFormatter,
     onLegendClick,
@@ -454,6 +466,7 @@ const BaseChartWrapperContent = forwardRef<
           label={props.label}
           labelFormatter={labelFormatter || defaultLabelFormatter}
           indicator="dot"
+          valueFormatter={formatTooltipValue}
         />
       );
     }
@@ -477,6 +490,7 @@ const BaseChartWrapperContent = forwardRef<
         label={props.label}
         labelFormatter={labelFormatter || defaultLabelFormatter}
         indicator="dot"
+        valueFormatter={formatTooltipValue}
       />
     );
   };
@@ -781,6 +795,8 @@ const BaseChartWrapperContent = forwardRef<
             disableHistoricalAnimation={disableHistoricalAnimation}
             showLegend={showLegend}
             forecastLineStyle={forecastLineStyle}
+            connectHistoryNulls={connectHistoryNulls}
+            connectForecastNulls={connectForecastNulls}
           />
 
           {showTooltip && (

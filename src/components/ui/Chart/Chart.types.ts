@@ -42,5 +42,10 @@ export type ChartTooltipContentProps = ComponentProps<'div'> & {
     index: number,
     payload: unknown,
   ) => ReactNode;
+  /**
+   * Formats each row's number (both ends of a range row). Without it the
+   * value prints as is.
+   */
+  valueFormatter?: (value: number) => string;
   color?: string;
 };

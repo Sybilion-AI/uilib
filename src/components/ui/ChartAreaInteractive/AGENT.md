@@ -14,6 +14,7 @@ ChartAreaInteractive is the full chart shell for time series data, combining an 
 ## Do
 
 - Pass loading while data is being fetched so the chart shows its skeleton state.
+- Pass `formatTooltipValue` for the tooltip's numbers (they print raw without it). Lines leave a gap at a month with no value unless `connectHistoryNulls` / `connectForecastNulls` is set; a range band fills across unless its `connectNulls` is false.
 - For several products, pass `historyData` (one history line each, data key `historical_<id>` in `chartData`) and set each forecast's `continues` to the history it extends. A forecast joins a history only when `continues` names it or there is exactly one history; otherwise it starts on its own first point. Without `historyData`, the single `historical` line works as before.
 
 ## Host provides
