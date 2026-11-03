@@ -24,7 +24,7 @@ import {
 } from '#uilib/components/ui/ChartAreaInteractive/chartHistories';
 import { Skeleton } from '#uilib/components/ui/Skeleton';
 import { chartRenderQueue } from '#uilib/utils/chartRenderQueue';
-import { Tooltip as ChartTooltip, ComposedChart, LineChart } from 'recharts';
+import { ComposedChart, LineChart } from 'recharts';
 import { LegendPayload } from 'recharts/types/component/DefaultLegendContent';
 
 import { normalizeTooltipPayload } from '../Chart.helpers';
@@ -39,6 +39,7 @@ import {
   type ChartEmptyStatusTone,
 } from './ChartEmptyState/ChartEmptyState';
 import { ChartGrid } from './ChartGrid';
+import { ChartPlacedTooltip, isTooltipUnder } from './ChartPlacedTooltip';
 import { ChartTooltipContent } from './ChartTooltipContent';
 import { CustomChartLegend } from './CustomChartLegend/CustomChartLegend';
 import { LegendSvg } from './LegendSvg/LegendSvg';
@@ -82,6 +83,21 @@ function clampTooltipTranslate(args: {
   ty = clamp(ty, minY, maxY);
 
   return { x: tx, y: ty };
+}
+
+/**
+ * The tooltip slides after the cursor, unless the user asked for less motion.
+ * ChartPlacedTooltip turns this off under a narrow chart.
+ */
+const TOOLTIP_WRAPPER_STYLE = {
+  transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
+};
+
+function tooltipWrapperStyle() {
+  const reduceMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  return reduceMotion ? undefined : TOOLTIP_WRAPPER_STYLE;
 }
 
 export interface BaseChartWrapperProps {
@@ -311,9 +327,17 @@ const BaseChartWrapperContent = forwardRef<
   const applyTooltipPosition = () => {
     const wrapper = tooltipWrapperRef.current;
     const coord = rawTooltipCoordinateRef.current;
-    const chartWrapper = rootRef.current?.querySelector('.recharts-wrapper');
+    // The chart the tooltip belongs to (with the grid on, the first chart in
+    // the root is the grid layer's).
+    const chartWrapper =
+      wrapper?.closest('.recharts-wrapper') ??
+      rootRef.current?.querySelector('.recharts-wrapper');
 
     if (!wrapper || !coord || !(chartWrapper instanceof HTMLElement)) return;
+
+    // A narrow chart's tooltip sits under it, where ChartPlacedTooltip has
+    // recharts put it. Leave it there: one writer, so it does not jump.
+    if (isTooltipUnder(wrapper)) return;
 
     const measured = wrapper.getBoundingClientRect();
     const width = tooltipSizeRef.current.width || measured.width;
@@ -364,8 +388,6 @@ const BaseChartWrapperContent = forwardRef<
 
       if (wrapperEl instanceof HTMLElement) {
         tooltipWrapperRef.current = wrapperEl;
-        wrapperEl.style.transition =
-          'transform 0.2s ease-out, opacity 0.2s ease-out';
         requestAnimationFrame(() => applyTooltipPositionRef.current());
       }
     };
@@ -763,10 +785,11 @@ const BaseChartWrapperContent = forwardRef<
 
           {showTooltip && (
             <div>
-              <ChartTooltip
+              <ChartPlacedTooltip
                 cursor={false}
                 offset={TOOLTIP_OFFSET}
                 allowEscapeViewBox={{ x: false, y: false }}
+                wrapperStyle={tooltipWrapperStyle()}
                 content={renderTooltipContent}
               />
             </div>
