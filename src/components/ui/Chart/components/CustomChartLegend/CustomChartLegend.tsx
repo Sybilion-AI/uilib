@@ -17,8 +17,16 @@ interface CustomChartLegendPayloadItem {
   updated_at?: string;
 }
 
+interface CustomChartLegendHistoryItem {
+  value: string;
+  color: string;
+  dataKey: string;
+}
+
 interface CustomChartLegendProps {
   payload?: CustomChartLegendPayloadItem[];
+  /** Several history lines, shown in place of the single "Historical" entry. */
+  histories?: CustomChartLegendHistoryItem[];
   onClick?: (data: any, index: number, event: any) => void;
   className?: string;
   wrapperStyle?: React.CSSProperties;
@@ -48,6 +56,7 @@ function extractIdFromDataKey(dataKey?: string): number {
  */
 export function CustomChartLegend({
   payload,
+  histories,
   onClick,
   hiddenSeries,
   className,
@@ -67,6 +76,16 @@ export function CustomChartLegend({
         updated_at: p.updated_at,
       })),
     [payload],
+  );
+
+  const historicalItems = useMemo(
+    () =>
+      histories?.map(h => ({
+        seriesKey: h.dataKey,
+        label: h.value,
+        color: h.color,
+      })),
+    [histories],
   );
 
   const selectedIds = useMemo(() => {
@@ -128,7 +147,7 @@ export function CustomChartLegend({
     [onClick, payload, hiddenSeries, onAnalysisSelect],
   );
 
-  if (!items.length) return null;
+  if (!items.length && !histories?.length) return null;
 
   return (
     <div className={cn(S.legendContainer, className)}>
@@ -144,6 +163,7 @@ export function CustomChartLegend({
         maxVisibleItems={maxVisibleItems}
         preventDeselection={preventDeselection}
         hiddenSeries={hiddenSeries ?? new Set()}
+        historicalItems={historicalItems}
         onToggleSeries={handleToggleSeriesVisibility}
       />
     </div>

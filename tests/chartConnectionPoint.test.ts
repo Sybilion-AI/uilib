@@ -103,3 +103,53 @@ describe('ensureChartForecastBridge', () => {
     expect(out.find(p => p.date === '2025-12-01')?.forecast_11246).toBe(73.563);
   });
 });
+
+describe('ensureChartForecastBridge with several history lines', () => {
+  const rows = (): ChartDataPoint[] => [
+    { date: '2026-08-01', historical_a: 10, historical_b: 50 },
+    { date: '2026-09-01', historical_a: 11, historical_b: 52 },
+    { date: '2026-10-01', forecast_1: 12, forecast_2: 53 },
+    { date: '2026-11-01', forecast_1: 13, forecast_2: 54 },
+  ];
+
+  it('joins each forecast to the history it names', () => {
+    const out = ensureChartForecastBridge(rows(), {
+      historyKeyFor: id => (id === 1 ? 'historical_a' : 'historical_b'),
+    });
+    const sep = out.find(p => p.date === '2026-09-01');
+    expect(sep?.forecast_1).toBe(11);
+    expect(sep?.forecast_2).toBe(52);
+  });
+
+  it('leaves a forecast unjoined when it names no history', () => {
+    const out = ensureChartForecastBridge(rows(), {
+      historyKeyFor: id => (id === 1 ? 'historical_a' : null),
+    });
+    const sep = out.find(p => p.date === '2026-09-01');
+    expect(sep?.forecast_1).toBe(11);
+    expect(sep?.forecast_2).toBeUndefined();
+  });
+
+  it('falls back to the named history’s own last value across a gap', () => {
+    const input: ChartDataPoint[] = [
+      { date: '2026-06-01', historical_a: 10, historical_b: 50 },
+      { date: '2026-07-01', historical_b: 51 },
+      { date: '2026-08-01', historical_b: 52 },
+      { date: '2026-10-01', forecast_1: 12 },
+    ];
+    const out = ensureChartForecastBridge(input, {
+      historyKeyFor: () => 'historical_a',
+    });
+    expect(out.find(p => p.date === '2026-06-01')?.forecast_1).toBe(10);
+    expect(out.find(p => p.date === '2026-08-01')?.forecast_1).toBeUndefined();
+  });
+
+  it('still joins the single historical line by default', () => {
+    const input: ChartDataPoint[] = [
+      { date: '2026-09-01', historical: 11, historical_a: 99 },
+      { date: '2026-10-01', forecast_1: 12 },
+    ];
+    const out = ensureChartForecastBridge(input);
+    expect(out.find(p => p.date === '2026-09-01')?.forecast_1).toBe(11);
+  });
+});

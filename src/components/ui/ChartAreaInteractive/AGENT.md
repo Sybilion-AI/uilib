@@ -14,10 +14,12 @@ ChartAreaInteractive is the full chart shell for time series data, combining an 
 ## Do
 
 - Pass loading while data is being fetched so the chart shows its skeleton state.
+- For several products, pass `historyData` (one history line each, data key `historical_<id>` in `chartData`) and set each forecast's `continues` to the history it extends. A forecast joins a history only when `continues` names it or there is exactly one history; otherwise it starts on its own first point. Without `historyData`, the single `historical` line works as before.
 
 ## Host provides
 
 - `chartData`, `forecastData` built from API
+- Optional `historyData` for several history lines, with `continues` on each forecast
 - `timeRange` / `onTimeRangeChange` or brush-only range
 - Optional `mode`: pin | intervals | thresholds + overlay state
 

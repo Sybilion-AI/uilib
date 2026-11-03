@@ -3,6 +3,11 @@ import { memo, useMemo } from 'react';
 import { Line } from 'recharts';
 
 import { ChartDataPoint } from './ChartAreaInteractive.types';
+import {
+  HISTORY_SERIES_KEY,
+  HistoryItemData,
+  historySeriesKey,
+} from './chartHistories';
 
 export interface LineConfig {
   dataKey: string;
@@ -20,6 +25,11 @@ export type ForecastItemData = {
   tooltip?: string;
   dimmed?: boolean;
   updated_at?: string;
+  /**
+   * Id of the history (`historyData`) this forecast continues. With several
+   * histories, a forecast joins one only when this names it.
+   */
+  continues?: string | number;
 };
 
 export type Dot = {
@@ -52,6 +62,26 @@ export const getForecastQuantileBandColor = (index: number) =>
     FORECAST_LINE_COLORS[index % FORECAST_LINE_COLORS.length]
   ];
 
+/** A history line as drawn: data key, label and colour with defaults applied. */
+export type HistoryLine = { dataKey: string; name: string; color: string };
+
+/** Default colour of the history at `index`: the forecast palette from its far end. */
+export function getHistoryColor(index: number): string {
+  const n = FORECAST_LINE_COLORS.length;
+  return FORECAST_LINE_COLORS[n - 1 - (index % n)];
+}
+
+/** `historyData` with the defaults applied, in order (empty without it). */
+export function resolveHistoryLines(
+  histories?: HistoryItemData[],
+): HistoryLine[] {
+  return (histories ?? []).map((h, index) => ({
+    dataKey: historySeriesKey(h.id),
+    name: h.name || String(h.id),
+    color: h.color ?? getHistoryColor(index),
+  }));
+}
+
 /** Same tint logic as intervals/threshold overlays: band fill follows forecast line hex when known. */
 export function resolveQuantileBandFillForForecastLine(
   lineColor: string,
@@ -67,6 +97,7 @@ export const ChartLines = memo(
   ({
     chartData,
     forecastData,
+    historyData,
     hiddenSeries,
     isDarkTheme,
     shouldAnimate,
@@ -78,6 +109,8 @@ export const ChartLines = memo(
   }: {
     chartData: ChartDataPoint[];
     forecastData?: ForecastItemData[];
+    /** Several history lines (one per product). Omit for the single `historical` line. */
+    historyData?: HistoryItemData[];
     hiddenSeries?: Set<string>;
     isDarkTheme: boolean;
     shouldAnimate?: boolean;
@@ -103,16 +136,37 @@ export const ChartLines = memo(
       fill: color,
     });
 
-    // Memoize last historical index to avoid recalculating on every render call
-    const lastHistoricalIndex = useMemo(() => {
-      for (let i = chartData.length - 1; i >= 0; i--) {
-        const value = chartData[i].historical;
-        if (value !== undefined && value !== null) {
-          return i;
+    // One entry per history line: the single `historical` line, or one per
+    // `historyData` item under `historical_<id>`.
+    const historyLines = useMemo(
+      () =>
+        historyData?.length
+          ? resolveHistoryLines(historyData)
+          : [
+              {
+                dataKey: HISTORY_SERIES_KEY,
+                name: 'Historical Data',
+                color: historicalLineColor,
+              },
+            ],
+      [historyData, historicalLineColor],
+    );
+
+    // Memoize last index per history line to avoid recalculating on every render call
+    const lastHistoryIndices = useMemo(() => {
+      const indices: Record<string, number> = {};
+      historyLines.forEach(({ dataKey }) => {
+        indices[dataKey] = -1;
+        for (let i = chartData.length - 1; i >= 0; i--) {
+          const value = chartData[i][dataKey];
+          if (value !== undefined && value !== null) {
+            indices[dataKey] = i;
+            break;
+          }
         }
-      }
-      return -1;
-    }, [chartData]);
+      });
+      return indices;
+    }, [chartData, historyLines]);
 
     // Memoize last forecast indices per forecast ID
     const lastForecastIndices = useMemo(() => {
@@ -149,8 +203,8 @@ export const ChartLines = memo(
       return null;
     };
 
-    const renderHistoricalDot = (props: any) =>
-      renderDot(props, lastHistoricalIndex, 'historical', historicalLineColor);
+    const renderHistoryDot = (props: any, dataKey: string, color: string) =>
+      renderDot(props, lastHistoryIndices[dataKey] ?? -1, dataKey, color);
 
     const renderForecastDot = (props: any, id: number, color: string) =>
       renderDot(props, lastForecastIndices[id] ?? -1, `forecast_${id}`, color);
@@ -164,25 +218,27 @@ export const ChartLines = memo(
 
     return (
       <>
-        {/* Historical Data Line */}
-        <Line
-          key="historical"
-          type="monotone"
-          dataKey="historical"
-          stroke={historicalLineColor}
-          strokeWidth={1}
-          dot={props => renderHistoricalDot(props)}
-          activeDot={activeDotHistorical}
-          name="Historical Data"
-          legendType={showLegend === false ? 'none' : undefined}
-          strokeDasharray="0"
-          hide={hiddenSeries?.has('historical')}
-          isAnimationActive={historicalAnimationActive}
-          animationDuration={animationDuration}
-          animateNewValues={valueAnimationEnabled}
-          animationBegin={0}
-          animationEasing="ease-out"
-        />
+        {/* History lines */}
+        {historyLines.map(({ dataKey, name, color }) => (
+          <Line
+            key={dataKey}
+            type="monotone"
+            dataKey={dataKey}
+            stroke={color}
+            strokeWidth={1}
+            dot={props => renderHistoryDot(props, dataKey, color)}
+            activeDot={{ ...activeDotHistorical, fill: color }}
+            name={name}
+            legendType={showLegend === false ? 'none' : undefined}
+            strokeDasharray="0"
+            hide={hiddenSeries?.has(dataKey)}
+            isAnimationActive={historicalAnimationActive}
+            animationDuration={animationDuration}
+            animateNewValues={valueAnimationEnabled}
+            animationBegin={0}
+            animationEasing="ease-out"
+          />
+        ))}
 
         {/* Forecast Lines */}
         {forecastData?.map((data: ForecastItemData, index: number) => {

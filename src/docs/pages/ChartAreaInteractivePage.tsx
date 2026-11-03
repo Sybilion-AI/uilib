@@ -7,6 +7,7 @@ import type {
   OverlayMode,
 } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
 import { ForecastItemData } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
+import type { HistoryItemData } from '#uilib/components/ui/ChartAreaInteractive/chartHistories';
 import { Label } from '#uilib/components/ui/Label';
 import { PageContentSection } from '#uilib/components/ui/Page';
 import { Switch } from '#uilib/components/ui/Switch';
@@ -94,6 +95,62 @@ const DEMO_FORECAST_ITEMS: ForecastItemData[] = [
 ];
 
 type DemoMode = 'none' | OverlayMode;
+
+// Two products, each with its own history; each forecast `continues` its own.
+const MULTI_HISTORIES: HistoryItemData[] = [
+  { id: 'a', name: 'Product A', color: '#216BF7' },
+  { id: 'b', name: 'Product B', color: '#059643' },
+];
+
+const MULTI_FORECASTS: ForecastItemData[] = [
+  { id: 11, name: 'Product A forecast', color: '#216BF7', continues: 'a' },
+  { id: 12, name: 'Product B forecast', color: '#059643', continues: 'b' },
+];
+
+const MULTI_CHART: ChartDataPoint[] = [
+  { date: '2025-10-01', historical_a: 10, historical_b: 14 },
+  { date: '2025-11-01', historical_a: 10.4, historical_b: 13.6 },
+  { date: '2025-12-01', historical_a: 10.9, historical_b: 13.1 },
+  { date: '2026-01-01', historical_a: 11.2, historical_b: 12.8 },
+  { date: '2026-02-01', historical_a: 11.0, historical_b: 12.9 },
+  { date: '2026-03-01', historical_a: 11.6, historical_b: 12.4 },
+  { date: '2026-04-01', forecast_11: 11.9, forecast_12: 12.2 },
+  { date: '2026-05-01', forecast_11: 12.3, forecast_12: 12.0 },
+  { date: '2026-06-01', forecast_11: 12.6, forecast_12: 11.7 },
+];
+
+function MultiHistoryDemo({ isDarkTheme }: { isDarkTheme: boolean }) {
+  const [timeRange, setTimeRange] = useState<string>('All');
+  const [pinMonth, setPinMonth] = useState<string | undefined>(undefined);
+  const [hidden, setHidden] = useState<Set<string>>(new Set());
+  const toggleLegendSeries = useCallback((key: string) => {
+    setHidden(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }, []);
+
+  return (
+    <ChartAreaInteractive
+      chartRenderId="multi-history-demo"
+      timeRange={timeRange}
+      onTimeRangeChange={setTimeRange}
+      pinMonth={pinMonth}
+      onPinMonthChange={setPinMonth}
+      chartData={MULTI_CHART}
+      historyData={MULTI_HISTORIES}
+      forecastData={MULTI_FORECASTS}
+      loading={false}
+      isDarkTheme={isDarkTheme}
+      toggleLegendSeries={toggleLegendSeries}
+      ensureAnalysisSeriesVisible={() => {}}
+      hiddenSeries={hidden}
+      maxVisibleItems={MULTI_FORECASTS.length}
+    />
+  );
+}
 
 export default function ChartAreaInteractivePage() {
   const { isDarkMode } = useTheme();
@@ -204,6 +261,16 @@ export default function ChartAreaInteractivePage() {
           onUpperThresholdChange={setUpperThreshold}
           discreteThresholdValues={DEMO_DISCRETE_THRESHOLDS}
         />
+      </PageContentSection>
+      <PageContentSection>
+        <h3 style={{ marginBottom: '1rem' }}>Several history lines</h3>
+        <p>
+          One history per product via <code>historyData</code> (data keys{' '}
+          <code>historical_&lt;id&gt;</code>). A forecast joins the history its{' '}
+          <code>continues</code> names; with several histories and no{' '}
+          <code>continues</code>, it starts on its own first point.
+        </p>
+        <MultiHistoryDemo isDarkTheme={isDarkMode} />
       </PageContentSection>
     </>
   );
