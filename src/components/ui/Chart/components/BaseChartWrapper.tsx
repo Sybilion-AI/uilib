@@ -142,6 +142,8 @@ export interface BaseChartWrapperProps {
   connectHistoryNulls?: boolean;
   /** Draw forecast lines across months with no value (default: a gap). */
   connectForecastNulls?: boolean;
+  /** Draw history lines over the forecast lines (default: under them). */
+  historyOnTop?: boolean;
   formatDate?: (value: string, detailed?: boolean) => string;
   labelFormatter?: (value: unknown) => string;
   onLegendClick?: (data: LegendPayload, index: number, event: any) => void;
@@ -269,6 +271,7 @@ const BaseChartWrapperContent = forwardRef<
     formatTooltipValue,
     connectHistoryNulls,
     connectForecastNulls,
+    historyOnTop,
     formatDate: formatDateFn = formatDate,
     labelFormatter,
     onLegendClick,
@@ -800,6 +803,7 @@ const BaseChartWrapperContent = forwardRef<
             forecastLineStyle={forecastLineStyle}
             connectHistoryNulls={connectHistoryNulls}
             connectForecastNulls={connectForecastNulls}
+            historyOnTop={historyOnTop}
           />
 
           {showTooltip && (

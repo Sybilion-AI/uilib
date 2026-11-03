@@ -13,6 +13,7 @@ ChartContainer wraps Recharts charts with the library’s theming, mapping a Cha
 
 - Define every series in the ChartConfig so labels and colours stay consistent across tooltips and legends.
 - With BaseChartWrapper or ChartAreaInteractive, pass `formatTooltipValue` so tooltip numbers match the axis format, and `connectHistoryNulls` / `connectForecastNulls` (or a band's `connectNulls: false`) to choose whether a line or range bridges a month with no value.
+- `historyOnTop` draws the history lines over the forecast lines, for many faint forecasts that would otherwise cover them.
 - `showAxes={false}` hides the axes but keeps them: the tooltip still names the row's date and `yMin`/`yMax` still hold.
 - Use ChartTooltip (not Recharts' Tooltip directly) so a chart narrower than 500px (`NARROW_CHART_PX`) opens its tooltip under the chart instead of over the lines. BaseChartWrapper, ChartAreaInteractive, BarChart, DonutChart, StackedAreaChart and the driver card chart already do. A parent that hides overflow (a chat bubble, a card) can clip it there. Pass `position` to place it yourself.
 

@@ -207,6 +207,33 @@ describe('BaseChartWrapper lines across missing months', () => {
   });
 });
 
+describe('BaseChartWrapper line order', () => {
+  const strokes = (container: HTMLElement) => {
+    const layers = container.querySelectorAll('.recharts-wrapper');
+    return [
+      ...layers[layers.length - 1].querySelectorAll('.recharts-line-curve'),
+    ].map(e => e.getAttribute('stroke'));
+  };
+  const props: Partial<BaseChartWrapperProps> = {
+    chartData: [
+      { date: '2026-01-01', historical_a: 1, forecast_1: 2 },
+      { date: '2026-02-01', historical_a: 2, forecast_1: 3 },
+    ],
+    historyData: [{ id: 'a', name: 'A', color: 'black' }],
+    forecastData: [{ id: 1, name: 'F', color: 'cyan' }],
+  };
+
+  it('draws history first, under the forecasts, by default', async () => {
+    const container = await renderChart(640, props);
+    expect(strokes(container)).toEqual(['black', 'cyan']);
+  });
+
+  it('draws history last, over the forecasts, when asked', async () => {
+    const container = await renderChart(640, { ...props, historyOnTop: true });
+    expect(strokes(container)).toEqual(['cyan', 'black']);
+  });
+});
+
 describe('BaseChartWrapper range bands across missing months', () => {
   const rows = [
     { date: '2026-01-01', historical: 1, band: [0, 2] },
