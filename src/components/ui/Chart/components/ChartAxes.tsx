@@ -21,8 +21,8 @@ interface ChartAxesProps {
   yMax?: number;
   autoScaleYAxis?: boolean;
   /**
-   * Draw no axes, but keep them for the chart's coordinates: the tooltip still
-   * names the row's date and the y-axis keeps `yMin`/`yMax`.
+   * Draw no axes. A hidden x-axis is kept, so the tooltip still names the
+   * row's date; the y-axis is left to recharts' default, as without axes.
    */
   hide?: boolean;
 }
@@ -47,7 +47,7 @@ export function ChartAxes({
 
   // Generate rounded ticks to avoid duplicates when we have explicit domain
   const yTicks = useMemo(() => {
-    if (yMin !== undefined && yMax !== undefined && !autoScaleYAxis) {
+    if (!hide && yMin !== undefined && yMax !== undefined && !autoScaleYAxis) {
       const ticks = generateRoundedYTicks(yMin, yMax);
       const formatter = formatNumber || formatYAxisNumber;
 
@@ -76,7 +76,7 @@ export function ChartAxes({
       return Array.from(ticksByFormatted.values()).sort((a, b) => a - b);
     }
     return undefined;
-  }, [yMin, yMax, autoScaleYAxis, formatNumber]);
+  }, [hide, yMin, yMax, autoScaleYAxis, formatNumber]);
 
   // Determine Y-axis domain
   let yDomain:
@@ -128,23 +128,24 @@ export function ChartAxes({
           <Label value={xAxisLabel} position="insideBottom" offset={-5} />
         )}
       </XAxis>
-      <YAxis
-        className={yAxisClassName}
-        hide={hide}
-        tickLine={false}
-        axisLine={false}
-        tickMargin={8}
-        minTickGap={32}
-        tick={{ fill: tickColor }}
-        tickFormatter={formatNumber}
-        {...(yDomain && { domain: yDomain })}
-        {...(yTicks && { ticks: yTicks })}
-        allowDataOverflow={!autoScaleYAxis}
-      >
-        {yAxisLabel && (
-          <Label value={yAxisLabel} angle={-90} position="insideLeft" />
-        )}
-      </YAxis>
+      {!hide && (
+        <YAxis
+          className={yAxisClassName}
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          minTickGap={32}
+          tick={{ fill: tickColor }}
+          tickFormatter={formatNumber}
+          {...(yDomain && { domain: yDomain })}
+          {...(yTicks && { ticks: yTicks })}
+          allowDataOverflow={!autoScaleYAxis}
+        >
+          {yAxisLabel && (
+            <Label value={yAxisLabel} angle={-90} position="insideLeft" />
+          )}
+        </YAxis>
+      )}
     </>
   );
 }

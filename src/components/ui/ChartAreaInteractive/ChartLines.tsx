@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 
-import { Line } from 'recharts';
+import { DefaultZIndexes, Line } from 'recharts';
 
 import { ChartDataPoint } from './ChartAreaInteractive.types';
 import {
@@ -228,9 +228,15 @@ export const ChartLines = memo(
     const animationDuration = disableAnimation ? 0 : ANIMATION_DURATION;
     const valueAnimationEnabled = !disableAnimation;
 
+    // recharts draws each line into its z-index layer in mount order, not in
+    // JSX order: a layer above the forecasts keeps history on top through
+    // hiding, showing and added forecasts, and leaves the tooltip's order.
+    const historyZIndex = historyOnTop ? DefaultZIndexes.line + 1 : undefined;
+
     const historyElements = historyLines.map(({ dataKey, name, color }) => (
       <Line
         key={dataKey}
+        zIndex={historyZIndex}
         type="monotone"
         dataKey={dataKey}
         stroke={color}
@@ -286,13 +292,7 @@ export const ChartLines = memo(
       },
     );
 
-    // recharts paints in render order: whatever comes last is on top.
-    return historyOnTop ? (
-      <>
-        {forecastElements}
-        {historyElements}
-      </>
-    ) : (
+    return (
       <>
         {historyElements}
         {forecastElements}

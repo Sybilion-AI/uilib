@@ -232,6 +232,29 @@ describe('BaseChartWrapper line order', () => {
     const container = await renderChart(640, { ...props, historyOnTop: true });
     expect(strokes(container)).toEqual(['cyan', 'black']);
   });
+
+  it('keeps history on top after a forecast is hidden and shown again', async () => {
+    width = 640;
+    const chart = (hidden: Set<string>) => (
+      <BaseChartWrapper
+        {...(props as BaseChartWrapperProps)}
+        hasCombinedData
+        loading={false}
+        isDarkTheme={false}
+        height={H}
+        showLegend={false}
+        historyOnTop
+        hiddenSeries={hidden}
+      />
+    );
+    const { container, rerender } = render(chart(new Set()));
+    await waitFor(() => expect(strokes(container)).toHaveLength(2));
+    rerender(chart(new Set(['forecast_1'])));
+    await waitFor(() => expect(strokes(container)).toEqual(['black']));
+    rerender(chart(new Set()));
+    await waitFor(() => expect(strokes(container)).toHaveLength(2));
+    expect(strokes(container)).toEqual(['cyan', 'black']);
+  });
 });
 
 describe('BaseChartWrapper range bands across missing months', () => {

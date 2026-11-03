@@ -158,8 +158,8 @@ export interface BaseChartWrapperProps {
   disableLineDrawAnimation?: boolean;
   showGrid?: boolean;
   /**
-   * Draw the axes. Off, they are still there, hidden: the tooltip keeps the
-   * row's date and the y-axis keeps `yMin`/`yMax`.
+   * Draw the axes. Off, a hidden x-axis is kept so the tooltip still names
+   * the row's date.
    */
   showAxes?: boolean;
   showTooltip?: boolean;
@@ -706,6 +706,26 @@ const BaseChartWrapperContent = forwardRef<
   const ChartComponent = chartType === 'line' ? LineChart : ComposedChart;
   const defaultLabelFormatter = (v: unknown) => formatDateFn(v as string, true);
 
+  // The same axes in the grid layer and the chart layer, so both share one
+  // scale. Hidden when showAxes is off: the hidden x-axis still places the
+  // rows by date, so the tooltip names it.
+  const axes = (
+    <ChartAxes
+      hide={!showAxes}
+      formatDate={formatDateFn}
+      formatNumber={formatNumber}
+      xAxisClassName={xAxisClassName}
+      yAxisClassName={yAxisClassName}
+      xAxisLabel={xAxisLabel}
+      yAxisLabel={yAxisLabel}
+      xMin={xMin}
+      xMax={xMax}
+      yMin={yMin}
+      yMax={yMax}
+      autoScaleYAxis={effectiveAutoScale}
+    />
+  );
+
   return (
     <div
       className={cn(
@@ -733,20 +753,7 @@ const BaseChartWrapperContent = forwardRef<
         >
           <ChartComponent data={chartData} margin={margin}>
             <ChartGrid />
-            <ChartAxes
-              hide={!showAxes}
-              formatDate={formatDateFn}
-              formatNumber={formatNumber}
-              xAxisClassName={xAxisClassName}
-              yAxisClassName={yAxisClassName}
-              xAxisLabel={xAxisLabel}
-              yAxisLabel={yAxisLabel}
-              xMin={xMin}
-              xMax={xMax}
-              yMin={yMin}
-              yMax={yMax}
-              autoScaleYAxis={effectiveAutoScale}
-            />
+            {axes}
           </ChartComponent>
         </ChartContainer>
       )}
@@ -759,22 +766,7 @@ const BaseChartWrapperContent = forwardRef<
         {...containerProps}
       >
         <ChartComponent data={chartData} margin={margin}>
-          {/* The axes, hidden when showAxes is off: they still place the rows
-              by date and keep yMin/yMax, so the tooltip names the date. */}
-          <ChartAxes
-            hide={!showAxes}
-            formatDate={formatDateFn}
-            formatNumber={formatNumber}
-            xAxisClassName={cn(xAxisClassName)}
-            yAxisClassName={cn(yAxisClassName)}
-            xAxisLabel={xAxisLabel}
-            yAxisLabel={yAxisLabel}
-            xMin={xMin}
-            xMax={xMax}
-            yMin={yMin}
-            yMax={yMax}
-            autoScaleYAxis={effectiveAutoScale}
-          />
+          {axes}
 
           {/* Quantile Bands (widest to narrowest) */}
           {quantileBands?.[0] && (
