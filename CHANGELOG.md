@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/Sybilion-AI/uilib/compare/v1.7.2...v1.8.0) (2026-11-03)
+
+
+### Features
+
+* **ChartAreaInteractive:** several history lines, each forecast joins its own (ENG-1774) ([#14](https://github.com/Sybilion-AI/uilib/issues/14)) ([0467461](https://github.com/Sybilion-AI/uilib/commit/046746137cb7fb30f44522da000f384217bef7ce))
+* **StackedAreaChart:** stacked cost layers with margin and compare zones (ENG-1775) ([#15](https://github.com/Sybilion-AI/uilib/issues/15)) ([7e882a1](https://github.com/Sybilion-AI/uilib/commit/7e882a1674d66d60bbe8ce985347438d8c5cbb42))
+
+
+### Bug Fixes
+
+* **Page:** follow --page-x-padding on the row and keep the tab focus ring inside ([#13](https://github.com/Sybilion-AI/uilib/issues/13)) ([71dc7b5](https://github.com/Sybilion-AI/uilib/commit/71dc7b5baeb8cb16baf1ee24aa0a318e64ad2ac2))
+
 ### [1.7.2](https://github.com/Sybilion-AI/uilib/compare/v1.7.1...v1.7.2) (2026-10-21)
 
 
