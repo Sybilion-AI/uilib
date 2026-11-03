@@ -3,7 +3,7 @@ import { useMemo, useRef } from 'react';
 import { Label, XAxis, YAxis } from 'recharts';
 
 import {
-  formatNumber,
+  formatNumber as defaultFormatNumber,
   formatYAxisNumber,
   generateRoundedYTicks,
 } from '../tools/formatters';
@@ -28,7 +28,9 @@ export function ChartAxes({
   xAxisLabel,
   yAxisLabel,
   formatDate,
-  // formatNumber = formatYAxisNumber,
+  // The host's number format for the y-axis ticks; uilib's compact one
+  // (K/M/B, whole numbers below 1000) without it.
+  formatNumber = defaultFormatNumber,
   xMin,
   xMax,
   yMin,
