@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.1](https://github.com/Sybilion-AI/uilib/compare/v1.8.0...v1.8.1) (2026-11-04)
+
+
+### Bug Fixes
+
+* **Chart:** narrow-chart tooltip starts right under the x-axis labels (ENG-1776) ([#17](https://github.com/Sybilion-AI/uilib/issues/17)) ([535d6e5](https://github.com/Sybilion-AI/uilib/commit/535d6e55f3dfefeabdae58c6c55fb5a45b497b79))
+
 ## [1.8.0](https://github.com/Sybilion-AI/uilib/compare/v1.7.2...v1.8.0) (2026-11-03)
 
 
