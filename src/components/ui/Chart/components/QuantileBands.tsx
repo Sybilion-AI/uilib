@@ -58,7 +58,7 @@ export function QuantileBands({
             fill={fillColor}
             // fillOpacity={band.opacity}
             legendType={showLegend === false ? 'none' : undefined}
-            connectNulls
+            connectNulls={band.connectNulls ?? true}
             dot={false}
             activeDot={false}
             isAnimationActive={animate}

@@ -24,6 +24,7 @@ export function ChartTooltipContent({
   labelClassName,
   payload,
   formatter,
+  valueFormatter,
   color,
   nameKey,
   labelKey,
@@ -137,6 +138,7 @@ export function ChartTooltipContent({
               color={color}
               nameKey={nameKey}
               formatter={formatter}
+              valueFormatter={valueFormatter}
             />
           ))}
       </div>

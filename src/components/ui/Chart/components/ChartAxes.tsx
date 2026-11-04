@@ -3,7 +3,7 @@ import { useMemo, useRef } from 'react';
 import { Label, XAxis, YAxis } from 'recharts';
 
 import {
-  formatNumber,
+  formatNumber as defaultFormatNumber,
   formatYAxisNumber,
   generateRoundedYTicks,
 } from '../tools/formatters';
@@ -20,6 +20,13 @@ interface ChartAxesProps {
   yMin?: number;
   yMax?: number;
   autoScaleYAxis?: boolean;
+  /**
+   * Draw no axes. A hidden x-axis is kept, so the tooltip still names the
+   * row's date. The y-axis keeps fixed `yMin`/`yMax` (with `autoScaleYAxis`
+   * off) as its range, widened if the data goes past it; otherwise it is
+   * recharts' default, as without axes.
+   */
+  hide?: boolean;
 }
 
 export function ChartAxes({
@@ -28,18 +35,21 @@ export function ChartAxes({
   xAxisLabel,
   yAxisLabel,
   formatDate,
-  // formatNumber = formatYAxisNumber,
+  // The host's number format for the y-axis ticks; uilib's compact one
+  // (K/M/B, whole numbers below 1000) without it.
+  formatNumber = defaultFormatNumber,
   xMin,
   xMax,
   yMin,
   yMax,
   autoScaleYAxis = false,
+  hide = false,
 }: ChartAxesProps) {
   const tickColor = 'var(--muted-foreground)';
 
   // Generate rounded ticks to avoid duplicates when we have explicit domain
   const yTicks = useMemo(() => {
-    if (yMin !== undefined && yMax !== undefined && !autoScaleYAxis) {
+    if (!hide && yMin !== undefined && yMax !== undefined && !autoScaleYAxis) {
       const ticks = generateRoundedYTicks(yMin, yMax);
       const formatter = formatNumber || formatYAxisNumber;
 
@@ -68,7 +78,7 @@ export function ChartAxes({
       return Array.from(ticksByFormatted.values()).sort((a, b) => a - b);
     }
     return undefined;
-  }, [yMin, yMax, autoScaleYAxis, formatNumber]);
+  }, [hide, yMin, yMax, autoScaleYAxis, formatNumber]);
 
   // Determine Y-axis domain
   let yDomain:
@@ -106,6 +116,7 @@ export function ChartAxes({
       <XAxis
         className={xAxisClassName}
         dataKey="date"
+        hide={hide}
         tickLine={false}
         axisLine={false}
         tickMargin={8}
@@ -119,22 +130,27 @@ export function ChartAxes({
           <Label value={xAxisLabel} position="insideBottom" offset={-5} />
         )}
       </XAxis>
-      <YAxis
-        className={yAxisClassName}
-        tickLine={false}
-        axisLine={false}
-        tickMargin={8}
-        minTickGap={32}
-        tick={{ fill: tickColor }}
-        tickFormatter={formatNumber}
-        {...(yDomain && { domain: yDomain })}
-        {...(yTicks && { ticks: yTicks })}
-        allowDataOverflow={!autoScaleYAxis}
-      >
-        {yAxisLabel && (
-          <Label value={yAxisLabel} angle={-90} position="insideLeft" />
-        )}
-      </YAxis>
+      {hide && !autoScaleYAxis && yMin !== undefined && yMax !== undefined && (
+        <YAxis hide domain={[yMin, yMax]} />
+      )}
+      {!hide && (
+        <YAxis
+          className={yAxisClassName}
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          minTickGap={32}
+          tick={{ fill: tickColor }}
+          tickFormatter={formatNumber}
+          {...(yDomain && { domain: yDomain })}
+          {...(yTicks && { ticks: yTicks })}
+          allowDataOverflow={!autoScaleYAxis}
+        >
+          {yAxisLabel && (
+            <Label value={yAxisLabel} angle={-90} position="insideLeft" />
+          )}
+        </YAxis>
+      )}
     </>
   );
 }

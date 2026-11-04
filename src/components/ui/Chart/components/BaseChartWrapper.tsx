@@ -24,7 +24,7 @@ import {
 } from '#uilib/components/ui/ChartAreaInteractive/chartHistories';
 import { Skeleton } from '#uilib/components/ui/Skeleton';
 import { chartRenderQueue } from '#uilib/utils/chartRenderQueue';
-import { Tooltip as ChartTooltip, ComposedChart, LineChart } from 'recharts';
+import { ComposedChart, LineChart } from 'recharts';
 import { LegendPayload } from 'recharts/types/component/DefaultLegendContent';
 
 import { normalizeTooltipPayload } from '../Chart.helpers';
@@ -39,6 +39,7 @@ import {
   type ChartEmptyStatusTone,
 } from './ChartEmptyState/ChartEmptyState';
 import { ChartGrid } from './ChartGrid';
+import { ChartPlacedTooltip, isTooltipUnder } from './ChartPlacedTooltip';
 import { ChartTooltipContent } from './ChartTooltipContent';
 import { CustomChartLegend } from './CustomChartLegend/CustomChartLegend';
 import { LegendSvg } from './LegendSvg/LegendSvg';
@@ -84,6 +85,21 @@ function clampTooltipTranslate(args: {
   return { x: tx, y: ty };
 }
 
+/**
+ * The tooltip slides after the cursor, unless the user asked for less motion.
+ * ChartPlacedTooltip turns this off under a narrow chart.
+ */
+const TOOLTIP_WRAPPER_STYLE = {
+  transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
+};
+
+function tooltipWrapperStyle() {
+  const reduceMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  return reduceMotion ? undefined : TOOLTIP_WRAPPER_STYLE;
+}
+
 export interface BaseChartWrapperProps {
   renderId?: string; // unique id for the render, used to identify the render in the render queue
   chartConfig?: ChartConfig;
@@ -117,6 +133,19 @@ export interface BaseChartWrapperProps {
   yMax?: number;
   autoScaleYAxis?: boolean;
   formatNumber?: (value: number) => string;
+  /**
+   * Formats the numbers in the tooltip. Without it they print as is. Not
+   * `formatNumber`, which is the axis's and often compact ("1.2k").
+   */
+  formatTooltipValue?: (value: number) => string;
+  /** Draw history lines across months with no value (default: a gap). */
+  connectHistoryNulls?: boolean;
+  /** Draw forecast lines across months with no value (default: a gap). */
+  connectForecastNulls?: boolean;
+  /** Draw history lines over the forecast lines (default: under them). */
+  historyOnTop?: boolean;
+  /** Mark each line's last point with a dot (default: on). */
+  showEndDots?: boolean;
   formatDate?: (value: string, detailed?: boolean) => string;
   labelFormatter?: (value: unknown) => string;
   onLegendClick?: (data: LegendPayload, index: number, event: any) => void;
@@ -130,6 +159,10 @@ export interface BaseChartWrapperProps {
    */
   disableLineDrawAnimation?: boolean;
   showGrid?: boolean;
+  /**
+   * Draw the axes. Off, a hidden x-axis is kept so the tooltip still names
+   * the row's date.
+   */
   showAxes?: boolean;
   showTooltip?: boolean;
   showLegend?: boolean;
@@ -237,6 +270,11 @@ const BaseChartWrapperContent = forwardRef<
     yMax,
     autoScaleYAxis = true,
     formatNumber,
+    formatTooltipValue,
+    connectHistoryNulls,
+    connectForecastNulls,
+    historyOnTop,
+    showEndDots,
     formatDate: formatDateFn = formatDate,
     labelFormatter,
     onLegendClick,
@@ -311,9 +349,17 @@ const BaseChartWrapperContent = forwardRef<
   const applyTooltipPosition = () => {
     const wrapper = tooltipWrapperRef.current;
     const coord = rawTooltipCoordinateRef.current;
-    const chartWrapper = rootRef.current?.querySelector('.recharts-wrapper');
+    // The chart the tooltip belongs to (with the grid on, the first chart in
+    // the root is the grid layer's).
+    const chartWrapper =
+      wrapper?.closest('.recharts-wrapper') ??
+      rootRef.current?.querySelector('.recharts-wrapper');
 
     if (!wrapper || !coord || !(chartWrapper instanceof HTMLElement)) return;
+
+    // A narrow chart's tooltip sits under it, where ChartPlacedTooltip has
+    // recharts put it. Leave it there: one writer, so it does not jump.
+    if (isTooltipUnder(wrapper)) return;
 
     const measured = wrapper.getBoundingClientRect();
     const width = tooltipSizeRef.current.width || measured.width;
@@ -364,8 +410,6 @@ const BaseChartWrapperContent = forwardRef<
 
       if (wrapperEl instanceof HTMLElement) {
         tooltipWrapperRef.current = wrapperEl;
-        wrapperEl.style.transition =
-          'transform 0.2s ease-out, opacity 0.2s ease-out';
         requestAnimationFrame(() => applyTooltipPositionRef.current());
       }
     };
@@ -432,6 +476,7 @@ const BaseChartWrapperContent = forwardRef<
           label={props.label}
           labelFormatter={labelFormatter || defaultLabelFormatter}
           indicator="dot"
+          valueFormatter={formatTooltipValue}
         />
       );
     }
@@ -455,6 +500,7 @@ const BaseChartWrapperContent = forwardRef<
         label={props.label}
         labelFormatter={labelFormatter || defaultLabelFormatter}
         indicator="dot"
+        valueFormatter={formatTooltipValue}
       />
     );
   };
@@ -663,6 +709,26 @@ const BaseChartWrapperContent = forwardRef<
   const ChartComponent = chartType === 'line' ? LineChart : ComposedChart;
   const defaultLabelFormatter = (v: unknown) => formatDateFn(v as string, true);
 
+  // The same axes in the grid layer and the chart layer, so both share one
+  // scale. Hidden when showAxes is off: the hidden x-axis still places the
+  // rows by date, so the tooltip names it.
+  const axes = (
+    <ChartAxes
+      hide={!showAxes}
+      formatDate={formatDateFn}
+      formatNumber={formatNumber}
+      xAxisClassName={xAxisClassName}
+      yAxisClassName={yAxisClassName}
+      xAxisLabel={xAxisLabel}
+      yAxisLabel={yAxisLabel}
+      xMin={xMin}
+      xMax={xMax}
+      yMin={yMin}
+      yMax={yMax}
+      autoScaleYAxis={effectiveAutoScale}
+    />
+  );
+
   return (
     <div
       className={cn(
@@ -690,21 +756,7 @@ const BaseChartWrapperContent = forwardRef<
         >
           <ChartComponent data={chartData} margin={margin}>
             <ChartGrid />
-            {showAxes && (
-              <ChartAxes
-                formatDate={formatDateFn}
-                formatNumber={formatNumber}
-                xAxisClassName={xAxisClassName}
-                yAxisClassName={yAxisClassName}
-                xAxisLabel={xAxisLabel}
-                yAxisLabel={yAxisLabel}
-                xMin={xMin}
-                xMax={xMax}
-                yMin={yMin}
-                yMax={yMax}
-                autoScaleYAxis={effectiveAutoScale}
-              />
-            )}
+            {axes}
           </ChartComponent>
         </ChartContainer>
       )}
@@ -717,22 +769,7 @@ const BaseChartWrapperContent = forwardRef<
         {...containerProps}
       >
         <ChartComponent data={chartData} margin={margin}>
-          {/* Render invisible axes for coordinate system, but hide labels */}
-          {showAxes && (
-            <ChartAxes
-              formatDate={formatDateFn}
-              formatNumber={formatNumber}
-              xAxisClassName={cn(xAxisClassName)}
-              yAxisClassName={cn(yAxisClassName)}
-              xAxisLabel={xAxisLabel}
-              yAxisLabel={yAxisLabel}
-              xMin={xMin}
-              xMax={xMax}
-              yMin={yMin}
-              yMax={yMax}
-              autoScaleYAxis={effectiveAutoScale}
-            />
-          )}
+          {axes}
 
           {/* Quantile Bands (widest to narrowest) */}
           {quantileBands?.[0] && (
@@ -759,14 +796,19 @@ const BaseChartWrapperContent = forwardRef<
             disableHistoricalAnimation={disableHistoricalAnimation}
             showLegend={showLegend}
             forecastLineStyle={forecastLineStyle}
+            connectHistoryNulls={connectHistoryNulls}
+            connectForecastNulls={connectForecastNulls}
+            historyOnTop={historyOnTop}
+            showEndDots={showEndDots}
           />
 
           {showTooltip && (
             <div>
-              <ChartTooltip
+              <ChartPlacedTooltip
                 cursor={false}
                 offset={TOOLTIP_OFFSET}
                 allowEscapeViewBox={{ x: false, y: false }}
+                wrapperStyle={tooltipWrapperStyle()}
                 content={renderTooltipContent}
               />
             </div>

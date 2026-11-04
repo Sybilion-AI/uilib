@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 
-import { Line } from 'recharts';
+import { DefaultZIndexes, Line } from 'recharts';
 
 import { ChartDataPoint } from './ChartAreaInteractive.types';
 import {
@@ -106,6 +106,10 @@ export const ChartLines = memo(
     forecastLineStyle = 'dashed',
     disableAnimation = false,
     disableHistoricalAnimation = false,
+    connectHistoryNulls = false,
+    connectForecastNulls = false,
+    historyOnTop = false,
+    showEndDots = true,
   }: {
     chartData: ChartDataPoint[];
     forecastData?: ForecastItemData[];
@@ -119,6 +123,17 @@ export const ChartLines = memo(
     forecastLineStyle?: 'dashed' | 'solid';
     disableAnimation?: boolean;
     disableHistoricalAnimation?: boolean;
+    /** Draw each history line across months it has no value for. */
+    connectHistoryNulls?: boolean;
+    /** Draw each forecast line across months it has no value for. */
+    connectForecastNulls?: boolean;
+    /**
+     * Draw the history lines after the forecast lines, over them (for many
+     * faint forecasts that would otherwise cover the history).
+     */
+    historyOnTop?: boolean;
+    /** Mark each line's last point with a dot (default: on). */
+    showEndDots?: boolean;
   }) => {
     const dotStroke = isDarkTheme ? '#000000' : '#FFFFFF';
 
@@ -216,63 +231,78 @@ export const ChartLines = memo(
     const animationDuration = disableAnimation ? 0 : ANIMATION_DURATION;
     const valueAnimationEnabled = !disableAnimation;
 
-    return (
-      <>
-        {/* History lines */}
-        {historyLines.map(({ dataKey, name, color }) => (
+    // recharts draws each line into its z-index layer in mount order, not in
+    // JSX order: a layer above the forecasts keeps history on top through
+    // hiding, showing and added forecasts, and leaves the tooltip's order.
+    const historyZIndex = historyOnTop ? DefaultZIndexes.line + 1 : undefined;
+
+    const historyElements = historyLines.map(({ dataKey, name, color }) => (
+      <Line
+        key={dataKey}
+        zIndex={historyZIndex}
+        type="monotone"
+        dataKey={dataKey}
+        stroke={color}
+        strokeWidth={1}
+        dot={
+          showEndDots ? props => renderHistoryDot(props, dataKey, color) : false
+        }
+        activeDot={{ ...activeDotHistorical, fill: color }}
+        name={name}
+        legendType={showLegend === false ? 'none' : undefined}
+        strokeDasharray="0"
+        connectNulls={connectHistoryNulls}
+        hide={hiddenSeries?.has(dataKey)}
+        isAnimationActive={historicalAnimationActive}
+        animationDuration={animationDuration}
+        animateNewValues={valueAnimationEnabled}
+        animationBegin={0}
+        animationEasing="ease-out"
+      />
+    ));
+
+    const forecastElements = forecastData?.map(
+      (data: ForecastItemData, index: number) => {
+        const {
+          id,
+          name,
+          color = FORECAST_LINE_COLORS[index % FORECAST_LINE_COLORS.length],
+        } = data;
+        const dataKey = `forecast_${id}`;
+
+        return (
           <Line
-            key={dataKey}
+            key={`forecast-${id}`}
             type="monotone"
             dataKey={dataKey}
             stroke={color}
             strokeWidth={1}
-            dot={props => renderHistoryDot(props, dataKey, color)}
-            activeDot={{ ...activeDotHistorical, fill: color }}
-            name={name}
+            strokeDasharray={forecastLineStyle === 'dashed' ? '4 2' : '0'}
+            dot={
+              showEndDots ? props => renderForecastDot(props, id, color) : false
+            }
+            activeDot={activeDotForecast(color)}
+            name={`${name || `${id}`}`}
             legendType={showLegend === false ? 'none' : undefined}
-            strokeDasharray="0"
+            connectNulls={connectForecastNulls}
             hide={hiddenSeries?.has(dataKey)}
-            isAnimationActive={historicalAnimationActive}
+            isAnimationActive={forecastAnimationActive}
             animationDuration={animationDuration}
             animateNewValues={valueAnimationEnabled}
             animationBegin={0}
             animationEasing="ease-out"
+            className={
+              data.status === 'pending' ? 'chart-line-blinking' : undefined
+            }
           />
-        ))}
+        );
+      },
+    );
 
-        {/* Forecast Lines */}
-        {forecastData?.map((data: ForecastItemData, index: number) => {
-          const {
-            id,
-            name,
-            color = FORECAST_LINE_COLORS[index % FORECAST_LINE_COLORS.length],
-          } = data;
-          const dataKey = `forecast_${id}`;
-
-          return (
-            <Line
-              key={`forecast-${id}`}
-              type="monotone"
-              dataKey={dataKey}
-              stroke={color}
-              strokeWidth={1}
-              strokeDasharray={forecastLineStyle === 'dashed' ? '4 2' : '0'}
-              dot={props => renderForecastDot(props, id, color)}
-              activeDot={activeDotForecast(color)}
-              name={`${name || `${id}`}`}
-              legendType={showLegend === false ? 'none' : undefined}
-              hide={hiddenSeries?.has(dataKey)}
-              isAnimationActive={forecastAnimationActive}
-              animationDuration={animationDuration}
-              animateNewValues={valueAnimationEnabled}
-              animationBegin={0}
-              animationEasing="ease-out"
-              className={
-                data.status === 'pending' ? 'chart-line-blinking' : undefined
-              }
-            />
-          );
-        })}
+    return (
+      <>
+        {historyElements}
+        {forecastElements}
       </>
     );
   },
