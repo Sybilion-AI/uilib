@@ -47,3 +47,14 @@ describe('ChartAxes y-axis numbers', () => {
     expect(own).toHaveBeenCalled();
   });
 });
+
+describe('ChartAxes auto-scaled y range', () => {
+  it("uses recharts' own fit around the data, not the values scaled", () => {
+    yAxisProps.length = 0;
+    render(<ChartAxes formatDate={formatDate} autoScaleYAxis />);
+    expect((yAxisProps.at(-1) as { domain?: unknown })?.domain).toEqual([
+      'auto',
+      'auto',
+    ]);
+  });
+});

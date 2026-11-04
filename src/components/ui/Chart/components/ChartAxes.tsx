@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { type ComponentProps, useMemo, useRef } from 'react';
 
 import { Label, XAxis, YAxis } from 'recharts';
 
@@ -81,32 +81,13 @@ export function ChartAxes({
   }, [hide, yMin, yMax, autoScaleYAxis, formatNumber]);
 
   // Determine Y-axis domain
-  let yDomain:
-    | [
-        (
-          | number
-          | string
-          | 'auto'
-          | 'dataMin'
-          | 'dataMax'
-          | ((dataMin: number) => number)
-        ),
-        (
-          | number
-          | string
-          | 'auto'
-          | 'dataMin'
-          | 'dataMax'
-          | ((dataMax: number) => number)
-        ),
-      ]
-    | undefined;
+  let yDomain: ComponentProps<typeof YAxis>['domain'];
 
   if (autoScaleYAxis) {
-    yDomain = [
-      (dataMin: number) => dataMin * 0.95,
-      (dataMax: number) => dataMax * 1.05,
-    ];
+    // recharts' own fit: nice round ticks just around the data, so a series
+    // moving 1000–1010 fills the chart (scaling the values by 0.95/1.05 left
+    // it flat) and a negative one is padded too.
+    yDomain = ['auto', 'auto'];
   } else if (yMin !== undefined && yMax !== undefined) {
     yDomain = [yMin, yMax];
   }
