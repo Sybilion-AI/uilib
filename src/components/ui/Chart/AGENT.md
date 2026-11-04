@@ -16,7 +16,7 @@ ChartContainer wraps Recharts charts with the library’s theming, mapping a Cha
 - `historyOnTop` draws the history lines over the forecast lines, for many faint forecasts that would otherwise cover them.
 - `showAxes={false}` draws no axes but keeps a hidden x-axis, so the tooltip still names the row's date; fixed `yMin`/`yMax` (with `autoScaleYAxis={false}`) still set the y range.
 - `showEndDots={false}` drops the dot on each line's last point (for many lines drawn as one bundle).
-- Use ChartTooltip (not Recharts' Tooltip directly) so a chart narrower than 500px (`NARROW_CHART_PX`) opens its tooltip under the chart instead of over the lines. BaseChartWrapper, ChartAreaInteractive, BarChart, DonutChart, StackedAreaChart and the driver card chart already do. A parent that hides overflow (a chat bubble, a card) can clip it there. Pass `position` to place it yourself.
+- Use ChartTooltip (not Recharts' Tooltip directly) so a chart narrower than 500px (`NARROW_CHART_PX`) opens its tooltip under the chart instead of over the lines, starting right under the x-axis labels (over any legend below). BaseChartWrapper, ChartAreaInteractive, BarChart, DonutChart, StackedAreaChart and the driver card chart already do. A parent that hides overflow (a chat bubble, a card) can clip it there. Pass `position` to place it yourself.
 
 ## Example
 
