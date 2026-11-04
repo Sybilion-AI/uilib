@@ -27,6 +27,48 @@ export type TimeRangeControlsProps = {
   loading?: boolean;
 };
 
+/**
+ * The preset ranges as a select. A range that is not a preset (one dragged on
+ * the chart) shows "Custom" rather than a preset it is not.
+ */
+export const TimeRangeSelect = memo(
+  ({ timeRange, onTimeRangeChange, loading }: TimeRangeControlsProps) => (
+    <Select
+      // An empty value shows the placeholder; undefined would leave the
+      // select uncontrolled and keep the last preset picked.
+      value={toggleValueForTimeRange(timeRange)}
+      onValueChange={onTimeRangeChange}
+      disabled={loading}
+    >
+      <SelectTrigger
+        className={S.timeRangeSelectTrigger}
+        size="sm"
+        aria-label="Time range"
+      >
+        <SelectValue placeholder="Custom" />
+      </SelectTrigger>
+
+      <SelectContent className={S.timeRangeSelectContent}>
+        {TIME_RANGES.map(range => (
+          <SelectItem
+            key={range}
+            value={range}
+            className={S.timeRangeSelectItem}
+          >
+            {range}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  ),
+);
+
+TimeRangeSelect.displayName = 'TimeRangeSelect';
+
+/**
+ * The preset ranges as a toggle row from 768px up, and as a select below it
+ * (CSS shows one of the two), so the control stays on a phone.
+ */
 export const TimeRangeControls = memo(
   ({ timeRange, onTimeRangeChange, loading }: TimeRangeControlsProps) => (
     <div className={S.timeRangeContainer}>
@@ -48,44 +90,13 @@ export const TimeRangeControls = memo(
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
+      <TimeRangeSelect
+        timeRange={timeRange}
+        onTimeRangeChange={onTimeRangeChange}
+        loading={loading}
+      />
     </div>
   ),
 );
 
 TimeRangeControls.displayName = 'TimeRangeControls';
-
-export const TimeRangeSelect = memo(
-  ({
-    timeRange,
-    onTimeRangeChange,
-    loading,
-  }: TimeRangeControlsProps & { loading: boolean }) => (
-    <Select
-      value={toggleValueForTimeRange(timeRange) || undefined}
-      onValueChange={onTimeRangeChange}
-      disabled={loading}
-    >
-      <SelectTrigger
-        className={S.timeRangeSelectTrigger}
-        size="sm"
-        aria-label="Select a value"
-      >
-        <SelectValue placeholder="1 year" />
-      </SelectTrigger>
-
-      <SelectContent className={S.timeRangeSelectContent}>
-        {TIME_RANGES.map(range => (
-          <SelectItem
-            key={range}
-            value={range}
-            className={S.timeRangeSelectItem}
-          >
-            {range}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  ),
-);
-
-TimeRangeSelect.displayName = 'TimeRangeSelect';
