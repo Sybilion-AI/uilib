@@ -5,12 +5,13 @@ import {
   useChartHeight,
   useChartWidth,
   useIsTooltipActive,
+  useMargin,
 } from 'recharts';
 
 /** Charts narrower than this open their tooltip under the chart, not over it. */
 export const NARROW_CHART_PX = 500;
 
-/** Gap between the bottom of a narrow chart and its tooltip. */
+/** Gap between a narrow chart's x-axis labels and its tooltip. */
 export const NARROW_TOOLTIP_GAP_PX = 4;
 
 /**
@@ -34,7 +35,8 @@ type ChartPlacedTooltipProps = ComponentProps<typeof Tooltip>;
 
 /**
  * A recharts Tooltip that, on a chart narrower than {@link NARROW_CHART_PX},
- * sits under the chart instead of over the lines, so a small chart stays
+ * sits under the chart instead of over the lines, starting right under the
+ * x-axis labels (the chart's bottom margin is left out), so a small chart stays
  * readable while it is hovered. It may then cover what follows the chart, be
  * clipped by a parent that hides overflow, or run past the page edge; that is
  * accepted. Under a chart it does not slide (no transition, whatever
@@ -47,6 +49,7 @@ export function ChartPlacedTooltip(props: ChartPlacedTooltipProps) {
   const width = useChartWidth();
   const height = useChartHeight();
   const hovered = useIsTooltipActive();
+  const bottomMargin = useMargin()?.bottom ?? 0;
   const open = props.active ?? hovered;
 
   const under =
@@ -56,7 +59,8 @@ export function ChartPlacedTooltip(props: ChartPlacedTooltipProps) {
     height > 0;
   const callerPosition = props.position;
   const y = under
-    ? (callerPosition?.y ?? height + NARROW_TOOLTIP_GAP_PX)
+    ? (callerPosition?.y ??
+      height - Math.max(0, bottomMargin) + NARROW_TOOLTIP_GAP_PX)
     : undefined;
   const position = useMemo(
     () => (y == null ? undefined : { ...callerPosition, y }),

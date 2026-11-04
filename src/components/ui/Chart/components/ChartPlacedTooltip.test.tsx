@@ -47,13 +47,18 @@ const data = [
   { date: '2026-03', v: 3 },
 ];
 
+// recharts' default margin is 5 on every side; the tooltip starts under the
+// x-axis, so it leaves the bottom one out.
+const MARGIN = 5;
+
 function renderChart(
   w: number,
   tooltip: Partial<Parameters<typeof ChartPlacedTooltip>[0]> = {},
+  margin?: { top: number; right: number; bottom: number; left: number },
 ) {
   width = w;
   return render(
-    <LineChart width={w} height={H} data={data}>
+    <LineChart width={w} height={H} data={data} margin={margin}>
       <Line dataKey="v" isAnimationActive={false} />
       <ChartPlacedTooltip
         content={() => <div className="tip">tip</div>}
@@ -91,13 +96,28 @@ describe('ChartPlacedTooltip', () => {
   it('opens under a narrow chart, without sliding there', async () => {
     const { container } = renderChart(300);
     const { y, transition } = await hoverAndReadY(container, 300);
-    expect(y).toBe(H + NARROW_TOOLTIP_GAP_PX);
+    expect(y).toBe(H - MARGIN + NARROW_TOOLTIP_GAP_PX);
     expect(transition).toBe('none');
     const wrapper = container.querySelector<HTMLElement>(
       '.recharts-tooltip-wrapper',
     )!;
     expect(isTooltipUnder(wrapper)).toBe(true);
     expect(wrapper.style.display).toBe('');
+  });
+
+  it('starts right under the x-axis labels, not under the bottom margin', async () => {
+    const { container } = renderChart(
+      300,
+      {},
+      {
+        top: 20,
+        right: 5,
+        bottom: 20,
+        left: 5,
+      },
+    );
+    const { y } = await hoverAndReadY(container, 300);
+    expect(y).toBe(H - 20 + NARROW_TOOLTIP_GAP_PX);
   });
 
   it('takes no room under a narrow chart while nothing is hovered', async () => {
@@ -135,6 +155,6 @@ describe('ChartPlacedTooltip', () => {
   it('keeps the under-chart y when the caller sets only x', async () => {
     const { container } = renderChart(300, { position: { x: 0 } });
     const { y } = await hoverAndReadY(container, 300);
-    expect(y).toBe(H + NARROW_TOOLTIP_GAP_PX);
+    expect(y).toBe(H - MARGIN + NARROW_TOOLTIP_GAP_PX);
   });
 });
