@@ -152,6 +152,30 @@ function MultiHistoryDemo({ isDarkTheme }: { isDarkTheme: boolean }) {
   );
 }
 
+function SegmentedHeaderDemo({ isDarkTheme }: { isDarkTheme: boolean }) {
+  const [timeRange, setTimeRange] = useState<string>('1y');
+  const [pinMonth, setPinMonth] = useState<string | undefined>(undefined);
+
+  return (
+    <ChartAreaInteractive
+      chartRenderId="segmented-header-demo"
+      headerTitle="Fair value 12.4 · horizon 3m · model A"
+      timeRangeVariant="segmented"
+      timeRange={timeRange}
+      onTimeRangeChange={setTimeRange}
+      pinMonth={pinMonth}
+      onPinMonthChange={setPinMonth}
+      chartData={INITIAL_CHART}
+      forecastData={DEMO_FORECAST_ITEMS}
+      loading={false}
+      isDarkTheme={isDarkTheme}
+      toggleLegendSeries={() => {}}
+      ensureAnalysisSeriesVisible={() => {}}
+      hiddenSeries={new Set()}
+    />
+  );
+}
+
 export default function ChartAreaInteractivePage() {
   const { isDarkMode } = useTheme();
   const [timeRange, setTimeRange] = useState<string>('1y');
@@ -271,6 +295,16 @@ export default function ChartAreaInteractivePage() {
           <code>continues</code>, it starts on its own first point.
         </p>
         <MultiHistoryDemo isDarkTheme={isDarkMode} />
+      </PageContentSection>
+      <PageContentSection>
+        <h3 style={{ marginBottom: '1rem' }}>Title and segmented range</h3>
+        <p>
+          <code>headerTitle</code> puts a caption at the start of the header
+          row, with the range control at its end;{' '}
+          <code>timeRangeVariant="segmented"</code> draws the compact picker on
+          a grey track.
+        </p>
+        <SegmentedHeaderDemo isDarkTheme={isDarkMode} />
       </PageContentSection>
     </>
   );

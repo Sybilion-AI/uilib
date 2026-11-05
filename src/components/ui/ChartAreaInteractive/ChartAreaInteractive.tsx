@@ -74,6 +74,8 @@ export function ChartAreaInteractive({
   onUpperThresholdChange,
   discreteThresholdValues,
   headerActions,
+  headerTitle,
+  timeRangeVariant,
   excludeLegendIds,
   loadingAnalyses,
   onLegendClick,
@@ -296,13 +298,17 @@ export function ChartAreaInteractive({
       className={cn(className, loading && S.loading)}
       disabled={loading}
     >
-      {(!disableTimeRangeSelector || headerActions) && (
+      {(!disableTimeRangeSelector || headerActions || headerTitle) && (
         <div className={S.chartHeaderContainer}>
+          {headerTitle != null && (
+            <div className={S.chartHeaderTitle}>{headerTitle}</div>
+          )}
           {!disableTimeRangeSelector && (
             <TimeRangeControls
               timeRange={timeRange}
               onTimeRangeChange={onTimeRangeChange}
               loading={loading}
+              variant={timeRangeVariant}
             />
           )}
 

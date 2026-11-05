@@ -27,6 +27,15 @@ export default function TimeRangeControlsPage() {
           loading={false}
         />
       </PageContentSection>
+      <PageContentSection>
+        <h3 style={{ marginBottom: '1rem' }}>Segmented</h3>
+        <TimeRangeControls
+          timeRange={range}
+          onTimeRangeChange={setRange}
+          loading={false}
+          variant="segmented"
+        />
+      </PageContentSection>
     </>
   );
 }
