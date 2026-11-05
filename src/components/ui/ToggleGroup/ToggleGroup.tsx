@@ -30,6 +30,7 @@ function ToggleGroup({
   return (
     <ToggleGroupPrimitive.Root
       data-slot="toggle-group"
+      data-variant={variant}
       data-disabled={disabled ? '' : undefined}
       className={cn(S.container, className)}
       {...props}

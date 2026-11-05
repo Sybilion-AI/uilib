@@ -6,6 +6,6 @@ export interface ToggleProps extends ComponentProps<
   typeof TogglePrimitive.Root
 > {
   className?: string;
-  variant?: 'default' | 'outline';
+  variant?: 'default' | 'outline' | 'segmented';
   size?: 'sm' | 'md' | 'lg';
 }

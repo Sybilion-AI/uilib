@@ -13,3 +13,4 @@ ToggleGroup presents a set of related toggle buttons where, in single mode, exac
 ## Do
 
 - In single mode, ignore empty values from onValueChange so one option always stays selected.
+- Use `variant="segmented"` for a compact picker on a grey track, where the chosen option is raised on a white chip (the chart time range uses it through `TimeRangeControls`).

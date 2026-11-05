@@ -25,6 +25,12 @@ export type TimeRangeControlsProps = {
   timeRange: string;
   onTimeRangeChange: (range: string) => void;
   loading?: boolean;
+  /**
+   * The toggle row's look: `default` (plain buttons) or `segmented` (small
+   * buttons on a grey track, the picked one raised). The select shown below
+   * 768px is the same either way.
+   */
+  variant?: 'default' | 'segmented';
 };
 
 /**
@@ -70,13 +76,18 @@ TimeRangeSelect.displayName = 'TimeRangeSelect';
  * (CSS shows one of the two), so the control stays on a phone.
  */
 export const TimeRangeControls = memo(
-  ({ timeRange, onTimeRangeChange, loading }: TimeRangeControlsProps) => (
+  ({
+    timeRange,
+    onTimeRangeChange,
+    loading,
+    variant = 'default',
+  }: TimeRangeControlsProps) => (
     <div className={S.timeRangeContainer}>
       <ToggleGroup
         type="single"
         value={toggleValueForTimeRange(timeRange)}
         onValueChange={onTimeRangeChange}
-        variant="outline"
+        variant={variant === 'segmented' ? 'segmented' : 'outline'}
         disabled={loading}
         className={S.timeRangeToggleGroup}
       >
