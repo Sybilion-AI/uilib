@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.3](https://github.com/Sybilion-AI/uilib/compare/v1.8.2...v1.8.3) (2026-11-05)
+
+
+### Features
+
+* **TimeRangeControls:** segmented range control on the chart header line (ENG-1776) ([#20](https://github.com/Sybilion-AI/uilib/issues/20)) ([6709dfe](https://github.com/Sybilion-AI/uilib/commit/6709dfe8fe832a9b2f2f4c98f95cd49ad5817930))
+
 ### [1.8.2](https://github.com/Sybilion-AI/uilib/compare/v1.8.1...v1.8.2) (2026-11-05)
 
 

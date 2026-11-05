@@ -1,6 +1,6 @@
 {
   "name": "@sybilion/uilib",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "description": "Sybilion Design System — React UI components (Vite + Stylus)",
   "publishConfig": {
     "access": "public",
