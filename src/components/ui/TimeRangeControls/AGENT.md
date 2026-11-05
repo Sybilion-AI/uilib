@@ -1,4 +1,4 @@
-TimeRangeControls renders a row of preset time range toggles, such as one month or one year, for switching the window of a chart. Control it with timeRange and onTimeRangeChange, and pass loading to disable the controls while data refreshes.
+TimeRangeControls renders a row of preset time range toggles, such as one month or one year, for switching the window of a chart. Control it with timeRange and onTimeRangeChange, and pass loading to disable the controls while data refreshes. Below 768px the same presets show as a select instead of the toggle row, so the control stays on a phone; a range that is not a preset (one dragged on the chart) selects no toggle and shows "Custom" in the select.
 
 ## When to use
 
