@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.2](https://github.com/Sybilion-AI/uilib/compare/v1.8.1...v1.8.2) (2026-11-05)
+
+
+### Bug Fixes
+
+* **Chart:** auto-scaled y-axis fits the data with recharts' own nice range (ENG-1776) ([#18](https://github.com/Sybilion-AI/uilib/issues/18)) ([680efef](https://github.com/Sybilion-AI/uilib/commit/680efeff3610224190d4badaecec7cddb5bdc829))
+* **TimeRangeControls:** show the preset select below 768px, so phones keep the range control (ENG-1776) ([#19](https://github.com/Sybilion-AI/uilib/issues/19)) ([4f0fdc1](https://github.com/Sybilion-AI/uilib/commit/4f0fdc10c10a4ab0b5a50328bd8ca458a9017886))
+
 ### [1.8.1](https://github.com/Sybilion-AI/uilib/compare/v1.8.0...v1.8.1) (2026-11-04)
 
 
