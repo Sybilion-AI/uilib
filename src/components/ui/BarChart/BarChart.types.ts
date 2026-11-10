@@ -29,9 +29,9 @@ export interface BarChartProps extends Omit<
   showLegend?: boolean;
   showTooltip?: boolean;
   showGrid?: boolean;
-  /** Formats numeric axis tick values (and the tooltip's, without `tooltipValueFormatter`). */
+  /** Formats numeric axis tick values. */
   valueFormatter?: (value: number) => string;
-  /** Formats the tooltip's values (for example with a unit). Defaults to `valueFormatter`. */
+  /** Formats the tooltip's values (for example with a unit); without it they print as they are. */
   tooltipValueFormatter?: (value: number) => string;
   /** Formats the category axis's ticks. */
   categoryTickFormatter?: (value: string | number) => string;

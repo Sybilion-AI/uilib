@@ -5,6 +5,7 @@ interface CssExports {
   dashed: string;
   dimmed: string;
   root: string;
+  square: string;
   swatch: string;
 }
 export const cssExports: CssExports;

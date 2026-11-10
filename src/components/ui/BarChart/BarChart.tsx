@@ -1,7 +1,6 @@
 import cn from 'classnames';
 import { forwardRef, useMemo } from 'react';
 
-import ChartS from '#uilib/components/ui/Chart/Chart.styl';
 import type { ChartConfig } from '#uilib/components/ui/Chart/Chart.types';
 import { getChartSeriesColor } from '#uilib/components/ui/Chart/chartSeriesPalette';
 // Straight from the components, not the Chart index, which also loads the
@@ -9,6 +8,7 @@ import { getChartSeriesColor } from '#uilib/components/ui/Chart/chartSeriesPalet
 import { ChartContainer } from '#uilib/components/ui/Chart/components/ChartContainer';
 import { ChartPlacedTooltip as ChartTooltip } from '#uilib/components/ui/Chart/components/ChartPlacedTooltip';
 import { ChartTooltipContent } from '#uilib/components/ui/Chart/components/ChartTooltipContent';
+import { SeriesLegend } from '#uilib/components/ui/Chart/components/SeriesLegend';
 import { useLegendState } from '#uilib/components/ui/Chart/hooks/useLegendState';
 import {
   Bar,
@@ -55,7 +55,7 @@ const BarChart = forwardRef<HTMLDivElement, BarChartProps>(
       showTooltip = true,
       showGrid = true,
       valueFormatter,
-      tooltipValueFormatter = valueFormatter,
+      tooltipValueFormatter,
       categoryTickFormatter,
       tooltipLabelFormatter,
       categoryAxisLabel,
@@ -170,7 +170,8 @@ const BarChart = forwardRef<HTMLDivElement, BarChartProps>(
                   type="number"
                   tickLine={false}
                   axisLine={axisLine}
-                  width={48}
+                  // Room for the title beside the tick labels.
+                  width={valueAxisLabel ? 64 : 48}
                   tickFormatter={valueFormatter}
                 >
                   {valueLabel}
@@ -203,40 +204,17 @@ const BarChart = forwardRef<HTMLDivElement, BarChartProps>(
           </RechartsBarChart>
         </ChartContainer>
 
-        {showLegend && series.length > 0 && (
-          <div className={cn(ChartS.legendContainer, S.legend)}>
-            {series.map((item, index) => {
-              const dimmed = hidden.has(item.key);
-              const content = (
-                <>
-                  <span
-                    className={ChartS.legendIndicator}
-                    style={{ backgroundColor: seriesColor(item, index) }}
-                  />
-                  {item.label ?? item.key}
-                </>
-              );
-              return toggle ? (
-                <button
-                  key={item.key}
-                  type="button"
-                  className={cn(
-                    ChartS.legendItem,
-                    S.legendButton,
-                    dimmed && S.dimmed,
-                  )}
-                  aria-pressed={!dimmed}
-                  onClick={() => toggle(item.key)}
-                >
-                  {content}
-                </button>
-              ) : (
-                <span key={item.key} className={ChartS.legendItem}>
-                  {content}
-                </span>
-              );
-            })}
-          </div>
+        {showLegend && (
+          <SeriesLegend
+            items={series.map((item, index) => ({
+              dataKey: item.key,
+              label: item.label ?? item.key,
+              color: seriesColor(item, index),
+              square: true,
+            }))}
+            hiddenSeries={hidden}
+            onToggle={toggle}
+          />
         )}
       </div>
     );

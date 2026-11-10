@@ -147,6 +147,11 @@ export interface BaseChartWrapperProps {
   historyOnTop?: boolean;
   /** Mark each line's last point with a dot (default: on). */
   showEndDots?: boolean;
+  /**
+   * Dot a point that a line not drawn across gaps leaves alone (no value on
+   * either side), so it still shows (default: off).
+   */
+  dotLonePoints?: boolean;
   formatDate?: (value: string, detailed?: boolean) => string;
   labelFormatter?: (value: unknown) => string;
   onLegendClick?: (data: LegendPayload, index: number, event: any) => void;
@@ -291,6 +296,7 @@ const BaseChartWrapperContent = forwardRef<
     connectForecastNulls,
     historyOnTop,
     showEndDots,
+    dotLonePoints,
     formatDate: formatDateProp,
     labelFormatter,
     onLegendClick,
@@ -855,6 +861,7 @@ const BaseChartWrapperContent = forwardRef<
             connectForecastNulls={connectForecastNulls}
             historyOnTop={historyOnTop}
             showEndDots={showEndDots}
+            dotLonePoints={dotLonePoints}
           />
 
           {showTooltip && (

@@ -158,11 +158,12 @@ describe('BaseChartWrapper lines with gaps', () => {
     { date: '2024-06-01', historical_a: 6, forecast_1: 6 },
   ];
 
-  it('dots a point the line leaves alone between two gaps', () => {
+  it('dots a point the line leaves alone between two gaps, when asked', () => {
     const { container } = lineChart({
       chartData: ROWS,
       historyData: [{ id: 'a', name: 'A', color: '#000' }],
       connectHistoryNulls: false,
+      dotLonePoints: true,
     });
     // Jan (gap after) and Mar (gaps on both sides); May and Jun join.
     expect(container.querySelectorAll('circle[r="3"]').length).toBe(2);
@@ -173,6 +174,21 @@ describe('BaseChartWrapper lines with gaps', () => {
       chartData: ROWS,
       historyData: [{ id: 'a', name: 'A', color: '#000', connectNulls: true }],
       connectHistoryNulls: false,
+      dotLonePoints: true,
+    });
+    expect(container.querySelectorAll('circle[r="3"]').length).toBe(0);
+  });
+});
+
+describe('BaseChartWrapper lone points by default', () => {
+  it('draws no dots it was not asked for', () => {
+    const { container } = lineChart({
+      chartData: [
+        { date: '2024-01-01', historical_a: 1 },
+        { date: '2024-02-01' },
+        { date: '2024-03-01', historical_a: 3 },
+      ],
+      historyData: [{ id: 'a', name: 'A', color: '#000' }],
     });
     expect(container.querySelectorAll('circle[r="3"]').length).toBe(0);
   });

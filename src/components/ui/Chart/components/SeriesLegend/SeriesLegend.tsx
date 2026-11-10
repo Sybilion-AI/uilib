@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import type { ReactNode } from 'react';
 
 import ChartS from '../../Chart.styl';
 import S from './SeriesLegend.styl';
@@ -6,10 +7,12 @@ import S from './SeriesLegend.styl';
 export type SeriesLegendItem = {
   /** The series' data key; the legend hands it back on a click. */
   dataKey: string;
-  label: string;
+  label: ReactNode;
   color: string;
   /** Draw the swatch as a dashed line (a forecast line). */
   dashed?: boolean;
+  /** Draw the swatch as a filled square (a bar or an area) instead of a line. */
+  square?: boolean;
 };
 
 /**
@@ -36,7 +39,10 @@ export function SeriesLegend({
         const content = (
           <>
             <span
-              className={cn(S.swatch, item.dashed && S.dashed)}
+              className={cn(
+                S.swatch,
+                item.square ? S.square : item.dashed && S.dashed,
+              )}
               style={{ color: item.color }}
               aria-hidden
             />
