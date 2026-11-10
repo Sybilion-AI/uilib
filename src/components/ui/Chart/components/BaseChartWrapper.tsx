@@ -493,7 +493,17 @@ const BaseChartWrapperContent = forwardRef<
   const renderTooltipContent = (props: any) => {
     // Filter payload to exclude items with null/undefined values
     // This prevents showing stale data when hovering on dates without data points
-    const filteredPayload = normalizeTooltipPayload(props.payload);
+    const normalized = normalizeTooltipPayload(props.payload);
+    // With `legendOrder`, the rows read in the legend's order (recharts lists
+    // every history line before the forecasts).
+    const filteredPayload =
+      legendOrder && normalized
+        ? [...normalized].sort(
+            (a, b) =>
+              orderRank(legendOrder, a.dataKey) -
+              orderRank(legendOrder, b.dataKey),
+          )
+        : normalized;
 
     // If no valid payload items, render ChartTooltipContent with active=false and empty payload
     // This allows ChartTooltipContent to clear its lastTooltipData state
@@ -946,6 +956,13 @@ BaseChartWrapperContent.displayName = 'BaseChartWrapperContent';
  * Base chart wrapper component with common structure
  * Handles container, grid, axes, tooltip, and legend
  */
+
+/** A key's place in `order`; keys not in it go last, in their own order. */
+function orderRank(order: readonly string[], key: unknown): number {
+  const i = typeof key === 'string' ? order.indexOf(key) : -1;
+  return i === -1 ? order.length : i;
+}
+
 export function BaseChartWrapper(props: BaseChartWrapperProps) {
   const { renderId, chartData, loading, hasCombinedData, legendVariant } =
     props;

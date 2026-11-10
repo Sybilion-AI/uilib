@@ -100,7 +100,7 @@ export function ChartTooltipContent({
       );
     }
 
-    if (!value) {
+    if (value == null || value === '') {
       return null;
     }
 
