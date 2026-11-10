@@ -262,7 +262,8 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
               ticks={yAxis.ticks}
               allowDataOverflow
               tickFormatter={valueFormatter}
-              width={56}
+              // Room for the rotated title beside the ticks.
+              width={yAxisLabel ? 72 : 56}
               tickLine={false}
               axisLine={AXIS_LINE}
             >

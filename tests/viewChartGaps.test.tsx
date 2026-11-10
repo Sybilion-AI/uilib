@@ -73,6 +73,20 @@ describe('BarChart', () => {
     expect(screen.getByText('Supplier A')).toBeInTheDocument();
   });
 
+  it('draws the bars at once with disableAnimation', () => {
+    const { container } = render(
+      <BarChart
+        data={BARS}
+        categoryKey="supplier"
+        series={BAR_SERIES}
+        disableAnimation
+      />,
+    );
+    expect(
+      container.querySelectorAll('.recharts-bar-rectangle path').length,
+    ).toBeGreaterThan(0);
+  });
+
   it('keeps a plain legend by default', () => {
     render(<BarChart data={BARS} categoryKey="supplier" series={BAR_SERIES} />);
     expect(screen.queryByRole('button')).toBeNull();
@@ -286,6 +300,22 @@ describe('BaseChartWrapper plain legend', () => {
       'Scenario A',
       'Actual',
       'Manually adjusted outlook',
+    ]);
+  });
+
+  it('lists the single historical line without historyData', () => {
+    lineChart({
+      chartData: [
+        { date: '2024-01-01', historical: 1 },
+        { date: '2024-02-01', historical: 2, forecast_1: 2 },
+      ],
+      forecastData: [{ id: 1, name: 'Outlook', color: '#111' }],
+      legendVariant: 'plain',
+      onLegendClick: () => {},
+    });
+    expect(screen.getAllByRole('button').map(b => b.textContent)).toEqual([
+      'Historical Data',
+      'Outlook',
     ]);
   });
 

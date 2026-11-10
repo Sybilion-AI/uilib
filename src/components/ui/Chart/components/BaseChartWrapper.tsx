@@ -18,6 +18,7 @@ import {
   resolveHistoryLines,
 } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
 import {
+  HISTORY_SERIES_KEY,
   HistoryItemData,
   historySeriesKeys,
   isHistorySeriesKey,
@@ -603,7 +604,21 @@ const BaseChartWrapperContent = forwardRef<
   // forecasts), forecasts drawn dashed when their lines are.
   const plainLegend = useMemo((): SeriesLegendItem[] => {
     if (!showLegend || legendVariant !== 'plain') return [];
+    // Without historyData the chart draws the single `historical` line;
+    // it is listed when it has a value to draw.
+    const singleHistory =
+      !historyData?.length &&
+      chartData.some(row => row[HISTORY_SERIES_KEY] != null)
+        ? [
+            {
+              dataKey: HISTORY_SERIES_KEY,
+              label: 'Historical Data',
+              color: historicalLineColor ?? (isDarkTheme ? '#ffffff' : '#000000'),
+            },
+          ]
+        : [];
     const all: SeriesLegendItem[] = [
+      ...singleHistory,
       ...(historyLegend ?? []).map(h => ({
         dataKey: h.dataKey,
         label: h.value,
@@ -617,13 +632,17 @@ const BaseChartWrapperContent = forwardRef<
       })),
     ];
     if (!legendOrder) return all;
-    const rank = new Map(legendOrder.map((key, i) => [key, i]));
-    const at = (item: SeriesLegendItem) =>
-      rank.get(item.dataKey) ?? Number.MAX_SAFE_INTEGER;
-    return [...all].sort((a, b) => at(a) - at(b));
+    return [...all].sort(
+      (a, b) =>
+        orderRank(legendOrder, a.dataKey) - orderRank(legendOrder, b.dataKey),
+    );
   }, [
     showLegend,
     legendVariant,
+    historyData,
+    chartData,
+    historicalLineColor,
+    isDarkTheme,
     historyLegend,
     legendPayload,
     forecastLineStyle,

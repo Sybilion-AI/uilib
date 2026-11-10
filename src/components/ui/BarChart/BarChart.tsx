@@ -63,6 +63,7 @@ const BarChart = forwardRef<HTMLDivElement, BarChartProps>(
       hiddenKeys,
       onToggleKey,
       height,
+      disableAnimation,
       ...props
     },
     ref,
@@ -144,7 +145,8 @@ const BarChart = forwardRef<HTMLDivElement, BarChartProps>(
                   tickLine={false}
                   axisLine={axisLine}
                   tickFormatter={categoryTickFormatter}
-                  width={80}
+                  // Room for the rotated title beside the category names.
+                  width={categoryAxisLabel ? 96 : 80}
                 >
                   {categoryLabel}
                 </YAxis>
@@ -198,6 +200,7 @@ const BarChart = forwardRef<HTMLDivElement, BarChartProps>(
                 radius={barRadius}
                 maxBarSize={48}
                 hide={hidden.has(item.key)}
+                isAnimationActive={!disableAnimation}
               />
             ))}
           </RechartsBarChart>

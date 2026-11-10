@@ -53,4 +53,6 @@ export interface BarChartProps extends Omit<
   onToggleKey?: (key: string) => void;
   /** Fixed chart height in px; defaults to a 16:9 responsive box. */
   height?: number;
+  /** Draw the bars at once, without the grow-in animation. */
+  disableAnimation?: boolean;
 }
