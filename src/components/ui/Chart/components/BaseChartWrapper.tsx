@@ -914,7 +914,7 @@ const BaseChartWrapperContent = forwardRef<
         {showLegend &&
           (legendVariant === 'plain' ? (
             <SeriesLegend
-              className={legendClassName}
+              className={cn(S.plainLegend, legendClassName)}
               items={plainLegend}
               hiddenSeries={hiddenSeries}
               onToggle={

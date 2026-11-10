@@ -17,6 +17,7 @@ interface CssExports {
   'loadingOverlay': string;
   'noLegend': string;
   'noLineDrawAnimation': string;
+  'plainLegend': string;
   'root': string;
 }
 export const cssExports: CssExports;

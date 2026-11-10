@@ -23,6 +23,7 @@ import {
 
 import {
   MARGIN_KEY,
+  chartBottom,
   chartTop,
   compareRowZones,
   compareZones,
@@ -190,11 +191,15 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
     const visibleLinesJoined = joinKeys(
       overlays.filter(o => !hidden.has(o.key)).map(o => o.key),
     );
-    const yAxis = useMemo(
-      () =>
-        valueAxis(chartTop(rows, visibleKeys, splitKeys(visibleLinesJoined))),
-      [rows, visibleKeys, visibleLinesJoined],
-    );
+    const yAxis = useMemo(() => {
+      const lines = splitKeys(visibleLinesJoined);
+      return valueAxis(
+        chartTop(rows, visibleKeys, lines),
+        undefined,
+        undefined,
+        chartBottom(rows, visibleKeys, lines),
+      );
+    }, [rows, visibleKeys, visibleLinesJoined]);
     const ticks = useMemo(
       () => (yearTicks ? findYearTicks(data, xKey) : undefined),
       [yearTicks, data, xKey],
@@ -258,7 +263,7 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
             <YAxis
               // Our own steps: automatic rounding can double the axis when the
               // margin nudges the top past a round number.
-              domain={[0, yAxis.max]}
+              domain={[yAxis.min ?? 0, yAxis.max]}
               ticks={yAxis.ticks}
               allowDataOverflow
               tickFormatter={valueFormatter}

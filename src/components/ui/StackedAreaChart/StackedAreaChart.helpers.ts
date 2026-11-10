@@ -196,28 +196,56 @@ function compareSides(
  * A value axis from 0 for a top value: at most `maxIntervals` steps of
  * 1, 2, 2.5 or 5 × 10ⁿ, with a little headroom above the top. Small changes
  * in the top (a margin being typed) move the axis by one step at most,
- * instead of doubling it the way automatic rounding can.
+ * instead of doubling it the way automatic rounding can. A `bottom` below 0
+ * (a negative layer or line) starts the axis at a step below it, as `min`.
  */
 export function valueAxis(
   top: number,
   maxIntervals = 5,
   headroom = 0.05,
-): { max: number; ticks: number[] } {
-  const target = Number.isFinite(top) && top > 0 ? top * (1 + headroom) : 1;
-  let exponent = Math.floor(Math.log10(target / maxIntervals));
+  bottom = 0,
+): { min?: number; max: number; ticks: number[] } {
+  const low = Number.isFinite(bottom) && bottom < 0 ? bottom * (1 + headroom) : 0;
+  const high =
+    Number.isFinite(top) && top > 0 ? top * (1 + headroom) : low < 0 ? 0 : 1;
+  let exponent = Math.floor(Math.log10((high - low) / maxIntervals));
   for (;;) {
     for (const mantissa of [1, 2, 2.5, 5]) {
       const step = mantissa * 10 ** exponent;
-      const count = Math.ceil(target / step - 1e-9);
+      const first = low < 0 ? Math.floor(low / step + 1e-9) * step : 0;
+      const count = Math.ceil((high - first) / step - 1e-9);
       if (count <= maxIntervals) {
         const ticks = Array.from({ length: count + 1 }, (_, i) =>
-          Number((i * step).toPrecision(12)),
+          Number((first + i * step).toPrecision(12)),
         );
-        return { max: ticks[ticks.length - 1], ticks };
+        const max = ticks[ticks.length - 1];
+        return low < 0 ? { min: ticks[0], max, ticks } : { max, ticks };
       }
     }
     exponent += 1;
   }
+}
+
+/**
+ * The lowest point the chart draws: the lowest running total up the stack
+ * on any row (a negative layer pulls it below 0) or the lowest line value;
+ * 0 when nothing is negative.
+ */
+export function chartBottom(
+  rows: readonly StackedAreaChartDatum[],
+  layerKeys: readonly string[],
+  lineKeys: readonly string[],
+): number {
+  let bottom = 0;
+  for (const row of rows) {
+    let running = 0;
+    for (const key of layerKeys) {
+      running += num(row[key]) ?? 0;
+      bottom = Math.min(bottom, running);
+    }
+    for (const key of lineKeys) bottom = Math.min(bottom, num(row[key]) ?? 0);
+  }
+  return bottom;
 }
 
 /** The highest stacked total (layers plus margin) or line value on any row. */
