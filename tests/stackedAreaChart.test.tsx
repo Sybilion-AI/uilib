@@ -304,8 +304,12 @@ describe('valueAxis', () => {
     expect(valueAxis(80, 5, 0.05, -30)).toEqual({
       min: -50,
       max: 100,
-      ticks: [-50, 0, 50, 100],
+      ticks: [-50, -25, 0, 25, 50, 75, 100],
     });
+    // A small negative value costs one step, not half the plot.
+    expect(valueAxis(1000, 5, 0.05, -5).ticks).toEqual([
+      -250, 0, 250, 500, 750, 1000, 1250,
+    ]);
     expect(valueAxis(0, 5, 0.05, -3).min).toBeLessThanOrEqual(-3.15);
   });
 });
@@ -326,6 +330,12 @@ describe('chartTop', () => {
     const rows = stackRows(ROWS, KEYS, 50);
     expect(chartTop(rows, KEYS, [])).toBeCloseTo(6);
     expect(chartTop(rows, ['energy'], ['paid'])).toBe(5);
+  });
+
+  it('reaches the peak under a negative layer stacked on top', () => {
+    const rows = [{ x: 'a', cost: 100, rebate: -30 }];
+    expect(chartTop(rows, ['cost', 'rebate'], [])).toBe(100);
+    expect(chartBottom(rows, ['cost', 'rebate'], [])).toBe(0);
   });
 });
 

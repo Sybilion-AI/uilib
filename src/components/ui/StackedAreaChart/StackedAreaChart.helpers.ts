@@ -214,7 +214,8 @@ export function valueAxis(
       const step = mantissa * 10 ** exponent;
       const first = low < 0 ? Math.floor(low / step + 1e-9) * step : 0;
       const count = Math.ceil((high - first) / step - 1e-9);
-      if (count <= maxIntervals) {
+      // Both ends round out to a step, so a range across 0 gets one more.
+      if (count <= maxIntervals + (low < 0 ? 1 : 0)) {
         const ticks = Array.from({ length: count + 1 }, (_, i) =>
           Number((first + i * step).toPrecision(12)),
         );
@@ -227,9 +228,8 @@ export function valueAxis(
 }
 
 /**
- * The lowest point the chart draws: the lowest running total up the stack
- * on any row (a negative layer pulls it below 0) or the lowest line value;
- * 0 when nothing is negative.
+ * The lowest point the stack (a negative layer or margin pulls it below 0)
+ * or a line reaches; 0 when nothing is negative.
  */
 export function chartBottom(
   rows: readonly StackedAreaChartDatum[],
@@ -238,17 +238,33 @@ export function chartBottom(
 ): number {
   let bottom = 0;
   for (const row of rows) {
-    let running = 0;
-    for (const key of layerKeys) {
-      running += num(row[key]) ?? 0;
-      bottom = Math.min(bottom, running);
-    }
+    bottom = Math.min(bottom, stackExtent(row, layerKeys)[0]);
     for (const key of lineKeys) bottom = Math.min(bottom, num(row[key]) ?? 0);
   }
   return bottom;
 }
 
-/** The highest stacked total (layers plus margin) or line value on any row. */
+/**
+ * The lowest and highest running totals up a row's stack (layers, then the
+ * margin): recharts draws each layer from the total below it, so a negative
+ * layer above a positive one leaves the peak below the final total.
+ */
+function stackExtent(
+  row: StackedAreaChartDatum,
+  layerKeys: readonly string[],
+): [number, number] {
+  let running = 0;
+  let low = 0;
+  let high = 0;
+  for (const key of [...layerKeys, MARGIN_KEY]) {
+    running += num(row[key]) ?? 0;
+    low = Math.min(low, running);
+    high = Math.max(high, running);
+  }
+  return [low, high];
+}
+
+/** The highest point the stack (layers plus margin) or a line reaches. */
 export function chartTop(
   rows: readonly StackedAreaChartDatum[],
   layerKeys: readonly string[],
@@ -256,10 +272,7 @@ export function chartTop(
 ): number {
   let top = 0;
   for (const row of rows) {
-    top = Math.max(
-      top,
-      layersTotal(row, layerKeys) + (num(row[MARGIN_KEY]) ?? 0),
-    );
+    top = Math.max(top, stackExtent(row, layerKeys)[1]);
     for (const key of lineKeys) top = Math.max(top, num(row[key]) ?? 0);
   }
   return top;
