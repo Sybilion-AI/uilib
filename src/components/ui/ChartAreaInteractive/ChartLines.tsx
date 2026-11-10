@@ -272,14 +272,19 @@ export const ChartLines = memo(
             dataKey={dataKey}
             stroke={color}
             strokeWidth={1}
-            dot={props =>
-              renderDot(
-                props,
-                lastHistoryIndices[dataKey] ?? -1,
-                dataKey,
-                color,
-                connected,
-              )
+            // A connected line with no end dot draws none: skip the
+            // per-point call.
+            dot={
+              !connected || showEndDots
+                ? props =>
+                    renderDot(
+                      props,
+                      lastHistoryIndices[dataKey] ?? -1,
+                      dataKey,
+                      color,
+                      connected,
+                    )
+                : false
             }
             activeDot={{ ...activeDotHistorical, fill: color }}
             name={name}
@@ -315,14 +320,17 @@ export const ChartLines = memo(
             stroke={color}
             strokeWidth={1}
             strokeDasharray={forecastLineStyle === 'dashed' ? '4 2' : '0'}
-            dot={props =>
-              renderDot(
-                props,
-                lastForecastIndices[id] ?? -1,
-                dataKey,
-                color,
-                connected,
-              )
+            dot={
+              !connected || showEndDots
+                ? props =>
+                    renderDot(
+                      props,
+                      lastForecastIndices[id] ?? -1,
+                      dataKey,
+                      color,
+                      connected,
+                    )
+                : false
             }
             activeDot={activeDotForecast(color)}
             name={`${name || `${id}`}`}

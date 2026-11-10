@@ -44,6 +44,7 @@ import { ChartTooltipContent } from './ChartTooltipContent';
 import { CustomChartLegend } from './CustomChartLegend/CustomChartLegend';
 import { LegendSvg } from './LegendSvg/LegendSvg';
 import { QuantileBands } from './QuantileBands';
+import { SeriesLegend, type SeriesLegendItem } from './SeriesLegend';
 
 function clampTooltipTranslate(args: {
   coordinate: { x: number; y: number };
@@ -186,7 +187,15 @@ export interface BaseChartWrapperProps {
   onFailedAnalysisClick?: (analysisId?: number | string) => void;
   maxVisibleItems?: number;
   preventDeselection?: boolean;
-  legendVariant?: 'default' | 'svg';
+  /**
+   * `default`: the analyses legend (forecast icons, +N overflow, latest
+   * first). `svg`: drawn into the chart for export. `plain`: one entry per
+   * line, in `legendOrder` (else histories then forecasts), each a button
+   * that hides or shows it through `onLegendClick`.
+   */
+  legendVariant?: 'default' | 'svg' | 'plain';
+  /** With `legendVariant="plain"`: the lines' data keys in legend order. */
+  legendOrder?: string[];
   legendWidth?: number;
   legendMarginLeft?: number;
   containerProps?: Omit<
@@ -282,7 +291,7 @@ const BaseChartWrapperContent = forwardRef<
     connectForecastNulls,
     historyOnTop,
     showEndDots,
-    formatDate: formatDateFn = formatDate,
+    formatDate: formatDateProp,
     labelFormatter,
     onLegendClick,
     margin,
@@ -320,9 +329,13 @@ const BaseChartWrapperContent = forwardRef<
     maxVisibleItems,
     preventDeselection,
     legendVariant = 'default',
+    legendOrder,
     legendWidth = 1000,
     legendMarginLeft = 0,
   } = props;
+  // A number axis has no dates to format: its default prints the number.
+  const formatDateFn =
+    formatDateProp ?? (xAxisType === 'number' ? String : formatDate);
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const lineDataInitializedRef = useRef(false);
@@ -569,6 +582,37 @@ const BaseChartWrapperContent = forwardRef<
       }));
   }, [forecastData, excludeLegendIds, showLegend]);
 
+  // The plain legend: every line in `legendOrder` (else histories, then
+  // forecasts), forecasts drawn dashed when their lines are.
+  const plainLegend = useMemo((): SeriesLegendItem[] => {
+    if (!showLegend || legendVariant !== 'plain') return [];
+    const all: SeriesLegendItem[] = [
+      ...(historyLegend ?? []).map(h => ({
+        dataKey: h.dataKey,
+        label: h.value,
+        color: h.color,
+      })),
+      ...legendPayload.map(p => ({
+        dataKey: p.dataKey,
+        label: p.value,
+        color: p.color,
+        dashed: forecastLineStyle === 'dashed',
+      })),
+    ];
+    if (!legendOrder) return all;
+    const rank = new Map(legendOrder.map((key, i) => [key, i]));
+    const at = (item: SeriesLegendItem) =>
+      rank.get(item.dataKey) ?? Number.MAX_SAFE_INTEGER;
+    return [...all].sort((a, b) => at(a) - at(b));
+  }, [
+    showLegend,
+    legendVariant,
+    historyLegend,
+    legendPayload,
+    forecastLineStyle,
+    legendOrder,
+  ]);
+
   useEffect(() => {
     if (disableAnimation) {
       setShouldAnimate(false);
@@ -787,7 +831,7 @@ const BaseChartWrapperContent = forwardRef<
             <QuantileBands
               hiddenBands={hiddenSeries}
               quantileBandKey={quantileBandKey}
-              animate
+              animate={!disableAnimation}
               animationDuration={150}
               animationBegin={0}
               customBands={quantileBands}
@@ -831,7 +875,27 @@ const BaseChartWrapperContent = forwardRef<
 
       <div className={cn(S.footer, footerClassName)}>
         {showLegend &&
-          (legendVariant === 'svg' ? (
+          (legendVariant === 'plain' ? (
+            <SeriesLegend
+              className={legendClassName}
+              items={plainLegend}
+              hiddenSeries={hiddenSeries}
+              onToggle={
+                onLegendClick
+                  ? dataKey => {
+                      const index = plainLegend.findIndex(
+                        item => item.dataKey === dataKey,
+                      );
+                      onLegendClick(
+                        { dataKey, value: plainLegend[index]?.label } as never,
+                        index,
+                        {},
+                      );
+                    }
+                  : undefined
+              }
+            />
+          ) : legendVariant === 'svg' ? (
             <LegendSvg
               payload={[
                 ...(historyLegend ?? []).map(p => ({ ...p, solid: true })),

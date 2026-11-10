@@ -214,3 +214,76 @@ describe('BaseChartWrapper x axis', () => {
     );
   });
 });
+
+describe('BaseChartWrapper plain legend', () => {
+  const ROWS = [
+    { date: '2024-01-01', historical_a: 1, forecast_1: 2, forecast_2: 3 },
+    { date: '2024-02-01', historical_a: 2, forecast_1: 3, forecast_2: 4 },
+  ];
+  const props = {
+    chartData: ROWS,
+    historyData: [{ id: 'a', name: 'Actual', color: '#000' }],
+    forecastData: [
+      { id: 1, name: 'Scenario A', color: '#111' },
+      { id: 2, name: 'Manually adjusted outlook', color: '#222' },
+    ],
+    legendVariant: 'plain' as const,
+  };
+
+  it('names every line in the given order', () => {
+    lineChart({
+      ...props,
+      legendOrder: ['forecast_1', 'historical_a', 'forecast_2'],
+      onLegendClick: () => {},
+    });
+    expect(screen.getAllByRole('button').map(b => b.textContent)).toEqual([
+      'Scenario A',
+      'Actual',
+      'Manually adjusted outlook',
+    ]);
+  });
+
+  it('hands back a history line too', () => {
+    const onLegendClick = jest.fn();
+    lineChart({ ...props, onLegendClick });
+    fireEvent.click(screen.getByRole('button', { name: 'Actual' }));
+    expect(onLegendClick.mock.calls[0][0]).toMatchObject({
+      dataKey: 'historical_a',
+    });
+  });
+
+  it('adds no history entry to a chart of forecasts only', () => {
+    lineChart({ ...props, historyData: [], onLegendClick: () => {} });
+    expect(screen.getAllByRole('button').map(b => b.textContent)).toEqual([
+      'Scenario A',
+      'Manually adjusted outlook',
+    ]);
+  });
+
+  it('dims a hidden line', () => {
+    lineChart({
+      ...props,
+      hiddenSeries: new Set(['forecast_1']),
+      onLegendClick: () => {},
+    });
+    expect(screen.getByRole('button', { name: 'Scenario A' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
+  });
+});
+
+describe('BaseChartWrapper number axis', () => {
+  it('prints the numbers without a formatDate', () => {
+    lineChart({
+      chartData: [
+        { date: '0', historical_a: 1 },
+        { date: '10', historical_a: 3 },
+      ],
+      historyData: [{ id: 'a', name: 'A' }],
+      xAxisType: 'number',
+    });
+    expect(screen.getAllByText('10').length).toBeGreaterThan(0);
+    expect(screen.queryByText(/1970/)).toBeNull();
+  });
+});
