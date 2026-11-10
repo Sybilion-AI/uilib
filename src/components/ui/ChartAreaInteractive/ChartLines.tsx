@@ -214,9 +214,24 @@ export const ChartLines = memo(
       return indices;
     }, [chartData, forecastData]);
 
+    // How many values each line has, for `dotLonePoints` on a line drawn
+    // across gaps: such a line leaves a point alone only when it is its only
+    // value.
+    const valueCounts = useMemo(() => {
+      if (!dotLonePoints) return undefined;
+      const counts: Record<string, number> = {};
+      for (const row of chartData) {
+        for (const [key, value] of Object.entries(row)) {
+          if (typeof value === 'number') counts[key] = (counts[key] ?? 0) + 1;
+        }
+      }
+      return counts;
+    }, [chartData, dotLonePoints]);
+
     // A dot on the line's last point (with `showEndDots`), and (with
-    // `dotLonePoints`) on any point a line not drawn across gaps leaves alone
-    // (no value in the rows on either side), which would otherwise not show.
+    // `dotLonePoints`) on any point the line leaves alone, which would
+    // otherwise not show: no value in the rows on either side, or, for a line
+    // drawn across gaps, no other value at all.
     const renderDot = (
       props: any,
       lastIndex: number,
@@ -236,9 +251,10 @@ export const ChartLines = memo(
       const isEnd = showEndDots && lastIndex >= 0 && i === lastIndex;
       const isAlone =
         dotLonePoints &&
-        !connected &&
-        chartData[i - 1]?.[dataKey] == null &&
-        chartData[i + 1]?.[dataKey] == null;
+        (connected
+          ? valueCounts?.[dataKey] === 1
+          : chartData[i - 1]?.[dataKey] == null &&
+            chartData[i + 1]?.[dataKey] == null);
       if (isEnd || isAlone) {
         return (
           <circle
@@ -278,7 +294,7 @@ export const ChartLines = memo(
             strokeWidth={1}
             // A line with no dot to draw skips the per-point call.
             dot={
-              showEndDots || (dotLonePoints && !connected)
+              showEndDots || dotLonePoints
                 ? props =>
                     renderDot(
                       props,
@@ -324,7 +340,7 @@ export const ChartLines = memo(
             strokeWidth={1}
             strokeDasharray={forecastLineStyle === 'dashed' ? '4 2' : '0'}
             dot={
-              showEndDots || (dotLonePoints && !connected)
+              showEndDots || dotLonePoints
                 ? props =>
                     renderDot(
                       props,

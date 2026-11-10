@@ -148,8 +148,9 @@ export interface BaseChartWrapperProps {
   /** Mark each line's last point with a dot (default: on). */
   showEndDots?: boolean;
   /**
-   * Dot a point that a line not drawn across gaps leaves alone (no value on
-   * either side), so it still shows (default: off).
+   * Dot a point a line would leave invisible, so it still shows: with no
+   * value on either side on a line not drawn across gaps, or a line's only
+   * value on one drawn across them (default: off).
    */
   dotLonePoints?: boolean;
   formatDate?: (value: string, detailed?: boolean) => string;

@@ -84,9 +84,12 @@ export function ChartTooltipContent({
     const [item] = payloadArray;
     const key = `${labelKey || item.dataKey || item.name || 'value'}`;
     const itemConfig = getPayloadConfigFromPayload(config, item, key);
+    // A number x (a number axis) is the label as much as a text one is.
     const value =
-      !labelKey && typeof displayLabel === 'string'
-        ? config[displayLabel as keyof typeof config]?.label || displayLabel
+      !labelKey &&
+      (typeof displayLabel === 'string' || typeof displayLabel === 'number')
+        ? config[String(displayLabel) as keyof typeof config]?.label ||
+          displayLabel
         : itemConfig?.label;
 
     if (labelFormatter) {

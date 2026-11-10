@@ -70,15 +70,14 @@ const BarChart = forwardRef<HTMLDivElement, BarChartProps>(
     const config = useMemo(() => buildChartConfig(series), [series]);
     const legend = useLegendState();
     const hidden: ReadonlySet<string> = hiddenKeys ?? legend.hiddenSeries;
-    // With hiddenKeys and no onToggleKey nothing can change visibility, so
-    // the legend entries are not buttons.
-    const toggle =
-      hiddenKeys && !onToggleKey
-        ? undefined
-        : (key: string) => {
-            onToggleKey?.(key);
-            if (!hiddenKeys) legend.toggleSeries(key);
-          };
+    // The legend entries are buttons only for a host that asked for toggling
+    // (onToggleKey); without hiddenKeys the chart keeps the hidden set itself.
+    const toggle = onToggleKey
+      ? (key: string) => {
+          onToggleKey(key);
+          if (!hiddenKeys) legend.toggleSeries(key);
+        }
+      : undefined;
 
     const isHorizontal = orientation === 'horizontal';
     const stackId = mode === 'stacked' ? STACK_ID : undefined;

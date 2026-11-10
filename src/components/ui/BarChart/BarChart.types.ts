@@ -42,11 +42,14 @@ export interface BarChartProps extends Omit<
   /** Title of the value axis. */
   valueAxisLabel?: string;
   /**
-   * Keys of hidden series. With it, the host owns visibility; without it a
-   * legend click hides and shows a series by itself.
+   * Keys of hidden series. With it, the host owns visibility; without it
+   * (and with onToggleKey) the chart keeps the hidden set itself.
    */
   hiddenKeys?: ReadonlySet<string>;
-  /** Called with a series key when its legend entry is clicked. */
+  /**
+   * Called with a series key when its legend entry is clicked. Without it the
+   * legend is plain text.
+   */
   onToggleKey?: (key: string) => void;
   /** Fixed chart height in px; defaults to a 16:9 responsive box. */
   height?: number;

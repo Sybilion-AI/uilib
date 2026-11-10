@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react';
 
 import { BarChart } from '#uilib/components/ui/BarChart';
+import { ChartContext } from '#uilib/components/ui/Chart/Chart.context';
 import { BaseChartWrapper } from '#uilib/components/ui/Chart/components/BaseChartWrapper';
+import { ChartTooltipContent } from '#uilib/components/ui/Chart/components/ChartTooltipContent';
 import { StackedAreaChart } from '#uilib/components/ui/StackedAreaChart';
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
@@ -71,9 +73,20 @@ describe('BarChart', () => {
     expect(screen.getByText('Supplier A')).toBeInTheDocument();
   });
 
-  it('hides a series from its legend entry by itself', () => {
+  it('keeps a plain legend by default', () => {
+    render(<BarChart data={BARS} categoryKey="supplier" series={BAR_SERIES} />);
+    expect(screen.queryByRole('button')).toBeNull();
+    expect(screen.getByText('Quote 1')).toBeInTheDocument();
+  });
+
+  it('hides a series from its legend entry by itself when asked', () => {
     const { container } = render(
-      <BarChart data={BARS} categoryKey="supplier" series={BAR_SERIES} />,
+      <BarChart
+        data={BARS}
+        categoryKey="supplier"
+        series={BAR_SERIES}
+        onToggleKey={() => {}}
+      />,
     );
     expect(container.querySelectorAll('.recharts-bar').length).toBe(2);
     const entry = screen.getByRole('button', { name: 'Quote 1' });
@@ -100,7 +113,7 @@ describe('BarChart', () => {
     expect(entry).toHaveAttribute('aria-pressed', 'false');
   });
 
-  it('shows plain legend entries when the host fixes visibility', () => {
+  it('shows plain legend entries when nothing toggles', () => {
     render(
       <BarChart
         data={BARS}
@@ -177,6 +190,23 @@ describe('BaseChartWrapper lines with gaps', () => {
       dotLonePoints: true,
     });
     expect(container.querySelectorAll('circle[r="3"]').length).toBe(0);
+  });
+
+  it('dots the only value of a line drawn across gaps, when asked', () => {
+    const { container } = lineChart({
+      chartData: [
+        { date: '2024-01-01', historical_a: 1 },
+        { date: '2024-02-01', historical_a: 2 },
+        { date: '2024-03-01', forecast_1: 3 },
+      ],
+      historyData: [{ id: 'a', name: 'A', color: '#000' }],
+      forecastData: [{ id: 1, name: 'F', color: '#111' }],
+      connectHistoryNulls: true,
+      connectForecastNulls: true,
+      dotLonePoints: true,
+    });
+    // The forecast's one point; the history line draws as a line.
+    expect(container.querySelectorAll('circle[r="3"]').length).toBe(1);
   });
 });
 
@@ -301,5 +331,23 @@ describe('BaseChartWrapper number axis', () => {
     });
     expect(screen.getAllByText('10').length).toBeGreaterThan(0);
     expect(screen.queryByText(/1970/)).toBeNull();
+  });
+});
+
+describe('ChartTooltipContent number label', () => {
+  it('hands a number x to the label formatter', () => {
+    render(
+      <ChartContext.Provider value={{ config: {} }}>
+        <ChartTooltipContent
+          active
+          label={50}
+          labelFormatter={v => `Tier ${String(v)}`}
+          payload={[
+            { dataKey: 'historical_a', name: 'A', value: 3, color: '#000', payload: {} },
+          ] as never}
+        />
+      </ChartContext.Provider>,
+    );
+    expect(screen.getByText('Tier 50')).toBeInTheDocument();
   });
 });

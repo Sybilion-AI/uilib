@@ -16,4 +16,4 @@ BarChart compares values across categories. Provide rows of data, a category key
 - Start the value axis at zero so bar lengths stay proportional.
 - Pass `valueFormatter` for the axis and `tooltipValueFormatter` for the tooltip (for example with a unit; without it the tooltip prints the raw value); `categoryTickFormatter` and `tooltipLabelFormatter` format the categories (dates, for instance).
 - Name the axes with `categoryAxisLabel` and `valueAxisLabel`.
-- A legend click hides or shows a series. Pass `hiddenKeys` and `onToggleKey` when the host must remember which are hidden; `hiddenKeys` alone makes the legend plain text.
+- The legend sits under the chart box (it adds its own height to `height`). It is plain text unless `onToggleKey` is passed; then a click hides or shows a series. Pass `hiddenKeys` too when the host must remember which are hidden.
