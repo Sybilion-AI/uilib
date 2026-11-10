@@ -29,8 +29,25 @@ export interface BarChartProps extends Omit<
   showLegend?: boolean;
   showTooltip?: boolean;
   showGrid?: boolean;
-  /** Formats numeric axis tick values. */
+  /** Formats numeric axis tick values (and the tooltip's, without `tooltipValueFormatter`). */
   valueFormatter?: (value: number) => string;
+  /** Formats the tooltip's values (for example with a unit). Defaults to `valueFormatter`. */
+  tooltipValueFormatter?: (value: number) => string;
+  /** Formats the category axis's ticks. */
+  categoryTickFormatter?: (value: string | number) => string;
+  /** Formats the tooltip's category label. */
+  tooltipLabelFormatter?: (value: string | number) => string;
+  /** Title of the category axis. */
+  categoryAxisLabel?: string;
+  /** Title of the value axis. */
+  valueAxisLabel?: string;
+  /**
+   * Keys of hidden series. With it, the host owns visibility; without it a
+   * legend click hides and shows a series by itself.
+   */
+  hiddenKeys?: ReadonlySet<string>;
+  /** Called with a series key when its legend entry is clicked. */
+  onToggleKey?: (key: string) => void;
   /** Fixed chart height in px; defaults to a 16:9 responsive box. */
   height?: number;
 }

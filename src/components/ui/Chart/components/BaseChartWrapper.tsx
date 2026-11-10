@@ -169,6 +169,13 @@ export interface BaseChartWrapperProps {
   showChartAxesLegend?: boolean;
   xAxisLabel?: string;
   yAxisLabel?: string;
+  /**
+   * `category` (default) gives every row one slot; `number` places the rows
+   * by their `date` read as a number (`'12.5'`), spaced by value.
+   */
+  xAxisType?: 'category' | 'number';
+  /** The x values to label (for example the first day of each month). */
+  xTicks?: ReadonlyArray<string | number>;
   showActiveDots?: boolean;
   overlayElements?: ReactNode;
   hiddenSeries?: Set<string>;
@@ -289,6 +296,8 @@ const BaseChartWrapperContent = forwardRef<
     showChartAxesLegend = true,
     xAxisLabel,
     yAxisLabel,
+    xAxisType,
+    xTicks,
     showActiveDots = true,
     overlayElements,
     hiddenSeries,
@@ -721,6 +730,8 @@ const BaseChartWrapperContent = forwardRef<
       yAxisClassName={yAxisClassName}
       xAxisLabel={xAxisLabel}
       yAxisLabel={yAxisLabel}
+      xAxisType={xAxisType}
+      xTicks={xTicks}
       xMin={xMin}
       xMax={xMax}
       yMin={yMin}

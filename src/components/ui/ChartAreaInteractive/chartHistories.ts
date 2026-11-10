@@ -23,6 +23,11 @@ export type HistoryItemData = {
    * colour to both.
    */
   color?: string;
+  /**
+   * Draw this line across rows it has no value for. Without it the chart's
+   * `connectHistoryNulls` decides.
+   */
+  connectNulls?: boolean;
 };
 
 /** Data key of one history line in `chartData` rows. */

@@ -1,16 +1,20 @@
 import cn from 'classnames';
 import { ReactNode, forwardRef, useMemo } from 'react';
 
-import type { ChartConfig } from '#uilib/components/ui/Chart';
-import { ChartContainer, ChartTooltip } from '#uilib/components/ui/Chart';
 import ChartS from '#uilib/components/ui/Chart/Chart.styl';
+import type { ChartConfig } from '#uilib/components/ui/Chart/Chart.types';
 import { getChartSeriesColor } from '#uilib/components/ui/Chart/chartSeriesPalette';
+// Straight from the components, not the Chart index, which also loads the
+// canvas chart (lightweight-charts) and its styles.
+import { ChartContainer } from '#uilib/components/ui/Chart/components/ChartContainer';
+import { ChartPlacedTooltip as ChartTooltip } from '#uilib/components/ui/Chart/components/ChartPlacedTooltip';
 import { useLegendState } from '#uilib/components/ui/Chart/hooks/useLegendState';
 import {
   Area,
   Bar,
   CartesianGrid,
   ComposedChart,
+  Label,
   Line,
   ReferenceArea,
   XAxis,
@@ -59,6 +63,8 @@ const splitKeys = (joined: string) => joined.split(KEY_SEP).slice(1);
 const ZONE_Z_INDEX = 50;
 
 const AXIS_LINE = { stroke: 'var(--border)', strokeWidth: 1 };
+/** Room for an x-axis title under the ticks (recharts' default is 30). */
+const X_AXIS_HEIGHT_WITH_LABEL = 44;
 
 const layerColor = (layer: StackedAreaChartLayer, index: number) =>
   layer.color ?? getChartSeriesColor(index);
@@ -118,8 +124,11 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
       showTooltip = true,
       showGrid = true,
       valueFormatter,
+      tooltipValueFormatter = valueFormatter,
       xTickFormatter,
       tooltipLabelFormatter,
+      xAxisLabel,
+      yAxisLabel,
       height,
       ...props
     },
@@ -240,7 +249,12 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
               minTickGap={ticks ? 8 : 24}
               tickLine={false}
               axisLine={AXIS_LINE}
-            />
+              height={xAxisLabel ? X_AXIS_HEIGHT_WITH_LABEL : undefined}
+            >
+              {xAxisLabel && (
+                <Label value={xAxisLabel} position="insideBottom" offset={0} />
+              )}
+            </XAxis>
             <YAxis
               // Our own steps: automatic rounding can double the axis when the
               // margin nudges the top past a round number.
@@ -251,7 +265,11 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
               width={56}
               tickLine={false}
               axisLine={AXIS_LINE}
-            />
+            >
+              {yAxisLabel && (
+                <Label value={yAxisLabel} angle={-90} position="insideLeft" />
+              )}
+            </YAxis>
             {showTooltip && (
               <ChartTooltip
                 content={tooltip => (
@@ -260,7 +278,7 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
                     payload={tooltip.payload as ReadonlyArray<TooltipRow>}
                     label={tooltip.label}
                     config={config}
-                    valueFormatter={valueFormatter}
+                    valueFormatter={tooltipValueFormatter}
                     labelFormatter={tooltipLabelFormatter}
                   />
                 )}

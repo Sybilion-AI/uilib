@@ -1,8 +1,8 @@
 import cn from 'classnames';
 import { CSSProperties } from 'react';
 
-import type { ChartConfig } from '#uilib/components/ui/Chart';
 import ChartS from '#uilib/components/ui/Chart/Chart.styl';
+import type { ChartConfig } from '#uilib/components/ui/Chart/Chart.types';
 
 export type TooltipRow = {
   dataKey?: unknown;
