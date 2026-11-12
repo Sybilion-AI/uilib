@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.4](https://github.com/Sybilion-AI/uilib/compare/v1.8.3...v1.8.4) (2026-11-12)
+
+
+### Features
+
+* **charts:** what the app's decision-view and chat charts need (ENG-1777) ([#21](https://github.com/Sybilion-AI/uilib/issues/21)) ([d6f35c6](https://github.com/Sybilion-AI/uilib/commit/d6f35c6677fedd50c943324e1e83a4ad8eed7dc4))
+
 ### [1.8.3](https://github.com/Sybilion-AI/uilib/compare/v1.8.2...v1.8.3) (2026-11-05)
 
 
