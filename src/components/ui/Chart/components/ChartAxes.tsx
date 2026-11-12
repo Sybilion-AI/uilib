@@ -8,6 +8,10 @@ import {
   generateRoundedYTicks,
 } from '../tools/formatters';
 
+/** Axis room for a title beside the ticks. */
+const X_AXIS_HEIGHT_WITH_LABEL = 44;
+const Y_AXIS_WIDTH_WITH_LABEL = 72;
+
 interface ChartAxesProps {
   xAxisClassName?: string;
   yAxisClassName?: string;
@@ -21,6 +25,13 @@ interface ChartAxesProps {
   yMax?: number;
   autoScaleYAxis?: boolean;
   /**
+   * `category` (default) gives every row one slot; `number` places the rows
+   * by their `date` read as a number, from the smallest to the largest.
+   */
+  xAxisType?: 'category' | 'number';
+  /** The x values to label; without it recharts picks them. */
+  xTicks?: ReadonlyArray<string | number>;
+  /**
    * Draw no axes. A hidden x-axis is kept, so the tooltip still names the
    * row's date. The y-axis keeps fixed `yMin`/`yMax` (with `autoScaleYAxis`
    * off) as its range, widened if the data goes past it; otherwise it is
@@ -28,6 +39,8 @@ interface ChartAxesProps {
    */
   hide?: boolean;
 }
+
+const numericDate = (row: { date?: unknown }) => Number(row.date);
 
 export function ChartAxes({
   xAxisClassName,
@@ -43,6 +56,8 @@ export function ChartAxes({
   yMin,
   yMax,
   autoScaleYAxis = false,
+  xAxisType = 'category',
+  xTicks,
   hide = false,
 }: ChartAxesProps) {
   const tickColor = 'var(--muted-foreground)';
@@ -96,19 +111,27 @@ export function ChartAxes({
     <>
       <XAxis
         className={xAxisClassName}
-        dataKey="date"
+        // A number axis reads the row's `date` as a number (rows keep it as
+        // text, like every other chart's).
+        dataKey={xAxisType === 'number' ? numericDate : 'date'}
+        type={xAxisType}
         hide={hide}
         tickLine={false}
         axisLine={false}
         tickMargin={8}
-        minTickGap={32}
+        minTickGap={xTicks ? 8 : 32}
         tick={{ fill: tickColor }}
         tickFormatter={value => formatDate(value as string)}
-        {...(xMin !== undefined &&
-          xMax !== undefined && { domain: [xMin, xMax] })}
+        // Room for the title under the ticks, as BarChart and
+        // StackedAreaChart keep.
+        {...(xAxisLabel && { height: X_AXIS_HEIGHT_WITH_LABEL })}
+        {...(xTicks && { ticks: [...xTicks] })}
+        {...(xMin !== undefined && xMax !== undefined
+          ? { domain: [xMin, xMax] }
+          : xAxisType === 'number' && { domain: ['dataMin', 'dataMax'] })}
       >
         {xAxisLabel && (
-          <Label value={xAxisLabel} position="insideBottom" offset={-5} />
+          <Label value={xAxisLabel} position="insideBottom" offset={0} />
         )}
       </XAxis>
       {hide && !autoScaleYAxis && yMin !== undefined && yMax !== undefined && (
@@ -123,6 +146,7 @@ export function ChartAxes({
           minTickGap={32}
           tick={{ fill: tickColor }}
           tickFormatter={formatNumber}
+          {...(yAxisLabel && { width: Y_AXIS_WIDTH_WITH_LABEL })}
           {...(yDomain && { domain: yDomain })}
           {...(yTicks && { ticks: yTicks })}
           allowDataOverflow={!autoScaleYAxis}

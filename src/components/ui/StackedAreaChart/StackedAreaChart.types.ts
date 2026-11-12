@@ -88,6 +88,15 @@ export interface StackedAreaChartProps extends Omit<
   showGrid?: boolean;
   /** Formats numeric y-axis ticks and tooltip values. */
   valueFormatter?: (value: number) => string;
+  /**
+   * Formats the tooltip's values (for example with a unit), when they should
+   * read differently from the axis. Defaults to `valueFormatter`.
+   */
+  tooltipValueFormatter?: (value: number) => string;
+  /** Title under the x axis. */
+  xAxisLabel?: string;
+  /** Title along the y axis. */
+  yAxisLabel?: string;
   /** Formats x-axis ticks (ignored for year ticks, which show the year). */
   xTickFormatter?: (value: string | number) => string;
   /** Formats the tooltip's x label. */

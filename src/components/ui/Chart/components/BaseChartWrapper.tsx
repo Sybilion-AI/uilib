@@ -18,6 +18,7 @@ import {
   resolveHistoryLines,
 } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
 import {
+  HISTORY_SERIES_KEY,
   HistoryItemData,
   historySeriesKeys,
   isHistorySeriesKey,
@@ -44,6 +45,7 @@ import { ChartTooltipContent } from './ChartTooltipContent';
 import { CustomChartLegend } from './CustomChartLegend/CustomChartLegend';
 import { LegendSvg } from './LegendSvg/LegendSvg';
 import { QuantileBands } from './QuantileBands';
+import { SeriesLegend, type SeriesLegendItem } from './SeriesLegend';
 
 function clampTooltipTranslate(args: {
   coordinate: { x: number; y: number };
@@ -146,6 +148,12 @@ export interface BaseChartWrapperProps {
   historyOnTop?: boolean;
   /** Mark each line's last point with a dot (default: on). */
   showEndDots?: boolean;
+  /**
+   * Dot a point a line would leave invisible, so it still shows: with no
+   * value on either side on a line not drawn across gaps, or a line's only
+   * value on one drawn across them (default: off).
+   */
+  dotLonePoints?: boolean;
   formatDate?: (value: string, detailed?: boolean) => string;
   labelFormatter?: (value: unknown) => string;
   onLegendClick?: (data: LegendPayload, index: number, event: any) => void;
@@ -169,6 +177,13 @@ export interface BaseChartWrapperProps {
   showChartAxesLegend?: boolean;
   xAxisLabel?: string;
   yAxisLabel?: string;
+  /**
+   * `category` (default) gives every row one slot; `number` places the rows
+   * by their `date` read as a number (`'12.5'`), spaced by value.
+   */
+  xAxisType?: 'category' | 'number';
+  /** The x values to label (for example the first day of each month). */
+  xTicks?: ReadonlyArray<string | number>;
   showActiveDots?: boolean;
   overlayElements?: ReactNode;
   hiddenSeries?: Set<string>;
@@ -179,7 +194,15 @@ export interface BaseChartWrapperProps {
   onFailedAnalysisClick?: (analysisId?: number | string) => void;
   maxVisibleItems?: number;
   preventDeselection?: boolean;
-  legendVariant?: 'default' | 'svg';
+  /**
+   * `default`: the analyses legend (forecast icons, +N overflow, latest
+   * first). `svg`: drawn into the chart for export. `plain`: one entry per
+   * line, in `legendOrder` (else histories then forecasts), each a button
+   * that hides or shows it through `onLegendClick`.
+   */
+  legendVariant?: 'default' | 'svg' | 'plain';
+  /** With `legendVariant="plain"`: the lines' data keys in legend order. */
+  legendOrder?: string[];
   legendWidth?: number;
   legendMarginLeft?: number;
   containerProps?: Omit<
@@ -275,7 +298,8 @@ const BaseChartWrapperContent = forwardRef<
     connectForecastNulls,
     historyOnTop,
     showEndDots,
-    formatDate: formatDateFn = formatDate,
+    dotLonePoints,
+    formatDate: formatDateProp,
     labelFormatter,
     onLegendClick,
     margin,
@@ -289,6 +313,8 @@ const BaseChartWrapperContent = forwardRef<
     showChartAxesLegend = true,
     xAxisLabel,
     yAxisLabel,
+    xAxisType,
+    xTicks,
     showActiveDots = true,
     overlayElements,
     hiddenSeries,
@@ -311,9 +337,13 @@ const BaseChartWrapperContent = forwardRef<
     maxVisibleItems,
     preventDeselection,
     legendVariant = 'default',
+    legendOrder,
     legendWidth = 1000,
     legendMarginLeft = 0,
   } = props;
+  // A number axis has no dates to format: its default prints the number.
+  const formatDateFn =
+    formatDateProp ?? (xAxisType === 'number' ? String : formatDate);
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const lineDataInitializedRef = useRef(false);
@@ -464,7 +494,17 @@ const BaseChartWrapperContent = forwardRef<
   const renderTooltipContent = (props: any) => {
     // Filter payload to exclude items with null/undefined values
     // This prevents showing stale data when hovering on dates without data points
-    const filteredPayload = normalizeTooltipPayload(props.payload);
+    const normalized = normalizeTooltipPayload(props.payload);
+    // With `legendOrder`, the rows read in the legend's order (recharts lists
+    // every history line before the forecasts).
+    const filteredPayload =
+      legendOrder && normalized
+        ? [...normalized].sort(
+            (a, b) =>
+              orderRank(legendOrder, a.dataKey) -
+              orderRank(legendOrder, b.dataKey),
+          )
+        : normalized;
 
     // If no valid payload items, render ChartTooltipContent with active=false and empty payload
     // This allows ChartTooltipContent to clear its lastTooltipData state
@@ -559,6 +599,55 @@ const BaseChartWrapperContent = forwardRef<
         updated_at: item.updated_at,
       }));
   }, [forecastData, excludeLegendIds, showLegend]);
+
+  // The plain legend: every line in `legendOrder` (else histories, then
+  // forecasts), forecasts drawn dashed when their lines are.
+  const plainLegend = useMemo((): SeriesLegendItem[] => {
+    if (!showLegend || legendVariant !== 'plain') return [];
+    // Without historyData the chart draws the single `historical` line;
+    // it is listed when it has a value to draw.
+    const singleHistory =
+      !historyData?.length &&
+      chartData.some(row => row[HISTORY_SERIES_KEY] != null)
+        ? [
+            {
+              dataKey: HISTORY_SERIES_KEY,
+              label: 'Historical Data',
+              color: historicalLineColor ?? (isDarkTheme ? '#ffffff' : '#000000'),
+            },
+          ]
+        : [];
+    const all: SeriesLegendItem[] = [
+      ...singleHistory,
+      ...(historyLegend ?? []).map(h => ({
+        dataKey: h.dataKey,
+        label: h.value,
+        color: h.color,
+      })),
+      ...legendPayload.map(p => ({
+        dataKey: p.dataKey,
+        label: p.value,
+        color: p.color,
+        dashed: forecastLineStyle === 'dashed',
+      })),
+    ];
+    if (!legendOrder) return all;
+    return [...all].sort(
+      (a, b) =>
+        orderRank(legendOrder, a.dataKey) - orderRank(legendOrder, b.dataKey),
+    );
+  }, [
+    showLegend,
+    legendVariant,
+    historyData,
+    chartData,
+    historicalLineColor,
+    isDarkTheme,
+    historyLegend,
+    legendPayload,
+    forecastLineStyle,
+    legendOrder,
+  ]);
 
   useEffect(() => {
     if (disableAnimation) {
@@ -721,6 +810,8 @@ const BaseChartWrapperContent = forwardRef<
       yAxisClassName={yAxisClassName}
       xAxisLabel={xAxisLabel}
       yAxisLabel={yAxisLabel}
+      xAxisType={xAxisType}
+      xTicks={xTicks}
       xMin={xMin}
       xMax={xMax}
       yMin={yMin}
@@ -776,7 +867,7 @@ const BaseChartWrapperContent = forwardRef<
             <QuantileBands
               hiddenBands={hiddenSeries}
               quantileBandKey={quantileBandKey}
-              animate
+              animate={!disableAnimation}
               animationDuration={150}
               animationBegin={0}
               customBands={quantileBands}
@@ -800,6 +891,7 @@ const BaseChartWrapperContent = forwardRef<
             connectForecastNulls={connectForecastNulls}
             historyOnTop={historyOnTop}
             showEndDots={showEndDots}
+            dotLonePoints={dotLonePoints}
           />
 
           {showTooltip && (
@@ -820,7 +912,27 @@ const BaseChartWrapperContent = forwardRef<
 
       <div className={cn(S.footer, footerClassName)}>
         {showLegend &&
-          (legendVariant === 'svg' ? (
+          (legendVariant === 'plain' ? (
+            <SeriesLegend
+              className={cn(S.plainLegend, legendClassName)}
+              items={plainLegend}
+              hiddenSeries={hiddenSeries}
+              onToggle={
+                onLegendClick
+                  ? dataKey => {
+                      const index = plainLegend.findIndex(
+                        item => item.dataKey === dataKey,
+                      );
+                      onLegendClick(
+                        { dataKey, value: plainLegend[index]?.label } as never,
+                        index,
+                        {},
+                      );
+                    }
+                  : undefined
+              }
+            />
+          ) : legendVariant === 'svg' ? (
             <LegendSvg
               payload={[
                 ...(historyLegend ?? []).map(p => ({ ...p, solid: true })),
@@ -863,6 +975,13 @@ BaseChartWrapperContent.displayName = 'BaseChartWrapperContent';
  * Base chart wrapper component with common structure
  * Handles container, grid, axes, tooltip, and legend
  */
+
+/** A key's place in `order`; keys not in it go last, in their own order. */
+function orderRank(order: readonly string[], key: unknown): number {
+  const i = typeof key === 'string' ? order.indexOf(key) : -1;
+  return i === -1 ? order.length : i;
+}
+
 export function BaseChartWrapper(props: BaseChartWrapperProps) {
   const { renderId, chartData, loading, hasCombinedData, legendVariant } =
     props;

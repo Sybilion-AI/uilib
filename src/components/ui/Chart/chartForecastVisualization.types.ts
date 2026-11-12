@@ -97,6 +97,11 @@ export interface QuantileBandConfig {
     | 'natural';
   fillPattern?: 'solid' | 'dots' | 'lines';
   /**
+   * List the range in the tooltip (default true). Read by the Recharts charts'
+   * bands (BaseChartWrapper, ChartAreaInteractive's default mode).
+   */
+  showInTooltip?: boolean;
+  /**
    * Fill across months with no range (default true). Read by the Recharts
    * charts' bands (BaseChartWrapper, ChartAreaInteractive's default mode),
    * not by LightweightForecastChart or the intervals and thresholds overlays,

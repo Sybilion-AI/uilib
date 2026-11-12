@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { StackedAreaChart } from '#uilib/components/ui/StackedAreaChart';
 import {
   MARGIN_KEY,
+  chartBottom,
   chartTop,
   compareRowZones,
   compareZones,
@@ -298,6 +299,30 @@ describe('valueAxis', () => {
     expect(valueAxis(0).max).toBe(1);
     expect(valueAxis(Number.NaN).max).toBe(1);
   });
+
+  it('starts below 0 at a round step when something is negative', () => {
+    expect(valueAxis(80, 5, 0.05, -30)).toEqual({
+      min: -50,
+      max: 100,
+      ticks: [-50, -25, 0, 25, 50, 75, 100],
+    });
+    // A small negative value costs one step, not half the plot.
+    expect(valueAxis(1000, 5, 0.05, -5).ticks).toEqual([
+      -250, 0, 250, 500, 750, 1000, 1250,
+    ]);
+    expect(valueAxis(0, 5, 0.05, -3).min).toBeLessThanOrEqual(-3.15);
+  });
+});
+
+describe('chartBottom', () => {
+  it('finds the lowest running total and line value', () => {
+    const rows = [
+      { x: 'a', fixed: 10, rebate: -25, paid: 4 },
+      { x: 'b', fixed: 10, rebate: -5, paid: -8 },
+    ];
+    expect(chartBottom(rows, ['fixed', 'rebate'], ['paid'])).toBe(-15);
+    expect(chartBottom([{ x: 'a', fixed: 3 }], ['fixed'], [])).toBe(0);
+  });
 });
 
 describe('chartTop', () => {
@@ -305,6 +330,12 @@ describe('chartTop', () => {
     const rows = stackRows(ROWS, KEYS, 50);
     expect(chartTop(rows, KEYS, [])).toBeCloseTo(6);
     expect(chartTop(rows, ['energy'], ['paid'])).toBe(5);
+  });
+
+  it('reaches the peak under a negative layer stacked on top', () => {
+    const rows = [{ x: 'a', cost: 100, rebate: -30 }];
+    expect(chartTop(rows, ['cost', 'rebate'], [])).toBe(100);
+    expect(chartBottom(rows, ['cost', 'rebate'], [])).toBe(0);
   });
 });
 

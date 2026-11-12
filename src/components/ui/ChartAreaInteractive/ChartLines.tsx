@@ -30,6 +30,11 @@ export type ForecastItemData = {
    * histories, a forecast joins one only when this names it.
    */
   continues?: string | number;
+  /**
+   * Draw this line across rows it has no value for. Without it the chart's
+   * `connectForecastNulls` decides.
+   */
+  connectNulls?: boolean;
 };
 
 export type Dot = {
@@ -63,7 +68,13 @@ export const getForecastQuantileBandColor = (index: number) =>
   ];
 
 /** A history line as drawn: data key, label and colour with defaults applied. */
-export type HistoryLine = { dataKey: string; name: string; color: string };
+export type HistoryLine = {
+  dataKey: string;
+  name: string;
+  color: string;
+  /** The line's own `connectNulls`, when it sets one. */
+  connectNulls?: boolean;
+};
 
 /** Default colour of the history at `index`: the forecast palette from its far end. */
 export function getHistoryColor(index: number): string {
@@ -79,6 +90,7 @@ export function resolveHistoryLines(
     dataKey: historySeriesKey(h.id),
     name: h.name || String(h.id),
     color: h.color ?? getHistoryColor(index),
+    connectNulls: h.connectNulls,
   }));
 }
 
@@ -110,6 +122,7 @@ export const ChartLines = memo(
     connectForecastNulls = false,
     historyOnTop = false,
     showEndDots = true,
+    dotLonePoints = false,
   }: {
     chartData: ChartDataPoint[];
     forecastData?: ForecastItemData[];
@@ -134,6 +147,8 @@ export const ChartLines = memo(
     historyOnTop?: boolean;
     /** Mark each line's last point with a dot (default: on). */
     showEndDots?: boolean;
+    /** Dot a point a gapped line leaves alone (default: off). */
+    dotLonePoints?: boolean;
   }) => {
     const dotStroke = isDarkTheme ? '#000000' : '#FFFFFF';
 
@@ -199,30 +214,60 @@ export const ChartLines = memo(
       return indices;
     }, [chartData, forecastData]);
 
-    // Helper to render dot at last data point
+    // How many values each line has, for `dotLonePoints` on a line drawn
+    // across gaps: such a line leaves a point alone only when it is its only
+    // value.
+    const valueCounts = useMemo(() => {
+      if (!dotLonePoints) return undefined;
+      const counts: Record<string, number> = {};
+      for (const row of chartData) {
+        for (const [key, value] of Object.entries(row)) {
+          if (typeof value === 'number') counts[key] = (counts[key] ?? 0) + 1;
+        }
+      }
+      return counts;
+    }, [chartData, dotLonePoints]);
+
+    // A dot on the line's last point (with `showEndDots`), and (with
+    // `dotLonePoints`) on any point the line leaves alone, which would
+    // otherwise not show: no value in the rows on either side, or, for a line
+    // drawn across gaps, no other value at all.
     const renderDot = (
       props: any,
       lastIndex: number,
       dataKey: string,
       color: string,
+      connected: boolean,
     ) => {
+      const i = props.index;
       if (
-        lastIndex >= 0 &&
-        props.index === lastIndex &&
-        chartData[props.index]?.[dataKey] != null &&
-        props.cy != null &&
-        props.cx != null
+        typeof i !== 'number' ||
+        chartData[i]?.[dataKey] == null ||
+        props.cy == null ||
+        props.cx == null
       ) {
-        return <circle cx={props.cx} cy={props.cy} r={3} fill={color} />;
+        return null;
+      }
+      const isEnd = showEndDots && lastIndex >= 0 && i === lastIndex;
+      const isAlone =
+        dotLonePoints &&
+        (connected
+          ? valueCounts?.[dataKey] === 1
+          : chartData[i - 1]?.[dataKey] == null &&
+            chartData[i + 1]?.[dataKey] == null);
+      if (isEnd || isAlone) {
+        return (
+          <circle
+            key={`dot-${dataKey}-${i}`}
+            cx={props.cx}
+            cy={props.cy}
+            r={3}
+            fill={color}
+          />
+        );
       }
       return null;
     };
-
-    const renderHistoryDot = (props: any, dataKey: string, color: string) =>
-      renderDot(props, lastHistoryIndices[dataKey] ?? -1, dataKey, color);
-
-    const renderForecastDot = (props: any, id: number, color: string) =>
-      renderDot(props, lastForecastIndices[id] ?? -1, `forecast_${id}`, color);
 
     const animationActive = Boolean(shouldAnimate) && !disableAnimation;
     const historicalAnimationActive =
@@ -236,30 +281,45 @@ export const ChartLines = memo(
     // hiding, showing and added forecasts, and leaves the tooltip's order.
     const historyZIndex = historyOnTop ? DefaultZIndexes.line + 1 : undefined;
 
-    const historyElements = historyLines.map(({ dataKey, name, color }) => (
-      <Line
-        key={dataKey}
-        zIndex={historyZIndex}
-        type="monotone"
-        dataKey={dataKey}
-        stroke={color}
-        strokeWidth={1}
-        dot={
-          showEndDots ? props => renderHistoryDot(props, dataKey, color) : false
-        }
-        activeDot={{ ...activeDotHistorical, fill: color }}
-        name={name}
-        legendType={showLegend === false ? 'none' : undefined}
-        strokeDasharray="0"
-        connectNulls={connectHistoryNulls}
-        hide={hiddenSeries?.has(dataKey)}
-        isAnimationActive={historicalAnimationActive}
-        animationDuration={animationDuration}
-        animateNewValues={valueAnimationEnabled}
-        animationBegin={0}
-        animationEasing="ease-out"
-      />
-    ));
+    const historyElements = historyLines.map(
+      ({ dataKey, name, color, connectNulls }) => {
+        const connected = connectNulls ?? connectHistoryNulls;
+        return (
+          <Line
+            key={dataKey}
+            zIndex={historyZIndex}
+            type="monotone"
+            dataKey={dataKey}
+            stroke={color}
+            strokeWidth={1}
+            // A line with no dot to draw skips the per-point call.
+            dot={
+              showEndDots || dotLonePoints
+                ? props =>
+                    renderDot(
+                      props,
+                      lastHistoryIndices[dataKey] ?? -1,
+                      dataKey,
+                      color,
+                      connected,
+                    )
+                : false
+            }
+            activeDot={{ ...activeDotHistorical, fill: color }}
+            name={name}
+            legendType={showLegend === false ? 'none' : undefined}
+            strokeDasharray="0"
+            connectNulls={connected}
+            hide={hiddenSeries?.has(dataKey)}
+            isAnimationActive={historicalAnimationActive}
+            animationDuration={animationDuration}
+            animateNewValues={valueAnimationEnabled}
+            animationBegin={0}
+            animationEasing="ease-out"
+          />
+        );
+      },
+    );
 
     const forecastElements = forecastData?.map(
       (data: ForecastItemData, index: number) => {
@@ -269,6 +329,7 @@ export const ChartLines = memo(
           color = FORECAST_LINE_COLORS[index % FORECAST_LINE_COLORS.length],
         } = data;
         const dataKey = `forecast_${id}`;
+        const connected = data.connectNulls ?? connectForecastNulls;
 
         return (
           <Line
@@ -279,12 +340,21 @@ export const ChartLines = memo(
             strokeWidth={1}
             strokeDasharray={forecastLineStyle === 'dashed' ? '4 2' : '0'}
             dot={
-              showEndDots ? props => renderForecastDot(props, id, color) : false
+              showEndDots || dotLonePoints
+                ? props =>
+                    renderDot(
+                      props,
+                      lastForecastIndices[id] ?? -1,
+                      dataKey,
+                      color,
+                      connected,
+                    )
+                : false
             }
             activeDot={activeDotForecast(color)}
             name={`${name || `${id}`}`}
             legendType={showLegend === false ? 'none' : undefined}
-            connectNulls={connectForecastNulls}
+            connectNulls={connected}
             hide={hiddenSeries?.has(dataKey)}
             isAnimationActive={forecastAnimationActive}
             animationDuration={animationDuration}

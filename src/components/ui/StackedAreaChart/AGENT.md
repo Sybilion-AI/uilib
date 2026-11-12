@@ -19,6 +19,7 @@ StackedAreaChart shows how a total is built from parts over time: cost layers st
 - Keep `margin.pct` in the host's state and pass it on every change; the margin layer stays mounted, so typing does not redraw the chart.
 - Set `yearTicks` for multi-year monthly data so the axis reads one label per year.
 - Pass `hiddenKeys` and `onToggleKey` when the host must remember which series are hidden.
+- Name the axes with `xAxisLabel` and `yAxisLabel`; pass `tooltipValueFormatter` when the tooltip should read differently from the axis (for example with a unit).
 
 ## Don't
 
