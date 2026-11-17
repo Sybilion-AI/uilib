@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.5](https://github.com/Sybilion-AI/uilib/compare/v1.8.4...v1.8.5) (2026-11-17)
+
+
+### Features
+
+* **StackedAreaChart:** dot an overlay's only value ([#22](https://github.com/Sybilion-AI/uilib/issues/22)) ([eaac43e](https://github.com/Sybilion-AI/uilib/commit/eaac43e083497d2814e6ceb83b4523b9edf77dbe))
+
 ### [1.8.4](https://github.com/Sybilion-AI/uilib/compare/v1.8.3...v1.8.4) (2026-11-12)
 
 
