@@ -17,7 +17,7 @@ StackedAreaChart shows how a total is built from parts over time: cost layers st
 - Expect zones to change at rows: a crossing between two rows shows at the next row. Hiding a layer or the compare line in the legend updates the margin, the zones and the weights to match what is drawn.
 - Give each layer a `label`; the legend and tooltip use it.
 - Keep `margin.pct` in the host's state and pass it on every change; the margin layer stays mounted, so typing does not redraw the chart.
-- Set `dotLonePoints` on an overlay that can have a single value in the window (for example one price paid): a bridged line with one value draws nothing, so it gets a dot. Set `dashed` to tell a reference line (a market price) apart from a measured one.
+- Set `dotLonePoints` on an overlay that can have a single value in the window (for example one price paid): a bridged line with one value draws nothing, so it gets a dot.
 - Set `yearTicks` for multi-year monthly data so the axis reads one label per year.
 - Pass `hiddenKeys` and `onToggleKey` when the host must remember which series are hidden.
 - Name the axes with `xAxisLabel` and `yAxisLabel`; pass `tooltipValueFormatter` when the tooltip should read differently from the axis (for example with a unit).

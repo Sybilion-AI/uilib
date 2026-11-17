@@ -71,7 +71,6 @@ const layerColor = (layer: StackedAreaChartLayer, index: number) =>
   layer.color ?? getChartSeriesColor(index);
 const overlayColor = (overlay: StackedAreaChartOverlay) =>
   overlay.color ?? DEFAULT_OVERLAY_COLOR;
-const OVERLAY_DASH = '5 4';
 const LONE_DOT_RADIUS = 3;
 
 function LegendEntry({
@@ -377,7 +376,6 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
                   name={overlay.key}
                   stroke={color}
                   strokeWidth={1.75}
-                  strokeDasharray={overlay.dashed ? OVERLAY_DASH : undefined}
                   dot={
                     asBars
                       ? { r: 4, fill: color, stroke: color }
@@ -452,11 +450,8 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
                 key={overlay.key}
                 swatch={
                   <span
-                    className={cn(
-                      S.legendLine,
-                      overlay.dashed && S.legendLineDashed,
-                    )}
-                    style={{ color: overlayColor(overlay) }}
+                    className={S.legendLine}
+                    style={{ backgroundColor: overlayColor(overlay) }}
                   />
                 }
                 label={overlay.label ?? overlay.key}

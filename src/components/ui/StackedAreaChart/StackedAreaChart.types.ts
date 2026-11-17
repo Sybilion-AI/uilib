@@ -27,8 +27,6 @@ export interface StackedAreaChartOverlay {
    * line. At most one overlay should set it; the first one that does is used.
    */
   compare?: boolean;
-  /** Draw the line, and its legend swatch, dashed. */
-  dashed?: boolean;
   /**
    * Dot the line's only value. Gaps are bridged, so a line with a single
    * value would otherwise draw nothing.

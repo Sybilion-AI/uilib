@@ -48,7 +48,7 @@ const PAID: StackedAreaChartOverlay[] = [
   { key: 'paid', label: 'Prices paid', compare: true },
 ];
 
-// One price paid in the window, next to a market line drawn dashed.
+// One price paid in the window, next to a market line.
 const ONE_PAID_ROWS: StackedAreaChartDatum[] = COST_ROWS.slice(24).map(
   (row, i) => ({
     ...row,
@@ -58,12 +58,7 @@ const ONE_PAID_ROWS: StackedAreaChartDatum[] = COST_ROWS.slice(24).map(
 );
 
 const ONE_PAID_OVERLAYS: StackedAreaChartOverlay[] = [
-  {
-    key: 'market',
-    label: 'Market',
-    color: 'var(--muted-foreground)',
-    dashed: true,
-  },
+  { key: 'market', label: 'Market', color: 'var(--muted-foreground)' },
   { key: 'paid', label: 'Prices paid', dotLonePoints: true },
 ];
 
@@ -142,8 +137,8 @@ export default function StackedAreaChartPage() {
       </PageContentSection>
       <PageContentSection>
         <SectionHeader
-          title="Dashed line and a lone price"
-          description="A dashed market line, and a single price paid shown as a dot with dotLonePoints (a line with one value draws nothing)."
+          title="A lone price"
+          description="A market line, and a single price paid shown as a dot with dotLonePoints (a line with one value draws nothing)."
           withMargin
         />
         <StackedAreaChart

@@ -695,25 +695,4 @@ describe('StackedAreaChart overlay marks', () => {
       container.querySelectorAll('.recharts-line-dots circle').length,
     ).toBe(0);
   });
-
-  it('dashes the line and its legend swatch', () => {
-    const { container } = render(
-      <StackedAreaChart
-        data={ROWS}
-        xKey="date"
-        layers={LAYERS}
-        overlays={[
-          { key: 'paid', label: 'Prices paid', dashed: true },
-          { key: 'raw', label: 'Raw line' },
-        ]}
-      />,
-    );
-    const curves = container.querySelectorAll('.recharts-line-curve');
-    expect(curves[0]).toHaveAttribute('stroke-dasharray', '5 4');
-    expect(curves[1]).not.toHaveAttribute('stroke-dasharray');
-    const swatch = screen
-      .getByRole('button', { name: /Prices paid/ })
-      .querySelector('span');
-    expect(swatch?.className).toMatch(/legendLineDashed/);
-  });
 });

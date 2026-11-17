@@ -6,7 +6,6 @@ interface CssExports {
   legendButton: string;
   legendExtra: string;
   legendLine: string;
-  legendLineDashed: string;
   legendZone: string;
   loneDot: string;
   root: string;
