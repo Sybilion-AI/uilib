@@ -71,6 +71,8 @@ const layerColor = (layer: StackedAreaChartLayer, index: number) =>
   layer.color ?? getChartSeriesColor(index);
 const overlayColor = (overlay: StackedAreaChartOverlay) =>
   overlay.color ?? DEFAULT_OVERLAY_COLOR;
+const OVERLAY_DASH = '5 4';
+const LONE_DOT_RADIUS = 3;
 
 function LegendEntry({
   swatch,
@@ -178,6 +180,18 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
       [showWeights, data, visibleKeys],
     );
     const asBars = rows.length < barsBelow;
+    // How many values each overlay has: a bridged line with one value draws
+    // nothing, so `dotLonePoints` dots it.
+    const overlayValueCounts = useMemo(() => {
+      const counts: Record<string, number> = {};
+      for (const overlay of overlays) {
+        counts[overlay.key] = data.filter(row => {
+          const value = row[overlay.key];
+          return typeof value === 'number' && Number.isFinite(value);
+        }).length;
+      }
+      return counts;
+    }, [data, overlays]);
     const compareKey = overlays.find(o => o.compare)?.key;
     const zonesOn = compareKey != null && !hidden.has(compareKey);
     const zones = useMemo(() => {
@@ -351,6 +365,10 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
               ))}
             {overlays.map(overlay => {
               const color = overlayColor(overlay);
+              const lone =
+                !asBars &&
+                overlay.dotLonePoints &&
+                overlayValueCounts[overlay.key] === 1;
               return (
                 <Line
                   key={overlay.key}
@@ -359,7 +377,34 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
                   name={overlay.key}
                   stroke={color}
                   strokeWidth={1.75}
-                  dot={asBars ? { r: 4, fill: color, stroke: color } : false}
+                  strokeDasharray={overlay.dashed ? OVERLAY_DASH : undefined}
+                  dot={
+                    asBars
+                      ? { r: 4, fill: color, stroke: color }
+                      : lone
+                        ? (props: {
+                            cx?: number;
+                            cy?: number;
+                            index?: number;
+                            value?: unknown;
+                          }) =>
+                            typeof props.value === 'number' &&
+                            Number.isFinite(props.value) &&
+                            props.cx != null &&
+                            props.cy != null ? (
+                              <circle
+                                key={`lone-${overlay.key}-${props.index}`}
+                                className={S.loneDot}
+                                cx={props.cx}
+                                cy={props.cy}
+                                r={LONE_DOT_RADIUS}
+                                fill={color}
+                              />
+                            ) : (
+                              <g key={`lone-${overlay.key}-${props.index}`} />
+                            )
+                        : false
+                  }
                   activeDot={false}
                   connectNulls
                   isAnimationActive={false}
@@ -407,8 +452,11 @@ const StackedAreaChart = forwardRef<HTMLDivElement, StackedAreaChartProps>(
                 key={overlay.key}
                 swatch={
                   <span
-                    className={S.legendLine}
-                    style={{ backgroundColor: overlayColor(overlay) }}
+                    className={cn(
+                      S.legendLine,
+                      overlay.dashed && S.legendLineDashed,
+                    )}
+                    style={{ color: overlayColor(overlay) }}
                   />
                 }
                 label={overlay.label ?? overlay.key}
