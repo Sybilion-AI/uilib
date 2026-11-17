@@ -48,6 +48,20 @@ const PAID: StackedAreaChartOverlay[] = [
   { key: 'paid', label: 'Prices paid', compare: true },
 ];
 
+// One price paid in the window, next to a market line.
+const ONE_PAID_ROWS: StackedAreaChartDatum[] = COST_ROWS.slice(24).map(
+  (row, i) => ({
+    ...row,
+    paid: i === 7 ? 3.4 : null,
+    market: Number((3.1 + 0.2 * Math.sin(i / 2)).toFixed(2)),
+  }),
+);
+
+const ONE_PAID_OVERLAYS: StackedAreaChartOverlay[] = [
+  { key: 'market', label: 'Market', color: 'var(--muted-foreground)' },
+  { key: 'paid', label: 'Prices paid', dotLonePoints: true },
+];
+
 const QUARTER_ROWS: StackedAreaChartDatum[] = [
   {
     quarter: 'Q1',
@@ -119,6 +133,22 @@ export default function StackedAreaChartPage() {
           valueFormatter={formatPrice}
           tooltipLabelFormatter={formatMonth}
           height={320}
+        />
+      </PageContentSection>
+      <PageContentSection>
+        <SectionHeader
+          title="A lone price"
+          description="A market line, and a single price paid shown as a dot with dotLonePoints (a line with one value draws nothing)."
+          withMargin
+        />
+        <StackedAreaChart
+          data={ONE_PAID_ROWS}
+          xKey="date"
+          layers={COST_LAYERS}
+          overlays={ONE_PAID_OVERLAYS}
+          valueFormatter={formatPrice}
+          tooltipLabelFormatter={formatMonth}
+          height={260}
         />
       </PageContentSection>
       <PageContentSection>

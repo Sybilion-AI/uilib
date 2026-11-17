@@ -7,6 +7,7 @@ interface CssExports {
   legendExtra: string;
   legendLine: string;
   legendZone: string;
+  loneDot: string;
   root: string;
 }
 export const cssExports: CssExports;

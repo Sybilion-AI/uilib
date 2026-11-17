@@ -647,3 +647,52 @@ describe('StackedTooltip', () => {
     expect(container).toBeEmptyDOMElement();
   });
 });
+
+describe('StackedAreaChart overlay marks', () => {
+  const ONE_PAID = ROWS.map((row, i) => ({
+    ...row,
+    paid: i === 2 ? 3 : null,
+  }));
+
+  it('dots an overlay with a single value when asked', () => {
+    const { container } = render(
+      <StackedAreaChart
+        data={ONE_PAID}
+        xKey="date"
+        layers={LAYERS}
+        overlays={[{ key: 'paid', dotLonePoints: true }]}
+      />,
+    );
+    const dots = container.querySelectorAll('.recharts-line-dots circle');
+    expect(dots.length).toBe(1);
+    expect(dots[0]).toHaveAttribute('r', '3');
+  });
+
+  it('draws no dot for a single value unless asked', () => {
+    const { container } = render(
+      <StackedAreaChart
+        data={ONE_PAID}
+        xKey="date"
+        layers={LAYERS}
+        overlays={[{ key: 'paid' }]}
+      />,
+    );
+    expect(
+      container.querySelectorAll('.recharts-line-dots circle').length,
+    ).toBe(0);
+  });
+
+  it('draws no dots on an overlay with more than one value', () => {
+    const { container } = render(
+      <StackedAreaChart
+        data={ROWS.map((row, i) => ({ ...row, paid: i % 2 ? null : 4 }))}
+        xKey="date"
+        layers={LAYERS}
+        overlays={[{ key: 'paid', dotLonePoints: true }]}
+      />,
+    );
+    expect(
+      container.querySelectorAll('.recharts-line-dots circle').length,
+    ).toBe(0);
+  });
+});
