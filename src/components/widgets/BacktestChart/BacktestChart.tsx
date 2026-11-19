@@ -230,9 +230,11 @@ function defaultScoreLine(
       ? s.forecastError > 0
         ? `more error than the ${baseline}`
         : null
-      : s.errorRemoved >= 0
-        ? `removes ${formatPercent(s.errorRemoved)} of the error`
-        : `${formatPercent(-s.errorRemoved)} more error than the ${baseline}`;
+      : formatPercent(Math.abs(s.errorRemoved)) === formatPercent(0)
+        ? `about the same error as the ${baseline}`
+        : s.errorRemoved > 0
+          ? `removes ${formatPercent(s.errorRemoved)} of the error`
+          : `${formatPercent(-s.errorRemoved)} more error than the ${baseline}`;
   return (
     <>
       <strong>Last {s.months} months:</strong> {head ? `${head} · ` : null}

@@ -50,7 +50,10 @@ export const backtestBaselineId = (index: number) => index * 2 + 1;
 /** A date's calendar month as a number (year × 12 + month), or NaN. */
 function monthIndex(date: string): number {
   const m = /^(\d{4})-(\d{2})/.exec(date);
-  return m ? Number(m[1]) * 12 + Number(m[2]) - 1 : Number.NaN;
+  const month = m ? Number(m[2]) : 0;
+  return m && month >= 1 && month <= 12
+    ? Number(m[1]) * 12 + month - 1
+    : Number.NaN;
 }
 
 /** The first day of month `index` (monthIndex's inverse). */
@@ -84,6 +87,7 @@ export function buildBacktestRows(
     return r;
   };
   for (const a of actuals) {
+    if (!Number.isFinite(a.value)) continue;
     const r = row(a.date);
     if (r) r[HISTORY_SERIES_KEY] = a.value;
   }
@@ -128,7 +132,9 @@ export function backtestScore(
   const actualByMonth = new Map<number, number>();
   for (const a of actuals) {
     const i = monthIndex(a.date);
-    if (Number.isFinite(i)) actualByMonth.set(i, a.value);
+    if (Number.isFinite(i) && Number.isFinite(a.value)) {
+      actualByMonth.set(i, a.value);
+    }
   }
   if (months <= 0 || actualByMonth.size === 0) return null;
   const last = Math.max(...actualByMonth.keys());
