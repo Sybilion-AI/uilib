@@ -309,6 +309,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/DriverMapPage'),
   },
   {
+    slug: 'backtest-chart',
+    title: 'BacktestChart',
+    section: 'Widgets',
+    load: () => import('./pages/BacktestChartPage'),
+  },
+  {
     slug: 'drivers-comparison-chart',
     title: 'DriversComparisonChart',
     section: 'Widgets',

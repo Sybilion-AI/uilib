@@ -11,6 +11,8 @@ export type SeriesLegendItem = {
   color: string;
   /** Draw the swatch as a dashed line (a forecast line). */
   dashed?: boolean;
+  /** Draw the swatch as a dotted line (a baseline, such as a value held flat). */
+  dotted?: boolean;
   /** Draw the swatch as a filled square (a bar or an area) instead of a line. */
   square?: boolean;
 };
@@ -41,7 +43,11 @@ export function SeriesLegend({
             <span
               className={cn(
                 S.swatch,
-                item.square ? S.square : item.dashed && S.dashed,
+                item.square
+                  ? S.square
+                  : item.dotted
+                    ? S.dotted
+                    : item.dashed && S.dashed,
               )}
               style={{ color: item.color }}
               aria-hidden

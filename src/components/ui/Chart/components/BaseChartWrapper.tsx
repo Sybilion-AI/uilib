@@ -597,6 +597,7 @@ const BaseChartWrapperContent = forwardRef<
         // tooltip: item.tooltip,
         dimmed: item.dimmed,
         updated_at: item.updated_at,
+        lineStyle: item.lineStyle,
       }));
   }, [forecastData, excludeLegendIds, showLegend]);
 
@@ -628,7 +629,8 @@ const BaseChartWrapperContent = forwardRef<
         dataKey: p.dataKey,
         label: p.value,
         color: p.color,
-        dashed: forecastLineStyle === 'dashed',
+        dashed: (p.lineStyle ?? forecastLineStyle) === 'dashed',
+        dotted: p.lineStyle === 'dotted',
       })),
     ];
     if (!legendOrder) return all;

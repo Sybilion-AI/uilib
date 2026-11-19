@@ -86,5 +86,6 @@ export * from './components/widgets/DriverCard';
 export * from './components/widgets/DriverMap';
 export * from './components/widgets/DriversComparisonChart';
 export * from './components/widgets/PerformanceChart';
+export * from './components/widgets/BacktestChart';
 export * from './components/widgets/SybilionAuthLayout';
 // SPA/router widgets (react-router-dom): `@sybilion/uilib/signin`
