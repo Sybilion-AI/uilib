@@ -37,12 +37,14 @@ export type ForecastItemData = {
   connectNulls?: boolean;
   /**
    * This line's style, over the chart's `forecastLineStyle`. `dotted` is for
-   * a baseline (a last value held flat), not a forecast.
+   * a baseline (a last value held flat), not a forecast. Read by the
+   * Recharts charts (ChartLines) and their plain legend only.
    */
   lineStyle?: ForecastLineStyle;
   /**
    * Mark this line's last point with a dot, over the chart's `showEndDots`
-   * (a backtest's forecast lands on a dot; its baseline does not).
+   * (a backtest's forecast lands on a dot; its baseline does not). Read by
+   * ChartLines only.
    */
   endDot?: boolean;
 };
@@ -152,7 +154,7 @@ export const ChartLines = memo(
     shouldAnimate?: boolean;
     historicalLineColor?: string;
     showLegend?: boolean;
-    forecastLineStyle?: 'dashed' | 'solid';
+    forecastLineStyle?: ForecastLineStyle;
     disableAnimation?: boolean;
     disableHistoricalAnimation?: boolean;
     /** Draw each history line across months it has no value for. */

@@ -25,6 +25,8 @@ import {
 /** The legend's three groups; each hides or shows all of its lines. */
 type Group = 'actual' | 'forecast' | 'baseline';
 
+const DEFAULT_WINDOWS = [24, 12];
+
 const PERCENT = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 1 });
 const defaultFormatPercent = (v: number) => `${PERCENT.format(v)}%`;
 
@@ -33,7 +35,10 @@ export type BacktestChartProps = {
   actuals: BacktestPoint[];
   /** The past months forecasts were made from, each cut to one horizon. */
   origins: BacktestOrigin[];
-  /** The score windows under the chart, in months (default: 24 and 12). */
+  /**
+   * The score windows under the chart: the last N calendar months up to the
+   * latest actual (default: 24 and 12).
+   */
   windows?: number[];
   actualLabel?: string;
   forecastLabel?: string;
@@ -46,7 +51,6 @@ export type BacktestChartProps = {
   formatPercent?: (value: number) => string;
   formatNumber?: (value: number) => string;
   formatDate?: (value: string, detailed?: boolean) => string;
-  labelFormatter?: (value: unknown) => string;
   height?: number;
   /** Draw the lines at once, with no animation. */
   disableAnimation?: boolean;
@@ -64,7 +68,7 @@ export type BacktestChartProps = {
 export function BacktestChart({
   actuals,
   origins,
-  windows = [24, 12],
+  windows = DEFAULT_WINDOWS,
   actualLabel = 'Actual',
   forecastLabel = 'Forecast',
   baselineLabel = 'Last price held flat',
@@ -75,7 +79,6 @@ export function BacktestChart({
   formatPercent = defaultFormatPercent,
   formatNumber,
   formatDate,
-  labelFormatter,
   height = 300,
   disableAnimation = false,
   isDarkTheme = false,
@@ -161,7 +164,7 @@ export function BacktestChart({
 
   const scores = useMemo(
     () =>
-      windows
+      [...new Set(windows)]
         .map(months => backtestScore(actuals, origins, months))
         .filter((s): s is BacktestScore => s !== null),
     [windows, actuals, origins],
@@ -193,7 +196,6 @@ export function BacktestChart({
         disableAnimation={disableAnimation}
         formatNumber={formatNumber}
         formatDate={formatDate}
-        labelFormatter={labelFormatter}
       />
       {chartData.length > 0 ? (
         <SeriesLegend
@@ -218,7 +220,9 @@ function defaultScoreLine(
   formatPercent: (value: number) => string,
   baselineLabel: string,
 ): ReactNode {
-  const baseline = baselineLabel.toLowerCase();
+  // Mid-sentence: only the first letter drops its capital.
+  const baseline =
+    baselineLabel.charAt(0).toLowerCase() + baselineLabel.slice(1);
   const head =
     s.errorRemoved === null
       ? null

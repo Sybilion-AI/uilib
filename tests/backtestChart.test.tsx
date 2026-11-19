@@ -113,6 +113,26 @@ describe('backtestScore', () => {
     expect(s?.forecastError).toBeCloseTo((13 / 130) * 100);
   });
 
+  it('counts calendar months, not actual values, in a window', () => {
+    // Month 2 has no actual: the last two months are 2 and 3, so only the
+    // landing in month 3 counts, not the one in month 2 nor any earlier.
+    const gappy = ACTUALS.filter((_, i) => i !== 2);
+    const s = backtestScore(gappy, ORIGINS, 2);
+    expect(s?.count).toBe(1);
+    expect(s?.forecastError).toBeCloseTo((13 / 130) * 100);
+  });
+
+  it('matches a landing to its actual by month', () => {
+    const endOfMonth = ORIGINS.map(o => ({
+      ...o,
+      forecast: o.forecast.map(p => ({
+        ...p,
+        date: p.date.replace(/-01$/, '-28'),
+      })),
+    }));
+    expect(backtestScore(ACTUALS, endOfMonth, 2)?.count).toBe(2);
+  });
+
   it('has no score for a window longer than the actuals', () => {
     expect(backtestScore(ACTUALS, ORIGINS, 24)).toBeNull();
   });

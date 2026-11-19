@@ -23,7 +23,7 @@ export type BacktestOrigin = {
 
 /** One window's scores: mean absolute percentage error at the landing month. */
 export type BacktestScore = {
-  /** The window: the last `months` months with an actual value. */
+  /** The window: the last `months` calendar months up to the latest actual. */
   months: number;
   /** How many forecasts landed in the window with an actual to compare. */
   count: number;
@@ -85,29 +85,43 @@ export function buildBacktestRows(
   );
 }
 
+/** A date's calendar month as a number (year × 12 + month), or NaN. */
+function monthIndex(date: string): number {
+  const m = /^(\d{4})-(\d{2})/.exec(date);
+  return m ? Number(m[1]) * 12 + Number(m[2]) - 1 : Number.NaN;
+}
+
 /**
- * The scores for the last `months` months with an actual value: every
- * origin whose forecast lands in one of them, against that month's actual.
- * Null when there are fewer actual months than the window, or no forecast
- * lands in it with a non-zero actual to compare.
+ * The scores for the last `months` calendar months up to the latest actual:
+ * every origin whose forecast lands in one of them, against that month's
+ * actual. Dates match by calendar month (`2024-03-01` and `2024-03-31` are
+ * one month). Null when the actuals span fewer months than the window, or
+ * no forecast lands in it with a non-zero actual to compare.
  */
 export function backtestScore(
   actuals: BacktestPoint[],
   origins: BacktestOrigin[],
   months: number,
 ): BacktestScore | null {
-  const sorted = [...actuals].sort((a, b) => a.date.localeCompare(b.date));
-  if (months <= 0 || sorted.length < months) return null;
-  const window = new Map(
-    sorted.slice(sorted.length - months).map(a => [a.date, a.value]),
-  );
+  const actualByMonth = new Map<number, number>();
+  for (const a of actuals) {
+    const i = monthIndex(a.date);
+    if (Number.isFinite(i)) actualByMonth.set(i, a.value);
+  }
+  if (months <= 0 || actualByMonth.size === 0) return null;
+  const last = Math.max(...actualByMonth.keys());
+  const first = Math.min(...actualByMonth.keys());
+  if (last - first + 1 < months) return null;
+  const from = last - months + 1;
   let forecastSum = 0;
   let baselineSum = 0;
   let count = 0;
   for (const o of origins) {
     const landing = o.forecast[o.forecast.length - 1];
     if (!landing) continue;
-    const actual = window.get(landing.date);
+    const i = monthIndex(landing.date);
+    if (!(i >= from && i <= last)) continue;
+    const actual = actualByMonth.get(i);
     if (actual === undefined || actual === 0 || !Number.isFinite(actual)) {
       continue;
     }
