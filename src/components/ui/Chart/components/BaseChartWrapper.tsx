@@ -14,6 +14,7 @@ import { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartA
 import {
   ChartLines,
   ForecastItemData,
+  type ForecastLineStyle,
   getForecastColor,
   resolveHistoryLines,
 } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
@@ -218,7 +219,8 @@ export interface BaseChartWrapperProps {
   /** When true, no placeholder UI for empty `chartData` (parent renders overlay). */
   suppressNoDataState?: boolean;
   onGridHeightChange?: (height: number) => void;
-  forecastLineStyle?: 'dashed' | 'solid';
+  /** Every forecast line's style, unless the line sets its own `lineStyle`. */
+  forecastLineStyle?: ForecastLineStyle;
   disableHistoricalAnimation?: boolean;
   /** Clear all hidden series (legend “show all”). */
   onShowAll?: () => void;
@@ -597,6 +599,7 @@ const BaseChartWrapperContent = forwardRef<
         // tooltip: item.tooltip,
         dimmed: item.dimmed,
         updated_at: item.updated_at,
+        lineStyle: item.lineStyle,
       }));
   }, [forecastData, excludeLegendIds, showLegend]);
 
@@ -628,7 +631,8 @@ const BaseChartWrapperContent = forwardRef<
         dataKey: p.dataKey,
         label: p.value,
         color: p.color,
-        dashed: forecastLineStyle === 'dashed',
+        dashed: (p.lineStyle ?? forecastLineStyle) === 'dashed',
+        dotted: (p.lineStyle ?? forecastLineStyle) === 'dotted',
       })),
     ];
     if (!legendOrder) return all;

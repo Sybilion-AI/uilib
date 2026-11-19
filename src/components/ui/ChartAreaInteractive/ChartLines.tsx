@@ -35,7 +35,28 @@ export type ForecastItemData = {
    * `connectForecastNulls` decides.
    */
   connectNulls?: boolean;
+  /**
+   * This line's style, over the chart's `forecastLineStyle`. `dotted` is for
+   * a baseline (a last value held flat), not a forecast. Read by the
+   * Recharts charts (ChartLines) and their plain legend only.
+   */
+  lineStyle?: ForecastLineStyle;
+  /**
+   * Mark this line's last point with a dot, over the chart's `showEndDots`
+   * (a backtest's forecast lands on a dot; its baseline does not). Read by
+   * ChartLines only.
+   */
+  endDot?: boolean;
 };
+
+export type ForecastLineStyle = 'dashed' | 'dotted' | 'solid';
+
+/** The stroke pattern for a line style. */
+export function lineStyleDasharray(style: ForecastLineStyle): string {
+  if (style === 'dashed') return '4 2';
+  if (style === 'dotted') return '1 3';
+  return '0';
+}
 
 export type Dot = {
   x: number;
@@ -133,7 +154,7 @@ export const ChartLines = memo(
     shouldAnimate?: boolean;
     historicalLineColor?: string;
     showLegend?: boolean;
-    forecastLineStyle?: 'dashed' | 'solid';
+    forecastLineStyle?: ForecastLineStyle;
     disableAnimation?: boolean;
     disableHistoricalAnimation?: boolean;
     /** Draw each history line across months it has no value for. */
@@ -238,6 +259,7 @@ export const ChartLines = memo(
       dataKey: string,
       color: string,
       connected: boolean,
+      endDot: boolean = showEndDots,
     ) => {
       const i = props.index;
       if (
@@ -248,7 +270,7 @@ export const ChartLines = memo(
       ) {
         return null;
       }
-      const isEnd = showEndDots && lastIndex >= 0 && i === lastIndex;
+      const isEnd = endDot && lastIndex >= 0 && i === lastIndex;
       const isAlone =
         dotLonePoints &&
         (connected
@@ -330,6 +352,8 @@ export const ChartLines = memo(
         } = data;
         const dataKey = `forecast_${id}`;
         const connected = data.connectNulls ?? connectForecastNulls;
+        const endDot = data.endDot ?? showEndDots;
+        const lineStyle = data.lineStyle ?? forecastLineStyle;
 
         return (
           <Line
@@ -338,9 +362,10 @@ export const ChartLines = memo(
             dataKey={dataKey}
             stroke={color}
             strokeWidth={1}
-            strokeDasharray={forecastLineStyle === 'dashed' ? '4 2' : '0'}
+            strokeDasharray={lineStyleDasharray(lineStyle)}
+            strokeLinecap={lineStyle === 'dotted' ? 'round' : undefined}
             dot={
-              showEndDots || dotLonePoints
+              endDot || dotLonePoints
                 ? props =>
                     renderDot(
                       props,
@@ -348,6 +373,7 @@ export const ChartLines = memo(
                       dataKey,
                       color,
                       connected,
+                      endDot,
                     )
                 : false
             }

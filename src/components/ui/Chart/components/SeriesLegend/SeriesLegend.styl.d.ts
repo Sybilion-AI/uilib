@@ -4,6 +4,7 @@ interface CssExports {
   button: string;
   dashed: string;
   dimmed: string;
+  dotted: string;
   root: string;
   square: string;
   swatch: string;
