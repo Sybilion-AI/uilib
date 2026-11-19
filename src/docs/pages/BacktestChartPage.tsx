@@ -60,25 +60,34 @@ export default function BacktestChartPage() {
       />
       <DocsGuidance source={BacktestChartGuidance} />
       <PageContentSection>
-        <Tabs
-          value={String(horizon)}
-          onValueChange={v => setHorizon(Number(v))}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 16,
+            width: '100%',
+          }}
         >
-          <TabsList>
-            {HORIZONS.map(h => (
-              <TabsTrigger key={h} value={String(h)}>
-                {h}m
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-        <BacktestChart
-          key={horizon}
-          actuals={ACTUALS}
-          origins={origins}
-          isDarkTheme={isDarkMode}
-          formatNumber={v => v.toFixed(0)}
-        />
+          <Tabs
+            value={String(horizon)}
+            onValueChange={v => setHorizon(Number(v))}
+          >
+            <TabsList>
+              {HORIZONS.map(h => (
+                <TabsTrigger key={h} value={String(h)}>
+                  {h}m
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+          <BacktestChart
+            key={horizon}
+            actuals={ACTUALS}
+            origins={origins}
+            isDarkTheme={isDarkMode}
+            formatNumber={v => v.toFixed(0)}
+          />
+        </div>
       </PageContentSection>
     </>
   );

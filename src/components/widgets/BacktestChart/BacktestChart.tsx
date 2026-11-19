@@ -177,6 +177,7 @@ export function BacktestChart({
   return (
     <div className={cn(S.root, className)}>
       <BaseChartWrapper
+        className={S.chart}
         chartData={chartData}
         historicalLineColor={historyColor}
         forecastData={forecastData}

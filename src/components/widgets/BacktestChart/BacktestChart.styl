@@ -16,3 +16,8 @@
   strong
     color var(--foreground)
     font-weight 500
+
+// BaseChartWrapper fills its parent's height (min-height 100%); here the
+// legend and the scores share that height, so the chart keeps its own.
+.root .chart
+  min-height 0
