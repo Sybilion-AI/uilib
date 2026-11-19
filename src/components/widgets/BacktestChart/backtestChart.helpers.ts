@@ -47,48 +47,70 @@ export const backtestBaselineKey = (index: number) =>
 export const backtestForecastId = (index: number) => index * 2;
 export const backtestBaselineId = (index: number) => index * 2 + 1;
 
+/** A date's calendar month as a number (year × 12 + month), or NaN. */
+function monthIndex(date: string): number {
+  const m = /^(\d{4})-(\d{2})/.exec(date);
+  return m ? Number(m[1]) * 12 + Number(m[2]) - 1 : Number.NaN;
+}
+
+/** The first day of month `index` (monthIndex's inverse). */
+function monthStart(index: number): string {
+  const y = Math.floor(index / 12);
+  const m = (index % 12) + 1;
+  return `${String(y).padStart(4, '0')}-${String(m).padStart(2, '0')}-01`;
+}
+
 /**
- * The chart's rows, one per month in date order: the actuals under
- * `historical`, and for each origin its forecast (from the origin's value
- * through every forecast month) and its baseline (the origin's value on the
- * same months), each under its own key.
+ * The chart's rows, one per calendar month from the first to the last, keyed
+ * `YYYY-MM-01` (a month with no value has a row of its own, so the x axis
+ * spaces months evenly): the actuals under `historical`, and for each origin
+ * its forecast (from the origin's value through every forecast month) and its
+ * baseline (the origin's value on the same months), each under its own key.
+ * A date that is not `YYYY-MM…` is left out.
  */
 export function buildBacktestRows(
   actuals: BacktestPoint[],
   origins: BacktestOrigin[],
 ): ChartDataPoint[] {
-  const byDate = new Map<string, ChartDataPoint>();
+  const byMonth = new Map<number, ChartDataPoint>();
   const row = (date: string) => {
-    let r = byDate.get(date);
+    const i = monthIndex(date);
+    if (!Number.isFinite(i)) return undefined;
+    let r = byMonth.get(i);
     if (!r) {
-      r = { date };
-      byDate.set(date, r);
+      r = { date: monthStart(i) };
+      byMonth.set(i, r);
     }
     return r;
   };
-  for (const a of actuals) row(a.date)[HISTORY_SERIES_KEY] = a.value;
+  for (const a of actuals) {
+    const r = row(a.date);
+    if (r) r[HISTORY_SERIES_KEY] = a.value;
+  }
   origins.forEach((o, i) => {
     if (o.forecast.length === 0) return;
     const fKey = backtestForecastKey(i);
     const bKey = backtestBaselineKey(i);
     const start = row(o.date);
-    start[fKey] = o.value;
-    start[bKey] = o.value;
+    if (start) {
+      start[fKey] = o.value;
+      start[bKey] = o.value;
+    }
     for (const p of o.forecast) {
       const r = row(p.date);
+      if (!r) continue;
       r[fKey] = p.value;
       r[bKey] = o.value;
     }
   });
-  return [...byDate.values()].sort((a, b) =>
-    String(a.date).localeCompare(String(b.date)),
-  );
-}
-
-/** A date's calendar month as a number (year × 12 + month), or NaN. */
-function monthIndex(date: string): number {
-  const m = /^(\d{4})-(\d{2})/.exec(date);
-  return m ? Number(m[1]) * 12 + Number(m[2]) - 1 : Number.NaN;
+  if (byMonth.size === 0) return [];
+  const first = Math.min(...byMonth.keys());
+  const last = Math.max(...byMonth.keys());
+  const rows: ChartDataPoint[] = [];
+  for (let i = first; i <= last; i++) {
+    rows.push(byMonth.get(i) ?? { date: monthStart(i) });
+  }
+  return rows;
 }
 
 /**

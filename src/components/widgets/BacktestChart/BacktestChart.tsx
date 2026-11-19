@@ -220,12 +220,16 @@ function defaultScoreLine(
   formatPercent: (value: number) => string,
   baselineLabel: string,
 ): ReactNode {
-  // Mid-sentence: only the first letter drops its capital.
-  const baseline =
-    baselineLabel.charAt(0).toLowerCase() + baselineLabel.slice(1);
+  // Mid-sentence: the first letter drops its capital, unless the label
+  // starts with an acronym ("EUR spot held flat").
+  const baseline = /^.[A-Z]/.test(baselineLabel)
+    ? baselineLabel
+    : baselineLabel.charAt(0).toLowerCase() + baselineLabel.slice(1);
   const head =
     s.errorRemoved === null
-      ? null
+      ? s.forecastError > 0
+        ? `more error than the ${baseline}`
+        : null
       : s.errorRemoved >= 0
         ? `removes ${formatPercent(s.errorRemoved)} of the error`
         : `${formatPercent(-s.errorRemoved)} more error than the ${baseline}`;

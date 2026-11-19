@@ -87,6 +87,31 @@ describe('buildBacktestRows', () => {
     expect(rows[3]).toMatchObject({ forecast_2: 143, forecast_3: 110 });
   });
 
+  it('puts a month on one row whatever its day, and fills missing months', () => {
+    const rows = buildBacktestRows(
+      [
+        { date: '2024-01-01', value: 1 },
+        { date: '2024-04-01', value: 4 },
+      ],
+      [
+        {
+          date: '2024-01-31',
+          value: 1,
+          forecast: [{ date: '2024-02-28', value: 2 }],
+        },
+      ],
+    );
+    expect(rows.map(r => r.date)).toEqual([
+      '2024-01-01',
+      '2024-02-01',
+      '2024-03-01',
+      '2024-04-01',
+    ]);
+    expect(rows[0]).toMatchObject({ historical: 1, forecast_0: 1 });
+    expect(rows[1]).toMatchObject({ forecast_0: 2, forecast_1: 1 });
+    expect(rows[2]).toEqual({ date: '2024-03-01' });
+  });
+
   it('adds the months a forecast reaches past the actuals', () => {
     const rows = buildBacktestRows(ACTUALS.slice(0, 2), ORIGINS.slice(1));
     expect(rows.map(r => r.date)).toEqual([0, 1, 2, 3].map(month));

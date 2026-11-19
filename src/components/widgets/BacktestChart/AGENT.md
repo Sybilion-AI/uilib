@@ -13,11 +13,12 @@ BacktestChart shows how a forecast did in the past against the simplest baseline
 
 - Cut each origin's `forecast` to the horizon shown: its last point is the landing month the scores use.
 - Set an origin's `value` to the actual value at the origin month (the last price known when the forecast was made), and leave out an origin with none.
-- `windows` (default 24 and 12) are the last N months with an actual value; a window longer than the actuals, or with no landing in it, has no line.
+- `windows` (default 24 and 12) are the last N calendar months up to the latest actual; a window longer than the actuals, or with no landing in it, has no line.
+- Dates are matched by month (`2024-03-01` and `2024-03-28` are one month), and the chart has one column per month, missing months included.
 - `backtestScore(actuals, origins, months)` is the same computation, for a score shown elsewhere.
 - Only forecasts are dashed: the baseline is dotted and the actuals solid.
 
 ## Requires
 
-- `actuals`: one point per month, ISO dates (`2024-03-01`) that sort as text.
+- `actuals`: one point per month, ISO dates (`2024-03-01`); a date that does not start `YYYY-MM` is left out.
 - `origins`: `{ date, value, forecast: [{ date, value }] }`, forecast in date order.
