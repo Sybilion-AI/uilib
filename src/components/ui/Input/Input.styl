@@ -4,6 +4,9 @@
   display flex
   width 100%
   min-width 0
+  // The ring is a box-shadow; reset the browser's own inset border, which
+  // apps without base.css would otherwise draw on top of it.
+  border 0
   background-color transparent
   outline none
   overflow visible
