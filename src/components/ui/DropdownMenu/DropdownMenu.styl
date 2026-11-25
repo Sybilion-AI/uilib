@@ -53,12 +53,14 @@
 // Menu rows draw no focus ring: the :focus background marks the focused row,
 // and Radix focuses the row under the pointer, so a ring outside the row would
 // show on hover and be clipped by the menu's rounded, scrolling box. base.css
-// draws the ring from --focus-outline-color; forced-colours mode still shows it.
+// draws the ring with specificity (0,3,0); this beats it on the row only, so
+// a control inside a row keeps its own ring.
 .item
 .checkboxItem
 .radioItem
 .subTrigger
-  --focus-outline-color transparent
+  &[data-slot]:focus-visible:not([data-disabled])
+    outline-color transparent
 
 .label
 .item
