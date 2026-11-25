@@ -102,7 +102,11 @@ function FilterByMenu() {
                 onValueChange={setDateRange}
               >
                 {DATE_RANGES.map(range => (
-                  <DropdownMenuRadioItem key={range} value={range}>
+                  <DropdownMenuRadioItem
+                    key={range}
+                    value={range}
+                    onSelect={e => e.preventDefault()}
+                  >
                     {range}
                   </DropdownMenuRadioItem>
                 ))}
