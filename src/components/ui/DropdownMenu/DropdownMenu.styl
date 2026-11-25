@@ -279,6 +279,11 @@
   align-items center
   justify-content center
 
+  // Radix's ItemIndicator is an inline span, which puts the icon on the text
+  // baseline, a few px above the row's middle. A flex box centres it.
+  > span
+    display flex
+
 @keyframes fade-in
   from
     opacity 0
