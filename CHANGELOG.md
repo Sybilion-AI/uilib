@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.7](https://github.com/Sybilion-AI/uilib/compare/v1.8.6...v1.8.7) (2026-11-25)
+
+
+### Bug Fixes
+
+* **DropdownMenu:** centre the checkbox tick and radio dot in the row ([#25](https://github.com/Sybilion-AI/uilib/issues/25)) ([93b7983](https://github.com/Sybilion-AI/uilib/commit/93b7983d177ce5f0357980fb46c307d791d889c4))
+* **DropdownMenu:** no focus ring on menu rows ([#26](https://github.com/Sybilion-AI/uilib/issues/26)) ([533c186](https://github.com/Sybilion-AI/uilib/commit/533c186bdb5e049448c8cb9d4ee7c59930fe56ac))
+
 ### [1.8.6](https://github.com/Sybilion-AI/uilib/compare/v1.8.5...v1.8.6) (2026-11-19)
 
 ### [1.8.5](https://github.com/Sybilion-AI/uilib/compare/v1.8.4...v1.8.5) (2026-11-17)
