@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.11](https://github.com/Sybilion-AI/uilib/compare/v1.8.10...v1.8.11) (2026-11-26)
+
+
+### Bug Fixes
+
+* Select - Hide the search input's own focus ring in searchable Select ([#9](https://github.com/Sybilion-AI/uilib/issues/9)) ([8107d00](https://github.com/Sybilion-AI/uilib/commit/8107d005f20a2e39a233e06485bccc59cc2612a3))
+
 ### [1.8.10](https://github.com/Sybilion-AI/uilib/compare/v1.8.9...v1.8.10) (2026-11-26)
 
 
