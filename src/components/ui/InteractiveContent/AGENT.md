@@ -1,4 +1,4 @@
-InteractiveContent renders assistant-style plain text with inline formatting: bold and italic emphasis, inline code via <code> tags or backticks, markdown and HTML links, and bare URLs converted into clickable links. The inline variant omits block-level features such as headings and markdown bullets.
+InteractiveContent renders assistant-style plain text with inline formatting: bold and italic emphasis, inline code via <code> tags or backticks, fenced code blocks (```lang … ```), markdown and HTML links, and bare URLs converted into clickable links. The inline variant omits block-level features such as headings and markdown bullets.
 
 ## When to use
 
@@ -8,7 +8,7 @@ InteractiveContent renders assistant-style plain text with inline formatting: bo
 
 ## When not to use
 
-- For trusted, authored content with rich structure such as headings, lists, or code blocks; use a full markdown component.
+- For trusted, authored content with rich structure such as nested lists, blockquotes, or images; use a full markdown component.
 - For static UI copy that needs no formatting; render the text directly.
 
 ## Do
@@ -19,3 +19,4 @@ InteractiveContent renders assistant-style plain text with inline formatting: bo
 - and renders each item inside a list — do not repeat
 - inside the item string.
 - Wrap inline code with <code>…</code> or backticks (`…`); both render as monospace code.
+- Wrap multi-line code in a ``` fence on its own lines, with an optional language tag (```json). Any language renders as a monospace, pre-wrapped block with its contents untouched; JSON is pretty-printed and lightly highlighted.
