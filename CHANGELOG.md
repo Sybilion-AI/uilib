@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.10](https://github.com/Sybilion-AI/uilib/compare/v1.8.9...v1.8.10) (2026-11-26)
+
+
+### Features
+
+* **InteractiveContent:** render fenced code blocks ([#29](https://github.com/Sybilion-AI/uilib/issues/29)) ([ffd65e7](https://github.com/Sybilion-AI/uilib/commit/ffd65e7463ef0d429d0a818af48e5fea13b22ba4))
+
 ### [1.8.9](https://github.com/Sybilion-AI/uilib/compare/v1.8.8...v1.8.9) (2026-11-26)
 
 
