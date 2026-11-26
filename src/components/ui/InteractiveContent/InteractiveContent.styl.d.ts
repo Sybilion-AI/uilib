@@ -4,8 +4,13 @@ interface CssExports {
   'autolinkUrl': string;
   'autolinkUrlIcon': string;
   'autolinkUrlLabel': string;
+  'codeBlock': string;
   'root': string;
   'textLink': string;
+  'tokenKey': string;
+  'tokenLiteral': string;
+  'tokenNumber': string;
+  'tokenString': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

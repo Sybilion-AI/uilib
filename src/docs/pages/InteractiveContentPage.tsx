@@ -36,6 +36,16 @@ const SHOWCASE_ROWS: ShowcaseRow[] = [
     variant: 'inline',
   },
   {
+    label: 'Code block (JSON, pretty-printed)',
+    source:
+      'Result:\n```json\n{"pushed": true, "commit": "360b2a9", "items": [{"id": "rc-1", "action": "fix", "ticket": null, "count": 2}]}\n```',
+  },
+  {
+    label: 'Code block (any language)',
+    source:
+      '```ts\nexport function add(a: number, b: number) {\n  return a + b; // **not bold**\n}\n```',
+  },
+  {
     label: 'Markdown link',
     source: 'Read the [release notes](/releases) for details.',
   },
