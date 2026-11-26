@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.8](https://github.com/Sybilion-AI/uilib/compare/v1.8.7...v1.8.8) (2026-11-26)
+
+
+### Bug Fixes
+
+* **Input:** reset the browser's default border ([#27](https://github.com/Sybilion-AI/uilib/issues/27)) ([6895e77](https://github.com/Sybilion-AI/uilib/commit/6895e77fa3059ad507b60a3378d3915c3a099259))
+
 ### [1.8.7](https://github.com/Sybilion-AI/uilib/compare/v1.8.6...v1.8.7) (2026-11-25)
 
 
