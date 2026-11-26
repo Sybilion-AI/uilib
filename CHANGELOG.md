@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.9](https://github.com/Sybilion-AI/uilib/compare/v1.8.8...v1.8.9) (2026-11-26)
+
+
+### Bug Fixes
+
+* **Input:** inherit the page font family ([#28](https://github.com/Sybilion-AI/uilib/issues/28)) ([3f75964](https://github.com/Sybilion-AI/uilib/commit/3f75964208318ca077c5f153e6d089350d52d041))
+
 ### [1.8.8](https://github.com/Sybilion-AI/uilib/compare/v1.8.7...v1.8.8) (2026-11-26)
 
 
