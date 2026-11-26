@@ -2,6 +2,10 @@ import { useMemo, useRef } from 'react';
 
 import { BaseChartWrapperProps } from '#uilib/components/ui/Chart/components/BaseChartWrapper';
 import { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartAreaInteractive.types';
+import {
+  forecastHistoryKey as historyKeyOfForecast,
+  isHistorySeriesKey,
+} from '#uilib/components/ui/ChartAreaInteractive/chartHistories';
 
 interface UseChartYRangeOptions {
   baseChartProps: BaseChartWrapperProps;
@@ -14,6 +18,11 @@ interface UseChartYRangeOptions {
 export interface CalculateChartYRangeOptions {
   excludeQuantileBands: boolean;
   forecastId?: number;
+  /**
+   * With `forecastId`: the history line that forecast joins (null: none).
+   * Other history lines are left out. Omitted: every history line counts.
+   */
+  forecastHistoryKey?: string | null;
   hiddenSeries?: Set<string>;
   includeHiddenInYScale?: boolean;
 }
@@ -33,8 +42,8 @@ export function isKeyExcludedFromYScale(
 ): boolean {
   if (!hiddenSeries || hiddenSeries.size === 0) return false;
 
-  if (key === 'historical') {
-    return hiddenSeries.has('historical');
+  if (isHistorySeriesKey(key)) {
+    return hiddenSeries.has(key);
   }
 
   if (key.startsWith('forecast_')) {
@@ -60,6 +69,7 @@ export function calculateChartYRange(
   {
     excludeQuantileBands,
     forecastId,
+    forecastHistoryKey,
     hiddenSeries,
     includeHiddenInYScale = false,
   }: CalculateChartYRangeOptions,
@@ -81,6 +91,12 @@ export function calculateChartYRange(
       // quantile band (exclude other forecasts and their quantile values only).
       if (forecastId !== undefined) {
         if (key.startsWith('forecast_') && key !== `forecast_${forecastId}`)
+          return;
+        if (
+          forecastHistoryKey !== undefined &&
+          isHistorySeriesKey(key) &&
+          key !== forecastHistoryKey
+        )
           return;
         // Exclude q{quantile}_{otherAnalysisId} - only include selected forecast's quantiles
         if (key.startsWith('q') && !key.endsWith(`_${forecastId}`)) return;
@@ -132,8 +148,14 @@ export function calculateChartYRange(
     return { yMin: 0, yMax: 100 };
   }
 
-  const min = Math.min(...allValues);
-  const max = Math.max(...allValues);
+  // A loop, not Math.min(...values): one value per row and line can exceed
+  // the engine's argument limit.
+  let min = Infinity;
+  let max = -Infinity;
+  for (const v of allValues) {
+    if (v < min) min = v;
+    if (v > max) max = v;
+  }
   const diff = max - min;
 
   return {
@@ -161,9 +183,23 @@ export function useChartYRange({
     yMin: number;
     yMax: number;
     forecastId?: number;
+    historyKey?: string | null;
   } | null>(null);
   const prevBaseChartDataRef = useRef(baseChartProps.chartData);
   const prevHiddenSeriesKeyRef = useRef(serializeHiddenSeries(hiddenSeries));
+
+  // With several histories, the selected forecast scales with its own only.
+  const { forecastData, historyData } = baseChartProps;
+  const selectedHistoryKey = useMemo(
+    () =>
+      selectedForecastId !== undefined && historyData?.length
+        ? historyKeyOfForecast(
+            forecastData?.find(f => f.id === selectedForecastId),
+            historyData,
+          )
+        : undefined,
+    [selectedForecastId, forecastData, historyData],
+  );
 
   const calculateYRange = (
     dataToUse: ChartDataPoint[],
@@ -173,6 +209,8 @@ export function useChartYRange({
     calculateChartYRange(dataToUse, {
       excludeQuantileBands: excludeBands,
       forecastId,
+      forecastHistoryKey:
+        forecastId === selectedForecastId ? selectedHistoryKey : undefined,
       hiddenSeries,
       includeHiddenInYScale,
     });
@@ -200,7 +238,10 @@ export function useChartYRange({
       prevBaseChartDataRef.current = baseChartProps.chartData;
       stableYRangeRef.current = null;
     }
-    if (stableYRangeRef.current?.forecastId !== selectedForecastId) {
+    if (
+      stableYRangeRef.current?.forecastId !== selectedForecastId ||
+      stableYRangeRef.current?.historyKey !== selectedHistoryKey
+    ) {
       stableYRangeRef.current = null;
     }
     const hiddenSeriesKey = serializeHiddenSeries(hiddenSeries);
@@ -227,6 +268,7 @@ export function useChartYRange({
       stableYRangeRef.current = {
         ...result,
         forecastId: selectedForecastId,
+        historyKey: selectedHistoryKey,
       };
     }
 
@@ -241,6 +283,7 @@ export function useChartYRange({
     selectedForecastId,
     hiddenSeries,
     includeHiddenInYScale,
+    selectedHistoryKey,
   ]);
 
   // When disableRescaleWhenQuantileChanges is false, calculate from transformed data
@@ -271,13 +314,16 @@ export function useChartYRange({
     selectedForecastId,
     hiddenSeries,
     includeHiddenInYScale,
+    selectedHistoryKey,
   ]);
 
   // Return appropriate range
   if (disableRescaleWhenQuantileChanges) {
     const cached = stableYRangeRef.current;
     const cachedMatchesForecast =
-      cached && cached.forecastId === selectedForecastId;
+      cached &&
+      cached.forecastId === selectedForecastId &&
+      cached.historyKey === selectedHistoryKey;
     return cachedMatchesForecast
       ? { yMin: cached!.yMin, yMax: cached!.yMax }
       : (stableRange ?? { yMin: 0, yMax: 100 });

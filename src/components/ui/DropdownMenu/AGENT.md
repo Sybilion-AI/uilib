@@ -14,3 +14,5 @@ DropdownMenu displays a list of actions or options in a floating panel opened fr
 
 - Order items by expected frequency of use and separate destructive actions from the rest.
 - Keep item labels short and verb-led, such as “Rename” or “Delete”.
+- Nest a sub-menu with DropdownMenuSub, DropdownMenuSubTrigger and DropdownMenuSubContent. Wrap DropdownMenuSubContent in DropdownMenuPortal, since it is not portalled by default and the parent menu's scroll box would clip it.
+- Keep a filter menu open while the user ticks several options by calling `event.preventDefault()` in the item's onSelect.

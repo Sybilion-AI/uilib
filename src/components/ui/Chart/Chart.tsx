@@ -6,9 +6,14 @@ import {
 } from './components/BaseChartWrapper';
 import { ChartContainer, ChartStyle } from './components/ChartContainer';
 import { ChartLegendContent } from './components/ChartLegendContent';
+import {
+  ChartPlacedTooltip,
+  NARROW_CHART_PX,
+} from './components/ChartPlacedTooltip';
 import { ChartTooltipContent } from './components/ChartTooltipContent';
 
-const ChartTooltip = RechartsPrimitive.Tooltip;
+/** recharts' Tooltip, opening under any chart narrower than {@link NARROW_CHART_PX}. */
+const ChartTooltip = ChartPlacedTooltip;
 const ChartLegend = RechartsPrimitive.Legend;
 
 export * from './Chart.types';
@@ -19,6 +24,7 @@ export {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  NARROW_CHART_PX,
   ChartLegend,
   ChartLegendContent,
   ChartStyle,

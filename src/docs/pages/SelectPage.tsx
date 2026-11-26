@@ -28,6 +28,7 @@ function DemoSelect({
   placeholder,
   defaultValue,
   darker = false,
+  round = false,
 }: {
   variant: (typeof VARIANTS)[number];
   size: (typeof SIZES)[number];
@@ -35,6 +36,7 @@ function DemoSelect({
   placeholder?: string;
   defaultValue?: string;
   darker?: boolean;
+  round?: boolean;
 }) {
   return (
     <Select defaultValue={defaultValue}>
@@ -43,6 +45,7 @@ function DemoSelect({
         size={size}
         disabled={disabled}
         darker={darker}
+        round={round}
         style={{ width: 200 }}
       >
         <SelectValue placeholder={placeholder ?? 'Pick fruit'} />
@@ -64,7 +67,7 @@ export default function SelectPage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'Select' }]}
         title="Select"
-        subheader="Variants, sizes, placeholder, darker trigger, disabled, and searchable."
+        subheader="Variants, sizes, placeholder, darker trigger, round, disabled, and searchable."
         actions={<DocsHeaderActions />}
       />
       <DocsGuidance source={selectGuidance} />
@@ -187,6 +190,36 @@ export default function SelectPage() {
                 size={s}
                 defaultValue="orange"
                 darker
+              />
+            ))}
+          </div>
+        </section>
+        <section>
+          <h3 style={{ marginBottom: '1rem' }}>Round</h3>
+          <p
+            style={{
+              marginBottom: '0.75rem',
+              color: 'var(--muted-foreground)',
+            }}
+          >
+            Pass <code>round</code> on <code>SelectTrigger</code> for pill
+            corners (<code>border-radius: 100px</code>).
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.75rem',
+              alignItems: 'center',
+            }}
+          >
+            {SIZES.map(s => (
+              <DemoSelect
+                key={s}
+                variant="default"
+                size={s}
+                defaultValue="apple"
+                round
               />
             ))}
           </div>

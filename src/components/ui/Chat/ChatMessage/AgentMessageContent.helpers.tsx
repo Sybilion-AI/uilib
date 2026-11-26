@@ -5,6 +5,7 @@ import {
   autolinkStyles,
   shouldRenderAutolinkPill,
 } from '#uilib/components/ui/InteractiveContent/AutolinkUrl';
+import { CodeBlock } from '#uilib/components/ui/InteractiveContent/CodeBlock';
 import logger from '#uilib/lib/logger';
 
 import S from './ChatMessage.styl';
@@ -57,6 +58,28 @@ const injectHTMLCodeTags = (content: string) => {
     elem: <code>{matches[2]}</code>,
     index: matches.index!,
     length: matches[0].length,
+  };
+};
+
+/**
+ * Fenced code block: ```lang ... ``` on its own lines, any language.
+ * An unclosed fence (e.g. while streaming) runs to the end of the text.
+ * Swallows one newline on each side so the block does not add blank lines.
+ */
+const injectFencedCodeBlock = (content: string) => {
+  const regex =
+    /(^|\n)[ \t]*```[ \t]*([^\s`]*)[^\n]*\n([\s\S]*?)(?:\n?[ \t]*```[ \t]*(?=\n|$)|$)/;
+  const matches = content.match(regex);
+
+  if (!matches || matches.index === undefined) return null;
+
+  let length = matches[0].length;
+  if (content[matches.index + length] === '\n') length += 1;
+
+  return {
+    elem: <CodeBlock code={matches[3]} language={matches[2] || undefined} />,
+    index: matches.index,
+    length,
   };
 };
 
@@ -603,6 +626,7 @@ const injectHeaders: Injector = (content: string) => {
 
 const applyFormatting = (text: string): React.ReactNode[] =>
   runFormattingPipeline(text, [
+    injectFencedCodeBlock,
     injectHeaders,
     injectAnchor,
     injectMarkdownLink,
@@ -618,6 +642,7 @@ const applyFormatting = (text: string): React.ReactNode[] =>
 
 const applyFormattingInline = (text: string): React.ReactNode[] =>
   runFormattingPipeline(text, [
+    injectFencedCodeBlock,
     injectAnchor,
     injectMarkdownLink,
     injectHTMLTags,
@@ -630,6 +655,7 @@ const applyFormattingInline = (text: string): React.ReactNode[] =>
   ]);
 
 export {
+  injectFencedCodeBlock,
   injectHeaders,
   injectAnchor,
   injectBold,

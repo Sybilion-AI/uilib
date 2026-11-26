@@ -16,4 +16,5 @@ export {
 } from './ChartAreaInteractive.helpers';
 export * from './ChartAreaInteractive.types';
 export * from './ChartLines';
+export * from './chartHistories';
 export type { OverlayMode } from './ChartAreaInteractive.types';

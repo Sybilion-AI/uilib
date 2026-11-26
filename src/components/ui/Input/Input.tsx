@@ -7,35 +7,49 @@ import type { InputProps } from './Input.types';
 const Input = React.forwardRef<
   HTMLInputElement | HTMLTextAreaElement,
   InputProps
->(({ className, type, size = 'md', variant = 'default', ...props }, ref) => {
-  if (type === 'textarea') {
+>(
+  (
+    {
+      className,
+      type,
+      size = 'md',
+      variant = 'default',
+      round = false,
+      ...props
+    },
+    ref,
+  ) => {
+    if (type === 'textarea') {
+      return (
+        <textarea
+          ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
+          className={cn(
+            S.root,
+            S[`size-${size}`],
+            S[`variant-${variant}`],
+            round && S.round,
+            className,
+          )}
+          {...(props as React.ComponentProps<'textarea'>)}
+        />
+      );
+    }
     return (
-      <textarea
-        ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
+      <input
+        ref={ref as React.ForwardedRef<HTMLInputElement>}
         className={cn(
           S.root,
           S[`size-${size}`],
           S[`variant-${variant}`],
+          round && S.round,
           className,
         )}
-        {...(props as React.ComponentProps<'textarea'>)}
+        type={type}
+        {...(props as React.ComponentProps<'input'>)}
       />
     );
-  }
-  return (
-    <input
-      ref={ref as React.ForwardedRef<HTMLInputElement>}
-      className={cn(
-        S.root,
-        S[`size-${size}`],
-        S[`variant-${variant}`],
-        className,
-      )}
-      type={type}
-      {...(props as React.ComponentProps<'input'>)}
-    />
-  );
-});
+  },
+);
 
 Input.displayName = 'Input';
 

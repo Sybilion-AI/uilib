@@ -50,6 +50,18 @@
   &[data-state="closed"][data-side="top"]
     animation fade-out 0.1s ease-in, zoom-out 0.1s ease-in
 
+// Menu rows draw no focus ring: the :focus background marks the focused row,
+// and Radix focuses the row under the pointer, so a ring outside the row would
+// show on hover and be clipped by the menu's rounded, scrolling box. base.css
+// draws the ring with specificity (0,3,0); this beats it on the row only, so
+// a control inside a row keeps its own ring.
+.item
+.checkboxItem
+.radioItem
+.subTrigger
+  &[data-slot]:focus-visible:not([data-disabled])
+    outline-color transparent
+
 .label
 .item
   padding 6px var(--p-2)
@@ -65,7 +77,6 @@
   outline-offset 2px
   user-select none
   cursor: pointer;
-  focus-outline()
 
   a&
     text-decoration: none;
@@ -133,7 +144,6 @@
   outline 2px solid transparent
   outline-offset 2px
   user-select none
-  focus-outline()
 
   &:focus
     background-color var(--accent)
@@ -162,7 +172,6 @@
   outline 2px solid transparent
   outline-offset 2px
   user-select none
-  focus-outline()
 
   &:focus
     background-color var(--accent)
@@ -211,7 +220,6 @@
   outline 2px solid transparent
   outline-offset 2px
   user-select none
-  focus-outline()
 
   &:focus
     background-color var(--accent)
@@ -278,6 +286,11 @@
   height 0.875rem
   align-items center
   justify-content center
+
+  // Radix's ItemIndicator is an inline span, which puts the icon on the text
+  // baseline, a few px above the row's middle. A flex box centres it.
+  > span
+    display flex
 
 @keyframes fade-in
   from

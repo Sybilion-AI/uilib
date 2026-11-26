@@ -48,6 +48,13 @@ export interface ChartAreaInteractiveProps extends BaseChartWrapperProps {
   onUpperThresholdChange?: (value: number) => void;
   discreteThresholdValues?: { lower: number[]; upper: number[] };
   headerActions?: React.ReactNode;
+  /**
+   * Shown at the start of the header row, before the time range control,
+   * which then sits at the row's end (e.g. a one-line summary of the chart).
+   */
+  headerTitle?: React.ReactNode;
+  /** The time range control's look (`TimeRangeControls` `variant`). */
+  timeRangeVariant?: 'default' | 'segmented';
   loadingAnalyses?: Set<string>;
   onLegendClick?: (data: LegendPayload) => undefined | boolean;
   disableTimeRangeSelector?: boolean;

@@ -25,7 +25,7 @@ export default function ButtonPage() {
       <AppPageHeader
         breadcrumbs={[{ label: 'Button' }]}
         title="Button"
-        subheader="Variants, sizes, icon mode, and disabled state."
+        subheader="Variants, sizes, icon mode, round, and disabled state."
         actions={<DocsHeaderActions />}
       />
       <DocsGuidance source={ButtonGuidance} />
@@ -117,6 +117,38 @@ export default function ButtonPage() {
                 <Plus size={20} />
               </Button>
             ))}
+          </div>
+        </section>
+        <section>
+          <h3 style={{ marginBottom: '1rem' }}>Round</h3>
+          <p
+            style={{
+              marginBottom: '0.75rem',
+              color: 'var(--muted-foreground)',
+            }}
+          >
+            Pass <code>round</code> for pill corners (
+            <code>border-radius: 100px</code>).
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.75rem',
+              alignItems: 'center',
+            }}
+          >
+            {SIZES.map(s => (
+              <Button key={s} type="button" variant="default" size={s} round>
+                Round {s}
+              </Button>
+            ))}
+            <Button type="button" variant="outline" round>
+              Outline
+            </Button>
+            <Button type="button" variant="outline" icon round aria-label="Add">
+              <Plus size={20} />
+            </Button>
           </div>
         </section>
         <section>

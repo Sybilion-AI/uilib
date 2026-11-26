@@ -225,6 +225,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     load: () => import('./pages/BarChartPage'),
   },
   {
+    slug: 'stacked-area-chart',
+    title: 'StackedAreaChart',
+    section: 'Charts',
+    load: () => import('./pages/StackedAreaChartPage'),
+  },
+  {
     slug: 'chat',
     title: 'Chat',
     section: 'Chat',
@@ -301,6 +307,12 @@ export const DOC_REGISTRY: DocEntry[] = [
     title: 'DriverMap & DriverCard',
     section: 'Widgets',
     load: () => import('./pages/DriverMapPage'),
+  },
+  {
+    slug: 'backtest-chart',
+    title: 'BacktestChart',
+    section: 'Widgets',
+    load: () => import('./pages/BacktestChartPage'),
   },
   {
     slug: 'drivers-comparison-chart',

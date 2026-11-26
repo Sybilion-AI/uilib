@@ -7,6 +7,7 @@ interface CssExports {
   'link': string;
   'outline': string;
   'root': string;
+  'round': string;
   'secondary': string;
   'sizeIcon': string;
   'sizeLg': string;

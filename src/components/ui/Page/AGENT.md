@@ -114,6 +114,8 @@ Pass `columns={[node1, node2, …]}`. For 3–4 equal columns, omit `fill`; do n
 
 Horizontal scroll strip; used inside `PageTabs` and anywhere a overflowing row needs page-aligned padding. Props: `size`, `fullWidth`, `innerClassName`, `scrollbarClassName`.
 
+The inset before and after the row is `--page-x-padding`, as the cascade resolves it for the row: an app that needs another inset sets that variable on `:root` or on any ancestor of the row (for example `0` when a layout around the row already has its own gutter), and the spacers, the scrollbar and the fade all follow. The scrollbar and the fade read it when the row mounts and when the window is resized, so a value that changes in a media query follows too; one changed another way after mount (a class toggled on an ancestor) shows in the spacers at once and in the scrollbar and fade at the next resize. The row's tabs draw their keyboard focus ring inside themselves, since the scrolling row would clip a ring drawn outside.
+
 ### SectionHeader
 
 In-section title block (`title`, `description`, `actions`). Use **inside** `PageContentSection`, not as a replacement for `PageHeader`.

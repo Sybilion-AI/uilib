@@ -1,11 +1,11 @@
 export interface ToggleGroupContextValue {
   size?: 'sm' | 'md' | 'lg';
-  variant?: 'default' | 'outline';
+  variant?: 'default' | 'outline' | 'segmented';
 }
 
 interface ToggleGroupBaseProps extends React.ComponentPropsWithoutRef<'div'> {
   size?: 'sm' | 'md' | 'lg';
-  variant?: 'default' | 'outline';
+  variant?: 'default' | 'outline' | 'segmented';
   orientation?: 'horizontal' | 'vertical';
   dir?: 'ltr' | 'rtl';
   rovingFocus?: boolean;
@@ -34,5 +34,5 @@ export type ToggleGroupProps =
 export interface ToggleGroupItemProps extends React.ComponentPropsWithoutRef<'button'> {
   value: string;
   size?: 'sm' | 'md' | 'lg';
-  variant?: 'default' | 'outline';
+  variant?: 'default' | 'outline' | 'segmented';
 }

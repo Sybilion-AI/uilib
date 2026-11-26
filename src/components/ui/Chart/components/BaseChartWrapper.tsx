@@ -14,11 +14,19 @@ import { ChartDataPoint } from '#uilib/components/ui/ChartAreaInteractive/ChartA
 import {
   ChartLines,
   ForecastItemData,
+  type ForecastLineStyle,
   getForecastColor,
+  resolveHistoryLines,
 } from '#uilib/components/ui/ChartAreaInteractive/ChartLines';
+import {
+  HISTORY_SERIES_KEY,
+  HistoryItemData,
+  historySeriesKeys,
+  isHistorySeriesKey,
+} from '#uilib/components/ui/ChartAreaInteractive/chartHistories';
 import { Skeleton } from '#uilib/components/ui/Skeleton';
 import { chartRenderQueue } from '#uilib/utils/chartRenderQueue';
-import { Tooltip as ChartTooltip, ComposedChart, LineChart } from 'recharts';
+import { ComposedChart, LineChart } from 'recharts';
 import { LegendPayload } from 'recharts/types/component/DefaultLegendContent';
 
 import { normalizeTooltipPayload } from '../Chart.helpers';
@@ -33,10 +41,12 @@ import {
   type ChartEmptyStatusTone,
 } from './ChartEmptyState/ChartEmptyState';
 import { ChartGrid } from './ChartGrid';
+import { ChartPlacedTooltip, isTooltipUnder } from './ChartPlacedTooltip';
 import { ChartTooltipContent } from './ChartTooltipContent';
 import { CustomChartLegend } from './CustomChartLegend/CustomChartLegend';
 import { LegendSvg } from './LegendSvg/LegendSvg';
 import { QuantileBands } from './QuantileBands';
+import { SeriesLegend, type SeriesLegendItem } from './SeriesLegend';
 
 function clampTooltipTranslate(args: {
   coordinate: { x: number; y: number };
@@ -78,12 +88,34 @@ function clampTooltipTranslate(args: {
   return { x: tx, y: ty };
 }
 
+/**
+ * The tooltip slides after the cursor, unless the user asked for less motion.
+ * ChartPlacedTooltip turns this off under a narrow chart.
+ */
+const TOOLTIP_WRAPPER_STYLE = {
+  transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
+};
+
+function tooltipWrapperStyle() {
+  const reduceMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  return reduceMotion ? undefined : TOOLTIP_WRAPPER_STYLE;
+}
+
 export interface BaseChartWrapperProps {
   renderId?: string; // unique id for the render, used to identify the render in the render queue
   chartConfig?: ChartConfig;
   chartData: ChartDataPoint[];
   historicalLineColor?: string;
   forecastData?: ForecastItemData[];
+  /**
+   * Several history lines (one per product), each under `historical_<id>` in
+   * `chartData`, with its own colour and legend entry. Omit for the single
+   * `historical` line. With it, `historicalLineColor` does not apply: give
+   * each history its `color`.
+   */
+  historyData?: HistoryItemData[];
   loading: boolean;
   hasCombinedData?: boolean; // Indicates if combinedData is available (for cache hits)
   isDarkTheme: boolean;
@@ -104,6 +136,25 @@ export interface BaseChartWrapperProps {
   yMax?: number;
   autoScaleYAxis?: boolean;
   formatNumber?: (value: number) => string;
+  /**
+   * Formats the numbers in the tooltip. Without it they print as is. Not
+   * `formatNumber`, which is the axis's and often compact ("1.2k").
+   */
+  formatTooltipValue?: (value: number) => string;
+  /** Draw history lines across months with no value (default: a gap). */
+  connectHistoryNulls?: boolean;
+  /** Draw forecast lines across months with no value (default: a gap). */
+  connectForecastNulls?: boolean;
+  /** Draw history lines over the forecast lines (default: under them). */
+  historyOnTop?: boolean;
+  /** Mark each line's last point with a dot (default: on). */
+  showEndDots?: boolean;
+  /**
+   * Dot a point a line would leave invisible, so it still shows: with no
+   * value on either side on a line not drawn across gaps, or a line's only
+   * value on one drawn across them (default: off).
+   */
+  dotLonePoints?: boolean;
   formatDate?: (value: string, detailed?: boolean) => string;
   labelFormatter?: (value: unknown) => string;
   onLegendClick?: (data: LegendPayload, index: number, event: any) => void;
@@ -117,12 +168,23 @@ export interface BaseChartWrapperProps {
    */
   disableLineDrawAnimation?: boolean;
   showGrid?: boolean;
+  /**
+   * Draw the axes. Off, a hidden x-axis is kept so the tooltip still names
+   * the row's date.
+   */
   showAxes?: boolean;
   showTooltip?: boolean;
   showLegend?: boolean;
   showChartAxesLegend?: boolean;
   xAxisLabel?: string;
   yAxisLabel?: string;
+  /**
+   * `category` (default) gives every row one slot; `number` places the rows
+   * by their `date` read as a number (`'12.5'`), spaced by value.
+   */
+  xAxisType?: 'category' | 'number';
+  /** The x values to label (for example the first day of each month). */
+  xTicks?: ReadonlyArray<string | number>;
   showActiveDots?: boolean;
   overlayElements?: ReactNode;
   hiddenSeries?: Set<string>;
@@ -133,7 +195,15 @@ export interface BaseChartWrapperProps {
   onFailedAnalysisClick?: (analysisId?: number | string) => void;
   maxVisibleItems?: number;
   preventDeselection?: boolean;
-  legendVariant?: 'default' | 'svg';
+  /**
+   * `default`: the analyses legend (forecast icons, +N overflow, latest
+   * first). `svg`: drawn into the chart for export. `plain`: one entry per
+   * line, in `legendOrder` (else histories then forecasts), each a button
+   * that hides or shows it through `onLegendClick`.
+   */
+  legendVariant?: 'default' | 'svg' | 'plain';
+  /** With `legendVariant="plain"`: the lines' data keys in legend order. */
+  legendOrder?: string[];
   legendWidth?: number;
   legendMarginLeft?: number;
   containerProps?: Omit<
@@ -149,7 +219,8 @@ export interface BaseChartWrapperProps {
   /** When true, no placeholder UI for empty `chartData` (parent renders overlay). */
   suppressNoDataState?: boolean;
   onGridHeightChange?: (height: number) => void;
-  forecastLineStyle?: 'dashed' | 'solid';
+  /** Every forecast line's style, unless the line sets its own `lineStyle`. */
+  forecastLineStyle?: ForecastLineStyle;
   disableHistoricalAnimation?: boolean;
   /** Clear all hidden series (legend “show all”). */
   onShowAll?: () => void;
@@ -202,6 +273,7 @@ const BaseChartWrapperContent = forwardRef<
     chartData,
     historicalLineColor,
     forecastData = [],
+    historyData,
     loading,
     hasCombinedData,
     renderId,
@@ -223,7 +295,13 @@ const BaseChartWrapperContent = forwardRef<
     yMax,
     autoScaleYAxis = true,
     formatNumber,
-    formatDate: formatDateFn = formatDate,
+    formatTooltipValue,
+    connectHistoryNulls,
+    connectForecastNulls,
+    historyOnTop,
+    showEndDots,
+    dotLonePoints,
+    formatDate: formatDateProp,
     labelFormatter,
     onLegendClick,
     margin,
@@ -237,6 +315,8 @@ const BaseChartWrapperContent = forwardRef<
     showChartAxesLegend = true,
     xAxisLabel,
     yAxisLabel,
+    xAxisType,
+    xTicks,
     showActiveDots = true,
     overlayElements,
     hiddenSeries,
@@ -259,9 +339,13 @@ const BaseChartWrapperContent = forwardRef<
     maxVisibleItems,
     preventDeselection,
     legendVariant = 'default',
+    legendOrder,
     legendWidth = 1000,
     legendMarginLeft = 0,
   } = props;
+  // A number axis has no dates to format: its default prints the number.
+  const formatDateFn =
+    formatDateProp ?? (xAxisType === 'number' ? String : formatDate);
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const lineDataInitializedRef = useRef(false);
@@ -297,9 +381,17 @@ const BaseChartWrapperContent = forwardRef<
   const applyTooltipPosition = () => {
     const wrapper = tooltipWrapperRef.current;
     const coord = rawTooltipCoordinateRef.current;
-    const chartWrapper = rootRef.current?.querySelector('.recharts-wrapper');
+    // The chart the tooltip belongs to (with the grid on, the first chart in
+    // the root is the grid layer's).
+    const chartWrapper =
+      wrapper?.closest('.recharts-wrapper') ??
+      rootRef.current?.querySelector('.recharts-wrapper');
 
     if (!wrapper || !coord || !(chartWrapper instanceof HTMLElement)) return;
+
+    // A narrow chart's tooltip sits under it, where ChartPlacedTooltip has
+    // recharts put it. Leave it there: one writer, so it does not jump.
+    if (isTooltipUnder(wrapper)) return;
 
     const measured = wrapper.getBoundingClientRect();
     const width = tooltipSizeRef.current.width || measured.width;
@@ -350,8 +442,6 @@ const BaseChartWrapperContent = forwardRef<
 
       if (wrapperEl instanceof HTMLElement) {
         tooltipWrapperRef.current = wrapperEl;
-        wrapperEl.style.transition =
-          'transform 0.2s ease-out, opacity 0.2s ease-out';
         requestAnimationFrame(() => applyTooltipPositionRef.current());
       }
     };
@@ -406,7 +496,17 @@ const BaseChartWrapperContent = forwardRef<
   const renderTooltipContent = (props: any) => {
     // Filter payload to exclude items with null/undefined values
     // This prevents showing stale data when hovering on dates without data points
-    const filteredPayload = normalizeTooltipPayload(props.payload);
+    const normalized = normalizeTooltipPayload(props.payload);
+    // With `legendOrder`, the rows read in the legend's order (recharts lists
+    // every history line before the forecasts).
+    const filteredPayload =
+      legendOrder && normalized
+        ? [...normalized].sort(
+            (a, b) =>
+              orderRank(legendOrder, a.dataKey) -
+              orderRank(legendOrder, b.dataKey),
+          )
+        : normalized;
 
     // If no valid payload items, render ChartTooltipContent with active=false and empty payload
     // This allows ChartTooltipContent to clear its lastTooltipData state
@@ -418,6 +518,7 @@ const BaseChartWrapperContent = forwardRef<
           label={props.label}
           labelFormatter={labelFormatter || defaultLabelFormatter}
           indicator="dot"
+          valueFormatter={formatTooltipValue}
         />
       );
     }
@@ -441,47 +542,44 @@ const BaseChartWrapperContent = forwardRef<
         label={props.label}
         labelFormatter={labelFormatter || defaultLabelFormatter}
         indicator="dot"
+        valueFormatter={formatTooltipValue}
       />
     );
   };
 
-  // Extract only line data (historical and forecast_* properties) for animation trigger
-  // This prevents re-animation when only quantile band data changes
-  // Use a stable reference based on actual line data values, not chartData reference
-  const lineDataKey = useMemo(() => {
-    const lineData = chartData.map(point => {
-      const linePoint: Record<string, unknown> = { date: point.date };
-      if (point.historical !== undefined) {
-        linePoint.historical = point.historical;
-      }
-      // Include all forecast_* properties but exclude quantile band properties
-      Object.keys(point).forEach(key => {
-        if (key.startsWith('forecast_')) {
-          linePoint[key] = point[key];
-        }
-      });
-      return linePoint;
-    });
-    // Create a stable key based on actual line data values
-    return JSON.stringify(lineData);
-  }, [chartData]);
+  // Only the line data (history and forecast_* keys) triggers the draw
+  // animation, so a change to quantile band data alone does not re-animate.
+  // The string key keeps the array's reference stable while the values are.
+  const lineData = useMemo(
+    () =>
+      chartData.map(point => {
+        const linePoint: Record<string, unknown> = { date: point.date };
+        Object.keys(point).forEach(key => {
+          if (
+            (isHistorySeriesKey(key) && point[key] !== undefined) ||
+            key.startsWith('forecast_')
+          ) {
+            linePoint[key] = point[key];
+          }
+        });
+        return linePoint;
+      }),
+    [chartData],
+  );
+  const lineDataKey = useMemo(() => JSON.stringify(lineData), [lineData]);
+  const lineDataForAnimation = useMemo(() => lineData, [lineDataKey]);
 
-  const lineDataForAnimation = useMemo(() => {
-    const lineData = chartData.map(point => {
-      const linePoint: Record<string, unknown> = { date: point.date };
-      if (point.historical !== undefined) {
-        linePoint.historical = point.historical;
-      }
-      // Include all forecast_* properties but exclude quantile band properties
-      Object.keys(point).forEach(key => {
-        if (key.startsWith('forecast_')) {
-          linePoint[key] = point[key];
-        }
-      });
-      return linePoint;
-    });
-    return lineData;
-  }, [lineDataKey]);
+  const historyLegend = useMemo(
+    () =>
+      showLegend && historyData?.length
+        ? resolveHistoryLines(historyData).map(h => ({
+            value: h.name,
+            color: h.color,
+            dataKey: h.dataKey,
+          }))
+        : undefined,
+    [historyData, showLegend],
+  );
 
   const legendPayload = useMemo(() => {
     if (!showLegend) return [];
@@ -501,8 +599,59 @@ const BaseChartWrapperContent = forwardRef<
         // tooltip: item.tooltip,
         dimmed: item.dimmed,
         updated_at: item.updated_at,
+        lineStyle: item.lineStyle,
       }));
   }, [forecastData, excludeLegendIds, showLegend]);
+
+  // The plain legend: every line in `legendOrder` (else histories, then
+  // forecasts), forecasts drawn dashed when their lines are.
+  const plainLegend = useMemo((): SeriesLegendItem[] => {
+    if (!showLegend || legendVariant !== 'plain') return [];
+    // Without historyData the chart draws the single `historical` line;
+    // it is listed when it has a value to draw.
+    const singleHistory =
+      !historyData?.length &&
+      chartData.some(row => row[HISTORY_SERIES_KEY] != null)
+        ? [
+            {
+              dataKey: HISTORY_SERIES_KEY,
+              label: 'Historical Data',
+              color: historicalLineColor ?? (isDarkTheme ? '#ffffff' : '#000000'),
+            },
+          ]
+        : [];
+    const all: SeriesLegendItem[] = [
+      ...singleHistory,
+      ...(historyLegend ?? []).map(h => ({
+        dataKey: h.dataKey,
+        label: h.value,
+        color: h.color,
+      })),
+      ...legendPayload.map(p => ({
+        dataKey: p.dataKey,
+        label: p.value,
+        color: p.color,
+        dashed: (p.lineStyle ?? forecastLineStyle) === 'dashed',
+        dotted: (p.lineStyle ?? forecastLineStyle) === 'dotted',
+      })),
+    ];
+    if (!legendOrder) return all;
+    return [...all].sort(
+      (a, b) =>
+        orderRank(legendOrder, a.dataKey) - orderRank(legendOrder, b.dataKey),
+    );
+  }, [
+    showLegend,
+    legendVariant,
+    historyData,
+    chartData,
+    historicalLineColor,
+    isDarkTheme,
+    historyLegend,
+    legendPayload,
+    forecastLineStyle,
+    legendOrder,
+  ]);
 
   useEffect(() => {
     if (disableAnimation) {
@@ -614,12 +763,12 @@ const BaseChartWrapperContent = forwardRef<
   let effectiveAutoScale = autoScaleYAxis;
   if (autoScaleYAxis !== false && yMin !== undefined && yMax !== undefined) {
     const dataKeys = chartData.length > 0 ? Object.keys(chartData[0]) : [];
-    const historicalValues =
-      !includeHiddenInYScale && hiddenSeries?.has('historical')
-        ? []
-        : chartData
-            .map(p => p.historical)
-            .filter(v => v !== null && v !== undefined);
+    const visibleHistoryKeys = historySeriesKeys(historyData).filter(
+      k => includeHiddenInYScale || !hiddenSeries?.has(k),
+    );
+    const historicalValues = chartData
+      .flatMap(p => visibleHistoryKeys.map(k => p[k]))
+      .filter(v => v !== null && v !== undefined);
     const forecastKeys = dataKeys.filter(k => k.startsWith('forecast_'));
     const visibleForecastKeys =
       !includeHiddenInYScale && hiddenSeries
@@ -631,10 +780,14 @@ const BaseChartWrapperContent = forwardRef<
     const allLineValues = [...historicalValues, ...forecastValues];
 
     if (allLineValues.length > 0) {
-      // @ts-ignore
-      const dataMin = Math.min(...allLineValues);
-      // @ts-ignore
-      const dataMax = Math.max(...allLineValues);
+      // A loop, not Math.min(...values): one value per row and line can
+      // exceed the engine's argument limit.
+      let dataMin = Infinity;
+      let dataMax = -Infinity;
+      for (const v of allLineValues as number[]) {
+        if (v < dataMin) dataMin = v;
+        if (v > dataMax) dataMax = v;
+      }
       const explicitRange = yMax - yMin;
       const dataRange = dataMax - dataMin;
       const wastedSpaceRatio = (explicitRange - dataRange) / dataRange;
@@ -648,6 +801,28 @@ const BaseChartWrapperContent = forwardRef<
 
   const ChartComponent = chartType === 'line' ? LineChart : ComposedChart;
   const defaultLabelFormatter = (v: unknown) => formatDateFn(v as string, true);
+
+  // The same axes in the grid layer and the chart layer, so both share one
+  // scale. Hidden when showAxes is off: the hidden x-axis still places the
+  // rows by date, so the tooltip names it.
+  const axes = (
+    <ChartAxes
+      hide={!showAxes}
+      formatDate={formatDateFn}
+      formatNumber={formatNumber}
+      xAxisClassName={xAxisClassName}
+      yAxisClassName={yAxisClassName}
+      xAxisLabel={xAxisLabel}
+      yAxisLabel={yAxisLabel}
+      xAxisType={xAxisType}
+      xTicks={xTicks}
+      xMin={xMin}
+      xMax={xMax}
+      yMin={yMin}
+      yMax={yMax}
+      autoScaleYAxis={effectiveAutoScale}
+    />
+  );
 
   return (
     <div
@@ -676,21 +851,7 @@ const BaseChartWrapperContent = forwardRef<
         >
           <ChartComponent data={chartData} margin={margin}>
             <ChartGrid />
-            {showAxes && (
-              <ChartAxes
-                formatDate={formatDateFn}
-                formatNumber={formatNumber}
-                xAxisClassName={xAxisClassName}
-                yAxisClassName={yAxisClassName}
-                xAxisLabel={xAxisLabel}
-                yAxisLabel={yAxisLabel}
-                xMin={xMin}
-                xMax={xMax}
-                yMin={yMin}
-                yMax={yMax}
-                autoScaleYAxis={effectiveAutoScale}
-              />
-            )}
+            {axes}
           </ChartComponent>
         </ChartContainer>
       )}
@@ -703,29 +864,14 @@ const BaseChartWrapperContent = forwardRef<
         {...containerProps}
       >
         <ChartComponent data={chartData} margin={margin}>
-          {/* Render invisible axes for coordinate system, but hide labels */}
-          {showAxes && (
-            <ChartAxes
-              formatDate={formatDateFn}
-              formatNumber={formatNumber}
-              xAxisClassName={cn(xAxisClassName)}
-              yAxisClassName={cn(yAxisClassName)}
-              xAxisLabel={xAxisLabel}
-              yAxisLabel={yAxisLabel}
-              xMin={xMin}
-              xMax={xMax}
-              yMin={yMin}
-              yMax={yMax}
-              autoScaleYAxis={effectiveAutoScale}
-            />
-          )}
+          {axes}
 
           {/* Quantile Bands (widest to narrowest) */}
           {quantileBands?.[0] && (
             <QuantileBands
               hiddenBands={hiddenSeries}
               quantileBandKey={quantileBandKey}
-              animate
+              animate={!disableAnimation}
               animationDuration={150}
               animationBegin={0}
               customBands={quantileBands}
@@ -737,6 +883,7 @@ const BaseChartWrapperContent = forwardRef<
             historicalLineColor={historicalLineColor}
             chartData={chartData}
             forecastData={forecastData}
+            historyData={historyData}
             hiddenSeries={hiddenSeries}
             isDarkTheme={isDarkTheme}
             shouldAnimate={shouldAnimate}
@@ -744,14 +891,20 @@ const BaseChartWrapperContent = forwardRef<
             disableHistoricalAnimation={disableHistoricalAnimation}
             showLegend={showLegend}
             forecastLineStyle={forecastLineStyle}
+            connectHistoryNulls={connectHistoryNulls}
+            connectForecastNulls={connectForecastNulls}
+            historyOnTop={historyOnTop}
+            showEndDots={showEndDots}
+            dotLonePoints={dotLonePoints}
           />
 
           {showTooltip && (
             <div>
-              <ChartTooltip
+              <ChartPlacedTooltip
                 cursor={false}
                 offset={TOOLTIP_OFFSET}
                 allowEscapeViewBox={{ x: false, y: false }}
+                wrapperStyle={tooltipWrapperStyle()}
                 content={renderTooltipContent}
               />
             </div>
@@ -763,13 +916,36 @@ const BaseChartWrapperContent = forwardRef<
 
       <div className={cn(S.footer, footerClassName)}>
         {showLegend &&
-          (legendVariant === 'svg' ? (
+          (legendVariant === 'plain' ? (
+            <SeriesLegend
+              className={cn(S.plainLegend, legendClassName)}
+              items={plainLegend}
+              hiddenSeries={hiddenSeries}
+              onToggle={
+                onLegendClick
+                  ? dataKey => {
+                      const index = plainLegend.findIndex(
+                        item => item.dataKey === dataKey,
+                      );
+                      onLegendClick(
+                        { dataKey, value: plainLegend[index]?.label } as never,
+                        index,
+                        {},
+                      );
+                    }
+                  : undefined
+              }
+            />
+          ) : legendVariant === 'svg' ? (
             <LegendSvg
-              payload={legendPayload.map(p => ({
-                value: p.value,
-                color: p.color,
-                dataKey: p.dataKey,
-              }))}
+              payload={[
+                ...(historyLegend ?? []).map(p => ({ ...p, solid: true })),
+                ...legendPayload.map(p => ({
+                  value: p.value,
+                  color: p.color,
+                  dataKey: p.dataKey,
+                })),
+              ]}
               width={legendWidth}
               marginLeft={legendMarginLeft}
             />
@@ -777,6 +953,7 @@ const BaseChartWrapperContent = forwardRef<
             <CustomChartLegend
               className={legendClassName}
               payload={legendPayload}
+              histories={historyLegend}
               onClick={onLegendClick}
               hiddenSeries={hiddenSeries}
               onAnalysisSelect={onAnalysisSelect}
@@ -802,6 +979,13 @@ BaseChartWrapperContent.displayName = 'BaseChartWrapperContent';
  * Base chart wrapper component with common structure
  * Handles container, grid, axes, tooltip, and legend
  */
+
+/** A key's place in `order`; keys not in it go last, in their own order. */
+function orderRank(order: readonly string[], key: unknown): number {
+  const i = typeof key === 'string' ? order.indexOf(key) : -1;
+  return i === -1 ? order.length : i;
+}
+
 export function BaseChartWrapper(props: BaseChartWrapperProps) {
   const { renderId, chartData, loading, hasCombinedData, legendVariant } =
     props;

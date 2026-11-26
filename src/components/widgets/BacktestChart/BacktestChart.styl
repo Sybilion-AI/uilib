@@ -1,0 +1,23 @@
+.root
+  display flex
+  flex-direction column
+  width 100%
+
+.scores
+  margin 0.75rem 0 0
+  padding 0
+  list-style none
+  display flex
+  flex-direction column
+  gap 0.25rem
+  font-size 0.875rem
+  color var(--muted-foreground)
+
+  strong
+    color var(--foreground)
+    font-weight 500
+
+// BaseChartWrapper fills its parent's height (min-height 100%); here the
+// legend and the scores share that height, so the chart keeps its own.
+.root .chart
+  min-height 0

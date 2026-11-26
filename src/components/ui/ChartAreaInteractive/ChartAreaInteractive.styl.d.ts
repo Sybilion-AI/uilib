@@ -4,6 +4,7 @@ interface CssExports {
   'chartContainer': string;
   'chartContainerWrapper': string;
   'chartHeaderContainer': string;
+  'chartHeaderTitle': string;
   'fadeIn': string;
   'loading': string;
   'loadingSpinner': string;

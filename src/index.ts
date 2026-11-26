@@ -27,6 +27,7 @@ export * from './components/ui/Chart';
 export * from './components/ui/ChartAreaInteractive';
 export * from './components/ui/DonutChart';
 export * from './components/ui/BarChart';
+export * from './components/ui/StackedAreaChart';
 export * from './components/ui/Checkbox';
 export * from './components/ui/Confirm';
 export * from './components/ui/DatePicker';
@@ -85,5 +86,6 @@ export * from './components/widgets/DriverCard';
 export * from './components/widgets/DriverMap';
 export * from './components/widgets/DriversComparisonChart';
 export * from './components/widgets/PerformanceChart';
+export * from './components/widgets/BacktestChart';
 export * from './components/widgets/SybilionAuthLayout';
 // SPA/router widgets (react-router-dom): `@sybilion/uilib/signin`

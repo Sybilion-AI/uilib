@@ -1,18 +1,19 @@
 import cn from 'classnames';
 import { forwardRef, useMemo } from 'react';
 
-import type { ChartConfig } from '#uilib/components/ui/Chart';
-import {
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '#uilib/components/ui/Chart';
+import type { ChartConfig } from '#uilib/components/ui/Chart/Chart.types';
 import { getChartSeriesColor } from '#uilib/components/ui/Chart/chartSeriesPalette';
+// Straight from the components, not the Chart index, which also loads the
+// canvas chart (lightweight-charts) and its styles.
+import { ChartContainer } from '#uilib/components/ui/Chart/components/ChartContainer';
+import { ChartPlacedTooltip as ChartTooltip } from '#uilib/components/ui/Chart/components/ChartPlacedTooltip';
+import { ChartTooltipContent } from '#uilib/components/ui/Chart/components/ChartTooltipContent';
+import { SeriesLegend } from '#uilib/components/ui/Chart/components/SeriesLegend';
+import { useLegendState } from '#uilib/components/ui/Chart/hooks/useLegendState';
 import {
   Bar,
   CartesianGrid,
+  Label,
   BarChart as RechartsBarChart,
   XAxis,
   YAxis,
@@ -22,6 +23,11 @@ import S from './BarChart.styl';
 import { BarChartProps, BarChartSeries } from './BarChart.types';
 
 const STACK_ID = 'stack';
+/** Room for an axis title beside the ticks (recharts' default is 30). */
+const CATEGORY_AXIS_HEIGHT_WITH_LABEL = 44;
+
+const seriesColor = (item: BarChartSeries, index: number) =>
+  item.color ?? getChartSeriesColor(index);
 
 function buildChartConfig(series: BarChartSeries[]): ChartConfig {
   const config: ChartConfig = {};
@@ -29,7 +35,7 @@ function buildChartConfig(series: BarChartSeries[]): ChartConfig {
   series.forEach((item, index) => {
     config[item.key] = {
       label: item.label ?? item.key,
-      color: item.color ?? getChartSeriesColor(index),
+      color: seriesColor(item, index),
     };
   });
 
@@ -49,17 +55,57 @@ const BarChart = forwardRef<HTMLDivElement, BarChartProps>(
       showTooltip = true,
       showGrid = true,
       valueFormatter,
+      tooltipValueFormatter,
+      categoryTickFormatter,
+      tooltipLabelFormatter,
+      categoryAxisLabel,
+      valueAxisLabel,
+      hiddenKeys,
+      onToggleKey,
       height,
+      disableAnimation,
       ...props
     },
     ref,
   ) => {
     const config = useMemo(() => buildChartConfig(series), [series]);
+    const legend = useLegendState();
+    const hidden: ReadonlySet<string> = hiddenKeys ?? legend.hiddenSeries;
+    // The legend entries are buttons only for a host that asked for toggling
+    // (onToggleKey); without hiddenKeys the chart keeps the hidden set itself.
+    const toggle = onToggleKey
+      ? (key: string) => {
+          onToggleKey(key);
+          if (!hiddenKeys) legend.toggleSeries(key);
+        }
+      : undefined;
 
     const isHorizontal = orientation === 'horizontal';
     const stackId = mode === 'stacked' ? STACK_ID : undefined;
     const barRadius: [number, number, number, number] | number =
       mode === 'stacked' ? 0 : isHorizontal ? [0, 3, 3, 0] : [3, 3, 0, 0];
+
+    const axisLine = { stroke: 'var(--border)', strokeWidth: 1 };
+    const categoryLabel = categoryAxisLabel ? (
+      isHorizontal ? (
+        <Label value={categoryAxisLabel} angle={-90} position="insideLeft" />
+      ) : (
+        <Label value={categoryAxisLabel} position="insideBottom" offset={0} />
+      )
+    ) : null;
+    const valueLabel = valueAxisLabel ? (
+      isHorizontal ? (
+        <Label value={valueAxisLabel} position="insideBottom" offset={0} />
+      ) : (
+        <Label value={valueAxisLabel} angle={-90} position="insideLeft" />
+      )
+    ) : null;
+    const labelFormatter = tooltipLabelFormatter
+      ? (label: unknown) =>
+          tooltipLabelFormatter(
+            typeof label === 'number' ? label : String(label ?? ''),
+          )
+      : undefined;
 
     return (
       <div ref={ref} className={cn(S.root, className)} {...props}>
@@ -85,16 +131,25 @@ const BarChart = forwardRef<HTMLDivElement, BarChartProps>(
                 <XAxis
                   type="number"
                   tickLine={false}
-                  axisLine={{ stroke: 'var(--border)', strokeWidth: 1 }}
+                  axisLine={axisLine}
                   tickFormatter={valueFormatter}
-                />
+                  height={
+                    valueAxisLabel ? CATEGORY_AXIS_HEIGHT_WITH_LABEL : undefined
+                  }
+                >
+                  {valueLabel}
+                </XAxis>
                 <YAxis
                   type="category"
                   dataKey={categoryKey}
                   tickLine={false}
-                  axisLine={{ stroke: 'var(--border)', strokeWidth: 1 }}
-                  width={80}
-                />
+                  axisLine={axisLine}
+                  tickFormatter={categoryTickFormatter}
+                  // Room for the rotated title beside the category names.
+                  width={categoryAxisLabel ? 96 : 80}
+                >
+                  {categoryLabel}
+                </YAxis>
               </>
             ) : (
               <>
@@ -102,21 +157,38 @@ const BarChart = forwardRef<HTMLDivElement, BarChartProps>(
                   type="category"
                   dataKey={categoryKey}
                   tickLine={false}
-                  axisLine={{ stroke: 'var(--border)', strokeWidth: 1 }}
-                />
+                  axisLine={axisLine}
+                  tickFormatter={categoryTickFormatter}
+                  height={
+                    categoryAxisLabel
+                      ? CATEGORY_AXIS_HEIGHT_WITH_LABEL
+                      : undefined
+                  }
+                >
+                  {categoryLabel}
+                </XAxis>
                 <YAxis
                   type="number"
                   tickLine={false}
-                  axisLine={{ stroke: 'var(--border)', strokeWidth: 1 }}
-                  width={48}
+                  axisLine={axisLine}
+                  // Room for the title beside the tick labels.
+                  width={valueAxisLabel ? 64 : 48}
                   tickFormatter={valueFormatter}
-                />
+                >
+                  {valueLabel}
+                </YAxis>
               </>
             )}
             {showTooltip && (
               <ChartTooltip
                 cursor={{ fill: 'var(--muted)' }}
-                content={<ChartTooltipContent indicator="dot" />}
+                content={
+                  <ChartTooltipContent
+                    indicator="dot"
+                    valueFormatter={tooltipValueFormatter}
+                    labelFormatter={labelFormatter}
+                  />
+                }
               />
             )}
             {series.map(item => (
@@ -127,11 +199,25 @@ const BarChart = forwardRef<HTMLDivElement, BarChartProps>(
                 stackId={stackId}
                 radius={barRadius}
                 maxBarSize={48}
+                hide={hidden.has(item.key)}
+                isAnimationActive={!disableAnimation}
               />
             ))}
-            {showLegend && <ChartLegend content={<ChartLegendContent />} />}
           </RechartsBarChart>
         </ChartContainer>
+
+        {showLegend && (
+          <SeriesLegend
+            items={series.map((item, index) => ({
+              dataKey: item.key,
+              label: item.label ?? item.key,
+              color: seriesColor(item, index),
+              square: true,
+            }))}
+            hiddenSeries={hidden}
+            onToggle={toggle}
+          />
+        )}
       </div>
     );
   },

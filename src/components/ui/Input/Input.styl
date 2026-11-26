@@ -4,6 +4,12 @@
   display flex
   width 100%
   min-width 0
+  // The ring is a box-shadow; reset the browser's own inset border, which
+  // apps without base.css would otherwise draw on top of it.
+  border 0
+  // Form fields don't inherit the page font. Only the family, so an app's own
+  // weight or line-height on the field is not reset; sizes set font-size.
+  font-family inherit
   background-color transparent
   outline none
   overflow visible
@@ -29,6 +35,10 @@
     &:focus,
     &:focus-visible
       box-shadow none
+
+  // Pill corners; after the variant rules so it overrides their radius
+  &.round
+    border-radius 100px
 
   &.size-sm
     height 32px

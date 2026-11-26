@@ -1,7 +1,10 @@
 import cn from 'classnames';
 import { CSSProperties, ReactNode } from 'react';
 
-import { getPayloadConfigFromPayload, type TooltipItem } from '../Chart.helpers';
+import {
+  type TooltipItem,
+  getPayloadConfigFromPayload,
+} from '../Chart.helpers';
 import S from '../Chart.styl';
 import { ChartConfig } from '../Chart.types';
 
@@ -22,7 +25,42 @@ type ChartTooltipItemProps = {
     index: number,
     payload: unknown,
   ) => ReactNode;
+  valueFormatter?: (value: number) => string;
 };
+
+const rawValue = (value: number) =>
+  value.toLocaleString(undefined, { maximumFractionDigits: 20 });
+
+const isMissing = (value: unknown) =>
+  value == null || (typeof value === 'number' && Number.isNaN(value));
+
+/**
+ * A row's value as text: numbers through `format`, anything else as is, and
+ * a missing one (null, NaN) as null. A range shows a missing end as a dash,
+ * and is missing itself when both ends are.
+ */
+function valueText(
+  value: unknown,
+  format: (value: number) => string,
+): string | null {
+  const one = (v: unknown) =>
+    isMissing(v) ? null : typeof v === 'number' ? format(v) : String(v);
+  if (!Array.isArray(value)) return one(value);
+  const [low, high] = [one(value[0]), one(value[1])];
+  if (low == null && high == null) return null;
+  return `${low ?? '—'} – ${high ?? '—'}`;
+}
+
+function TooltipValue({
+  value,
+  format,
+}: {
+  value: unknown;
+  format: (value: number) => string;
+}) {
+  const text = valueText(value, format);
+  return text == null ? null : <span className={S.tooltipValue}>{text}</span>;
+}
 
 export function ChartTooltipItem({
   item,
@@ -35,6 +73,7 @@ export function ChartTooltipItem({
   color,
   nameKey,
   formatter,
+  valueFormatter = rawValue,
 }: ChartTooltipItemProps) {
   const key = `${nameKey || item.name || item.dataKey || 'value'}`;
   const itemConfig = getPayloadConfigFromPayload(config, item, key);
@@ -88,15 +127,7 @@ export function ChartTooltipItem({
               </span>
             </div>
 
-            {item.value && (
-              <span className={S.tooltipValue}>
-                {Array.isArray(item.value)
-                  ? `${item.value[0].toLocaleString(undefined, { maximumFractionDigits: 20 })} – ${item.value[1].toLocaleString(undefined, { maximumFractionDigits: 20 })}`
-                  : item.value.toLocaleString(undefined, {
-                      maximumFractionDigits: 20,
-                    })}
-              </span>
-            )}
+            <TooltipValue value={item.value} format={valueFormatter} />
           </div>
         </>
       )}

@@ -6,6 +6,8 @@ export interface SelectTriggerProps extends React.ComponentProps<
   size?: 'xs' | 'sm' | 'md' | 'lg';
   variant?: 'default' | 'clear';
   darker?: boolean;
+  /** Fully rounded (pill) corners: `border-radius: 100px`. */
+  round?: boolean;
   className?: string;
   children?: React.ReactNode;
   hideChevron?: boolean;

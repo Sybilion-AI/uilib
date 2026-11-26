@@ -32,7 +32,20 @@ import { SelectInlineRenamer } from './SelectInlineRenamer';
 const isFailed = (item: AnalysesSelectorItem) =>
   item.status?.toLowerCase() === 'fail';
 
-const isDashedIcon = (item: AnalysesSelectorItem) => item.id !== -1;
+/**
+ * An entry listed in the selector. History entries (the single "Historical",
+ * id -1, or one per `historicalItems` line, which carries its `seriesKey`) are
+ * shown only: like "Historical", they do not toggle or select.
+ */
+type ListedItem = AnalysesSelectorItem & {
+  dimmed?: boolean;
+  seriesKey?: string;
+};
+
+const isHistoryItem = (item: ListedItem) =>
+  item.id === -1 || item.seriesKey !== undefined;
+
+const isDashedIcon = (item: AnalysesSelectorItem) => !isHistoryItem(item);
 
 const defaultIsAnalysisInProgress = (status?: string) =>
   ['pending', 'running', 'cancelling'].includes(status?.toLowerCase() ?? '');
@@ -106,6 +119,7 @@ export function AnalysesSelector({
   triggerProps,
   onFailedItemClick,
   showHistorical = true,
+  historicalItems,
   enableToggleHidden = false,
   maxVisibleItems = 1,
   preventDeselection = false,
@@ -138,17 +152,35 @@ export function AnalysesSelector({
     );
   }, [selectedIds]);
 
+  // The history entries: one per `historicalItems` line, or the single "Historical".
+  const historyEntries = useMemo(() => {
+    if (!showHistorical) return [];
+    if (historicalItems?.length) {
+      return historicalItems.map(
+        (h, index): ListedItem => ({
+          // Negative ids keep them apart from analyses in keys; the history
+          // is recognised by its seriesKey.
+          id: -(index + 1),
+          label: h.label,
+          color: h.color,
+          seriesKey: h.seriesKey,
+          dimmed: hiddenSeries.has(h.seriesKey),
+        }),
+      );
+    }
+    return [
+      {
+        id: -1,
+        label: 'Historical',
+        dimmed: hiddenSeries.has('historical'),
+      },
+    ];
+  }, [showHistorical, historicalItems, hiddenSeries]);
+
   // In inlineMode, show Historical + selected analyses (limited by maxVisibleItems)
   const selectedItems = useMemo(() => {
     if (inlineMode) {
-      const list = [];
-      if (showHistorical) {
-        list.push({
-          id: -1,
-          label: 'Historical',
-          dimmed: hiddenSeries.has('historical'),
-        });
-      }
+      const list: ListedItem[] = [...historyEntries];
       // Filter by selectedIds, exclude failed items and user series
       const analysesOnly = items.filter(
         item =>
@@ -167,18 +199,12 @@ export function AnalysesSelector({
       return list.concat(limitedItems);
     }
     // Non-inlineMode: keep original behavior
-    const list = [];
-    if (showHistorical) {
-      list.push({
-        id: -1,
-        label: 'Historical',
-      });
-    }
+    const list: ListedItem[] = [...historyEntries];
     return list.concat(items.filter(item => selectedSet.has(item.id)));
   }, [
     items,
     selectedSet,
-    showHistorical,
+    historyEntries,
     inlineMode,
     hiddenSeries,
     maxVisibleItems,
@@ -262,7 +288,8 @@ export function AnalysesSelector({
     handleItemClick(item);
   };
 
-  const handleItemClick = (item: AnalysesSelectorItem) => {
+  const handleItemClick = (item: ListedItem) => {
+    if (item.seriesKey !== undefined) return;
     if (isFailed(item) && onFailedItemClick) {
       onFailedItemClick(item.id);
     } else if (preventDeselection || (inlineMode && enableToggleHidden)) {
@@ -288,9 +315,10 @@ export function AnalysesSelector({
     );
   };
 
-  const renderItemLabel = (item: AnalysesSelectorItem) => (
+  const renderItemLabel = (item: ListedItem) => (
     <LabelWithId
-      id={item.id}
+      // -1 shows no id badge: history lines have no analysis id.
+      id={isHistoryItem(item) ? -1 : item.id}
       label={
         isAnalysisInProgressProp(item.status) ? (
           <TextShimmer as="span">{item.label}</TextShimmer>
@@ -323,11 +351,11 @@ export function AnalysesSelector({
       >
         {selectedItems.map(item => (
           <div
-            key={item.id}
+            key={item.seriesKey ?? item.id}
             className={cn(
               S.item,
               disabled && S.disabled,
-              item.id === -1 && S.historical,
+              isHistoryItem(item) && S.historical,
               item.dimmed && S.dimmed,
             )}
             onClick={() => !disabled && handleItemClick(item)}

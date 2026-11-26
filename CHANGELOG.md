@@ -2,6 +2,107 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.10](https://github.com/Sybilion-AI/uilib/compare/v1.8.9...v1.8.10) (2026-11-26)
+
+
+### Features
+
+* **InteractiveContent:** render fenced code blocks ([#29](https://github.com/Sybilion-AI/uilib/issues/29)) ([ffd65e7](https://github.com/Sybilion-AI/uilib/commit/ffd65e7463ef0d429d0a818af48e5fea13b22ba4))
+
+### [1.8.9](https://github.com/Sybilion-AI/uilib/compare/v1.8.8...v1.8.9) (2026-11-26)
+
+
+### Bug Fixes
+
+* **Input:** inherit the page font family ([#28](https://github.com/Sybilion-AI/uilib/issues/28)) ([3f75964](https://github.com/Sybilion-AI/uilib/commit/3f75964208318ca077c5f153e6d089350d52d041))
+
+### [1.8.8](https://github.com/Sybilion-AI/uilib/compare/v1.8.7...v1.8.8) (2026-11-26)
+
+
+### Bug Fixes
+
+* **Input:** reset the browser's default border ([#27](https://github.com/Sybilion-AI/uilib/issues/27)) ([6895e77](https://github.com/Sybilion-AI/uilib/commit/6895e77fa3059ad507b60a3378d3915c3a099259))
+
+### [1.8.7](https://github.com/Sybilion-AI/uilib/compare/v1.8.6...v1.8.7) (2026-11-25)
+
+
+### Bug Fixes
+
+* **DropdownMenu:** centre the checkbox tick and radio dot in the row ([#25](https://github.com/Sybilion-AI/uilib/issues/25)) ([93b7983](https://github.com/Sybilion-AI/uilib/commit/93b7983d177ce5f0357980fb46c307d791d889c4))
+* **DropdownMenu:** no focus ring on menu rows ([#26](https://github.com/Sybilion-AI/uilib/issues/26)) ([533c186](https://github.com/Sybilion-AI/uilib/commit/533c186bdb5e049448c8cb9d4ee7c59930fe56ac))
+
+### [1.8.6](https://github.com/Sybilion-AI/uilib/compare/v1.8.5...v1.8.6) (2026-11-19)
+
+### [1.8.5](https://github.com/Sybilion-AI/uilib/compare/v1.8.4...v1.8.5) (2026-11-17)
+
+
+### Features
+
+* **StackedAreaChart:** dot an overlay's only value ([#22](https://github.com/Sybilion-AI/uilib/issues/22)) ([eaac43e](https://github.com/Sybilion-AI/uilib/commit/eaac43e083497d2814e6ceb83b4523b9edf77dbe))
+
+### [1.8.4](https://github.com/Sybilion-AI/uilib/compare/v1.8.3...v1.8.4) (2026-11-12)
+
+
+### Features
+
+* **charts:** what the app's decision-view and chat charts need (ENG-1777) ([#21](https://github.com/Sybilion-AI/uilib/issues/21)) ([d6f35c6](https://github.com/Sybilion-AI/uilib/commit/d6f35c6677fedd50c943324e1e83a4ad8eed7dc4))
+
+### [1.8.3](https://github.com/Sybilion-AI/uilib/compare/v1.8.2...v1.8.3) (2026-11-05)
+
+
+### Features
+
+* **TimeRangeControls:** segmented range control on the chart header line (ENG-1776) ([#20](https://github.com/Sybilion-AI/uilib/issues/20)) ([6709dfe](https://github.com/Sybilion-AI/uilib/commit/6709dfe8fe832a9b2f2f4c98f95cd49ad5817930))
+
+### [1.8.2](https://github.com/Sybilion-AI/uilib/compare/v1.8.1...v1.8.2) (2026-11-05)
+
+
+### Bug Fixes
+
+* **Chart:** auto-scaled y-axis fits the data with recharts' own nice range (ENG-1776) ([#18](https://github.com/Sybilion-AI/uilib/issues/18)) ([680efef](https://github.com/Sybilion-AI/uilib/commit/680efeff3610224190d4badaecec7cddb5bdc829))
+* **TimeRangeControls:** show the preset select below 768px, so phones keep the range control (ENG-1776) ([#19](https://github.com/Sybilion-AI/uilib/issues/19)) ([4f0fdc1](https://github.com/Sybilion-AI/uilib/commit/4f0fdc10c10a4ab0b5a50328bd8ca458a9017886))
+
+### [1.8.1](https://github.com/Sybilion-AI/uilib/compare/v1.8.0...v1.8.1) (2026-11-04)
+
+
+### Bug Fixes
+
+* **Chart:** narrow-chart tooltip starts right under the x-axis labels (ENG-1776) ([#17](https://github.com/Sybilion-AI/uilib/issues/17)) ([535d6e5](https://github.com/Sybilion-AI/uilib/commit/535d6e55f3dfefeabdae58c6c55fb5a45b497b79))
+
+## [1.8.0](https://github.com/Sybilion-AI/uilib/compare/v1.7.2...v1.8.0) (2026-11-03)
+
+
+### Features
+
+* **ChartAreaInteractive:** several history lines, each forecast joins its own (ENG-1774) ([#14](https://github.com/Sybilion-AI/uilib/issues/14)) ([0467461](https://github.com/Sybilion-AI/uilib/commit/046746137cb7fb30f44522da000f384217bef7ce))
+* **StackedAreaChart:** stacked cost layers with margin and compare zones (ENG-1775) ([#15](https://github.com/Sybilion-AI/uilib/issues/15)) ([7e882a1](https://github.com/Sybilion-AI/uilib/commit/7e882a1674d66d60bbe8ce985347438d8c5cbb42))
+
+
+### Bug Fixes
+
+* **Page:** follow --page-x-padding on the row and keep the tab focus ring inside ([#13](https://github.com/Sybilion-AI/uilib/issues/13)) ([71dc7b5](https://github.com/Sybilion-AI/uilib/commit/71dc7b5baeb8cb16baf1ee24aa0a318e64ad2ac2))
+
+### [1.7.2](https://github.com/Sybilion-AI/uilib/compare/v1.7.1...v1.7.2) (2026-10-21)
+
+
+### Bug Fixes
+
+* remove rudimental doc ([51cd09b](https://github.com/Sybilion-AI/uilib/commit/51cd09b910da464927e2f2f4407e505ba21ce829))
+
+### [1.7.1](https://github.com/Sybilion-AI/uilib/compare/v1.7.0...v1.7.1) (2026-10-20)
+
+
+### Bug Fixes
+
+* publish without npm provenance ([#11](https://github.com/Sybilion-AI/uilib/issues/11)) ([013c85d](https://github.com/Sybilion-AI/uilib/commit/013c85d6eb6b5772b6e40462e74aa20c62ee9e03))
+
+## [1.7.0](https://github.com/Sybilion-AI/uilib/compare/v1.6.1...v1.7.0) (2026-10-20)
+
+
+### Features
+
+* Button, Input and Select - Add round prop for pill corners ([#7](https://github.com/Sybilion-AI/uilib/issues/7)) ([5e05054](https://github.com/Sybilion-AI/uilib/commit/5e050545acf98e11dcdf848a179b1b73d6fa68c8))
+
 ### [1.6.1](https://github.com/Mir-Insight/uilib/compare/v1.6.0...v1.6.1) (2026-10-15)
 
 

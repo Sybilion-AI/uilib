@@ -60,6 +60,30 @@
     background-color var(--background)
     color var(--foreground)
 
+// One button of a segmented control (ToggleGroup variant="segmented"): small
+// and quiet, the picked one a raised white chip on the group's grey track.
+// Two classes, so it wins over the size classes and ToggleGroup's .item.
+.toggle.variant-segmented
+  height auto
+  padding 4px 10px
+  border none
+  border-radius 6px
+  font-size var(--text-xs)
+  font-weight 400
+  line-height 1.4
+  color var(--muted-foreground)
+  background-color transparent
+
+  &:hover
+    background-color transparent
+    color var(--foreground)
+
+  &[data-state='on']
+    border-radius 6px
+    background-color var(--background)
+    color var(--foreground)
+    box-shadow 0 1px 2px 0 rgba(0, 0, 0, 0.08)
+
 .size-sm
   height 1.75rem
   padding-left 0.75rem

@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'root': string;
+  'round': string;
   'size-lg': string;
   'size-md': string;
   'size-sm': string;

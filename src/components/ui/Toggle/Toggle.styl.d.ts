@@ -7,6 +7,7 @@ interface CssExports {
   'toggle': string;
   'variant-default': string;
   'variant-outline': string;
+  'variant-segmented': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

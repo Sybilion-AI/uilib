@@ -5,7 +5,6 @@ import {
   CartesianGrid,
   Line,
   LineChart,
-  Tooltip as RechartsTooltip,
   type TooltipContentProps,
   XAxis,
   YAxis,
@@ -15,6 +14,7 @@ import {
   type ChartConfig,
   ChartContainer,
   ChartEmptyState,
+  ChartTooltip,
 } from '../../ui/Chart/Chart';
 import type { DriverData } from '../DriverMap/driverMapGeography';
 import S from './DriverPerformanceChart.styl';
@@ -133,7 +133,7 @@ export function DriverPerformanceChart({
             width={0}
             domain={['dataMin', 'dataMax']}
           />
-          <RechartsTooltip cursor={false} content={renderTooltipContent} />
+          <ChartTooltip cursor={false} content={renderTooltipContent} />
           <Line dataKey="value" type="natural" stroke="var(--color-value)" />
         </LineChart>
       </ChartContainer>

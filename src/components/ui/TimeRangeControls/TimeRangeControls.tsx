@@ -25,52 +25,33 @@ export type TimeRangeControlsProps = {
   timeRange: string;
   onTimeRangeChange: (range: string) => void;
   loading?: boolean;
+  /**
+   * The toggle row's look: `default` (plain buttons) or `segmented` (small
+   * buttons on a grey track, the picked one raised). The select shown below
+   * 768px is the same either way.
+   */
+  variant?: 'default' | 'segmented';
 };
 
-export const TimeRangeControls = memo(
-  ({ timeRange, onTimeRangeChange, loading }: TimeRangeControlsProps) => (
-    <div className={S.timeRangeContainer}>
-      <ToggleGroup
-        type="single"
-        value={toggleValueForTimeRange(timeRange)}
-        onValueChange={onTimeRangeChange}
-        variant="outline"
-        disabled={loading}
-        className={S.timeRangeToggleGroup}
-      >
-        {TIME_RANGES.map(range => (
-          <ToggleGroupItem
-            key={range}
-            value={range}
-            className={S.timeRangeToggleItem}
-          >
-            {range}
-          </ToggleGroupItem>
-        ))}
-      </ToggleGroup>
-    </div>
-  ),
-);
-
-TimeRangeControls.displayName = 'TimeRangeControls';
-
+/**
+ * The preset ranges as a select. A range that is not a preset (one dragged on
+ * the chart) shows "Custom" rather than a preset it is not.
+ */
 export const TimeRangeSelect = memo(
-  ({
-    timeRange,
-    onTimeRangeChange,
-    loading,
-  }: TimeRangeControlsProps & { loading: boolean }) => (
+  ({ timeRange, onTimeRangeChange, loading }: TimeRangeControlsProps) => (
     <Select
-      value={toggleValueForTimeRange(timeRange) || undefined}
+      // An empty value shows the placeholder; undefined would leave the
+      // select uncontrolled and keep the last preset picked.
+      value={toggleValueForTimeRange(timeRange)}
       onValueChange={onTimeRangeChange}
       disabled={loading}
     >
       <SelectTrigger
         className={S.timeRangeSelectTrigger}
         size="sm"
-        aria-label="Select a value"
+        aria-label="Time range"
       >
-        <SelectValue placeholder="1 year" />
+        <SelectValue placeholder="Custom" />
       </SelectTrigger>
 
       <SelectContent className={S.timeRangeSelectContent}>
@@ -89,3 +70,44 @@ export const TimeRangeSelect = memo(
 );
 
 TimeRangeSelect.displayName = 'TimeRangeSelect';
+
+/**
+ * The preset ranges as a toggle row from 768px up, and as a select below it
+ * (CSS shows one of the two), so the control stays on a phone.
+ */
+export const TimeRangeControls = memo(
+  ({
+    timeRange,
+    onTimeRangeChange,
+    loading,
+    variant = 'default',
+  }: TimeRangeControlsProps) => (
+    <div className={S.timeRangeContainer}>
+      <ToggleGroup
+        type="single"
+        value={toggleValueForTimeRange(timeRange)}
+        onValueChange={onTimeRangeChange}
+        variant={variant === 'segmented' ? 'segmented' : 'outline'}
+        disabled={loading}
+        className={S.timeRangeToggleGroup}
+      >
+        {TIME_RANGES.map(range => (
+          <ToggleGroupItem
+            key={range}
+            value={range}
+            className={S.timeRangeToggleItem}
+          >
+            {range}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
+      <TimeRangeSelect
+        timeRange={timeRange}
+        onTimeRangeChange={onTimeRangeChange}
+        loading={loading}
+      />
+    </div>
+  ),
+);
+
+TimeRangeControls.displayName = 'TimeRangeControls';

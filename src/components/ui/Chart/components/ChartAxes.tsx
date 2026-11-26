@@ -1,12 +1,16 @@
-import { useMemo, useRef } from 'react';
+import { type ComponentProps, useMemo, useRef } from 'react';
 
 import { Label, XAxis, YAxis } from 'recharts';
 
 import {
-  formatNumber,
+  formatNumber as defaultFormatNumber,
   formatYAxisNumber,
   generateRoundedYTicks,
 } from '../tools/formatters';
+
+/** Axis room for a title beside the ticks. */
+const X_AXIS_HEIGHT_WITH_LABEL = 44;
+const Y_AXIS_WIDTH_WITH_LABEL = 72;
 
 interface ChartAxesProps {
   xAxisClassName?: string;
@@ -20,7 +24,23 @@ interface ChartAxesProps {
   yMin?: number;
   yMax?: number;
   autoScaleYAxis?: boolean;
+  /**
+   * `category` (default) gives every row one slot; `number` places the rows
+   * by their `date` read as a number, from the smallest to the largest.
+   */
+  xAxisType?: 'category' | 'number';
+  /** The x values to label; without it recharts picks them. */
+  xTicks?: ReadonlyArray<string | number>;
+  /**
+   * Draw no axes. A hidden x-axis is kept, so the tooltip still names the
+   * row's date. The y-axis keeps fixed `yMin`/`yMax` (with `autoScaleYAxis`
+   * off) as its range, widened if the data goes past it; otherwise it is
+   * recharts' default, as without axes.
+   */
+  hide?: boolean;
 }
+
+const numericDate = (row: { date?: unknown }) => Number(row.date);
 
 export function ChartAxes({
   xAxisClassName,
@@ -28,18 +48,23 @@ export function ChartAxes({
   xAxisLabel,
   yAxisLabel,
   formatDate,
-  // formatNumber = formatYAxisNumber,
+  // The host's number format for the y-axis ticks; uilib's compact one
+  // (K/M/B, whole numbers below 1000) without it.
+  formatNumber = defaultFormatNumber,
   xMin,
   xMax,
   yMin,
   yMax,
   autoScaleYAxis = false,
+  xAxisType = 'category',
+  xTicks,
+  hide = false,
 }: ChartAxesProps) {
   const tickColor = 'var(--muted-foreground)';
 
   // Generate rounded ticks to avoid duplicates when we have explicit domain
   const yTicks = useMemo(() => {
-    if (yMin !== undefined && yMax !== undefined && !autoScaleYAxis) {
+    if (!hide && yMin !== undefined && yMax !== undefined && !autoScaleYAxis) {
       const ticks = generateRoundedYTicks(yMin, yMax);
       const formatter = formatNumber || formatYAxisNumber;
 
@@ -68,35 +93,16 @@ export function ChartAxes({
       return Array.from(ticksByFormatted.values()).sort((a, b) => a - b);
     }
     return undefined;
-  }, [yMin, yMax, autoScaleYAxis, formatNumber]);
+  }, [hide, yMin, yMax, autoScaleYAxis, formatNumber]);
 
   // Determine Y-axis domain
-  let yDomain:
-    | [
-        (
-          | number
-          | string
-          | 'auto'
-          | 'dataMin'
-          | 'dataMax'
-          | ((dataMin: number) => number)
-        ),
-        (
-          | number
-          | string
-          | 'auto'
-          | 'dataMin'
-          | 'dataMax'
-          | ((dataMax: number) => number)
-        ),
-      ]
-    | undefined;
+  let yDomain: ComponentProps<typeof YAxis>['domain'];
 
   if (autoScaleYAxis) {
-    yDomain = [
-      (dataMin: number) => dataMin * 0.95,
-      (dataMax: number) => dataMax * 1.05,
-    ];
+    // recharts' own fit: nice round ticks just around the data, so a series
+    // moving 1000–1010 fills the chart (scaling the values by 0.95/1.05 left
+    // it flat) and a negative one is padded too.
+    yDomain = ['auto', 'auto'];
   } else if (yMin !== undefined && yMax !== undefined) {
     yDomain = [yMin, yMax];
   }
@@ -105,36 +111,51 @@ export function ChartAxes({
     <>
       <XAxis
         className={xAxisClassName}
-        dataKey="date"
+        // A number axis reads the row's `date` as a number (rows keep it as
+        // text, like every other chart's).
+        dataKey={xAxisType === 'number' ? numericDate : 'date'}
+        type={xAxisType}
+        hide={hide}
         tickLine={false}
         axisLine={false}
         tickMargin={8}
-        minTickGap={32}
+        minTickGap={xTicks ? 8 : 32}
         tick={{ fill: tickColor }}
         tickFormatter={value => formatDate(value as string)}
-        {...(xMin !== undefined &&
-          xMax !== undefined && { domain: [xMin, xMax] })}
+        // Room for the title under the ticks, as BarChart and
+        // StackedAreaChart keep.
+        {...(xAxisLabel && { height: X_AXIS_HEIGHT_WITH_LABEL })}
+        {...(xTicks && { ticks: [...xTicks] })}
+        {...(xMin !== undefined && xMax !== undefined
+          ? { domain: [xMin, xMax] }
+          : xAxisType === 'number' && { domain: ['dataMin', 'dataMax'] })}
       >
         {xAxisLabel && (
-          <Label value={xAxisLabel} position="insideBottom" offset={-5} />
+          <Label value={xAxisLabel} position="insideBottom" offset={0} />
         )}
       </XAxis>
-      <YAxis
-        className={yAxisClassName}
-        tickLine={false}
-        axisLine={false}
-        tickMargin={8}
-        minTickGap={32}
-        tick={{ fill: tickColor }}
-        tickFormatter={formatNumber}
-        {...(yDomain && { domain: yDomain })}
-        {...(yTicks && { ticks: yTicks })}
-        allowDataOverflow={!autoScaleYAxis}
-      >
-        {yAxisLabel && (
-          <Label value={yAxisLabel} angle={-90} position="insideLeft" />
-        )}
-      </YAxis>
+      {hide && !autoScaleYAxis && yMin !== undefined && yMax !== undefined && (
+        <YAxis hide domain={[yMin, yMax]} />
+      )}
+      {!hide && (
+        <YAxis
+          className={yAxisClassName}
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          minTickGap={32}
+          tick={{ fill: tickColor }}
+          tickFormatter={formatNumber}
+          {...(yAxisLabel && { width: Y_AXIS_WIDTH_WITH_LABEL })}
+          {...(yDomain && { domain: yDomain })}
+          {...(yTicks && { ticks: yTicks })}
+          allowDataOverflow={!autoScaleYAxis}
+        >
+          {yAxisLabel && (
+            <Label value={yAxisLabel} angle={-90} position="insideLeft" />
+          )}
+        </YAxis>
+      )}
     </>
   );
 }

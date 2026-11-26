@@ -2,6 +2,8 @@ export interface LegendSvgPayloadItem {
   value: string;
   color: string;
   dataKey: string;
+  /** A history line: drawn solid, where forecasts are dashed. */
+  solid?: boolean;
 }
 
 interface LegendSvgProps {
@@ -42,7 +44,7 @@ export function LegendSvg({ payload, width, marginLeft = 0 }: LegendSvgProps) {
             y2={ROW_HEIGHT / 2}
             stroke={item.color}
             strokeWidth={2}
-            strokeDasharray="3 3"
+            strokeDasharray={item.solid ? undefined : '3 3'}
           />
           <circle cx={20} cy={ROW_HEIGHT / 2} r={3} fill={item.color} />
           <text
